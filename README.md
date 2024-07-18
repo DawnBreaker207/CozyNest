@@ -1,30 +1,36 @@
-# React + TypeScript + Vite
+# CozyNest
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Graduate project with the topic is selling furniture
 
-Currently, two official plugins are available:
+## Table of contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Folder Structure
+- Tech usage
 
-## Expanding the ESLint configuration
+### Folder Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![image](https://github.com/user-attachments/assets/40260f79-b049-4084-8cab-a5015209832a)
 
-- Configure the top-level `parserOptions` property like this:
+- public: Folder store public content likes images
+- src: Folder store all coding content
+  - app: store global css config
+  - common: store common reusable function in project
+  - components: store reusable part of UI
+  - configs: store config file in project
+  - layouts: spilt page into two type: client and admin
+  - lib:
+  - pages: all pages in webpage
+  - routes: split pages into route
+  - services: function to solve with API
+  - utils: function support
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### Tech usage 
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Shadcn UI
+- React Router DOM
+- React Query
+- Zod
+- SASS
+- Axios
+- React
+- TypeScript
