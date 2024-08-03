@@ -5,9 +5,9 @@ import { Outlet } from 'react-router-dom'
 const LayoutWebsite = () => {
   return (
     <div>
-        <Header />
-        <Outlet />
-        <Footer />
+      <Header />
+      <Outlet />
+      <Footer />
     </div>
   )
 }

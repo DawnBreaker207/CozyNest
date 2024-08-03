@@ -1,11 +1,11 @@
-import DashboardPage from '@/pages/(dashboard)/dashboard/page';
-import LayoutAdmin from '@/pages/(dashboard)/layout';
-import ProductAddPage from '@/pages/(dashboard)/products/add/ProductAdd';
-import ProductEditPage from '@/pages/(dashboard)/products/edit/ProductEdit';
-import ProductPage from '@/pages/(dashboard)/products/ProductPage';
-import HomePage from '@/pages/(website)/home/page';
-import LayoutWebsite from '@/pages/(website)/layout';
-import { useRoutes } from 'react-router-dom';
+import ProductAddPage from '@/pages/admin/category/add/CategoryAdd'
+import ProductPage from '@/pages/admin/category/CategoryPage'
+import ProductEditPage from '@/pages/admin/category/edit/CategoryEdit'
+import DashboardPage from '@/pages/admin/dashboard/page'
+import LayoutAdmin from '@/pages/admin/layout'
+import HomePage from '@/pages/website/home/page'
+import LayoutWebsite from '@/pages/website/layout'
+import { useRoutes } from 'react-router-dom'
 function App() {
   const routes = useRoutes([
     {

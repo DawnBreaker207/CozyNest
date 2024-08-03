@@ -1,27 +1,22 @@
-import React, { useState } from 'react';
-import {
-  AppstoreOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { NavLink, Outlet } from 'react-router-dom';
+import React, { useState } from 'react'
+import { AppstoreOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons'
+import { Breadcrumb, Layout, Menu, theme } from 'antd'
+import { NavLink, Outlet } from 'react-router-dom'
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer, Sider } = Layout
 const LayoutAdmin: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false)
   const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+    token: { colorBgContainer, borderRadiusLG }
+  } = theme.useToken()
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className="demo-logo-vertical" />
+        <div className='demo-logo-vertical' />
         <Menu
-          theme="dark"
-          mode="inline"
+          theme='dark'
+          mode='inline'
           defaultSelectedKeys={['1']}
           items={[
             {
@@ -48,34 +43,29 @@ const LayoutAdmin: React.FC = () => {
               key: '5',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/`}>Reports</NavLink>
-            },
+            }
           ]}
         />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Controller</Breadcrumb.Item>
-            <Breadcrumb.Item></Breadcrumb.Item>
-          </Breadcrumb>
+          <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'Controller' }, { title: '' }]}></Breadcrumb>
           <div
             style={{
               padding: 24,
               minHeight: 360,
               background: colorBgContainer,
-              borderRadius: borderRadiusLG,
+              borderRadius: borderRadiusLG
             }}
           >
             <Outlet />
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          CozyNest Controller {new Date().getFullYear()} Created by CozyNest Group
-        </Footer>
+        <Footer style={{ textAlign: 'center' }}>{new Date().getFullYear()} Created by CozyNest</Footer>
       </Layout>
     </Layout>
-  );
-};
+  )
+}
 
-export default LayoutAdmin;
+export default LayoutAdmin
