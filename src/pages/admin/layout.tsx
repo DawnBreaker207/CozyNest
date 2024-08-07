@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { AppstoreOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons'
-import { Breadcrumb, Layout, Menu, theme } from 'antd'
+import { AppstoreOutlined, BellOutlined, DownOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons'
+import { Badge, Breadcrumb, Button, Layout, Menu, theme } from 'antd'
 import { NavLink, Outlet } from 'react-router-dom'
 
 const { Header, Content, Footer, Sider } = Layout
@@ -48,7 +48,18 @@ const LayoutAdmin: React.FC = () => {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header style={{ padding: 0, background: colorBgContainer  }} >
+          <div className="flex justify-between items-center px-4 mt-4">
+            <div className='text-xl font-semibold '>Dashboard</div>
+            <div className="flex items-center ">
+              <Button className='mr-4'>Nik Shop< DownOutlined  className='text-sm '/></Button>
+              <Badge count={4}>
+                <BellOutlined style={{ fontSize: '20px' }} />
+              </Badge>
+              <UserOutlined style={{ fontSize: '20px', marginLeft: '20px' }} />
+            </div>
+          </div>
+        </Header>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'Controller' }, { title: '' }]}></Breadcrumb>
           <div
