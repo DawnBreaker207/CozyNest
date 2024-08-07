@@ -1,6 +1,8 @@
 
-import React, { useState } from 'react';
-import { MenuItem, Select } from '@mui/material';
+import { useState } from 'react';
+
+import { Select } from 'antd';
+import { Option } from 'antd/es/mentions';
 
 const orders = [
   {
@@ -60,16 +62,19 @@ const RecentOrders = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-semibold">Recent Orders</h2>
         <Select
+           defaultValue="All"
+           
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          displayEmpty
-          variant="outlined"
+          onChange={(value) => setFilter(value)}
+           variant="outlined"
           className="bg-transparent outline-none text-sm"
-          style={{ height: '30px' }}
-        >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Pending">Pending</MenuItem>
-          <MenuItem value="Completed">Completed</MenuItem>
+         style={{ height: '30px' }}        >
+       
+          <Option value ="All">All</Option>
+          <Option value="Pending">Pending</Option>
+          <Option value="Completed">Completed</Option>
+
+        
         </Select>
       </div>
       {orders.filter(order => filter === 'All' || order.status === filter).map(order => (
