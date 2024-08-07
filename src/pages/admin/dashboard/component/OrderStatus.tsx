@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
 import { LuUsers2 } from 'react-icons/lu';
 import { MdOutlineShoppingBag } from 'react-icons/md';
-
 import { Select } from 'antd';
 import { Option } from 'antd/es/mentions';
 
