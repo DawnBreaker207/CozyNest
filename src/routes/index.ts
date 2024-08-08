@@ -1,6 +1,8 @@
 import ProductAddPage from '@/pages/admin/category/add/CategoryAdd'
 import ProductPage from '@/pages/admin/category/CategoryPage'
 import ProductEditPage from '@/pages/admin/category/edit/CategoryEdit'
+import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
+import AdminCustomerPage from '@/pages/admin/customer/page'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
 import orderPage from '@/pages/admin/order/OrderPage'
@@ -23,6 +25,8 @@ function App() {
         { path: 'products', Component: ProductPage },
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
+        { path: 'customer', Component: AdminCustomerPage },
+        { path: 'customer/:id', Component: AdminCustomerDetailPage },
         { path: 'orders',Component:orderPage},
         { path: 'reports',Component:ReportsPage}
       ]
