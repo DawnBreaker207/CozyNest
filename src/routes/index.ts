@@ -3,6 +3,8 @@ import ProductPage from '@/pages/admin/category/CategoryPage'
 import ProductEditPage from '@/pages/admin/category/edit/CategoryEdit'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
+import orderPage from '@/pages/admin/order/OrderPage'
+import ReportsPage from '@/pages/admin/report/ReportPage'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
 import { useRoutes } from 'react-router-dom'
@@ -20,7 +22,9 @@ function App() {
         { index: true, Component: DashboardPage },
         { path: 'products', Component: ProductPage },
         { path: 'products/add', Component: ProductAddPage },
-        { path: 'products/:id/edit', Component: ProductEditPage }
+        { path: 'products/:id/edit', Component: ProductEditPage },
+        { path: 'orders',Component:orderPage},
+        { path: 'reports',Component:ReportsPage}
       ]
     }
   ])
