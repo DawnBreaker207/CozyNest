@@ -13,7 +13,7 @@ interface CategoryRecord {
 
 const columns = [
   {
-    title: 'Category Name',
+    title: 'Product Name',
     dataIndex: 'name',
     key: 'name',
     render: (_: string, record: CategoryRecord) => (

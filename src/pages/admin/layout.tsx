@@ -91,7 +91,7 @@ const LayoutAdmin: React.FC = () => {
             {
               key: '5',
               icon: <UserOutlined />,
-              label: <NavLink to={`/admin/`}>Customer Manager</NavLink>
+              label: <NavLink to={`/admin/customer`}>Customer Manager</NavLink>
             },
             {
               key: '6',
