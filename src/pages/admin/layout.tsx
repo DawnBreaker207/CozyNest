@@ -32,7 +32,7 @@ const LayoutAdmin: React.FC = () => {
             {
               key: '3',
               icon: <UploadOutlined />,
-              label: <NavLink to={`/admin/`}>Order Manager</NavLink>
+              label: <NavLink to={`/admin/orders`}>Order Manager</NavLink>
             },
             {
               key: '4',
@@ -42,7 +42,7 @@ const LayoutAdmin: React.FC = () => {
             {
               key: '5',
               icon: <UploadOutlined />,
-              label: <NavLink to={`/admin/`}>Reports</NavLink>
+              label: <NavLink to={`/admin/reports`}>Reports</NavLink>
             }
           ]}
         />
