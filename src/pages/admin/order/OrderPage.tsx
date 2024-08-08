@@ -45,9 +45,9 @@ const dataSource = [
     total: '$590.00',
     payment: 'Visa',
     status: (
-      <Button type="default" style={{ borderColor: 'yellow', color: 'yellow' }}>
-      Processing 
-    </Button>
+      <Button type='default' style={{ borderColor: 'yellow', color: 'yellow' }}>
+        Processing
+      </Button>
     )
   },
   {
@@ -61,7 +61,7 @@ const dataSource = [
     payment: 'Mastercard',
     status: (
       <Button type='primary' ghost>
-       Delivered
+        Delivered
       </Button>
     )
   },
@@ -91,7 +91,7 @@ const dataSource = [
     payment: 'Mastercard',
     status: (
       <Button type='dashed' danger>
-       Cancelled
+        Cancelled
       </Button>
     )
   },
@@ -105,7 +105,7 @@ const dataSource = [
     total: '$125.00',
     payment: 'Mastercard',
     status: (
-      <Button type="default" style={{ borderColor: 'yellow', color: 'yellow' }}>
+      <Button type='default' style={{ borderColor: 'yellow', color: 'yellow' }}>
         Processing
       </Button>
     )
@@ -191,7 +191,7 @@ const menu = (
   </Menu>
 )
 
-const orderPage = () => {
+const OrderPage = () => {
   const [form] = Form.useForm()
   const [, setFormValues] = useState<Values>()
   const [open, setOpen] = useState(false)
@@ -299,4 +299,4 @@ const orderPage = () => {
   )
 }
 
-export default orderPage
+export default OrderPage

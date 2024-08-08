@@ -184,19 +184,17 @@ const ReportsPage = () => {
         </BarChart>
       </div>
 
-    
-        <Card className='bg-white p-4 w-auto rounded-lg shadow' title='Customer Behavior'>
-          <PieChart width={730} height={250}>
-            <Pie data={data3} cx='50%' cy='50%' outerRadius={80} label dataKey='value'>
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={colors[index]} />
-              ))}
-            </Pie>
-          </PieChart>
-        </Card>
-      
+      <Card className='bg-white p-4 w-auto rounded-lg shadow' title='Customer Behavior'>
+        <PieChart width={730} height={250}>
+          <Pie data={data3} cx='50%' cy='50%' outerRadius={80} label dataKey='value'>
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index]} />
+            ))}
+          </Pie>
+        </PieChart>
+      </Card>
 
-      <Card className='bg-white p-4 rounded-lg shadow' title='Trending Orders' >
+      <Card className='bg-white p-4 rounded-lg shadow' title='Trending Orders'>
         <Table dataSource={product} pagination={{ pageSize: 5 }}>
           <Column title='Product' dataIndex='product' key='product' />
           <Column title='Category' dataIndex='category' key='category' />
