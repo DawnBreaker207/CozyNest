@@ -25,12 +25,15 @@ const LayoutAdmin: React.FC = () => {
   } = theme.useToken()
   const location = useLocation()
 
-  const menu = (
-    <Menu>
-      <Menu.Item key='1'>1</Menu.Item>
-      <Menu.Item key='2'>2</Menu.Item>
-    </Menu>
-  )
+  const menu = {
+    children: (
+      <>
+        <Menu.Item key="1">Option 1</Menu.Item>
+        <Menu.Item key="2">Option 2</Menu.Item>
+        <Menu.Item key="3">Option 3</Menu.Item>
+      </>
+    ),
+  };
   const { id } = useParams()
   const renderHeader = (title: string) => (
     <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
@@ -39,7 +42,7 @@ const LayoutAdmin: React.FC = () => {
           <span className='text-xl text-[#353535] ml-[25px]'>{title}</span>
         </div>
         <div className='flex items-center space-x-4 mr-[14px]'>
-          <Dropdown overlay={menu} trigger={['click']}>
+          <Dropdown menu={menu} trigger={['click']}>
             <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
               Nik Shop <DownOutlined className='ml-2' />
             </button>
@@ -134,7 +137,7 @@ const LayoutAdmin: React.FC = () => {
                       <span className='text-xl text-[#353535] ml-[25px]'>Category</span>
                     </div>
                     <div className='flex items-center space-x-4 mr-[14px]'>
-                      <Dropdown overlay={menu} trigger={['click']}>
+                      <Dropdown menu={menu} trigger={['click']}>
                         <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
                           Nik Shop <DownOutlined className='ml-2' />
                         </button>
@@ -171,7 +174,7 @@ const LayoutAdmin: React.FC = () => {
                       <span className='text-xl text-[#353535] ml-[25px]'>Product</span>
                     </div>
                     <div className='flex items-center space-x-4 mr-[14px]'>
-                      <Dropdown overlay={menu} trigger={['click']}>
+                      <Dropdown menu={menu} trigger={['click']}>
                         <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
                           Nik Shop <DownOutlined className='ml-2' />
                         </button>

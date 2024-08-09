@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
-import { Select } from 'antd'
-import { Option } from 'antd/es/mentions'
+import { Select } from 'antd';
 
 const orders = [
   {
@@ -46,10 +45,15 @@ const orders = [
   }
 ]
 
-const statusColors = {
-  Pending: 'bg-red-100 text-red-600',
-  Completed: 'bg-blue-100 text-blue-600'
+interface StatusColors {
+  [key: string]: string;
+  Pending: string;
+  Completed: string;
 }
+const statusColors: StatusColors = {
+  Pending: 'bg-red-100 text-red-800',
+  Completed: 'bg-green-100 text-green-800',
+};
 
 const RecentOrders = () => {
   const [filter, setFilter] = useState('All')
@@ -66,9 +70,9 @@ const RecentOrders = () => {
           className='bg-transparent outline-none text-sm'
           style={{ height: '30px' }}
         >
-          <Option value='All'>All</Option>
-          <Option value='Pending'>Pending</Option>
-          <Option value='Completed'>Completed</Option>
+          <Select.Option value='All'>All</Select.Option>
+          <Select.Option value='Pending'>Pending</Select.Option>
+          <Select.Option value='Completed'>Completed</Select.Option>
         </Select>
       </div>
       {orders
