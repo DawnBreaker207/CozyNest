@@ -194,7 +194,7 @@ const AdminCustomerPage = (props: Props) => {
       </section>
       <Modal
         title={<h1 className='text-[#353535] font-medium text-xl mb-7'>Add a New Customer</h1>}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         okText='Add'
         centered

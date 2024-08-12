@@ -154,9 +154,9 @@ const colors = ['red', 'green', 'blue', 'yellow']
 // const maxValue = Math.max(...data.map((d) => d.value))
 const ReportsPage = () => {
   return (
-    <div className='grid grid-cols-2 md:grid-cols-2 gap-4'>
+    <div className='grid grid-cols-2 md:grid-cols-2  '>
       <Card className='bg-white p-4 w-auto rounded-lg shadow' title='Customer Volume'>
-        <PieChart width={730} height={250}>
+        <PieChart width={530} height={250}>
           <Pie data={data01} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={50} fill='#8884d8' />
           <Pie
             data={data02}
@@ -173,7 +173,7 @@ const ReportsPage = () => {
       </Card>
       <div className='bg-white p-4 w-auto rounded-lg shadow'>
         <span className='text-xl ml-6'>Customer Volume</span>
-        <BarChart style={{ marginTop: 50 }} width={730} height={250} data={data}>
+        <BarChart style={{ marginTop: 50 }} width={550} height={250} data={data}>
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis dataKey='name' />
           <YAxis />
@@ -185,10 +185,10 @@ const ReportsPage = () => {
       </div>
 
       <Card className='bg-white p-4 w-auto rounded-lg shadow' title='Customer Behavior'>
-        <PieChart width={730} height={250}>
+        <PieChart width={530} height={250}>
           <Pie data={data3} cx='50%' cy='50%' outerRadius={80} label dataKey='value'>
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index]} />
+            {data.map((_, index) => (
+              <Cell  key={`cell-${index}`} fill={colors[index]} />
             ))}
           </Pie>
         </PieChart>

@@ -1,9 +1,8 @@
+import { Select } from 'antd'
 import { useState } from 'react'
 import { FiShoppingCart } from 'react-icons/fi'
 import { LuUsers2 } from 'react-icons/lu'
 import { MdOutlineShoppingBag } from 'react-icons/md'
-import { Select } from 'antd'
-import { Option } from 'antd/es/mentions'
 
 const OrderStatus = () => {
   const [filter, setFilter] = useState('Movie')
@@ -20,9 +19,9 @@ const OrderStatus = () => {
             className='bg-transparent outline-none text-sm'
             style={{ height: '30px' }}
           >
-            <Option value='All'>Movie</Option>
-            <Option value='Pending'>Pending</Option>
-            <Option value='Completed'>Completed</Option>
+            <Select.Option value='All'>Movie</Select.Option>
+            <Select.Option value='Pending'>Pending</Select.Option>
+            <Select.Option value='Completed'>Completed</Select.Option>
           </Select>
         </div>
         <div className='flex gap-7'>
@@ -47,9 +46,9 @@ const OrderStatus = () => {
             className='bg-transparent outline-none text-sm'
             style={{ height: '30px' }}
           >
-            <Option value='All'>Movie</Option>
-            <Option value='Pending'>Pending</Option>
-            <Option value='Completed'>Completed</Option>
+            <Select.Option value='All'>Movie</Select.Option>
+            <Select.Option value='Pending'>Pending</Select.Option>
+            <Select.Option value='Completed'>Completed</Select.Option>
           </Select>
         </div>
         <div className='flex gap-7'>
@@ -74,9 +73,9 @@ const OrderStatus = () => {
             className='bg-transparent outline-none text-sm'
             style={{ height: '30px' }}
           >
-            <Option value='All'>Movie</Option>
-            <Option value='Pending'>Pending</Option>
-            <Option value='Completed'>Completed</Option>
+            <Select.Option value='All'>Movie</Select.Option>
+            <Select.Option value='Pending'>Pending</Select.Option>
+            <Select.Option value='Completed'>Completed</Select.Option>
           </Select>
         </div>
         <div className='flex gap-7'>

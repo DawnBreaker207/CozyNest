@@ -9,7 +9,6 @@ import {
 } from '@ant-design/icons'
 import { Button, DatePicker, Dropdown, Form, Input, Menu, Modal, Select, Space, Switch, Table } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import { Option } from 'antd/es/mentions'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 interface Values {
@@ -184,12 +183,15 @@ const columns = [
   }
 ]
 
-const menu = (
-  <Menu>
-    <Menu.Item key='1'>Option 1</Menu.Item>
-    <Menu.Item key='2'>Option 2</Menu.Item>
-  </Menu>
-)
+const menu = {
+  children: (
+    <>
+      <Menu.Item key="1">Option 1</Menu.Item>
+      <Menu.Item key="2">Option 2</Menu.Item>
+      <Menu.Item key="3">Option 3</Menu.Item>
+    </>
+  ),
+};
 
 const OrderPage = () => {
   const [form] = Form.useForm()
@@ -218,7 +220,8 @@ const OrderPage = () => {
             <Button type='dashed'>All Orders</Button>
           </div>
           <DatePicker placeholder='Select Date' className='mr-2' />
-          <Dropdown overlay={menu}>
+          
+          <Dropdown menu={menu}>
             <Button>
               Filters <DownOutlined />
             </Button>
@@ -251,15 +254,15 @@ const OrderPage = () => {
           </Form.Item>
           <Form.Item>
             <Select className='text-sm mr-64' placeholder='Select customer'>
-              <Option value='jack'>Jack</Option>
-              <Option value='mtp'>mtp</Option>
+              <Select.Option value='jack'>Jack</Select.Option>
+              <Select.Option value='mtp'>mtp</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item style={{ marginBottom: 0 }}>
             <Form.Item rules={[{ required: true }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
               <Select className='text-sm mr-64' placeholder='Payment Type'>
-                <Option value='jack'>Jack</Option>
-                <Option value='mtp'>mtp</Option>
+                <Select.Option value='jack'>Jack</Select.Option>
+                <Select.Option value='mtp'>mtp</Select.Option>
               </Select>
             </Form.Item>
             <Form.Item
@@ -268,8 +271,8 @@ const OrderPage = () => {
               style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
             >
               <Select className='text-sm mr-64' placeholder='Order Type'>
-                <Option value='jack'>Jack</Option>
-                <Option value='mtp'>mtp</Option>
+                <Select.Option value='jack'>Jack</Select.Option>
+                <Select.Option value='mtp'>mtp</Select.Option>
               </Select>
             </Form.Item>
           </Form.Item>
@@ -286,8 +289,8 @@ const OrderPage = () => {
           </Form.Item>
           <Form.Item label='Order Status'>
             <Select className='text-sm mr-64' placeholder='Pending'>
-              <Option value='jack'>Jack</Option>
-              <Option value='mtp'>mtp</Option>
+              <Select.Option value='jack'>Jack</Select.Option>
+              <Select.Option value='mtp'>mtp</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item>
