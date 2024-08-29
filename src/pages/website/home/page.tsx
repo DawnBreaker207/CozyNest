@@ -1,10 +1,13 @@
-import Banner from './_components/Banner'
+import HomeBanner from './_components/HomeBanner'
+import BannerSection from './_components/BannerSection'
+import Category from './_components/Category'
 
 const HomePage = () => {
   return (
     <div>
-      HomePage
-      <Banner />
+      <HomeBanner />
+      <Category />
+      <BannerSection />
     </div>
   )
 }
