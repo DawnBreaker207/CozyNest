@@ -1,5 +1,4 @@
 import { Shoppingcart } from '@/components/icons'
-import React from 'react'
 import { FaRegEye } from 'react-icons/fa'
 
 type Props = {}
