@@ -4,9 +4,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        Spectral: ["Spectral", "sans-serif"],
+        Spectral: ['Spectral', 'sans-serif']
       }
     }
   },
+
   plugins: []
 }
