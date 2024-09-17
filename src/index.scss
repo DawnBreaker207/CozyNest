@@ -15,9 +15,10 @@
 @layer base {
   * {
     @apply font-Spectral;
+    @apply font-custom;
   }
   img {
     width: 100%;
-    height: auto; 
+    height: auto;
   }
 }
