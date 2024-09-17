@@ -1,3 +1,3 @@
-import Shoppingcart from "@/components/icons/Shoppingcart"
+import Shoppingcart from '@/components/icons/Shoppingcart'
 
-export {Shoppingcart}
+export { Shoppingcart }
