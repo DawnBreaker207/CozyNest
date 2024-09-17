@@ -59,15 +59,14 @@ const News: React.FC = () => {
         <h1 className="text-center text-3xl mb-8 mx-auto font-serif">Tin tức nổi bật</h1>
         <div
           ref={scrollContainerRef}
-          className="overflow-hidden scrollbar-hide   whitespace-nowrap p-4"
+          className="overflow-hidden scrollbar-hide flex flex-nowrap p-4"
         >
           {newsItems.map((article, index) => (
             <Card
               key={index}
               hoverable
-              style={{ width: 380, display: 'inline-block' }}
+              className="flex-shrink-0 w-1/3 m-4 rounded-lg shadow-lg overflow-hidden relative bg-white"
               cover={<img alt={article.title} src={article.image} className="rounded-t-lg" />}
-              className="m-4 rounded-lg shadow-lg overflow-hidden relative bg-white"
             >
               <div className="absolute top-0 left-0 bg-white text-gray-500 px-2 py-1 rounded-br-lg">
                 {article.date}
