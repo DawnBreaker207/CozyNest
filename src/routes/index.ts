@@ -4,6 +4,7 @@ import ProductEditPage from '@/pages/admin/category/edit/CategoryEdit'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
 import HomePage from '@/pages/website/home/page'
+import Introduction from '@/pages/website/introduction/page'
 import LayoutWebsite from '@/pages/website/layout'
 import { useRoutes } from 'react-router-dom'
 function App() {
@@ -11,7 +12,10 @@ function App() {
     {
       path: '/',
       Component: LayoutWebsite,
-      children: [{ index: true, Component: HomePage }]
+      children: [
+        { index: true, Component: HomePage },
+        { path: "/introduction", Component: Introduction }
+      ]
     },
     {
       path: 'admin',
