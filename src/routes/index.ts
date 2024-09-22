@@ -5,13 +5,18 @@ import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
+import pageCheckOut from '@/pages/website/order/page'
+import page from '@/pages/website/products/page'
 import { useRoutes } from 'react-router-dom'
 function App() {
   const routes = useRoutes([
     {
       path: '/',
       Component: LayoutWebsite,
-      children: [{ index: true, Component: HomePage }]
+      children: [{ index: true, Component: HomePage },
+        { path: 'products', Component: page } ,
+        {path: 'orders', Component:pageCheckOut}, 
+      ]
     },
     {
       path: 'admin',
