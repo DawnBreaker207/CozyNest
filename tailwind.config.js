@@ -5,8 +5,6 @@ export default {
     extend: {
       fontFamily: {
         Spectral: ['Spectral', 'sans-serif'],
-        // Ađ new custom font
-        custom: ['CustomFont', 'sans-serif'],
       }
     }
   },

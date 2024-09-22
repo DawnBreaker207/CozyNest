@@ -53,14 +53,14 @@ const News: React.FC = () => {
   return (
     <div>
       {/* Desktop grid view, hidden on mobile */}
-      <div className='hidden md:block relative'>
+      <div className='hidden md:block relative mt-10 md:mt-20'>
         <Button
           onClick={scrollLeft}
-          className='absolute left-3 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2'
+          className='absolute left-10 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2'
         >
           <LeftOutlined />
         </Button>
-        <h1 className="text-center text-3xl mb-8 mx-auto font-serif">Tin tức nổi bật</h1>
+        <h1 className="text-center text-[25px] sm:text-[45px] mb-2 mx-auto text-[#FCA120]">Tin tức nổi bật</h1>
         <div
           ref={scrollContainerRef}
           className="overflow-hidden scrollbar-hide flex flex-nowrap p-4"
@@ -74,7 +74,7 @@ const News: React.FC = () => {
             >
               <div className='absolute top-0 left-0 bg-white text-gray-500 px-2 py-1 rounded-br-lg'>{article.date}</div>
               <Meta
-                title={<span className='text-orange-500'>{article.title}</span>}
+                title={<span className='text-[#FCA120]'>{article.title}</span>}
                 description={article.description.substring(0, 20)}
               />
               <Link to={article.link} className='text-black hover:text-orange-600 flex items-center mt-4'>
@@ -95,7 +95,8 @@ const News: React.FC = () => {
       </div>
 
       {/* Mobile carousel view, hidden on desktop */}
-      <div className='block md:hidden'>
+      <div className='block md:hidden mt-10'>
+      <h1 className="text-center text-[25px] sm:text-[45px] mb-10 mx-auto text-[#FCA120]">Tin tức nổi bật</h1>
         <Carousel
           slidesToShow={2}
           dots
@@ -115,7 +116,7 @@ const News: React.FC = () => {
                 arrows: false
               }
             }
-          ]}
+          ]}  
         >
           {newsItems.map((newsItem, index) => (
             <div key={index} className='px-2'>
@@ -124,11 +125,11 @@ const News: React.FC = () => {
                 cover={<img alt={newsItem.title} src={newsItem.image} className='rounded-t-lg' />}
                 className='rounded-lg shadow-lg overflow-hidden relative'
               >
-                <div className='absolute top-0 left-0 bg-white text-orange-500 px-2 py-1 rounded-br-lg'>
+                <div className='absolute top-2 left-2 bg-white text-[#FCA120] px-2 py-1 rounded-br-lg'>
                   {newsItem.date}
                 </div>
                 <Meta
-                  title={<span className='text-orange-500'>{newsItem.title}</span>}
+                  title={<span className='text-[#FCA120]'>{newsItem.title}</span>}
                   description={
                     <div>
                       <p className='text-gray-600 mb-2'>{newsItem.description.substring(0, 20)}... </p>

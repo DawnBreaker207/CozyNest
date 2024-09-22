@@ -86,10 +86,10 @@ const Category = () => {
   }
 
   return (
-    <div className='mx-auto max-w-[1900px] mt-[100px] lg:mt-[200px]'>
+    <div className='mx-auto max-w-[1900px] mt-[50px] lg:mt-[100px]'>
       <div className='mx-auto px-4 lg:px-[75px]'>
         <div className='sectionHeading text-center mb-8'>
-          <h3 className='text-5xl font-normal text-[#FCA120]'>Danh mục sản phẩm</h3>
+          <h3 className='text-[25px] sm:text-[45px] font-normal text-[#FCA120]'>Danh mục sản phẩm</h3>
         </div>
         <div className='sectionContent'>
           <Slider {...settings}>

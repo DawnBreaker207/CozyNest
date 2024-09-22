@@ -1,7 +1,7 @@
 const HomeBanner = () => {
   return (
     <>
-      <div className='container mx-auto max-w-[1900px] px-6 lg:px-[75px] '>
+      <div className='container mx-auto max-w-[1900px] px-6 lg:px-[75px] mt-10 md:mt-20'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
           <div className='item-home-banner px-[15px] col-12 col-lg-6'>
             <div className='item-home-banner-inner effect-image'>
@@ -14,7 +14,7 @@ const HomeBanner = () => {
                 </picture>
               </div>
               <div className='info-home-banner text-center mt-4 lg:mt-8'>
-                <h4 className='lg:text-5xl text-2xl font-normal text-[#fca120]'>
+                <h4 className='lg:text-[45px] text-[25px] font-normal text-[#fca120]'>
                   <a href='' aria-label='Nội thất phòng khách'>
                     Nội thất phòng khách
                   </a>
@@ -48,7 +48,7 @@ const HomeBanner = () => {
               </div>
               <div className='info-home-banner text-center mt-4 lg:mt-8'>
                 <a href=''>
-                  <h4 className='lg:text-5xl text-2xl font-normal text-[#fca120]'>Nội thất phòng ngủ</h4>
+                  <h4 className='lg:text-[45px] text-[25px] font-normal text-[#fca120]'>Nội thất phòng ngủ</h4>
                 </a>
                 <p className='text-[#252a2b] lg:text-[18px] text-sm lg:mt-6 mt-2 leading-relaxed'>
                   Phòng ngủ là không gian quan trọng, là cầu nối giúp cho giấc ngủ được trọn vẹn, tạo không gian riêng

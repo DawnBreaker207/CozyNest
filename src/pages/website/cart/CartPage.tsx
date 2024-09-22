@@ -21,7 +21,7 @@ const CartPage = (props: Props) => {
   return (
     <div className='mb-[50px] mt-[110px]'>
       <div className='lg:mx-20 md:mx-10 mx-4'>
-        <span className='text-sm font-light text-[#252A2B]'>Trang chủ / Giỏ hàng(1)</span>
+        <span className='text-sm font-light text-[#252A2B]'>Trang chủ / Giỏ hàng <span className=''>(1)</span></span>
         <div className='flex flex-col lg:flex-row mt-5 gap-6 w-full'>
           <div className='lg:w-[70%] w-full p-3 border border-gray-300 rounded-xl h-min'>
             <h2 className='text-xl font-semibold mb-2 text-[#fca120]'>Giỏ hàng của bạn</h2>
@@ -29,39 +29,53 @@ const CartPage = (props: Props) => {
             <p className='text-[#252A2B] my-3'>
               Bạn đang có <span className='font-semibold text-[#fca120]'>1 sản phẩm</span> trong giỏ hàng
             </p>
+            {/* item cart */}
             <div className='border border-gray-300 rounded-xl p-4'>
               <ul>
                 <li className='flex items-center justify-between cursor-pointer'>
-                  <div className='flex items-center gap-4 relative'>
-                    <div className='relative'>
-                      <img src='https://picsum.photos/id/1/200/300' alt='' className='md:size-20 size-14 min-w-14 min-h-14' />
-                      <span className='absolute -top-2 -left-2 bg-gray-400 text-[8px] text-white rounded-full font-light size-5 flex items-center justify-center'>
-                        Xóa
-                      </span>
+                  <div className='flex items-center gap-4'>
+                    <div className=''>
+                      <img
+                        src='https://picsum.photos/id/1/200/300'
+                        alt=''
+                        className='md:size-20 size-14 min-w-14 min-h-14'
+                      />
                     </div>
                     <div className='flex flex-col gap-2'>
-                      <h3 className='text-base truncate sm:w-full w-40'>Bộ ấm trà bằng sứ BLACK & WHITE hoa văn đen trắng</h3>
+                      <h3 className='text-base truncate sm:w-full w-40'>
+                        Bộ ấm trà bằng sứ BLACK & WHITE hoa văn đen trắng
+                      </h3>
                       <div className='flex items-center gap-[10px]'>
                         <span className='text-red-500 font-semibold'>516,000₫</span>
                         <span className='font-light line-through text-xs'>1,290,000₫</span>
                       </div>
                     </div>
                   </div>
-                  <div className='flex flex-col gap-2'>
+                  <div className='flex flex-col gap-2 items-center'>
                     <span className='text-red-500 font-semibold text-end'>516,000₫</span>
                     <div className='flex items-center justify-center'>
-                      <button onClick={decrease} className='bg-gray-100 px-2 py-1 rounded-md cursor-pointer'>
+                      <button
+                        onClick={decrease}
+                        className='bg-stone-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                      >
                         -
                       </button>
                       <span className='mx-3 text-[#252A2B]'>{count}</span>
-                      <button onClick={increase} className='bg-gray-100 px-2 py-1 rounded-md cursor-pointer'>
+                      <button
+                        onClick={increase}
+                        className='bg-stone-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                      >
                         +
                       </button>
                     </div>
                   </div>
+                  <button>
+                    <img src='./src/assets/icon/delete.svg' alt='' className='size-5 min-h-5 min-w-5' />
+                  </button>
                 </li>
               </ul>
             </div>
+            {/* End item cart */}
             <div className='mt-5'>
               <h3 className='font-semibold text-sm mb-3'>Ghi chú đơn hàng</h3>
               <textarea
