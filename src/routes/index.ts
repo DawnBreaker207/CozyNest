@@ -13,13 +13,19 @@ import ReportsPage from '@/pages/admin/report/ReportPage'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
 import { useRoutes } from 'react-router-dom'
+import NewPage from '@/pages/website/home/newpage'
+import ContactPage from '@/pages/website/home/contact'
 
 function App() {
   const routes = useRoutes([
     {
       path: '/',
       Component: LayoutWebsite,
-      children: [{ index: true, Component: HomePage }]
+      children: [
+        { index: true, Component: HomePage },
+        { path: 'contact', Component: ContactPage },
+        { path: 'newpage', Component: NewPage }
+      ]
     },
     {
       path: 'admin',
