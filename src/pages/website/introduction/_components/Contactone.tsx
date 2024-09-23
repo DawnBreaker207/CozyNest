@@ -2,25 +2,25 @@ import React from 'react'
 
 const Contactone = () => {
     return (
-        <div>
-            <h1 className='text-3xl font-bold text-center mt-[25%] -mb-5'>Về chúng tôi</h1>
-            <div className='text-center py-8 '>
+        <div className=' md:px-2'>
+            <h1 className='text-xl font-bold text-center  md:mt-[10%] mt-[25%] sm:mt-[15%] -mb-5'>Về chúng tôi</h1>
+            <div className='text-center py-8'>
                 <div className='flex flex-col md:flex-row justify-around items-center'>
-                    <div className='max-w-xs bg-white  rounded-lg overflow-hidden mb-4 md:mb-0'>
+                    <div className='max-w-xs bg-white  rounded-lg overflow-hidden mb-4 md:mb-0 md:mr-2'>
                         <img
                             className='w-full h-48 object-cover'
                             src='https://file.hstatic.net/200000804441/file/7_16944769ad624250addfd6e66a28e588_large.png'
                             alt='Sản phẩm chất lượng tốt nhất'
                         />
-                        <div className='p-6'>
-                            <h3 className='text-xl font-semibold mb-4'>Sản phẩm chất lượng tốt nhất</h3>
+                        <div className='p-6 '>
+                            <h3 className='text-xl font-semibold mb-4'>Sản phẩm tốt nhất</h3>
                             <p className='text-gray-700'>
-                                Chất lượng vừa mang tính trừu tượng vừa mang tính cụ thể. Tính trừu tượng thông qua sự phù hợp, nó phản ánh mặt chủ quan của sản phẩm và phụ thuộc vào nhận thức của khách hàng.
+                                Chất lượng vừa mang tính trừu tượng vừa mang tính cụ thể. Tính trừu tượng thông qua sự phù hợp, nó phản ánh mặt chủ quan của sản phẩm và khách hàng hàng hàng hàng.
                             </p>
                         </div>
                     </div>
 
-                    <div className='max-w-xs bg-white  rounded-lg overflow-hidden mb-4 md:mb-0'>
+                    <div className='max-w-xs bg-white  rounded-lg overflow-hidden mb-4 md:mb-0 md:mr-2'>
                         <img
                             className='w-full h-48 object-cover'
                             src='https://file.hstatic.net/200000804441/file/8_6bf70e035241456a9eb04abe849bc59a_large.png'
@@ -34,7 +34,7 @@ const Contactone = () => {
                         </div>
                     </div>
 
-                    <div className='max-w-xs bg-white rounded-lg overflow-hidden'>
+                    <div className='max-w-xs bg-white rounded-lg overflow-hidden md:mr-2'>
                         <img
                             className='w-full h-48 object-cover'
                             src='https://file.hstatic.net/200000804441/file/9_fcbfc9ce490e4416a9d90ded046f0763_large.png'
