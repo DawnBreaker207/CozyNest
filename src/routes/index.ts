@@ -3,6 +3,9 @@ import ProductPage from '@/pages/admin/category/CategoryPage'
 import ProductEditPage from '@/pages/admin/category/edit/CategoryEdit'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
+import Login from '@/pages/website/auth/Login'
+import Register from '@/pages/website/auth/Register'
+import ResetPassword from '@/pages/website/auth/ResetPassword'
 import CartPage from '@/pages/website/cart/CartPage'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
@@ -14,7 +17,11 @@ function App() {
       Component: LayoutWebsite,
       children: [
         { index: true, Component: HomePage },
-        { path: 'cart', Component: CartPage }
+        { path: 'cart', Component: CartPage },
+        {path:'login',Component:Login},
+        {path:'register',Component:Register},
+        {path:'reset-password',Component:ResetPassword}
+        
       ]
     },
     {
