@@ -16,6 +16,8 @@ import OrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
+import pageCheckOut from '@/pages/website/order/page'
+import page from '@/pages/website/products/page'
 import { useRoutes } from 'react-router-dom'
 
 function App() {
@@ -28,8 +30,9 @@ function App() {
         { path: 'cart', Component: CartPage },
         {path:'login',Component:Login},
         {path:'register',Component:Register},
-        {path:'reset-password',Component:ResetPassword}
-        
+        {path:'reset-password',Component:ResetPassword},
+        { path: 'products', Component: page } ,
+        {path: 'orders', Component:pageCheckOut}, 
       ]
     },
     {
