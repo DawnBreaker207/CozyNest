@@ -5,7 +5,6 @@ export default {
     extend: {
       fontFamily: {
         Spectral: ['Spectral', 'sans-serif'],
-      }
         poppin: ['Poppins', 'sans-serif'],
       },
       colors: {
