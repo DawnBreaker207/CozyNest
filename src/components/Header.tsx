@@ -121,7 +121,7 @@ const Header = () => {
     <div>
       {/* header */}
       <div
-      className={`flex items-center justify-between bg-background fixed w-full top-0 z-40  bg-white shadow-md transition-all duration-500 `}
+      className={`flex items-center justify-between bg-background fixed w-full top-0 z-40  bg-white shadow-md transition-all duration-500  `}
     >
         <nav className='flex items-center justify-between px-[4%] bg-background w-full  '>
           <div className=' md:w-[20%] sm:w-[50%] w-[45%]  '>

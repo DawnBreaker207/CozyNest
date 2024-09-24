@@ -1,4 +1,3 @@
-import React from 'react'
 import { QuestionCircleOutlined, GiftOutlined, CreditCardOutlined, ReloadOutlined } from '@ant-design/icons'
 
 const Contactfour = () => {

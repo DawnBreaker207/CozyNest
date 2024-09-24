@@ -20,7 +20,7 @@ const CustomFooter = () => {
     setActiveSection(activeSection === section ? undefined : section)
   }
   return (
-    <Footer className='bg-black text-white py-2'>
+    <Footer className='bg-black text-white py-2 '>
       <div className='bg-black py-1'>
         <div className='container mx-auto flex flex-col md:flex-row justify-between    items-center space-y-2 md:space-y-0'>
           {/* Đăng ký nhận tin */}
