@@ -4,6 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        Spectral: ['Spectral', 'sans-serif'],
         poppin: ['Poppins', 'sans-serif'],
       },
       colors: {
@@ -16,5 +17,7 @@ export default {
       },
     }
   },
+
   plugins: []
 }
+
