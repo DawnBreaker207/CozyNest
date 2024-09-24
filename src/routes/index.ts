@@ -6,6 +6,7 @@ import LayoutAdmin from '@/pages/admin/layout'
 import CartPage from '@/pages/website/cart/CartPage'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
+import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 import { useRoutes } from 'react-router-dom'
 function App() {
   const routes = useRoutes([
@@ -14,7 +15,8 @@ function App() {
       Component: LayoutWebsite,
       children: [
         { index: true, Component: HomePage },
-        { path: 'cart', Component: CartPage }
+        { path: 'cart', Component: CartPage },
+        { path: 'check_out_order', Component: CheckOutOder }
       ]
     },
     {
