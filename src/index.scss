@@ -15,10 +15,28 @@
 @layer base {
   * {
     @apply font-Spectral;
-    @apply font-custom;
   }
   img {
     width: 100%;
     height: auto;
+  }
+  .custom-tooltip {
+    max-width: 450px !important; 
+  }
+  .custom-tooltip .ant-tooltip-inner {
+    background-color: white !important; 
+    color: black !important; 
+    margin-right: 30px;
+  }
+  .custom-tooltip .ant-tooltip-arrow::before {
+    background-color: darkgray !important; 
+  }
+  @media only screen and (max-width: 600px) {
+    .custom-tooltip {
+      max-width: 350px !important; 
+    }
+    .custom-tooltip .ant-tooltip-inner {
+      margin-right: 20px;
+    }
   }
 }
