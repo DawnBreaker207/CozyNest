@@ -8,13 +8,11 @@ import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import AdminCustomerPage from '@/pages/admin/customer/page'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
-import Login from '@/pages/website/auth/Login'
-import Register from '@/pages/website/auth/Register'
-import ResetPassword from '@/pages/website/auth/ResetPassword'
-import CartPage from '@/pages/website/cart/CartPage'
+
 import OrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
 import HomePage from '@/pages/website/home/page'
+import Introduction from '@/pages/website/introduction/page'
 import LayoutWebsite from '@/pages/website/layout'
 import pageCheckOut from '@/pages/website/order/page'
 import page from '@/pages/website/products/page'
@@ -27,12 +25,9 @@ function App() {
       Component: LayoutWebsite,
       children: [
         { index: true, Component: HomePage },
-        { path: 'cart', Component: CartPage },
-        {path:'login',Component:Login},
-        {path:'register',Component:Register},
-        {path:'reset-password',Component:ResetPassword},
-        { path: 'products', Component: page } ,
-        {path: 'orders', Component:pageCheckOut}, 
+
+        { path: "/introduction", Component: Introduction }
+
       ]
     },
     {
