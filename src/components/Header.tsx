@@ -121,18 +121,18 @@ const Header = () => {
     <div>
       {/* header */}
       <div
-      className={`flex items-center justify-between bg-background fixed w-full top-0 z-40  bg-white shadow-md transition-all duration-500 `}
+      className={`flex items-center justify-between bg-background fixed w-full top-0 z-40  bg-white shadow-md transition-all duration-500  `}
     >
         <nav className='flex items-center justify-between px-[4%] bg-background w-full  '>
-          <div className=' md:w-[20%] sm:w-[50%] w-[45%]  '>
-            <img src='src/assets/icon/logo.jpg' className='w-full md:w-3/4 sm:w-1/2  ' alt='Logo' />
+        <div className=' md:w-[80%] md:h-[30%] sm:w-[50%] lg:w-[230px] w-[41%] '>
+            <img src='src/assets/icon/logo.jpg' className='w-full md:w-[94%]  sm:w-1/2 lg:w-[80%] lg:h-[50%] md:h-[74px]  ' alt='Logo' />
           </div>
-          <div className='hidden md:flex space-x-8 mr-20 text-lg'>
+          <div className='hidden md:flex md:items-center space-x-8 mr-20 text-lg md:text-base md:mr-[5px]'>
             <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
               Trang chủ
             </NavLink>
             <Dropdown menu={{ items: menus }}>
-              <NavLink to={'#'} className='bg-white'>
+              <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
                 Sản phẩm <DownOutlined className='text-xs ' />
               </NavLink>
             </Dropdown>
@@ -140,7 +140,7 @@ const Header = () => {
               Giới thiệu
             </NavLink>
             <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
-              Cẩm nang trang trí
+              Cẩm nang 
             </NavLink>
             <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
               Liên hệ
