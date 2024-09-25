@@ -1,14 +1,14 @@
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button } from 'antd'
 
 const ResetPassword = () => {
-  const onFinish = (values:any) => {
-    console.log('Reset Password Info:', values);
+  const onFinish = (values: any) => {
+    console.log('Reset Password Info:', values)
     // Gửi yêu cầu lấy lại mật khẩu đến server ở đây
-  };
+  }
 
-  const onFinishFailed = (errorInfo:any) => {
-    console.log('Failed:', errorInfo);
-  };
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo)
+  }
 
   return (
     <div
@@ -18,20 +18,25 @@ const ResetPassword = () => {
           "url('https://nhaxinh.com/wp-content/uploads/2021/11/nha-xinh-banner-thiet-ke-noi-that-new.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: 'fixed'
       }}
     >
       <div className='bg-white p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 rounded-lg shadow-md w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl bg-opacity-60'>
         <h2 className='text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6'>Lấy lại mật khẩu</h2>
-        <Form name='reset-password' layout='vertical' onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='off'>
-          
+        <Form
+          name='reset-password'
+          layout='vertical'
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete='off'
+        >
           {/* Trường Email */}
           <Form.Item
             label='Email'
             name='email'
             rules={[
               { required: true, message: 'Vui lòng nhập email!' },
-              { type: 'email', message: 'Email không hợp lệ!' },
+              { type: 'email', message: 'Email không hợp lệ!' }
             ]}
           >
             <Input className='p-2' />
@@ -55,7 +60,7 @@ const ResetPassword = () => {
         </Form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ResetPassword;
+export default ResetPassword

@@ -1,11 +1,11 @@
-import BannerProduct from "./_components/BannerProduct"
-import ProductList from "./_components/ProductList"
+import BannerProduct from './_components/BannerProduct'
+import ProductList from './_components/ProductList'
 
 const page = () => {
   return (
     <div>
-      <BannerProduct/>
-      <ProductList/>
+      <BannerProduct />
+      <ProductList />
     </div>
   )
 }

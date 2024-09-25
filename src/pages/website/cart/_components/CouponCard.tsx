@@ -30,7 +30,7 @@ const CouponCard = ({ couponCode, imageUrl, expirationDate, title, description, 
   return (
     <div className='mt-4 grid grid-cols-10 border border-gray-200 rounded-2xl p-2 items-center gap-4 lg:w-full w-50%'>
       <div className='p-2 col-span-3 mx-auto'>
-        <img src={imageUrl} alt='' className='w-[68px]'/>
+        <img src={imageUrl} alt='' className='w-[68px]' />
       </div>
       <div className='flex flex-col gap-4 col-span-7'>
         <div className='flex justify-between'>
@@ -68,12 +68,12 @@ const CouponCard = ({ couponCode, imageUrl, expirationDate, title, description, 
                     {condition}
                   </p>
                   <p className='flex items-center'>
-                    <div className='size-[6px] min-h-[6px] min-w-[6px] bg-black rounded-full mr-2'></div>Mỗi khách hàng được sử dụng tối đa
-                    1 lần.
+                    <div className='size-[6px] min-h-[6px] min-w-[6px] bg-black rounded-full mr-2'></div>Mỗi khách hàng
+                    được sử dụng tối đa 1 lần.
                   </p>
                   <p className='flex items-center'>
-                    <div className='size-[6px] min-h-[6px] min-w-[6px] bg-black rounded-full mr-2'></div>Sao chép mã và nhập mã khuyến mãi
-                    ở trang thanh toán
+                    <div className='size-[6px] min-h-[6px] min-w-[6px] bg-black rounded-full mr-2'></div>Sao chép mã và
+                    nhập mã khuyến mãi ở trang thanh toán
                   </p>
                 </div>
               </div>

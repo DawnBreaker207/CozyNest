@@ -1,9 +1,3 @@
-   
-
-
-
-
-
 import { Shoppingcart } from '@/components/icons'
 import { DoubleRightOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Drawer, Dropdown, MenuProps } from 'antd'
@@ -405,8 +399,10 @@ const ProductList = () => {
         {/* sản phẩm nổi bật */}
         <div className='bg-[#faefec] mt-10 mb-8 rounded'>
           <div className='flex flex-row justify-between px-8 p-2 '>
-          <h2 className='text-lg sm:text-2xl font-semibold text-center px-5 mt-4  '>Sản phẩm nổi bật</h2>
-          <Link to={'#'} className='flex text-[#FCA120] mr-0.5 mt-[20px] px-5 hover:text-black text-sm sm:mt-6'>Xem thêm <DoubleRightOutlined className='ml-1 -mt-1 ' /></Link>
+            <h2 className='text-lg sm:text-2xl font-semibold text-center px-5 mt-4  '>Sản phẩm nổi bật</h2>
+            <Link to={'#'} className='flex text-[#FCA120] mr-0.5 mt-[20px] px-5 hover:text-black text-sm sm:mt-6'>
+              Xem thêm <DoubleRightOutlined className='ml-1 -mt-1 ' />
+            </Link>
           </div>
           <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 items-center gap-5 sm:gap-10 lg:gap-20 mx-4 sm:mx-8 lg:mx-16 xl:mx-32 py-5'>
             <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
@@ -429,11 +425,11 @@ const ProductList = () => {
                   <span className='text-[#878c8f] font-light line-through text-[13px]'>1,250,000₫</span>
                 </div>
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
-                <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
-                </div>
-              </button>
+                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
+                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
+                    <Shoppingcart />
+                  </div>
+                </button>
               </div>
             </div>
             {/* end */}
@@ -457,11 +453,11 @@ const ProductList = () => {
                   <span className='text-[#878c8f] font-light line-through text-[13px]'>1,250,000₫</span>
                 </div>
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
-                <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
-                </div>
-              </button>
+                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
+                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
+                    <Shoppingcart />
+                  </div>
+                </button>
               </div>
             </div>
             {/* end */}
@@ -485,11 +481,11 @@ const ProductList = () => {
                   <span className='text-[#878c8f] font-light line-through text-[13px]'>1,250,000₫</span>
                 </div>
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
-                <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
-                </div>
-              </button>
+                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
+                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
+                    <Shoppingcart />
+                  </div>
+                </button>
               </div>
             </div>
             {/* end  */}
@@ -513,11 +509,11 @@ const ProductList = () => {
                   <span className='text-[#878c8f] font-light line-through text-[13px]'>1,250,000₫</span>
                 </div>
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
-                <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
-                </div>
-              </button>
+                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
+                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
+                    <Shoppingcart />
+                  </div>
+                </button>
               </div>
             </div>
           </div>
