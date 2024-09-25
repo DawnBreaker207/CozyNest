@@ -1,10 +1,9 @@
-// import './css.css'
 import { FaRegEye } from 'react-icons/fa'
 import CouponCard from '../../cart/_components/CouponCard'
 import { Shoppingcart } from '@/components/icons'
 import { useState } from 'react'
-import { FcNext } from 'react-icons/fc'
-import { MdOutlineArrowBackIos } from 'react-icons/md'
+import { GrFormNext } from 'react-icons/gr'
+import { GrFormPrevious } from 'react-icons/gr'
 const ProductDetail = () => {
   const [count, setCount] = useState(1)
 
@@ -35,100 +34,111 @@ const ProductDetail = () => {
     'https://product.hstatic.net/200000796751/product/kdp_4025_ff16975890de4709a9535fbfb02f96e9_master.jpg'
   ]
 
-  // const fb = "../image/pngtree-facebook-social-media-icon-facebook-logo-png-image_3654772.png"
-  // const link = "../image/pngtree-vector-link-icon-png-image_322157.jpg"
-  // const twitter = "../image/sm_5aeee44e137e1.jpg"
-  // const mess = "../image/sm_5aff608b8cae5.jpg"
-  // const chat = '../image/sm_5b321c98efaa6.jpg'
+  const fb = 'https://png.pngtree.com/element_our/sm/20180515/sm_5afaf0c36298b.jpg'
+  const link =
+    'https://media.istockphoto.com/id/1302329383/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-hai-chu%E1%BB%97i-li%C3%AAn-k%E1%BA%BFt-bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-%C4%91%C3%ADnh-k%C3%A8m-kh%C3%B3a.jpg?s=612x612&w=0&k=20&c=gmc2ecGI6aJlcPdiT98vTRYChEt59P5SMdihgaZpCzs='
+  const twitter = 'https://inkythuatso.com/uploads/thumbnails/800/2021/11/logo-twitter-inkythuatso-2-01-27-10-22-11.jpg'
+  const mess = 'https://png.pngtree.com/png-clipart/20190303/ourmid/pngtree-messenger-logo-icon-png-image_771438.jpg'
+  const chat = 'https://png.pngtree.com/element_our/sm/20180521/sm_5b02f93af13fd.jpg'
   const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
   return (
     <>
+      {/* <div className='bg-gray-100 container'> */}
       <div
-        className='bg-gray-100'
+        className={`btn-0  max-w-[93.75vw] bg-white item-center justify-center scale-up`}
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
+          // justifyContent: 'space-between',
           padding: '20px',
           width: '100%',
+          margin: '1px auto',
           boxSizing: 'border-box'
         }}
       >
         <div
-          className='bg-white ml-[15px] flex'
+          className={`img ml-[-10px] flex flex-col md:flex-row`}
           style={{
-            width: '616.5px',
-            height: '582px',
+            width: '100%',
+            maxWidth: '616.5px',
+            height: '100%',
             position: 'sticky',
+            // minHeight: '37.890625vw',
             top: '20px'
           }}
         >
-          {/* List ảnh nhỏ */}
-          <div className='ml-[8px] flex flex-col mr-[10px]'>
+          {/* List of Thumbnails */}
+          <div className='ml-[0.5208333333333334vw] flex flex-wrap md:flex-col mr-[10px] img-small-1'>
             {thumbnails.map((thumbnail, index) => (
               <img
                 key={index}
                 src={thumbnail}
                 alt={`Product Thumbnail ${index + 1}`}
-                className='w-[66px] h-[66px] mb-[10px] cursor-pointer'
+                className='w-[65px] h-[65px] mb-[10px] cursor-pointer img-small'
                 onClick={() => setActiveImageIndex(index)}
               />
             ))}
           </div>
 
-          {/* Ảnh chính của sản phẩm */}
-          <div className='relative w-[532px] h-[532px] overflow-hidden'>
+          <div className='relative big-img  w-[85vw] h-[85vw] md:w-[532px] md:h-[532px] overflow-hidden'>
             <div
               className='flex transition-transform duration-1000 ease-in-out'
               style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
             >
               {thumbnails.map((thumbnail, index) => (
-                <img key={index} src={thumbnail} alt={`Product Image ${index + 1}`} className='w-full h-full' />
+                <img
+                  key={index}
+                  src={thumbnail}
+                  alt={`Product Image ${index + 1}`}
+                  className='w-full h-full object-contain' // Keep image aspect ratio and fit within container
+                />
               ))}
             </div>
+
             <span className='w-[50px] h-[55px] absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded rounded-b-lg'>
               -29% OFF
             </span>
 
-            {/* Nút Back */}
+            {/* Back Button */}
             <button
               className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
               onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
             >
-              <MdOutlineArrowBackIos className='w-[35px] h-[35px] text-blue-500' />
+              <GrFormPrevious className='w-[35px] h-[35px]' />
             </button>
 
-            {/* Nút Next */}
+            {/* Next Button */}
             <button
               className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
               onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
             >
-              <FcNext className='w-[35px] h-[35px]' />
+              <GrFormNext className='w-[35px] h-[35px]' />
             </button>
           </div>
-          {/* <div>
-            <span>Chia sẻ</span>
-            <img src={fb} />
-            <img src={mess} />
-            <img src={twitter} />
-            <img src={chat} />
-            <img src={link} />
-          </div> */}
+
+          {/* Share Section */}
+          <div className='hidden share md:flex ml-[-440px] mt-[530px] z-50 items-center p-2'>
+            <span className='mr-2'>Chia sẻ:</span>
+            <img src={fb} className='w-[35px] h-[35px] ml-2' />
+            <img src={mess} className='w-[35px] h-[35px] ml-2' />
+            <img src={twitter} className='w-[35px] h-[35px] ml-2' />
+            <img src={chat} className='w-[35px] h-[35px] ml-2' />
+            <img src={link} className='w-[35px] h-[35px] ml-2' />
+          </div>
         </div>
 
-        <div style={{ width: '800px' }}>
-          <div className='bg-white ml-[-15px] mr-[15px]'>
-            <div className='ml-[15px]'>
+        <div className='info max-w-[850px] w-[100%]'>
+          <div className=' mx-[20px]'>
+            <div className='ml-[0.9765625vw]'>
               <div className='product-heading'>
                 <h1 className='text-red-500 font-bold text-[28px]'>
                   Bộ ấm trà bằng sứ BLACK &amp; WHITE hoa văn đen trắng
                 </h1>
-                <div style={{ display: 'flex', gap: '30px' }}>
+                <div className='flex gap-[30px]'>
                   <span id='pro_sku'>
-                    Mã sản phẩm: <strong className='text-red-500'>2001256</strong>{' '}
+                    Mã sản phẩm: <strong className='text-red-500'>2001256</strong>
                   </span>
                   <span className='pro-soldold'>
-                    Tình trạng:
-                    <strong className='text-red-500'>Còn hàng</strong>
+                    Tình trạng: <strong className='text-red-500'>Còn hàng</strong>
                   </span>
                   <span className='pro-vendor'>
                     Thương hiệu:{' '}
@@ -140,227 +150,203 @@ const ProductDetail = () => {
                   </span>
                 </div>
               </div>
-              <div className='price' style={{ marginTop: '30px' }}>
-                <span className='text-[19px] m-0 flex items-center mr-[150px] font-bold'>Giá:</span>
-                <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+
+              {/* Price Section */}
+              <div className='price w-full max-w-[720px] bg-gray-100 p-2 flex justify-start items-center mt-[30px]'>
+                <span className='name-price text-[19px] mr-[30px] font-bold'>Giá:</span>
+                <div className='pricedetail flex flex-row items-center gap-2 ml-[5.2734375vw]'>
                   <span className='text-[#FF0000] font-semibold text-[24px]'>890,000₫</span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px] text-[26px]'>1,250,000₫</span>
+                  <span className='text-[#878c8f] font-light line-through text-[16px]'>1,250,000₫</span>
+
+                  {/* Phần Giảm Giá */}
+                  <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>-29%</span>
                 </div>
               </div>
 
+              {/* Quantity Section */}
               <div className='btn_1'>
-                <div className='quantity-container' style={{ marginTop: '30px' }}>
-                  <h2 className='font-bold'>Số lượng:</h2>
-                  <div className='products-btn__count'>
-                    <button className='minus' onClick={decrease}>
+                <div className='quantity-container flex items-center' style={{ marginTop: '30px' }}>
+                  <h2 className='font-bold mr-[10px]'>Số lượng:</h2>
+                  <div className='products-btn__count flex items-center justify-between rounded p-[5px] min-w-[120px] border border-gray-300'>
+                    <button className='minus text-[16px] p-[10px]' onClick={decrease}>
                       -
                     </button>
                     <span className='font-bold'>{count}</span>
-                    <button className='plus' onClick={increase}>
+                    <button className='plus text-[16px] p-[10px]' onClick={increase}>
                       +
                     </button>
                   </div>
                 </div>
                 <div className='button-container'>
-                  <div className='button-container'>
-                    <button className='products__btn btn1 text-white'>
-                      <span>Thêm Vào Giỏ</span>
+                  <div className='button-container flex gap-[12px] mt-[22px]'>
+                    <button className='products__btn flex items-center justify-center relative z-10  btn1 hover:text-white bg-white max-w-[380px] w-[100%] h-[50px] border-2 border-red-500 text-red-500 overflow-hidden transition-colors duration-400 ease-in-out'>
+                      <span className='relative z-10 text-[16px]'>Thêm Vào Giỏ</span>
                     </button>
-                    <button className='products__btn btn2 bg-blue-600 text-white'>
-                      <span>Mua Ngay</span>
+                    <button className='products__btn flex items-center justify-center relative z-10 btn2 hover:text-white bg-white max-w-[380px] w-[100%] h-[50px] border-2 border-red-500 text-red-500 overflow-hidden transition-colors duration-400 ease-in-out'>
+                      <span className='relative z-10'>Mua Ngay</span>
                     </button>
                   </div>
                 </div>
               </div>
-              <div className='product-deliverly mb-0'>
-                <div className='deliverly-inner' style={{ marginTop: '10px' }}>
-                  <div className='row m-0 infoList-deliverly'>
-                    <div className='col-lg-4 col-md-6 col-12 deliverly-item'>
-                      <span>
-                        <img
-                          className='ls-is-cached lazyloaded'
-                          data-src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_1_ico.png?v=38'
-                          src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_1_ico.png?v=38'
-                          alt='1 Năm Bảo Hành'
-                        />
-                      </span>
-                      1 Năm Bảo Hành
-                    </div>
-                    <div className='col-lg-4 col-md-6 col-12 deliverly-item'>
-                      <span>
-                        <img
-                          className='ls-is-cached lazyloaded'
-                          data-src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_2_ico.png?v=38'
-                          src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_2_ico.png?v=38'
-                          alt='Hỗ trợ đổi trong 3 ngày cho sản phẩm nguyên giá'
-                        />
-                      </span>
-                      Hỗ trợ đổi trong 3 ngày cho sản phẩm nguyên giá
-                    </div>
-                    <div className='col-lg-4 col-md-6 col-12 deliverly-item'>
-                      <span>
-                        <img
-                          className='ls-is-cached lazyloaded'
-                          data-src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_3_ico.png?v=38'
-                          src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_3_ico.png?v=38'
-                          alt='Hotline: 1900 63 64 76(9-21h)'
-                        />
-                      </span>
-                      Hotline: <strong>1900 63 64 76</strong> (9-21h)
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='flex flex-wrap bg-white ml-[-15px] mr-[15px] min-h-[280px] mt-[10px]'>
-            <div className='flex flex-wrap gap-4 mt-2 ml-3'>
-              <div className='w-[48%]'>
-                <CouponCard
-                  couponCode={couponCode1}
-                  imageUrl='./src/assets/images/coupon/coupon_2_img.webp'
-                  expirationDate='10/10/2024'
-                  title='Miễn phí vận chuyển'
-                  description='Đơn hàng từ 300k'
-                  condition='Dành cho đơn hàng từ 300k'
-                />
-              </div>
-              <div className='w-[48%]'>
-                <CouponCard
-                  couponCode={couponCode2}
-                  imageUrl='./src/assets/images/coupon/coupon_1_img.webp'
-                  expirationDate='10/10/2024'
-                  title='Giảm 20%'
-                  description='Đơn hàng từ 200k'
-                  condition='Dành cho đơn hàng từ 200k'
-                />
-              </div>
-              <div className='w-[48%] mt-[-40px]'>
-                <CouponCard
-                  couponCode={couponCode3}
-                  imageUrl='./src/assets/images/coupon/coupon_3_img.webp'
-                  expirationDate='10/10/2024'
-                  title='Giảm 10%'
-                  description='Đơn hàng từ 100k'
-                  condition='Dành cho đơn hàng từ 100k'
-                />
-              </div>
-            </div>
-          </div>
 
-          <div
-            className={`transition-all duration-300 ease-in-out ${
-              isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'
-            } bg-white ml-[-15px] mr-[15px] mt-[15px] overflow-hidden`}
-          >
-            <div className='productDetail--navs mg-top mt-[15px] ml-[15px] ProductDetail'>
-              <div className='nav tab-title' id='nav-tab' role='tablist'>
-                <b className='nav-item active text-[24px] text-red-500' id='nav-home-tab' data-toggle='tab' role='tab'>
-                  Mô tả sản phẩm
-                </b>
+              {/* Delivery Section */}
+              <div className='product-delivery p-[10px]'>
+                <div className='flex gap-4 mt-[10px]'>
+                  <div className='flex items-center'>
+                    <img
+                      src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_1_ico.png?v=38'
+                      alt='1 Năm Bảo Hành'
+                      className='w-[30px] h-auto mr-[10px]'
+                    />
+                    1 Năm Bảo Hành
+                  </div>
+                  <div className='flex items-center'>
+                    <img
+                      src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_2_ico.png?v=38'
+                      alt='Hỗ trợ đổi trong 3 ngày'
+                      className='w-[30px] h-auto mr-[10px]'
+                    />
+                    Hỗ trợ đổi trong 3 ngày
+                  </div>
+                  <div className='flex items-center'>
+                    <img
+                      src='//theme.hstatic.net/200000796751/1001266995/14/product_deliverly_3_ico.png?v=38'
+                      alt='Hotline: 1900 63 64 76'
+                      className='w-[30px] h-auto mr-[10px]'
+                    />
+                    Hotline: <strong>1900 63 64 76</strong>
+                  </div>
+                </div>
               </div>
-              <hr className='mb-[20px]' />
-              <div className='tab-content' id='nav-tabContent'>
-                <div
-                  className={`tab-pane fade show active w-[758.5px] ${
-                    isCollapsed ? 'h-[250px]' : 'h-auto'
-                  } overflow-hidden transition-all duration-300 ease-in-out`}
-                  id='nav-desc'
-                  role='tabpanel'
-                >
-                  <div className='product-description'>
-                    <div className='description-content expandable-toggle relative'>
-                      <div
-                        className={`description-productdetail w-[750px] overflow-hidden transition-all duration-300 ease-in-out ${
-                          isCollapsed ? 'max-h-[180px]' : 'max-h-none'
-                        }`}
-                      >
-                        <p>
-                          Như cái tên “ Black &amp; White” đã thể hiện lên tông màu chủ đạo của bộ sưu tập này chỉ với
-                          hai màu đen và trắng kết hợp, sản phẩm đã toát lên vẻ đẹp thuần khiết, phóng khoáng pha chút
-                          huyền bí và sang trọng. Theo phong cách này, khách sử dụng dễ bày biện, trang trí, đặt đồ ăn
-                          lên trên. Sản phẩm được làm từ chất liệu sứ đảm bảo an toàn cho sức khỏe người dùng, dễ dàng
-                          bảo quản, tiện lợi khi sử dụng.
-                        </p>
-                        <p>----------</p>
-                        <table id='product-attribute-specs-table' className='table-auto w-full border-collapse'>
-                          <tbody>
-                            <tr>
-                              <th scope='row' className='text-left align-top pr-12'>
-                                Sản phẩm
-                              </th>
-                              <td className=''>Bộ ấm trà</td>
-                            </tr>
-                            <tr>
-                              <th scope='row' className='text-left align-top pr-12'>
-                                Bộ sưu tập
-                              </th>
-                              <td className=''>BLACK-&amp;-WHITE</td>
-                            </tr>
-                            <tr>
-                              <th scope='row' className='text-left align-top pr-12'>
-                                Kích cỡ
-                              </th>
-                              <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
-                            </tr>
-                            <tr>
-                              <th scope='row' className='text-left align-top pr-12'>
-                                Màu sắc
-                              </th>
-                              <td className=''>Màu trắng/ màu đen</td>
-                            </tr>
-                            <tr>
-                              <th scope='row' className='text-left align-top pr-12'>
-                                Chất liệu
-                              </th>
-                              <td className=''>Sứ</td>
-                            </tr>
-                            <tr>
-                              <th scope='row' className='text-left align-top pr-12'>
-                                Xuất xứ
-                              </th>
-                              <td className=''>Trung Quốc</td>
-                            </tr>
-                            <tr>
-                              <th scope='row' className='text-left align-top pr-12'>
-                                Đơn vị
-                              </th>
-                              <td className=''>SET</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        ----------
-                      </div>
+              <hr className='h-[1px] bg-black mt-[1.7615176151761518vh] border-none my-5' />
+
+              {/* Coupon Section */}
+              <div className='flex flex-wrap gap-4 mt-[10px]'>
+                <div className='coupon w-[48%]'>
+                  <CouponCard
+                    couponCode={couponCode1}
+                    imageUrl='./src/assets/images/coupon/coupon_2_img.webp'
+                    expirationDate='10/10/2024'
+                    title='Miễn phí vận chuyển'
+                    description='Đơn hàng từ 300k'
+                    condition='Dành cho đơn hàng từ 300k'
+                  />
+                </div>
+                <div className='coupon w-[48%]'>
+                  <CouponCard
+                    couponCode={couponCode2}
+                    imageUrl='./src/assets/images/coupon/coupon_1_img.webp'
+                    expirationDate='10/10/2024'
+                    title='Giảm 20%'
+                    description='Đơn hàng từ 200k'
+                    condition='Dành cho đơn hàng từ 200k'
+                  />
+                </div>
+                <div className='coupon w-[48%]'>
+                  <CouponCard
+                    couponCode={couponCode3}
+                    imageUrl='./src/assets/images/coupon/coupon_3_img.webp'
+                    expirationDate='10/10/2024'
+                    title='Giảm 10%'
+                    description='Đơn hàng từ 100k'
+                    condition='Dành cho đơn hàng từ 100k'
+                  />
+                </div>
+              </div>
+              <hr className='h-[1px] bg-black mt-[2.710027100271003vh] border-none my-5' />
+
+              {/* Product Description */}
+              <div
+                className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden mt-[10px]`}
+              >
+                <div className='productDetail--navs mg-top mt-[15px]'>
+                  <div className='nav tab-title'>
+                    <b className='nav-item active text-[24px] text-red-500'>Mô tả sản phẩm</b>
+                  </div>
+                  <hr className='mb-[20px]' />
+                  <div className={`tab-pane fade show active ${isCollapsed ? 'h-[250px]' : 'h-auto'} transition-all`}>
+                    <div
+                      className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
+                    >
+                      <p>
+                        Như cái tên “ Black &amp; White” đã thể hiện lên tông màu chủ đạo của bộ sưu tập này chỉ với hai
+                        màu đen và trắng kết hợp, sản phẩm đã toát lên vẻ đẹp thuần khiết, phóng khoáng pha chút huyền
+                        bí và sang trọng. Theo phong cách này, khách sử dụng dễ bày biện, trang trí, đặt đồ ăn lên trên.
+                        Sản phẩm được làm từ chất liệu sứ đảm bảo an toàn cho sức khỏe người dùng, dễ dàng bảo quản,
+                        tiện lợi khi sử dụng.
+                      </p>
+                      <p>--------------</p>
+                      {/* More product description details */}
+                      <table className='table-auto w-full border-collapse mt-[10px]'>
+                        <tbody>
+                          <tr>
+                            <th scope='row' className='btn-th text-left align-top pr-12'>
+                              Sản phẩm
+                            </th>
+                            <td className=''>Bộ ấm trà</td>
+                          </tr>
+                          <tr>
+                            <th scope='row' className='btn-th text-left align-top pr-12'>
+                              Bộ sưu tập
+                            </th>
+                            <td className=''>BLACK-&amp;-WHITE</td>
+                          </tr>
+                          <tr>
+                            <th scope='row' className='btn-th text-left align-top pr-12'>
+                              Kích cỡ
+                            </th>
+                            <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
+                          </tr>
+                          <tr>
+                            <th scope='row' className='btn-th text-left align-top pr-12'>
+                              Màu sắc
+                            </th>
+                            <td className=''>Màu trắng/ màu đen</td>
+                          </tr>
+                          <tr>
+                            <th scope='row' className='btn-th text-left align-top pr-12'>
+                              Chất liệu
+                            </th>
+                            <td className=''>Sứ</td>
+                          </tr>
+                          <tr>
+                            <th scope='row' className='btn-th text-left align-top pr-12'>
+                              Xuất xứ
+                            </th>
+                            <td className=''>Trung Quốc</td>
+                          </tr>
+                          <tr>
+                            <th scope='row' className='btn-th text-left align-top pr-12'>
+                              Đơn vị
+                            </th>
+                            <td className=''>SET</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
-                  <div className='description-btn flex justify-center mt-4'>
+                  <div className='description-btn flex justify-center mt-[10px]'>
                     <button
-                      className={`expandable-content_toggle js_expandable_content btn-closemore ${
-                        isCollapsed
-                          ? 'border border-red-500 text-red-500' // Thêm viền và màu chữ đỏ cho "Xem thêm"
-                          : 'text-red-500' // Chỉ màu chữ đỏ cho "Rút gọn nội dung"
-                      } p-2 rounded-md transition-all duration-300 ease-in-out`} // Thêm padding, bo góc, hiệu ứng chuyển đổi mượt mà
+                      className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-red-500' : 'text-red-500'} p-2 rounded-md`}
                       onClick={handleToggleCollapse}
                     >
-                      <span className='expandable-content_toggle-icon' />
-                      <span className='expandable-content_toggle-text text-[18px]'>
-                        {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
-                      </span>
+                      {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
                     </button>
                   </div>
                 </div>
-                <div className='tab-pane fade' id='nav-comment' role='tabpanel'></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className='bg-gray-100 h-[auto]'>
-        <div className='ml-[30px]'>
+      <div
+        className='bg-white h-[auto] max-w-[1519px] cata'
+        style={{ padding: '20px', width: '100%', margin: '1px auto' }}
+      >
+        <div className='ml-[2.808988764044944vw] container'>
           <h1 className='text-red-500 font-bold text-[25px] mb-[20px]'>Xem thêm sản phẩm cùng loại</h1>
-
           <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 mx-8'>
-            <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
+            <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
               <div className='relative'>
                 <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
                   <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
@@ -447,7 +433,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        <div className='ml-[30px] mt-[60px] h-[600px]'>
+        <div className='ml-[2.808988764044944vw] mt-[60px] h-[600px] container'>
           <h1 className='text-red-500 font-bold text-[25px] mb-[20px]'>Sản phẩm đã xem</h1>
           <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 mx-8'>
             <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
@@ -481,63 +467,11 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+      {/* </div> */}
 
       <style>{`
-        .quantity-container {
-          display: flex;
-          align-items: center;
-        }
-
-        .quantity-container h2 {
-          margin-right: 10px;
-        }
-
-        .products-btn__count {
-          display: flex;
-          align-items: center;
-          border: 1px solid #ccc; /* Khuôn bao quanh */
-          border-radius: 5px;
-          padding: 5px;
-          width: 120px;
-          justify-content: space-between;
-        }
-
-        .products-btn__count button {
-          // background-color: #f0f0f0; /* Nền cho nút */
-          border: none;
-          padding: 10px;
-          cursor: pointer;
-          font-size: 16px;
-          width: 30px; /* Độ rộng cố định cho nút */
-          text-align: center;
-        }
-
         .products-btn__count button:hover {
           transform: scale(1.8); /* Scale the button to 120% of its original size */
-        }
-
-        .button-container {
-          display: flex;
-          gap: 12px; /* Khoảng cách giữa hai nút */
-          margin-top: 12px;
-        }
-
-        .btn_1 {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .btn1, .btn2 {
-          background-color: white;
-          border: 2px solid red;
-          color: red;
-          position: relative;
-          overflow: hidden;
-          font-size: 16px;
-          width: 380px;
-          height: 50px;
-          transition: color 0.4s ease;
         }
 
         .btn1::after, .btn2::after {
@@ -556,64 +490,185 @@ const ProductDetail = () => {
           left: 0; /* Di chuyển lớp nền vào từ trái sang phải */
         }
 
-        .btn1:hover, .btn2:hover {
-          color: white; /* Khi hover, màu chữ sẽ chuyển thành trắng */
+        @media (min-width: 1025px) and (max-width: 1250px) {
+        .btn-0 {
+    display: flex;
+    // flex-direction: column;
+    gap: 10px;
+    background: white;
+    align-items: center; /* Căn giữa các item trong cột */
+  }
+
+  .thumbnail-container {
+    display: flex;
+    justify-content: center; /* Căn giữa các thumbnail */
+    margin-top: 10px;
+  }
+
+  .thumbnail {
+    width: 4.23177vw;
+    height: 4.23177vw;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .price {
+    max-width: 1024px; 
+    width: 100%;
+    text-align: center; /* Căn giữa văn bản */
+  }
+    .share{
+        display: none;
+    }
+    // .name-price{
+    //  display: none
+    // }
+  .info {
+    max-width: 1024px;
+    width: 70%;
+    text-align: center; /* Căn giữa văn bản */
+  }
+
+  .coupon {
+    width: 100%;
+    text-align: center; /* Căn giữa văn bản */
+  }
+
+  .product-delivery {
+    display: table-column; /* Giữ lại thuộc tính này nếu cần thiết, nhưng có thể cân nhắc điều chỉnh cho phù hợp */
+  }
+
+  .img {
+    // display: flex;
+    justify-content: center; /* Căn giữa ảnh */
+    margin-top: -1200px
+  }
         }
 
-        .products__btn {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: relative;
-          z-index: 1;
-        }
-.products__btn span {
-  position: relative;
-  z-index: 1;
+  @media (max-width: 1025px) {
+  .btn-0 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: white;
+    align-items: center; /* Căn giữa các item trong cột */
+  }
+
+  .thumbnail-container {
+    display: flex;
+    justify-content: center; /* Căn giữa các thumbnail */
+    margin-top: 10px;
+  }
+
+  .thumbnail {
+    width: 4.23177vw;
+    height: 4.23177vw;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .price {
+    max-width: 1024px; 
+    width: 100%;
+    text-align: center; /* Căn giữa văn bản */
+  }
+    .share{
+        display: none;
+    }
+    .name-price{
+     display: none
+    }
+  .info {
+    margin-top: 20px;
+    max-width: 1024px;
+    width: 70%;
+    text-align: center; /* Căn giữa văn bản */
+  }
+
+  .coupon {
+    width: 100%;
+    text-align: center; /* Căn giữa văn bản */
+  }
+
+  .product-delivery {
+    display: table-column; /* Giữ lại thuộc tính này nếu cần thiết, nhưng có thể cân nhắc điều chỉnh cho phù hợp */
+  }
+
+  .img {
+    position: static !important;
+    display: flex;
+    justify-content: center; /* Căn giữa ảnh */
+  }
+}
+  @media (max-width: 480px) {
+  .btn-0 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: white;
+    align-items: center; /* Căn giữa các item trong cột */
+  }
+
+  .btn-th{
+        width: 40%;
+  }
+
+  .thumbnail-container {
+    display: flex;
+    justify-content: center; /* Căn giữa các thumbnail */
+    margin-top: 10px;
+  }
+
+  .thumbnail {
+    width: 4.23177vw;
+    height: 4.23177vw;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .price {
+    max-width: 480px; 
+    width: 100%;
+    text-align: center; /* Căn giữa văn bản */
+  }
+
+  .img-small{
+        width: 35px;
+        height: 35px;
+  }
+
+  .img-small-1{
+        justify-content: center;
+        gap: 10px;
+  }
+        .pricedetail{
+        display: flex;
+        width: 400px;
+    }
+
+  .info {
+    margin-top: 20px;
+    max-width: 420px;
+    width: 400px;
+    text-align: center; /* Căn giữa văn bản */
+  }
+
+  .coupon {
+    width: 100%;
+    text-align: center; /* Căn giữa văn bản */
+  }
+
+  .product-delivery {
+    display: table-column; /* Giữ lại thuộc tính này nếu cần thiết, nhưng có thể cân nhắc điều chỉnh cho phù hợp */
+  }
+
+  .img {
+    position: static; /* Giữ nguyên */
+    display: flex;
+    justify-content: center; /* Căn giữa ảnh */
+  }
 }
 
-.product-deliverly {
-  padding: 10px; /* Thêm padding nếu cần */
-}
-
-.deliverly-inner {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.infoList-deliverly {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0px; /* Khoảng cách giữa các item */
-  margin: 0;
-  margin-left: -10px;
-  padding: 0;
-  list-style: none;
-}
-
-.deliverly-item {
-  display: flex;
-  align-items: center; /* Căn chỉnh logo và chữ theo chiều dọc */
-  flex: 1 1 calc(33.333% - 30px); /* Chiếm 1/3 chiều rộng của container, trừ khoảng cách */
-  margin-bottom: 10px; /* Khoảng cách dưới mỗi item */
-}
-
-.deliverly-item img {
-  width: 30px; /* Đặt kích thước cho logo */
-  height: auto; /* Giữ tỷ lệ kích thước của logo */
-  margin-right: 10px; /* Khoảng cách giữa logo và chữ */
-}
-
-.price {
-  width: 770px; /* Chiều rộng của div */
-  height: 60px; /* Chiều cao của div */
-  background-color: #f0f0f0; /* Màu nền xám */
-  display: flex;
-  align-items: center; /* Căn giữa nội dung theo chiều dọc */
-  justify-content: flex-start; /* Căn chỉnh nội dung theo chiều ngang bên trái */
-  padding-left: 10px; /* Khoảng cách giữa div và viền bên trái */
-  border: 1px solid #ddd; /* Đường viền nhẹ xung quanh div, tùy chọn */
-}
       `}</style>
     </>
   )
