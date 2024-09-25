@@ -7,6 +7,7 @@ import CartPage from '@/pages/website/cart/CartPage'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
 import { useRoutes } from 'react-router-dom'
+
 function App() {
   const routes = useRoutes([
     {
