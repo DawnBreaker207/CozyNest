@@ -28,12 +28,12 @@ const LayoutAdmin: React.FC = () => {
   const menu = {
     children: (
       <>
-        <Menu.Item key="1">Option 1</Menu.Item>
-        <Menu.Item key="2">Option 2</Menu.Item>
-        <Menu.Item key="3">Option 3</Menu.Item>
+        <Menu.Item key='1'>Option 1</Menu.Item>
+        <Menu.Item key='2'>Option 2</Menu.Item>
+        <Menu.Item key='3'>Option 3</Menu.Item>
       </>
-    ),
-  };
+    )
+  }
   const { id } = useParams()
   const renderHeader = (title: string) => (
     <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
@@ -105,8 +105,6 @@ const LayoutAdmin: React.FC = () => {
         />
       </Sider>
       <Layout>
-
-
         <Header style={{ padding: 0, background: colorBgContainer }}>
           <div className='flex justify-between items-center px-4 mt-4'>
             <div className='text-xl font-semibold '>Dashboard</div>

@@ -4,14 +4,14 @@ import Contactthree from './_components/Contactthree'
 import Contactfour from './_components/Contactfour'
 
 const Introduction = () => {
-    return (
-        <div>
-            <Contactone />
-            <Contacttwo />
-            <Contactthree />
-            <Contactfour />
-        </div>
-    )
+  return (
+    <div>
+      <Contactone />
+      <Contacttwo />
+      <Contactthree />
+      <Contactfour />
+    </div>
+  )
 }
 
 export default Introduction

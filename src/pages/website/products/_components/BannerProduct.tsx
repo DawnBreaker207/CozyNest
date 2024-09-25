@@ -1,16 +1,19 @@
-
-import { Breadcrumb } from "antd"
-import { Link } from "react-router-dom"
+import { Breadcrumb } from 'antd'
+import { Link } from 'react-router-dom'
 
 const BannerProduct = () => {
   const breadcrumbItems = [
     {
-      title: <Link className="text-white" to="/">Trang chủ</Link>,
+      title: (
+        <Link className='text-white' to='/'>
+          Trang chủ
+        </Link>
+      )
     },
     {
-      title: 'Tất cả sản phẩm',
-    },
-  ];
+      title: 'Tất cả sản phẩm'
+    }
+  ]
   return (
     <div>
       <div className='w-full  mx-auto relative mt-[58px]   '>
@@ -26,7 +29,7 @@ const BannerProduct = () => {
         {/* Content */}
         <div className='absolute inset-0 flex flex-col items-center justify-center text-center px-4 md:px-8'>
           <h1 className='text-white text-base md:text-2xl lg:text-3xl font-bold'>SẢN PHẨM</h1>
-          <Breadcrumb items={breadcrumbItems} className='text-white mt-2 text-sm md:text-base lg:text-lg'/>
+          <Breadcrumb items={breadcrumbItems} className='text-white mt-2 text-sm md:text-base lg:text-lg' />
         </div>
       </div>
     </div>

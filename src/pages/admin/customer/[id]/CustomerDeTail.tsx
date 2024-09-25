@@ -591,7 +591,7 @@ const AdminCustomerDetailPage = (props: Props) => {
               dataSource={dataSource}
               columns={columns}
               pagination={{
-                pageSize: 5 
+                pageSize: 5
               }}
             />
           </div>

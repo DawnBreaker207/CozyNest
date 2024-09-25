@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { Select } from 'antd';
+import { Select } from 'antd'
 
 const orders = [
   {
@@ -46,14 +46,14 @@ const orders = [
 ]
 
 interface StatusColors {
-  [key: string]: string;
-  Pending: string;
-  Completed: string;
+  [key: string]: string
+  Pending: string
+  Completed: string
 }
 const statusColors: StatusColors = {
   Pending: 'bg-red-100 text-red-800',
-  Completed: 'bg-green-100 text-green-800',
-};
+  Completed: 'bg-green-100 text-green-800'
+}
 
 const RecentOrders = () => {
   const [filter, setFilter] = useState('All')
