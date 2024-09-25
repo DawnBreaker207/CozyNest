@@ -1,6 +1,6 @@
 import { FaRegEye } from 'react-icons/fa'
 import CouponCard from '../../cart/_components/CouponCard'
-import { Shoppingcart } from '@/components/icons'
+import { Cart } from '@/components/icons/index'
 import { useState } from 'react'
 import { GrFormNext } from 'react-icons/gr'
 import { GrFormPrevious } from 'react-icons/gr'
@@ -369,7 +369,7 @@ const ProductDetail = () => {
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                   <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Shoppingcart />
+                    <Cart />
                   </div>
                 </button>
               </div>
@@ -397,7 +397,7 @@ const ProductDetail = () => {
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                   <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Shoppingcart />
+                    <Cart />
                   </div>
                 </button>
               </div>
@@ -425,7 +425,7 @@ const ProductDetail = () => {
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                   <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Shoppingcart />
+                    <Cart />
                   </div>
                 </button>
               </div>
@@ -459,7 +459,7 @@ const ProductDetail = () => {
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                   <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Shoppingcart />
+                    <Cart />
                   </div>
                 </button>
               </div>

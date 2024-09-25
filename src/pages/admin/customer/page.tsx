@@ -1,13 +1,11 @@
-import { download, filters, menu, search } from '@/components/icons'
+import { download, filters, search } from '@/components/icons'
 import { PlusOutlined } from '@ant-design/icons'
-import { Checkbox, FormProps, Pagination, Select, Switch } from 'antd'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Checkbox, Form, FormProps, Input, Modal, Pagination, Select, Switch } from 'antd'
+import { useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import { Link } from 'react-router-dom'
 
-type Props = {}
 type FieldType = {
   name?: string
   email?: string
@@ -17,11 +15,11 @@ type FieldType = {
   country?: string
   state?: string
 }
-const AdminCustomerPage = (props: Props) => {
+const AdminCustomerPage = () => {
   const [checkedId, setCheckedId] = useState<number[]>([])
   const [isModalVisible, setIsModalVisible] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-  const [pageSize] = useState(15); // Số lượng mục trên mỗi trang
+  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
+  const [pageSize] = useState(15) // Số lượng mục trên mỗi trang
 
   const showModal = () => {
     setIsModalVisible(true)
@@ -68,16 +66,16 @@ const AdminCustomerPage = (props: Props) => {
     { id: 17, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' },
     { id: 18, name: 'Mohammad Karim', status: false, orders: '12,091', balance: '$12,091' },
     { id: 19, name: 'John Bushmill', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 20, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' },
+    { id: 20, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' }
   ]
   // Tính toán danh sách người dùng cho trang hiện tại
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const currentUsers = users.slice(startIndex, endIndex);
+  const startIndex = (currentPage - 1) * pageSize
+  const endIndex = startIndex + pageSize
+  const currentUsers = users.slice(startIndex, endIndex)
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+    setCurrentPage(page)
+  }
   return (
     <div className='font-poppin'>
       <div className='flex space-x-5 justify-between'>

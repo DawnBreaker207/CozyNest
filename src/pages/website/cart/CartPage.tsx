@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import CouponCard from './_components/CouponCard'
 
-type Props = {}
-
-const CartPage = (props: Props) => {
+const CartPage = () => {
   const [count, setCount] = useState(1)
 
   const increase = () => {
@@ -21,7 +19,9 @@ const CartPage = (props: Props) => {
   return (
     <div className='mb-[50px] mt-[110px]'>
       <div className='lg:mx-20 md:mx-10 mx-4'>
-        <span className='text-sm font-light text-[#252A2B]'>Trang chủ / Giỏ hàng <span className=''>(1)</span></span>
+        <span className='text-sm font-light text-[#252A2B]'>
+          Trang chủ / Giỏ hàng <span className=''>(1)</span>
+        </span>
         <div className='flex flex-col lg:flex-row mt-5 gap-6 w-full'>
           <div className='lg:w-[70%] w-full p-3 border border-gray-300 rounded-xl h-min'>
             <h2 className='text-xl font-semibold mb-2 text-[#fca120]'>Giỏ hàng của bạn</h2>

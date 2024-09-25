@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
 import { Tooltip } from 'antd'
+import { useState } from 'react'
 
 interface CouponCardProps {
   couponCode: string

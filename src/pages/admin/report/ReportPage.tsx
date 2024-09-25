@@ -188,7 +188,7 @@ const ReportsPage = () => {
         <PieChart width={530} height={250}>
           <Pie data={data3} cx='50%' cy='50%' outerRadius={80} label dataKey='value'>
             {data.map((_, index) => (
-              <Cell  key={`cell-${index}`} fill={colors[index]} />
+              <Cell key={`cell-${index}`} fill={colors[index]} />
             ))}
           </Pie>
         </PieChart>

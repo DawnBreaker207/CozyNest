@@ -1,10 +1,8 @@
-import { Shoppingcart } from '@/components/icons'
+import { Cart } from '@/components/icons/index'
 import { FaRegEye } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
-type Props = {}
-
-const ProductList = (props: Props) => {
+const ProductList = () => {
   return (
     <>
       <h2 className='text-center text-[25px] sm:text-[45px] mb-8 mt-10 md:mt-20 text-[#FCA120]'>Sản phẩm mới ra mắt</h2>
@@ -25,6 +23,7 @@ const ProductList = (props: Props) => {
               </span>
             </div>
           </Link>
+
           <div className='mx-2 text-center space-y-2 mt-3'>
             <h3>Ấm trà inox không ghỉ</h3>
             <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
@@ -34,7 +33,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -64,7 +63,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -93,7 +92,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -122,7 +121,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -151,7 +150,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -180,7 +179,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -209,7 +208,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -238,7 +237,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -267,7 +266,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>
@@ -296,7 +295,7 @@ const ProductList = (props: Props) => {
             <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
               <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
               <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                <Shoppingcart />
+                <Cart />
               </div>
             </button>
           </div>

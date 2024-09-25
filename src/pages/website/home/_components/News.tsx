@@ -60,17 +60,14 @@ const News: React.FC = () => {
         >
           <LeftOutlined />
         </Button>
-        <h1 className="text-center text-[25px] sm:text-[45px] mb-2 mx-auto text-[#FCA120]">Tin tức nổi bật</h1>
-        <div
-          ref={scrollContainerRef}
-          className="overflow-hidden scrollbar-hide flex flex-nowrap p-4"
-        >
+        <h1 className='text-center text-[25px] sm:text-[45px] mb-2 mx-auto text-[#FCA120]'>Tin tức nổi bật</h1>
+        <div ref={scrollContainerRef} className='overflow-hidden scrollbar-hide flex flex-nowrap p-4'>
           {newsItems.map((article, index) => (
             <Card
               key={index}
               hoverable
-              className="flex-shrink-0 w-1/3 m-4 rounded-lg shadow-lg overflow-hidden relative bg-white"
-              cover={<img alt={article.title} src={article.image} className="rounded-t-lg" />}
+              className='flex-shrink-0 w-1/3 m-4 rounded-lg shadow-lg overflow-hidden relative bg-white'
+              cover={<img alt={article.title} src={article.image} className='rounded-t-lg' />}
             >
               <div className='absolute top-0 left-0 bg-white text-gray-500 px-2 py-1 rounded-br-lg'>{article.date}</div>
               <Meta
@@ -96,7 +93,7 @@ const News: React.FC = () => {
 
       {/* Mobile carousel view, hidden on desktop */}
       <div className='block md:hidden mt-10'>
-      <h1 className="text-center text-[25px] sm:text-[45px] mb-10 mx-auto text-[#FCA120]">Tin tức nổi bật</h1>
+        <h1 className='text-center text-[25px] sm:text-[45px] mb-10 mx-auto text-[#FCA120]'>Tin tức nổi bật</h1>
         <Carousel
           slidesToShow={2}
           dots
@@ -116,7 +113,7 @@ const News: React.FC = () => {
                 arrows: false
               }
             }
-          ]}  
+          ]}
         >
           {newsItems.map((newsItem, index) => (
             <div key={index} className='px-2'>
