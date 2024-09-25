@@ -23,7 +23,6 @@ function App() {
 
         { path: 'cart', Component: CartPage },
         { path: 'check_out_order', Component: CheckOutOder }
-
       ]
     },
     {
