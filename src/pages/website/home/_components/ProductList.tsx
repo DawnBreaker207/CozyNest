@@ -1,4 +1,4 @@
-import { Shoppingcart } from '@/components/icons'
+import { Shoppingcart } from '@/components/icons/index'
 import { FaRegEye } from 'react-icons/fa'
 
 type Props = {}

@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
 
+
         Spectral: ['Spectral', 'sans-serif'],
 
         // Ađ new custom font
@@ -22,8 +23,6 @@ export default {
       boxShadow: {
         shadowUser: '0px 4px 30px 0px rgba(46, 45, 116, 0.05)',
       },
-
-
     },
     plugins: [
 
