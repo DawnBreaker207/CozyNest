@@ -8,13 +8,19 @@ import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import AdminCustomerPage from '@/pages/admin/customer/page'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
+
 import OrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
 import HomePage from '@/pages/website/home/page'
+// import Introduction from '@/pages/website/introduction/page'
 import LayoutWebsite from '@/pages/website/layout'
+
+import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
+
 import { useRoutes } from 'react-router-dom'
 import NewPage from '@/pages/website/newpage/newpage'
 import ContactPage from '@/pages/website/contact/contact'
+import CartPage from '@/pages/website/cart/CartPage'
 
 function App() {
   const routes = useRoutes([
@@ -24,7 +30,10 @@ function App() {
       children: [
         { index: true, Component: HomePage },
         { path: 'contact', Component: ContactPage },
-        { path: 'newpage', Component: NewPage }
+        { path: 'newpage', Component: NewPage },
+        { path: 'cart', Component: CartPage },
+        { path: 'check_out_order', Component: CheckOutOder }
+
       ]
     },
     {
