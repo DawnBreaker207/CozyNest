@@ -10,7 +10,7 @@ export default {
         custom: ['CustomFont', 'sans-serif']
       },
 
-      poppin: ['Poppins', 'sans-serif']
+      poppins: ['Poppins', 'sans-serif']
     },
     colors: {
       customBlue: 'rgba(58, 91, 255, 0.15)',
