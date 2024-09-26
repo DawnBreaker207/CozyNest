@@ -186,12 +186,12 @@ const columns = [
 const menu = {
   children: (
     <>
-      <Menu.Item key="1">Option 1</Menu.Item>
-      <Menu.Item key="2">Option 2</Menu.Item>
-      <Menu.Item key="3">Option 3</Menu.Item>
+      <Menu.Item key='1'>Option 1</Menu.Item>
+      <Menu.Item key='2'>Option 2</Menu.Item>
+      <Menu.Item key='3'>Option 3</Menu.Item>
     </>
-  ),
-};
+  )
+}
 
 const OrderPage = () => {
   const [form] = Form.useForm()
@@ -220,7 +220,7 @@ const OrderPage = () => {
             <Button type='dashed'>All Orders</Button>
           </div>
           <DatePicker placeholder='Select Date' className='mr-2' />
-          
+
           <Dropdown menu={menu}>
             <Button>
               Filters <DownOutlined />

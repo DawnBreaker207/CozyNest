@@ -1,5 +1,5 @@
-import { Table, Tag, Space, Button } from 'antd'
-import { EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { Button, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
 
 interface CategoryRecord {
@@ -10,7 +10,6 @@ interface CategoryRecord {
   products: number
   createdAt: string
 }
-
 const columns = [
   {
     title: 'Product Name',
@@ -18,7 +17,7 @@ const columns = [
     key: 'name',
     render: (_: string, record: CategoryRecord) => (
       <Space size='middle'>
-        <div >
+        <div>
           <div>{record.name}</div>
           <div style={{ color: 'gray' }}>{record.products} Products</div>
         </div>
@@ -77,6 +76,5 @@ const data: CategoryRecord[] = [
   // Add more data here if needed
 ]
 
-const CategoryPage = () => <Table  columns={columns} dataSource={data} pagination={false} />
-
+const CategoryPage = () => <Table columns={columns} dataSource={data} pagination={false} />
 export default CategoryPage
