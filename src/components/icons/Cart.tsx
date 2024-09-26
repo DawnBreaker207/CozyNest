@@ -1,8 +1,4 @@
-import React from 'react'
-
-type Props = {}
-
-const Shoppingcart = (props: Props) => {
+const Cart = () => {
   return (
     <>
       <svg className='size-4' version='1.0' viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg' fill='white'>
@@ -15,4 +11,4 @@ const Shoppingcart = (props: Props) => {
   )
 }
 
-export default Shoppingcart
+export default Cart

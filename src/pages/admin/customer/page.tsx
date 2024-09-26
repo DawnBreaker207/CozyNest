@@ -1,13 +1,11 @@
-import { download, filters, menu, search } from '@/components/icons'
+import { download, filters, search } from '@/components/icons'
 import { PlusOutlined } from '@ant-design/icons'
-import { Checkbox, FormProps, Pagination, Select, Switch } from 'antd'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Checkbox, Form, FormProps, Input, Modal, Pagination, Select, Switch } from 'antd'
+import { useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import { Link } from 'react-router-dom'
 
-type Props = {}
 type FieldType = {
   name?: string
   email?: string
@@ -17,7 +15,7 @@ type FieldType = {
   country?: string
   state?: string
 }
-const AdminCustomerPage = (props: Props) => {
+const AdminCustomerPage = () => {
   const [checkedId, setCheckedId] = useState<number[]>([])
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại

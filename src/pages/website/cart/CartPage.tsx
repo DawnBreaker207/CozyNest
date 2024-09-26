@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import CouponCard from './_components/CouponCard'
 
-type Props = {}
-
-const CartPage = (props: Props) => {
+const CartPage = () => {
   const [count, setCount] = useState(1)
 
   const increase = () => {

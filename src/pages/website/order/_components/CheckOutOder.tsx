@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Button, Table } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
+import { Button, Table } from 'antd'
+import { useState } from 'react'
 
 const CheckOutOrder = () => {
   const [isOrderDetailsVisible, setIsOrderDetailsVisible] = useState(false)

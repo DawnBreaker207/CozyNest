@@ -9,7 +9,6 @@ export default {
         // Ađ new custom font
         custom: ['CustomFont', 'sans-serif']
       },
-
       poppins: ['Poppins', 'sans-serif']
     },
     colors: {

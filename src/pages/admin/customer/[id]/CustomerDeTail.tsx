@@ -1,10 +1,7 @@
-import React from 'react'
-import { Select, Table } from 'antd'
 import { filters } from '@/components/icons'
+import { Select, Table } from 'antd'
 
-type Props = {}
-
-const AdminCustomerDetailPage = (props: Props) => {
+const AdminCustomerDetailPage = () => {
   const dataSource = [
     {
       key: '1',

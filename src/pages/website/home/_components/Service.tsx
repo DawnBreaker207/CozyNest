@@ -1,5 +1,4 @@
-import React from 'react'
-import { QuestionCircleOutlined, GiftOutlined, CreditCardOutlined, ReloadOutlined } from '@ant-design/icons'
+import { CreditCardOutlined, GiftOutlined, QuestionCircleOutlined, ReloadOutlined } from '@ant-design/icons'
 
 const Service = () => {
   const services = [

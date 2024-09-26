@@ -1,4 +1,4 @@
-import { Shoppingcart } from '@/components/icons'
+import { Cart } from '@/components/icons/index'
 import { DoubleRightOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Drawer, Dropdown, MenuProps } from 'antd'
 import { useState } from 'react'
@@ -128,7 +128,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -157,7 +157,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -186,7 +186,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -215,7 +215,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -244,7 +244,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -273,7 +273,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -302,7 +302,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -331,7 +331,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -360,7 +360,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -389,7 +389,7 @@ const ProductList = () => {
               <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                 <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Shoppingcart />
+                  <Cart />
                 </div>
               </button>
             </div>
@@ -427,7 +427,7 @@ const ProductList = () => {
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                   <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Shoppingcart />
+                    <Cart />
                   </div>
                 </button>
               </div>
@@ -455,7 +455,7 @@ const ProductList = () => {
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                   <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Shoppingcart />
+                    <Cart />
                   </div>
                 </button>
               </div>
@@ -483,7 +483,7 @@ const ProductList = () => {
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                   <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Shoppingcart />
+                    <Cart />
                   </div>
                 </button>
               </div>
@@ -511,7 +511,7 @@ const ProductList = () => {
                 <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
                   <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Shoppingcart />
+                    <Cart />
                   </div>
                 </button>
               </div>
