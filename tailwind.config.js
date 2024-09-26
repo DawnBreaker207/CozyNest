@@ -6,7 +6,7 @@ export default {
       fontFamily: {
         Spectral: ['Spectral', 'sans-serif'],
 
-        // Add new custom font
+        // Ađ new custom font
         custom: ['CustomFont', 'sans-serif']
       },
       poppins: ['Poppins', 'sans-serif']
