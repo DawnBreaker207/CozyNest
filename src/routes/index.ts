@@ -13,6 +13,9 @@ import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 import { useRoutes } from 'react-router-dom'
 import ProductDetail from '@/pages/website/products/detail/DetailPage'
 import Introduction from '@/pages/website/introduction/page'
+import NewPage from '@/pages/website/newpage/newpage'
+import ContactPage from '@/pages/website/contact/contact'
+
 function App() {
   const routes = useRoutes([
     {
@@ -21,6 +24,8 @@ function App() {
       children: [
         { index: true, Component: HomePage },
         { path: 'detail', Component: ProductDetail },
+        { path: 'contact', Component: ContactPage },
+        { path: 'newpage', Component: NewPage },
         { path: 'cart', Component: CartPage },
         { path: 'check_out_order', Component: CheckOutOder },
         { path: 'order', Component: OrderPage },
