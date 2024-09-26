@@ -117,11 +117,11 @@ const Header = () => {
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
   return (
-    <div>
-      {/* header */}
-      <div
-        className={`flex items-center justify-between bg-background fixed w-full top-0 z-40  bg-white shadow-md transition-all duration-500  `}
-      >
+    <div className='sticky bg-header bg-while z-50 bg-red-500  w-full top-0'>
+    {/* header */}
+    <div
+      className={`flex items-center justify-between bg-background shadow-md transition-all duration-500  `}
+    >
         <nav className='flex items-center justify-between px-[4%] bg-background w-full  '>
           <div className=' md:w-[80%] md:h-[30%] sm:w-[50%] lg:w-[230px] w-[41%] '>
             <img
@@ -245,7 +245,7 @@ const Header = () => {
           </Drawer>
         </nav>
       </div>
-      <hr />
+      <hr className='border border-[#E0E2E7]' />
     </div>
   )
 }
