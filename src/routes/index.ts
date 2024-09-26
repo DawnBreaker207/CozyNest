@@ -8,6 +8,9 @@ import OrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
+import { useRoutes } from 'react-router-dom'
+import NewPage from '@/pages/website/newpage/newpage'
+import ContactPage from '@/pages/website/contact/contact'
 import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 
 import { useRoutes } from 'react-router-dom'
@@ -20,6 +23,8 @@ function App() {
       Component: LayoutWebsite,
       children: [
         { index: true, Component: HomePage },
+        { path: 'contact', Component: ContactPage },
+        { path: 'newpage', Component: NewPage }
         { path: 'detail', Component: ProductDetail },
         { path: 'cart', Component: CartPage },
         { path: 'check_out_order', Component: CheckOutOder },
