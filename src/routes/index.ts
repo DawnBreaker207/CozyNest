@@ -9,10 +9,10 @@ import ReportsPage from '@/pages/admin/report/ReportPage'
 import HomePage from '@/pages/website/home/page'
 import Introduction from '@/pages/website/introduction/page'
 import LayoutWebsite from '@/pages/website/layout'
-import ProductDetail from '@/pages/website/product/detail/DetailPage'
 import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 
 import { useRoutes } from 'react-router-dom'
+import ProductDetail from '@/pages/website/products/detail/DetailPage'
 function App() {
   const routes = useRoutes([
     {

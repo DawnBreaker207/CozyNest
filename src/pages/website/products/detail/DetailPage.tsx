@@ -44,88 +44,73 @@ const ProductDetail = () => {
   return (
     <>
       {/* <div className='bg-gray-100 container'> */}
-      <div
-        className={`btn-0  max-w-[93.75vw] bg-white item-center justify-center scale-up`}
-        style={{
-          display: 'flex',
-          // justifyContent: 'space-between',
-          padding: '20px',
-          width: '100%',
-          margin: '1px auto',
-          boxSizing: 'border-box'
-        }}
-      >
+      <div className='lg:flex mt-16'>
         <div
-          className={`img ml-[-10px] flex flex-col md:flex-row`}
-          style={{
-            width: '100%',
-            maxWidth: '616.5px',
-            height: '100%',
-            position: 'sticky',
-            // minHeight: '37.890625vw',
-            top: '20px'
-          }}
+          className={`btn-0 max-w-[93.75vw]   bg-white lg:flex justify-center py-[20px] w-full mx-auto box-border lg:scale-up`}
         >
-          {/* List of Thumbnails */}
-          <div className='ml-[0.5208333333333334vw] flex flex-wrap md:flex-col mr-[10px] img-small-1'>
-            {thumbnails.map((thumbnail, index) => (
-              <img
-                key={index}
-                src={thumbnail}
-                alt={`Product Thumbnail ${index + 1}`}
-                className='w-[65px] h-[65px] mb-[10px] cursor-pointer img-small'
-                onClick={() => setActiveImageIndex(index)}
-              />
-            ))}
-          </div>
-
-          <div className='relative big-img  w-[85vw] h-[85vw] md:w-[532px] md:h-[532px] overflow-hidden'>
-            <div
-              className='flex transition-transform duration-1000 ease-in-out'
-              style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
-            >
+          <div
+            className={`img lg:ml-[-10px] flex flex-col md:flex-row w-full max-w-[616.5px] h-full sticky top-[20px]`}
+          >
+            {/* List of Thumbnails */}
+            <div className='lg:ml-[0.5208333333333334vw] flex flex-wrap md:flex-col mr-[10px] img-small-1'>
               {thumbnails.map((thumbnail, index) => (
                 <img
                   key={index}
                   src={thumbnail}
-                  alt={`Product Image ${index + 1}`}
-                  className='w-full h-full object-contain' // Keep image aspect ratio and fit within container
+                  alt={`Product Thumbnail ${index + 1}`}
+                  className='w-[65px] h-[65px] mb-[10px] cursor-pointer img-small'
+                  onClick={() => setActiveImageIndex(index)}
                 />
               ))}
             </div>
 
-            <span className='w-[50px] h-[55px] absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded rounded-b-lg'>
-              -29% OFF
-            </span>
+            <div className='relative mx-auto lg:mx-0 big-img  w-[85vw] h-[85vw] md:w-[532px] md:h-[532px] block overflow-hidden'>
+              <div
+                className='flex  lg:mx-auto transition-transform duration-1000 ease-in-out'
+                style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+              >
+                {thumbnails.map((thumbnail, index) => (
+                  <img
+                    key={index}
+                    src={thumbnail}
+                    alt={`Product Image ${index + 1}`}
+                    className='w-full h-full object-contain' // Keep image aspect ratio and fit within container
+                  />
+                ))}
+              </div>
 
-            {/* Back Button */}
-            <button
-              className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
-              onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
-            >
-              <GrFormPrevious className='w-[35px] h-[35px]' />
-            </button>
+              <span className='w-[50px] h-[55px] absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded rounded-b-lg'>
+                -29% OFF
+              </span>
 
-            {/* Next Button */}
-            <button
-              className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
-              onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
-            >
-              <GrFormNext className='w-[35px] h-[35px]' />
-            </button>
-          </div>
+              {/* Back Button */}
+              <button
+                className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
+                onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
+              >
+                <GrFormPrevious className='w-[35px] h-[35px]' />
+              </button>
 
-          {/* Share Section */}
-          <div className='hidden share md:flex ml-[-440px] mt-[530px] z-50 items-center p-2'>
-            <span className='mr-2'>Chia sẻ:</span>
-            <img src={fb} className='w-[35px] h-[35px] ml-2' />
-            <img src={mess} className='w-[35px] h-[35px] ml-2' />
-            <img src={twitter} className='w-[35px] h-[35px] ml-2' />
-            <img src={chat} className='w-[35px] h-[35px] ml-2' />
-            <img src={link} className='w-[35px] h-[35px] ml-2' />
+              {/* Next Button */}
+              <button
+                className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
+                onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
+              >
+                <GrFormNext className='w-[35px] h-[35px]' />
+              </button>
+            </div>
+
+            {/* Share Section */}
+            <div className='hidden share md:flex  lg:ml-[-440px]  z-50 items-center p-2'>
+              <span className='mr-2'>Chia sẻ:</span>
+              <img src={fb} className='w-[35px] h-[35px] ml-2' />
+              <img src={mess} className='w-[35px] h-[35px] ml-2' />
+              <img src={twitter} className='w-[35px] h-[35px] ml-2' />
+              <img src={chat} className='w-[35px] h-[35px] ml-2' />
+              <img src={link} className='w-[35px] h-[35px] ml-2' />
+            </div>
           </div>
         </div>
-
         <div className='info max-w-[850px] w-[100%]'>
           <div className=' mx-[20px]'>
             <div className='ml-[0.9765625vw]'>
@@ -221,8 +206,8 @@ const ProductDetail = () => {
               <hr className='h-[1px] bg-black mt-[1.7615176151761518vh] border-none my-5' />
 
               {/* Coupon Section */}
-              <div className='flex flex-wrap gap-4 mt-[10px]'>
-                <div className='coupon w-[48%]'>
+              <div className='lg:flex   lg:flex-wrap  lg:space-x-0  lg:gap-4 mt-[10px]'>
+                <div className='coupon w-1/2,5 lg:w-[48%]'>
                   <CouponCard
                     couponCode={couponCode1}
                     imageUrl='./src/assets/images/coupon/coupon_2_img.webp'
@@ -232,7 +217,7 @@ const ProductDetail = () => {
                     condition='Dành cho đơn hàng từ 300k'
                   />
                 </div>
-                <div className='coupon w-[48%]'>
+                <div className='coupon w-1/2,5 lg:w-[48%]'>
                   <CouponCard
                     couponCode={couponCode2}
                     imageUrl='./src/assets/images/coupon/coupon_1_img.webp'
@@ -242,7 +227,7 @@ const ProductDetail = () => {
                     condition='Dành cho đơn hàng từ 200k'
                   />
                 </div>
-                <div className='coupon w-[48%]'>
+                <div className='coupon w-1/2,5 lg:w-[48%]'>
                   <CouponCard
                     couponCode={couponCode3}
                     imageUrl='./src/assets/images/coupon/coupon_3_img.webp'
@@ -339,6 +324,7 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
       <div
         className='bg-white h-[auto] max-w-[1519px] cata'
         style={{ padding: '20px', width: '100%', margin: '1px auto' }}
@@ -468,208 +454,6 @@ const ProductDetail = () => {
         </div>
       </div>
       {/* </div> */}
-
-      <style>{`
-        .products-btn__count button:hover {
-          transform: scale(1.8); /* Scale the button to 120% of its original size */
-        }
-
-        .btn1::after, .btn2::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%; /* Bắt đầu từ ngoài màn hình */
-          width: 100%;
-          height: 100%;
-          background-color: red;
-          transition: left 0.4s ease; /* Chuyển động mượt mà */
-          z-index: 0;
-        }
-
-        .btn1:hover::after, .btn2:hover::after {
-          left: 0; /* Di chuyển lớp nền vào từ trái sang phải */
-        }
-
-        @media (min-width: 1025px) and (max-width: 1250px) {
-        .btn-0 {
-    display: flex;
-    // flex-direction: column;
-    gap: 10px;
-    background: white;
-    align-items: center; /* Căn giữa các item trong cột */
-  }
-
-  .thumbnail-container {
-    display: flex;
-    justify-content: center; /* Căn giữa các thumbnail */
-    margin-top: 10px;
-  }
-
-  .thumbnail {
-    width: 4.23177vw;
-    height: 4.23177vw;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-
-  .price {
-    max-width: 1024px; 
-    width: 100%;
-    text-align: center; /* Căn giữa văn bản */
-  }
-    .share{
-        display: none;
-    }
-    // .name-price{
-    //  display: none
-    // }
-  .info {
-    max-width: 1024px;
-    width: 70%;
-    text-align: center; /* Căn giữa văn bản */
-  }
-
-  .coupon {
-    width: 100%;
-    text-align: center; /* Căn giữa văn bản */
-  }
-
-  .product-delivery {
-    display: table-column; /* Giữ lại thuộc tính này nếu cần thiết, nhưng có thể cân nhắc điều chỉnh cho phù hợp */
-  }
-
-  .img {
-    // display: flex;
-    justify-content: center; /* Căn giữa ảnh */
-    margin-top: -1200px
-  }
-        }
-
-  @media (max-width: 1025px) {
-  .btn-0 {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: white;
-    align-items: center; /* Căn giữa các item trong cột */
-  }
-
-  .thumbnail-container {
-    display: flex;
-    justify-content: center; /* Căn giữa các thumbnail */
-    margin-top: 10px;
-  }
-
-  .thumbnail {
-    width: 4.23177vw;
-    height: 4.23177vw;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-
-  .price {
-    max-width: 1024px; 
-    width: 100%;
-    text-align: center; /* Căn giữa văn bản */
-  }
-    .share{
-        display: none;
-    }
-    .name-price{
-     display: none
-    }
-  .info {
-    margin-top: 20px;
-    max-width: 1024px;
-    width: 70%;
-    text-align: center; /* Căn giữa văn bản */
-  }
-
-  .coupon {
-    width: 100%;
-    text-align: center; /* Căn giữa văn bản */
-  }
-
-  .product-delivery {
-    display: table-column; /* Giữ lại thuộc tính này nếu cần thiết, nhưng có thể cân nhắc điều chỉnh cho phù hợp */
-  }
-
-  .img {
-    position: static !important;
-    display: flex;
-    justify-content: center; /* Căn giữa ảnh */
-  }
-}
-  @media (max-width: 480px) {
-  .btn-0 {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: white;
-    align-items: center; /* Căn giữa các item trong cột */
-  }
-
-  .btn-th{
-        width: 40%;
-  }
-
-  .thumbnail-container {
-    display: flex;
-    justify-content: center; /* Căn giữa các thumbnail */
-    margin-top: 10px;
-  }
-
-  .thumbnail {
-    width: 4.23177vw;
-    height: 4.23177vw;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-
-  .price {
-    max-width: 480px; 
-    width: 100%;
-    text-align: center; /* Căn giữa văn bản */
-  }
-
-  .img-small{
-        width: 35px;
-        height: 35px;
-  }
-
-  .img-small-1{
-        justify-content: center;
-        gap: 10px;
-  }
-        .pricedetail{
-        display: flex;
-        width: 400px;
-    }
-
-  .info {
-    margin-top: 20px;
-    max-width: 420px;
-    width: 400px;
-    text-align: center; /* Căn giữa văn bản */
-  }
-
-  .coupon {
-    width: 100%;
-    text-align: center; /* Căn giữa văn bản */
-  }
-
-  .product-delivery {
-    display: table-column; /* Giữ lại thuộc tính này nếu cần thiết, nhưng có thể cân nhắc điều chỉnh cho phù hợp */
-  }
-
-  .img {
-    position: static; /* Giữ nguyên */
-    display: flex;
-    justify-content: center; /* Căn giữa ảnh */
-  }
-}
-
-      `}</style>
     </>
   )
 }
