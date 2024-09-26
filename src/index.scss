@@ -7,6 +7,9 @@
 
 @layer antd {
   @import 'antd/dist/reset.css';
+  .bg-footer{
+    background-color: gray;
+  }
 }
 
 @tailwind components;
@@ -22,6 +25,10 @@
   }
   .custom-tooltip {
     max-width: 450px !important;
+  }
+  
+  .bg-header{
+    background-color: white;
   }
   .custom-tooltip .ant-tooltip-inner {
     background-color: white !important;

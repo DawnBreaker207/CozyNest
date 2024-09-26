@@ -20,7 +20,7 @@ const CustomFooter = () => {
     setActiveSection(activeSection === section ? undefined : section)
   }
   return (
-    <Footer className='bg-black text-white py-2 '>
+    <footer className='bg-footer text-white py-2 '>
       <div className='bg-black py-1'>
         <div className='container mx-auto flex flex-col md:flex-row justify-between    items-center space-y-2 md:space-y-0'>
           {/* Đăng ký nhận tin */}
@@ -149,7 +149,7 @@ const CustomFooter = () => {
                   </ul>
                   <>
                     <h4 className='text-lg font-semibold mt-6'>Phương thức vận chuyển</h4>
-                    <div className='flex space-x-4 mt-4'>
+                    <div className='flex space-x-4 mt-4 '>
                       <img
                         src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_1_img.png?v=31'
                         alt='GHN Express'
@@ -181,7 +181,7 @@ const CustomFooter = () => {
               </ul>
               {/* Phương thức  vận chuyển */}
               <h4 className='text-lg font-semibold mt-6'>Phương thức vận chuyển</h4>
-              <div className='flex space-x-4 mt-4'>
+              <div className='flex space-x-6 mt-4 w-[23%] '>
                 <img
                   src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_1_img.png?v=31'
                   alt='GHN Express'
@@ -195,7 +195,7 @@ const CustomFooter = () => {
                 <img
                   src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_4_img.png?v=31'
                   alt='J&T Express'
-                  className='h-8'
+                  className='h-8 '
                 />
               </div>
             </div>
@@ -277,7 +277,7 @@ const CustomFooter = () => {
           </Col>
         </Row>
       </div>
-    </Footer>
+    </footer>
   )
 }
 
