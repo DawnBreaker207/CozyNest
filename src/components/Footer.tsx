@@ -11,7 +11,6 @@ import {
   PlusOutlined
 } from '@ant-design/icons'
 import { useState } from 'react'
-const { Footer } = Layout
 
 const CustomFooter = () => {
   const [activeSection, setActiveSection] = useState<string | undefined>(undefined)
@@ -20,9 +19,9 @@ const CustomFooter = () => {
     setActiveSection(activeSection === section ? undefined : section)
   }
   return (
-    <footer className='bg-footer text-white py-2 '>
-      <div className='bg-black py-1'>
-        <div className='container mx-auto flex flex-col md:flex-row justify-between    items-center space-y-2 md:space-y-0'>
+    <footer className='bg-black text-white py-2'>
+      <div className='bg-black py-1 container'>
+        <div className='mx-auto flex flex-col md:flex-row justify-between    items-center space-y-2 md:space-y-0'>
           {/* Đăng ký nhận tin */}
           <div className='flex flex-col md:flex-row items-center space-x-0 md:space-x-4 p-2  space-y-2 md:space-y-0'>
             <span className='text-lg font-semibold text-white'>Đăng ký nhận tin</span>

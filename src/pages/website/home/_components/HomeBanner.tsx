@@ -1,7 +1,7 @@
 const HomeBanner = () => {
   return (
     <>
-      <div className='container mx-auto max-w-[1900px] px-6 lg:px-[75px] mt-10 md:mt-20'>
+      <div className='container mt-10 md:mt-20'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
           <div className='item-home-banner px-[15px] col-12 col-lg-6'>
             <div className='item-home-banner-inner effect-image'>

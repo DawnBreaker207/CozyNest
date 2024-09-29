@@ -204,7 +204,7 @@ const OrderPage = () => {
     setOpen(false)
   }
   return (
-    <>
+    <div className='mt-10'>
       <div className='flex items-center ml-6'>
         <Search placeholder='Search order...' />
         <Button type='default' icon={<DownloadOutlined />} className='ml-2'>
@@ -298,7 +298,7 @@ const OrderPage = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   )
 }
 

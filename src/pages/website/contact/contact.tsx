@@ -15,7 +15,7 @@ const ContactPage = () => {
   }
 
   return (
-    <div style={{ backgroundColor: '#f3f4f6', padding: '24px', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#f3f4f6', minHeight: '100vh' }} className='container pt-6'>
       <div
         style={{
           backgroundColor: '#fff',
@@ -25,7 +25,6 @@ const ContactPage = () => {
           display: 'flex',
           flexDirection: screenWidth <= 768 ? 'column' : 'row',
           justifyContent: 'space-between',
-          maxWidth: '1200px',
           margin: '0 auto'
         }}
       >

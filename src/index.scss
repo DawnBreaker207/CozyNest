@@ -7,9 +7,6 @@
 
 @layer antd {
   @import 'antd/dist/reset.css';
-  .bg-footer{
-    background-color: gray;
-  }
 }
 
 @tailwind components;
@@ -19,17 +16,20 @@
   * {
     @apply font-Spectral;
   }
+  .container{
+    @apply 2xl:px-20 xl:px-4 lg:px-10 md:px-8 sm:px-6 px-4 mx-auto; 
+  }
   img {
     width: 100%;
     height: auto;
   }
+
+
+  // Cart Page
   .custom-tooltip {
     max-width: 450px !important;
   }
   
-  .bg-header{
-    background-color: white;
-  }
   .custom-tooltip .ant-tooltip-inner {
     background-color: white !important;
     color: black !important;
