@@ -1,5 +1,5 @@
-import { Table, Tag, Space, Checkbox, Button, Image } from 'antd'
-import { EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Image, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
 interface ProductRecord {
   id: number
