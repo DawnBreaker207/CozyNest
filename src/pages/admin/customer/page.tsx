@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { download, filters, search } from '@/components/icons'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, FormProps, Input, Modal, Pagination, Select, Switch } from 'antd'
@@ -32,7 +33,8 @@ const AdminCustomerPage = () => {
   const handleCancel = () => {
     setIsModalVisible(false)
   }
-  const validatePhoneNumber = (rule: any, value: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const validatePhoneNumber = (_rule: any, value: any) => {
     if (!value || value.replace(/\D/g, '').length === 10) {
       return Promise.resolve()
     }
@@ -81,7 +83,7 @@ const AdminCustomerPage = () => {
       <div className='flex space-x-5 justify-between'>
         <div className='flex-1 relative'>
           <div className='flex items-center gap-1'>
-            <img src={search} alt='' className='absolute pl-[14px]' />
+            <img src={search} alt='' className='absolute w-[30px] pl-[14px]' />
             <input
               type='text'
               placeholder='Search order. . .'
