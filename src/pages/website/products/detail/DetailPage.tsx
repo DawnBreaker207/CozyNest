@@ -26,20 +26,14 @@ const ProductDetail = () => {
 
   // const [image, setImage] = useState('https://via.placeholder.com/500')
   const thumbnails = [
-    'https://product.hstatic.net/200000796751/product/422809995_713194157568384_6066714952149197999_n_fca580eb5d5c4f9a9b1ba222f6d061bf_master.jpg',
-    'https://product.hstatic.net/200000796751/product/bo-am-tra-black-white_9ae77aee5b7545b78cff8fc15c191afe_master.jpg',
-    'https://product.hstatic.net/200000796751/product/kdp_4235_b09fff3d8f994eb486d4d13720ac3b25_master.jpg',
-    'https://product.hstatic.net/200000796751/product/kdp_4043_b446b2e4562f4094be3f41b12de94bc2_master.jpg',
-    'https://product.hstatic.net/200000796751/product/kdp_4024_a5f92c669d29451cb5dd534db79d4966_master.jpg',
-    'https://product.hstatic.net/200000796751/product/kdp_4025_ff16975890de4709a9535fbfb02f96e9_master.jpg'
+    './src/assets/images/product/img-slide-1.jpg',
+    './src/assets/images/product/img-slide-2.webp',
+    './src/assets/images/product/img-slide-3.webp',
+    './src/assets/images/product/img-slide-4.webp',
+    './src/assets/images/product/img-slide-5.webp',
+    './src/assets/images/product/img-slide-6.webp'
   ]
 
-  const fb = 'https://png.pngtree.com/element_our/sm/20180515/sm_5afaf0c36298b.jpg'
-  const link =
-    'https://media.istockphoto.com/id/1302329383/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-hai-chu%E1%BB%97i-li%C3%AAn-k%E1%BA%BFt-bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-%C4%91%C3%ADnh-k%C3%A8m-kh%C3%B3a.jpg?s=612x612&w=0&k=20&c=gmc2ecGI6aJlcPdiT98vTRYChEt59P5SMdihgaZpCzs='
-  const twitter = 'https://inkythuatso.com/uploads/thumbnails/800/2021/11/logo-twitter-inkythuatso-2-01-27-10-22-11.jpg'
-  const mess = 'https://png.pngtree.com/png-clipart/20190303/ourmid/pngtree-messenger-logo-icon-png-image_771438.jpg'
-  const chat = 'https://png.pngtree.com/element_our/sm/20180521/sm_5b02f93af13fd.jpg'
   const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
   return (
     <div>
@@ -58,7 +52,7 @@ const ProductDetail = () => {
                 />
               ))}
             </div>
-            <div className='relative lg:mx-0 md:w-[450px] md:h-[450px] min-h-[450px]  w-full overflow-hidden'>
+            <div className='relative lg:mx-0 md:w-[450px] md:h-[450px] h-auto w-full overflow-hidden'>
               <div
                 className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
                 style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
@@ -107,13 +101,13 @@ const ProductDetail = () => {
             </div>
           </div>
           {/* Share Section */}
-          <div className='share flex flex-row items-center justify-center xl:mr-20 mt-4'>
-            <span className='mr-2'>Chia sẻ:</span>
-            <img src={fb} className='w-[35px] h-[35px] ml-2' />
-            <img src={mess} className='w-[35px] h-[35px] ml-2' />
-            <img src={twitter} className='w-[35px] h-[35px] ml-2' />
-            <img src={chat} className='w-[35px] h-[35px] ml-2' />
-            <img src={link} className='w-[35px] h-[35px] ml-2' />
+          <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
+            <span className='font-light'>Chia sẻ:</span>
+            <img src="./src/assets/images/share/fb.svg" className='w-[30px] h-[30px] ml-4' />
+            <img src="./src/assets/images/share/mess.svg" className='w-[30px] h-[30px] ml-4' />
+            <img src="./src/assets/images/share/twitter.svg" className='w-[30px] h-[30px] ml-4' />
+            <img src="./src/assets/images/share/phone.svg" className='w-[35px] h-[35px] ml-4' />
+            <img src="./src/assets/images/share/link.svg" className='w-[25px] h-[25px] ml-4' />
           </div>
         </div>
         <div className='col-span-1 lg:mt-0 mt-6'>

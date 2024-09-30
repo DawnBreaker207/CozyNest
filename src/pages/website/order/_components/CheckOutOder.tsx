@@ -18,7 +18,7 @@ const CheckOutOrder = () => {
       key: 'description'
     },
     {
-      title: 'Số lượng',  
+      title: 'Số lượng',
       dataIndex: 'quantity',
       key: 'quantity'
     },

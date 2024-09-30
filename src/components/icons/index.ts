@@ -5,4 +5,3 @@ import filters from '@/assets/svg/icon/filters.svg'
 import menu from '@/assets/svg/icon/menu.svg'
 
 export { search, download, filters, menu, Cart }
-

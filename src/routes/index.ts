@@ -6,7 +6,6 @@ import LayoutAdmin from '@/pages/admin/layout'
 import CartPage from '@/pages/website/cart/CartPage'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
-import NewPage from '@/pages/website/newpage/newpage'
 import ContactPage from '@/pages/website/contact/contact'
 import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 import { useRoutes } from 'react-router-dom'
@@ -15,6 +14,8 @@ import Introduction from '@/pages/website/introduction/page'
 import Login from '@/pages/website/auth/Login'
 import Register from '@/pages/website/auth/Register'
 import ResetPassword from '@/pages/website/auth/ResetPassword'
+import NewsPage from '@/pages/website/news/page'
+
 function App() {
   const routes = useRoutes([
     {
@@ -23,7 +24,7 @@ function App() {
       children: [
         { index: true, Component: HomePage },
         { path: 'contact', Component: ContactPage },
-        { path: 'newpage', Component: NewPage },
+        { path: 'news', Component: NewsPage },
         { path: 'detail', Component: ProductDetail },
         { path: 'cart', Component: CartPage },
         { path: 'check_out_order', Component: CheckOutOder },
