@@ -193,7 +193,7 @@ const menu = {
   )
 }
 
-const OrderPage = () => {
+const AdminOrderPage = () => {
   const [form] = Form.useForm()
   const [, setFormValues] = useState<Values>()
   const [open, setOpen] = useState(false)
@@ -302,4 +302,4 @@ const OrderPage = () => {
   )
 }
 
-export default OrderPage
+export default AdminOrderPage
