@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { AppstoreOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons'
-import { Breadcrumb, Layout, Menu, theme } from 'antd'
-import { NavLink, Outlet } from 'react-router-dom'
+import { AppstoreOutlined, BellOutlined, DownOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons'
+import { Avatar, Badge, Breadcrumb, Button, Dropdown, Layout, Menu, theme } from 'antd'
+import { NavLink, Outlet, useLocation, useParams } from 'react-router-dom'
 
 const { Header, Content, Footer, Sider } = Layout
 const LayoutAdmin: React.FC = () => {
@@ -9,6 +9,45 @@ const LayoutAdmin: React.FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken()
+
+  const location = useLocation()
+
+  const menu = {
+    children: (
+      <>
+        <Menu.Item key='1'>Option 1</Menu.Item>
+        <Menu.Item key='2'>Option 2</Menu.Item>
+        <Menu.Item key='3'>Option 3</Menu.Item>
+      </>
+    )
+  }
+  const { id } = useParams()
+  const renderHeader = (title: string) => (
+    <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
+      <div className='flex justify-between h-[60px] items-center'>
+        <div>
+          <span className='text-xl text-[#353535] ml-[25px]'>{title}</span>
+        </div>
+        <div className='flex items-center space-x-4 mr-[14px]'>
+          <Dropdown menu={menu} trigger={['click']}>
+            <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
+              Nik Shop <DownOutlined className='ml-2' />
+            </button>
+          </Dropdown>
+          <Badge count={4} className='cursor-pointer'>
+            <BellOutlined className='text-xl text-blue-500' />
+          </Badge>
+          <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+        </div>
+      </div>
+    </Header>
+  )
+  const isAddProductPage = location.pathname === '/admin/products/add'
+  const isEditProductPage = location.pathname === `/admin/products/${id}/edit`
+  const isAddCategoryPage = location.pathname === '/admin/categories/add'
+  const isEditCategoryPage = location.pathname === `/admin/categories/${id}/edit`
+  const isCategoryPage = location.pathname === `/admin/categories`
+  const isProductPage = location.pathname === `/admin/products`
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -48,7 +87,21 @@ const LayoutAdmin: React.FC = () => {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <div className='flex justify-between items-center px-4 mt-4'>
+            <div className='text-xl font-semibold '>Dashboard</div>
+            <div className='flex items-center '>
+              <Button className='mr-4'>
+                Nik Shop
+                <DownOutlined className='text-sm ' />
+              </Button>
+              <Badge count={4}>
+                <BellOutlined style={{ fontSize: '20px' }} />
+              </Badge>
+              <UserOutlined style={{ fontSize: '20px', marginLeft: '20px' }} />
+            </div>
+          </div>
+        </Header>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'Controller' }, { title: '' }]}></Breadcrumb>
           <div
