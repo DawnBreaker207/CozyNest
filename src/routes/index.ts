@@ -5,7 +5,7 @@ import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
 import HomePage from '@/pages/website/home/page'
 import LayoutWebsite from '@/pages/website/layout'
-import page from '@/pages/website/Link/page'
+import LinkPage from '@/pages/website/Link/page'
 import { useRoutes } from 'react-router-dom'
 function App() {
   const routes = useRoutes([
@@ -13,7 +13,7 @@ function App() {
       path: '/',
       Component: LayoutWebsite,
       children: [{ index: true, Component: HomePage },
-        {path:'/link',Component:page}
+        { path: '/link', Component: LinkPage }
       ]
     },
     {
