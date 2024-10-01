@@ -4,7 +4,7 @@ import Meta from 'antd/es/card/Meta'
 import React, { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
-const News: React.FC = () => {
+const News = () => {
   const newsItems = [
     {
       title: 'Thiết kế nội thất chung cư đẹp cho đôi vợ chồng trẻ',
@@ -51,7 +51,7 @@ const News: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className='container'>
       {/* Desktop grid view, hidden on mobile */}
       <div className='hidden md:block relative mt-10 md:mt-20'>
         <Button

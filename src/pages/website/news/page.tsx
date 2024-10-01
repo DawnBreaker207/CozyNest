@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const { Header, Content, Sider } = Layout
 const { Title, Paragraph, Text } = Typography
 
-const App: React.FC = () => {
+const NewsPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState('')
 
@@ -19,7 +19,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <Layout style={{ minHeight: '100vh', backgroundColor: '#f0f2f5' }}>
+    <Layout style={{ backgroundColor: '#f0f2f5' }} className='py-10 container'>
       <Row gutter={[16, 16]}>
         {/* Sidebar */}
         <Col xs={24} sm={8} md={6}>
@@ -127,4 +127,4 @@ const App: React.FC = () => {
   )
 }
 
-export default App
+export default NewsPage

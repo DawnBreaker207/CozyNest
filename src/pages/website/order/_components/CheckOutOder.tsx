@@ -40,8 +40,8 @@ const CheckOutOrder = () => {
   ]
 
   return (
-    <div className='mx-auto my-10'>
-      <div className='flex flex-col lg:flex-row justify-between pt-14 mt-10'>
+    <div className='mx-auto'>
+      <div className='flex flex-col lg:flex-row justify-between pt-10'>
         {/* Thông tin đặt hàng */}
         <div className='lg:w-1/2 lg:p-[66px] px-4 lg:pl-[66px] mb-8 lg:mb-0'>
           <h1 className='text-3xl font-bold'>CozyNest</h1>
@@ -56,7 +56,7 @@ const CheckOutOrder = () => {
             </div>
           </div>
 
-          <div className='my-4 border border-[2px]'>
+          <div className='my-4 border-[2px]'>
             <div className='px-2 mt-2'>
               <h3 className='text-xl font-semibold'>Thông tin giao hàng</h3>
             </div>
@@ -89,7 +89,7 @@ const CheckOutOrder = () => {
         </div>
 
         {/* Thông tin đơn hàng */}
-        <div className='lg:w-1/2 p-4 border-l lg:p-[66px] pl-4 lg:pl-[66px] mb-8'>
+        <div className='lg:w-1/2 border-l px-6'>
           <h2 className='text-lg font-semibold'>Thông tin đơn hàng</h2>
 
           {/* Chỉ hiển thị nút trên mobile */}

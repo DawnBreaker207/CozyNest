@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 
 const ProductList = () => {
   return (
-    <>
+    <div className='container'>
       <h2 className='text-center text-[25px] sm:text-[45px] mb-8 mt-10 md:mt-20 text-[#FCA120]'>Sản phẩm mới ra mắt</h2>
-      <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 mx-8'>
+      <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
         <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
           <Link to={`/detail`}>
             <div className='relative'>
@@ -302,7 +302,7 @@ const ProductList = () => {
         </div>
         {/* End product */}
       </div>
-    </>
+    </div>
   )
 }
 

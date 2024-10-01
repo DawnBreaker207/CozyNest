@@ -17,8 +17,8 @@ const CartPage = () => {
   const couponCode3 = 'A789UYT'
 
   return (
-    <div className='mb-[50px] mt-[110px]'>
-      <div className='lg:mx-20 md:mx-10 mx-4'>
+    <div className='mb-14 mt-5'>
+      <div className='container'>
         <span className='text-sm font-light text-[#252A2B]'>
           Trang chủ / Giỏ hàng <span className=''>(1)</span>
         </span>
@@ -56,14 +56,14 @@ const CartPage = () => {
                     <div className='flex items-center justify-center'>
                       <button
                         onClick={decrease}
-                        className='bg-stone-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                        className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
                       >
                         -
                       </button>
                       <span className='mx-3 text-[#252A2B]'>{count}</span>
                       <button
                         onClick={increase}
-                        className='bg-stone-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                        className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
                       >
                         +
                       </button>

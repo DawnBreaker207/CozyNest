@@ -1,7 +1,7 @@
 const Contactone = () => {
   return (
     <div className=' md:px-2'>
-      <h1 className='text-xl font-bold text-center  md:mt-[10%] mt-[25%] sm:mt-[15%] -mb-5'>Về chúng tôi</h1>
+      <h1 className='text-xl font-bold text-center mt-10 -mb-5'>Về chúng tôi</h1>
       <div className='text-center py-8'>
         <div className='flex flex-col md:flex-row justify-around items-center'>
           <div className='max-w-xs bg-white  rounded-lg overflow-hidden mb-4 md:mb-0 md:mr-2'>

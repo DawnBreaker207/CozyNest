@@ -1,6 +1,6 @@
 const BannerSection = () => {
   return (
-    <div className='container mx-auto max-w-[1900px] px-6 lg:px-[75px] mt-10 md:mt-20'>
+    <div className='container mx-auto mt-10 md:mt-20'>
       <div className='line-banner-bottom flex flex-col lg:flex-row mb-8'>
         <div className='col-banner media-banner flex-1 mb-4 lg:mb-0'>
           <a href='' aria-label='Trang trí phòng khách'>

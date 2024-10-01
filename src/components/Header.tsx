@@ -117,19 +117,17 @@ const Header = () => {
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
   return (
-    <div className='sticky bg-header bg-while z-50 bg-red-500  w-full top-0'>
-    {/* header */}
-    <div
-      className={`flex items-center justify-between bg-background shadow-md transition-all duration-500  `}
-    >
+    <div className='sticky bg-white bg-while z-50 w-full top-0'>
+      {/* header */}
+      <div className={`flex items-center justify-between bg-background shadow-md transition-all duration-500  `}>
         <nav className='flex items-center justify-between px-[4%] bg-background w-full  '>
-          <div className=' md:w-[80%] md:h-[30%] sm:w-[50%] lg:w-[230px] w-[41%] '>
+          <a className=' md:w-[80%] md:h-[30%] sm:w-[50%] lg:w-[230px] w-[41%] ' href='/'>
             <img
-              src='src/assets/icon/logo.jpg'
+              src='src/assets/icon/cozynet.svg'
               className='w-full md:w-[94%]  sm:w-1/2 lg:w-[80%] lg:h-[50%] md:h-[74px]  '
               alt='Logo'
             />
-          </div>
+          </a>
           <div className='hidden md:flex md:items-center space-x-8 mr-20 text-lg md:text-base md:mr-[5px]'>
             <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
               Trang chủ
