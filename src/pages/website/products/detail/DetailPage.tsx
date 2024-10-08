@@ -4,8 +4,32 @@ import { Cart } from '@/components/icons/index'
 import { useState } from 'react'
 import { GrFormNext } from 'react-icons/gr'
 import { GrFormPrevious } from 'react-icons/gr'
+import { useProductQuery } from '@/hooks/useProductQuery'
+import { useParams } from 'react-router-dom'
 const ProductDetail = () => {
-  const [count, setCount] = useState(1)
+  const { id } = useParams() // Lấy productId từ URL
+  const { data, isLoading, error } = useProductQuery({ id })
+  const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
+
+  console.log(data)
+  // console.log(data.name)
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+
+  //Kiểm tra dữ liệu product
+  if (!data || !data.res) return <p>Product not found</p>
+  const product = data.res
+  const category = product.categoryId?.[0]
+  console.log(product.name)
+  console.log(category.name)
 
   const increase = () => {
     if (count < 10) setCount(count + 1)
@@ -14,7 +38,6 @@ const ProductDetail = () => {
   const decrease = () => {
     if (count > 1) setCount(count - 1)
   }
-  const [isCollapsed, setIsCollapsed] = useState(false)
 
   // Hàm tính toán chiều cao của phần mô tả
   const handleToggleCollapse = () => {
@@ -26,15 +49,14 @@ const ProductDetail = () => {
 
   // const [image, setImage] = useState('https://via.placeholder.com/500')
   const thumbnails = [
-    './src/assets/images/product/img-slide-1.jpg',
-    './src/assets/images/product/img-slide-2.webp',
-    './src/assets/images/product/img-slide-3.webp',
-    './src/assets/images/product/img-slide-4.webp',
-    './src/assets/images/product/img-slide-5.webp',
-    './src/assets/images/product/img-slide-6.webp'
+    '/src/assets/images/product/img-slide-1.jpg',
+    '/src/assets/images/product/img-slide-2.webp',
+    '/src/assets/images/product/img-slide-3.webp',
+    '/src/assets/images/product/img-slide-4.webp',
+    '/src/assets/images/product/img-slide-5.webp',
+    '/src/assets/images/product/img-slide-6.webp'
   ]
 
-  const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
@@ -103,11 +125,11 @@ const ProductDetail = () => {
           {/* Share Section */}
           <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
             <span className='font-light'>Chia sẻ:</span>
-            <img src="./src/assets/images/share/fb.svg" className='w-[30px] h-[30px] ml-4' />
-            <img src="./src/assets/images/share/mess.svg" className='w-[30px] h-[30px] ml-4' />
-            <img src="./src/assets/images/share/twitter.svg" className='w-[30px] h-[30px] ml-4' />
-            <img src="./src/assets/images/share/phone.svg" className='w-[35px] h-[35px] ml-4' />
-            <img src="./src/assets/images/share/link.svg" className='w-[25px] h-[25px] ml-4' />
+            <img src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
+            <img src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
+            <img src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
+            <img src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
+            <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
           </div>
         </div>
         <div className='col-span-1 lg:mt-0 mt-6'>
@@ -203,7 +225,7 @@ const ProductDetail = () => {
             <div className='coupon w-1/2,5 lg:w-[48%]'>
               <CouponCard
                 couponCode={couponCode1}
-                imageUrl='./src/assets/images/coupon/coupon_2_img.webp'
+                imageUrl='/src/assets/images/coupon/coupon_2_img.webp'
                 expirationDate='10/10/2024'
                 title='Miễn phí vận chuyển'
                 description='Đơn hàng từ 300k'
@@ -213,7 +235,7 @@ const ProductDetail = () => {
             <div className='coupon w-1/2,5 lg:w-[48%]'>
               <CouponCard
                 couponCode={couponCode2}
-                imageUrl='./src/assets/images/coupon/coupon_1_img.webp'
+                imageUrl='/src/assets/images/coupon/coupon_1_img.webp'
                 expirationDate='10/10/2024'
                 title='Giảm 20%'
                 description='Đơn hàng từ 200k'
@@ -223,7 +245,7 @@ const ProductDetail = () => {
             <div className='coupon w-1/2,5 lg:w-[48%]'>
               <CouponCard
                 couponCode={couponCode3}
-                imageUrl='./src/assets/images/coupon/coupon_3_img.webp'
+                imageUrl='/src/assets/images/coupon/coupon_3_img.webp'
                 expirationDate='10/10/2024'
                 title='Giảm 10%'
                 description='Đơn hàng từ 100k'
@@ -323,8 +345,8 @@ const ProductDetail = () => {
             <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
               <div className='relative'>
                 <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                  <img src='./src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
                 </div>
                 <FaRegEye
                   className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
@@ -351,8 +373,8 @@ const ProductDetail = () => {
             <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
               <div className='relative'>
                 <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                  <img src='./src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
                 </div>
                 <FaRegEye
                   className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
@@ -379,8 +401,8 @@ const ProductDetail = () => {
             <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
               <div className='relative'>
                 <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                  <img src='./src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
                 </div>
                 <FaRegEye
                   className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
@@ -413,8 +435,8 @@ const ProductDetail = () => {
             <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
               <div className='relative'>
                 <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                  <img src='./src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
                 </div>
                 <FaRegEye
                   className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
