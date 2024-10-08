@@ -1,12 +1,43 @@
-import { Form, Input, Button, Checkbox } from 'antd'
-
+import instance from '@/configs/axios'
+import { useMutation } from '@tanstack/react-query'
+import { Form, Input, Button, Checkbox, message } from 'antd'
+import { useNavigate } from 'react-router-dom'
+type FieldType = {
+  email?: string
+  password?: string
+  confirmPass?: string
+}
 const Register = () => {
-  const onFinish = (values: any) => {
-    console.log('Form Values: ', values)
-  }
+  const [messageApi, contextHolder] = message.useMessage()
+  const navigate = useNavigate()
+  const { mutate } = useMutation({
+    mutationFn: async (formData: FieldType) => {
+      try {
+        return await instance.post(`/auth/register`, formData)
+      } catch (error) {
+        throw new Error('Dang ky that bai')
+      }
+    },
+    onSuccess: () => {
+      messageApi.open({
+        type: 'success',
+        content: 'Dang ky thanh cong'
+      }),
+        setTimeout(() => {
+          navigate(`/login`)
+        }, 600)
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: 'error',
+        content: error.message
+      })
+    }
+  })
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed: ', errorInfo)
+  const onFinish = (values: FieldType) => {
+    console.log('Form Values: ', values)
+    mutate(values)
   }
 
   return (
@@ -20,9 +51,10 @@ const Register = () => {
         backgroundAttachment: 'fixed'
       }}
     >
+      {contextHolder}
       <div className='bg-white p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 rounded-lg shadow-md w-full  max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl bg-opacity-60'>
         <h2 className='text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6'>Đăng ký</h2>
-        <Form name='register' layout='vertical' onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='off'>
+        <Form name='register' layout='vertical' onFinish={onFinish} autoComplete='off'>
           {/* Trường Username */}
           <Form.Item
             label='Tên đăng nhập'
@@ -59,7 +91,7 @@ const Register = () => {
           {/* Trường Xác nhận Mật khẩu */}
           <Form.Item
             label='Xác nhận mật khẩu'
-            name='confirmPassword'
+            name='confirmPass'
             dependencies={['password']}
             rules={[
               { required: true, message: 'Vui lòng xác nhận mật khẩu!' },

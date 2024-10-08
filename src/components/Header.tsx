@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import useCart from '@/hooks/useCart'
 import {
   DownOutlined,
   MailOutlined,
@@ -9,14 +11,69 @@ import {
   UserOutlined
 } from '@ant-design/icons'
 
-import { Button, Divider, Drawer, Dropdown, GetProps, Input, MenuProps, Space, theme } from 'antd'
+import { Button, Divider, Drawer, Dropdown, GetProps, Input, MenuProps, message, Space, theme } from 'antd'
 
-import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
 
 const { useToken } = theme
 
 const Header = () => {
+  const [user, setUser] = useState(null)
+  const [messageApi, contextHolder] = message.useMessage()
+  const { data, calculateTotal, mutate } = useCart()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const products = data?.res?.products || []
+  const [quantities, setQuantities] = useState<number[]>([])
+
+  useEffect(() => {
+    // Chỉ thiết lập quantities khi sản phẩm có thay đổi
+    if (products.length) {
+      const initialQuantities = products.map((product: any) => product.quantity)
+      setQuantities(initialQuantities)
+    }
+  }, [products])
+
+  const increase = (index: number) => {
+    setQuantities((prevQuantities) => {
+      const newQuantities = [...prevQuantities]
+      if (newQuantities[index] < 10) {
+        newQuantities[index]++
+        mutate({ action: 'INCREMENT', productId: products[index].productId._id })
+      }
+      return newQuantities
+    })
+  }
+
+  const decrease = (index: number) => {
+    setQuantities((prevQuantities) => {
+      const newQuantities = [...prevQuantities]
+      if (newQuantities[index] > 1) {
+        newQuantities[index]--
+        mutate({ action: 'DECREMENT', productId: products[index].productId._id })
+      }
+      return newQuantities
+    })
+  }
+
+  useEffect(() => {
+    // Cập nhật lại tổng tiền khi quantities thay đổi
+    calculateTotal()
+  }, [quantities, calculateTotal])
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser)
+      setUser(parsedUser?.data?.res?.username || null)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem('user')
+    messageApi.success('Đăng xuất thành công!')
+    setUser(null)
+  }
   const menu: MenuProps['items'] = [
     {
       key: '1',
@@ -88,23 +145,21 @@ const Header = () => {
       )
     }
   ]
-  const users: MenuProps['items'] = [
-    {
-      label: <a href='#'>Tên người dùng</a>,
-      key: '0'
-    },
-    {
-      label: <a href='#'>Đơn hàng</a>,
-      key: '1'
-    },
-    {
-      type: 'divider'
-    },
-    {
-      label: <a href='#'>Đăng xuất</a>,
-      key: '3'
-    }
-  ]
+  const users: MenuProps['items'] = user
+    ? [
+        { label: <a href='#'>{user}</a>, key: '0' },
+        { label: <a href='#'>Đơn hàng</a>, key: '1' },
+        { type: 'divider' },
+        {
+          label: (
+            <a href='/' onClick={handleLogout}>
+              Đăng xuất
+            </a>
+          ),
+          key: '3'
+        }
+      ]
+    : [{ label: <NavLink to='/login'>Đăng nhập</NavLink>, key: '1' }]
   const { token } = useToken()
 
   const contentStyle: React.CSSProperties = {
@@ -118,6 +173,7 @@ const Header = () => {
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
+      {contextHolder}
       {/* header */}
       <div className={`flex items-center justify-between bg-background shadow-md transition-all duration-500  `}>
         <nav className='flex items-center justify-between px-[4%] bg-background w-full  '>
@@ -187,7 +243,7 @@ const Header = () => {
             </Dropdown>
             <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={show}>
               <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
-                0
+                {data?.res?.products?.length || 0}
               </span>
             </Button>
             <Button className='md:hidden' shape='circle' icon={<MenuOutlined />} onClick={showDrawer} />
@@ -229,17 +285,60 @@ const Header = () => {
           </Drawer>
           {/* giỏ hàng  */}
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
-            <div className='text-center'>
-              <span>
-                <MehOutlined />
-              </span>
-              <br />
-              <span>Không có sản phẩm trong giỏ hàng</span>
-              <br />
-              <NavLink to={'#'} className='text-sm'>
-                trở về trang sản phẩm
-              </NavLink>
-            </div>
+            {products.length > 0 ? (
+              <div>
+                {products.map((product: any, index: number) => (
+                  <div key={product.productId._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                    <div className='flex items-center'>
+                      <img
+                        src={product.productId.thumbnail}
+                        alt={product.productId.name}
+                        className='w-16 h-16 object-cover'
+                      />
+                      <div className='ml-2'>
+                        <p className='font-semibold'>{product.productId.name}</p>
+                        <div className='flex items-center'>
+                          <button className='border px-2 py-1' onClick={() => decrease(index)}>
+                            -
+                          </button>
+                          <input type='number' value={quantities[index]} className='w-12 text-center border' readOnly />
+                          <button className='border px-2 py-1' onClick={() => increase(index)}>
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
+                    <button onClick={() => mutate({ action: 'REMOVE', productId: product.productId._id })}>
+                      <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                    </button>
+                  </div>
+                ))}
+                <Divider />
+                <div className='flex justify-between items-center font-bold'>
+                  <span>Tổng tiền:</span>
+                  <span>{calculateTotal().toLocaleString()}₫</span>
+                </div>
+                <Link to={`/cart`}>
+                  {' '}
+                  <Button type='primary' className='mt-4 w-full' onClick={() => onClose()}>
+                    XEM GIỎ HÀNG
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className='text-center'>
+                <span>
+                  <MehOutlined />
+                </span>
+                <br />
+                <span>Không có sản phẩm trong giỏ hàng</span>
+                <br />
+                <NavLink to={'#'} className='text-sm'>
+                  trở về trang sản phẩm
+                </NavLink>
+              </div>
+            )}
           </Drawer>
         </nav>
       </div>

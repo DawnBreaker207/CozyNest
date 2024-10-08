@@ -1,80 +1,98 @@
+import useCategoryMutation from '@/hooks/useCategoryMutations'
+import { ICategory } from '@/types/category'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button, Space, Table, Tag } from 'antd'
+import { useQueryClient } from '@tanstack/react-query'
+import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 
-interface CategoryRecord {
-  id: number
-  name: string
-  thumbnail: string
-  isHidden: boolean
-  products: number
-  createdAt: string
+const CategoryPage = () => {
+  const queryClient = useQueryClient()
+  const [messageApi, contextHolder] = message.useMessage()
+
+  // Fetch data categories using custom hook
+  const { data, isLoading, isError, error } = useCategoryQuery()
+
+  // Sử dụng hook cho xóa danh mục
+  const { mutate: deleteCategory } = useCategoryMutation({
+    action: 'DELETE',
+    onSuccess: () => {
+      messageApi.open({
+        type: 'success',
+        content: 'Xóa thành công'
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['CATEGORY_KEY']
+      })
+    }
+  })
+
+  // Chuẩn bị dữ liệu cho bảng
+  const dataSource = data?.res.map((item: ICategory) => ({
+    key: item._id,
+    ...item
+  }))
+
+  // Cấu trúc các cột của bảng
+  const columns = [
+    {
+      key: 'name',
+      title: 'Tên danh mục',
+      dataIndex: 'name',
+      render: (name: string, record: ICategory) => (
+        <Space size='middle'>
+          <div>
+            <div>{name}</div>
+            <div style={{ color: 'gray' }}>{record.products.length} Products</div>
+          </div>
+        </Space>
+      )
+    },
+    {
+      key: 'isHidden',
+      title: 'Trạng thái hiển thị',
+      dataIndex: 'isHidden',
+      render: (isHidden: boolean) => <Tag color={isHidden ? 'red' : 'green'}>{isHidden ? 'Ẩn' : 'Hiển thị'}</Tag>
+    },
+    {
+      key: 'createdAt',
+      title: 'Ngày thêm',
+      dataIndex: 'createdAt',
+      render: (createdAt: string) => new Date(createdAt).toLocaleDateString()
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (category: ICategory) => (
+        <Space size='middle'>
+          <Link to={`/admin/categories/${category._id}/edit`}>
+            <Button icon={<EditOutlined />} />
+          </Link>
+          <Button icon={<EyeOutlined />} />
+          <Popconfirm
+            title='Xóa danh mục'
+            description='Bạn có chắc chắn muốn xóa danh mục này không?'
+            onConfirm={() => deleteCategory({ _id: category._id } as ICategory)}
+            okText='Có'
+            cancelText='Không'
+          >
+            <Button icon={<DeleteOutlined />} danger />
+          </Popconfirm>
+        </Space>
+      )
+    }
+  ]
+
+  // Xử lý trạng thái khi loading hoặc error
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>{error?.message}</div>
+
+  return (
+    <>
+      {contextHolder}
+      <Table dataSource={dataSource} columns={columns} />
+    </>
+  )
 }
-const columns = [
-  {
-    title: 'Product Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (_: string, record: CategoryRecord) => (
-      <Space size='middle'>
-        <div>
-          <div>{record.name}</div>
-          <div style={{ color: 'gray' }}>{record.products} Products</div>
-        </div>
-      </Space>
-    )
-  },
-  {
-    title: 'Thumbnail',
-    dataIndex: 'thumbnail',
-    key: 'thumbnail',
-    render: (thumbnail: string) => <img src={thumbnail} alt=' thumbnail ' style={{ width: '50px' }} />
-  },
-  {
-    title: 'Visibility',
-    dataIndex: 'isHidden',
-    key: 'isHidden',
-    render: (isHidden: boolean) => <Tag color={isHidden ? 'red' : 'green'}>{isHidden ? 'Hidden' : 'Visible'}</Tag>
-  },
-  {
-    title: 'Created At',
-    dataIndex: 'createdAt',
-    key: 'createdAt'
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (record: CategoryRecord) => (
-      <Space size='middle'>
-        <Link to={`${record.id}/edit`}>
-          <Button icon={<EditOutlined />} />
-        </Link>
-        <Button icon={<EyeOutlined />} />
-        <Button icon={<DeleteOutlined />} />
-      </Space>
-    )
-  }
-]
 
-const data: CategoryRecord[] = [
-  {
-    id: 1,
-    name: 'Category 1',
-    thumbnail: 'https://picsum.photos/200/300',
-    isHidden: false,
-    products: 10,
-    createdAt: '01 Jan 2023'
-  },
-  {
-    id: 2,
-    name: 'Category 2',
-    thumbnail: 'https://picsum.photos/200/300',
-    isHidden: true,
-    products: 5,
-    createdAt: '15 Jan 2023'
-  }
-  // Add more data here if needed
-]
-
-const CategoryPage = () => <Table columns={columns} dataSource={data} pagination={false} />
 export default CategoryPage

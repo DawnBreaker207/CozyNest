@@ -23,6 +23,7 @@ import AdminCustomerPage from '@/pages/admin/customer/page'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
+import pageCheckOut from '@/pages/website/order/page'
 function App() {
   const routes = useRoutes([
     {
@@ -34,7 +35,7 @@ function App() {
         { path: 'news', Component: NewsPage },
         { path: 'detail', Component: ProductDetail },
         { path: 'cart', Component: CartPage },
-        { path: 'check_out_order', Component: CheckOutOder },
+        { path: 'cart/check_out_form', Component: pageCheckOut },
         { path: 'intro', Component: Introduction },
         { path: 'login', Component: Login },
         { path: 'register', Component: Register },

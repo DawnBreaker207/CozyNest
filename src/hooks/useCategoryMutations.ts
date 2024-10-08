@@ -2,7 +2,7 @@ import { addCategory, editCategory, removeCategory } from '@/services/category'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { message, Modal } from 'antd'
+import { message } from 'antd'
 import { ICategory } from '@/types/category'
 import { CategoryZodSchema } from '@/validations/category'
 
@@ -19,7 +19,6 @@ const useCategoryMutation = ({ action, onSuccess }: useCategoryMutationProps) =>
     resolver: zodResolver(CategoryZodSchema),
     defaultValues: {
       name: '',
-      thumbnail: '',
       isHidden: false
     }
   })
@@ -29,20 +28,8 @@ const useCategoryMutation = ({ action, onSuccess }: useCategoryMutationProps) =>
       switch (action) {
         case 'CREATE':
           return await addCategory(category)
-        case 'DELETE': {
-          return new Promise((resolve) => {
-            Modal.confirm({
-              title: 'Bạn có chắc chắn không?',
-              onOk: async () => {
-                const result = await removeCategory(category)
-                resolve(result)
-              },
-              onCancel: () => {
-                resolve(false)
-              }
-            })
-          })
-        }
+        case 'DELETE':
+          return await removeCategory(category)
         case 'UPDATE':
           return await editCategory(category)
         default:

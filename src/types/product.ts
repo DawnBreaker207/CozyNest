@@ -1,10 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IProduct {
-  _id?: number | string
+  res: any
+  _id: string | number
+  originId?: string | null
   name: string
-  category?: string
-  base_price: number
-  brand: string
   thumbnail: string
+  categoryId: string
+  brand: string
   description: string
+  price: number
+  discount: number
+  sold: number
+  isSale: boolean
   isHidden: boolean
+  images: string[]
+  createdAt: string
+  updatedAt: string
 }
