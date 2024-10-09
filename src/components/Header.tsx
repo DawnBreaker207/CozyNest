@@ -179,7 +179,7 @@ const Header = () => {
         <nav className='flex items-center justify-between px-[4%] bg-background w-full  '>
           <a className=' md:w-[80%] md:h-[30%] sm:w-[50%] lg:w-[230px] w-[41%] ' href='/'>
             <img
-              src='src/assets/icon/cozynet.svg'
+              src='/src/assets/icon/cozynet.svg'
               className='w-full md:w-[94%]  sm:w-1/2 lg:w-[80%] lg:h-[50%] md:h-[74px]  '
               alt='Logo'
             />

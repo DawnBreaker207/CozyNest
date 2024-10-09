@@ -4,8 +4,28 @@ import { Cart } from '@/components/icons/index'
 import { useState } from 'react'
 import { GrFormNext } from 'react-icons/gr'
 import { GrFormPrevious } from 'react-icons/gr'
+import { useProductQuery } from '@/hooks/useProductQuery'
+import { useParams } from 'react-router-dom'
+import RelatedProduct from '../_components/RelatedProduct'
 const ProductDetail = () => {
-  const [count, setCount] = useState(1)
+  const { id } = useParams() // Lấy productId từ URL
+  const { data, isLoading, error } = useProductQuery({ id })
+  const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+
+  //Kiểm tra dữ liệu product
+  if (!data || !data.res) return <p>Product not found</p>
+  const product = data.res
+  const category = product.categoryId?.[0]
 
   const increase = () => {
     if (count < 10) setCount(count + 1)
@@ -14,7 +34,6 @@ const ProductDetail = () => {
   const decrease = () => {
     if (count > 1) setCount(count - 1)
   }
-  const [isCollapsed, setIsCollapsed] = useState(false)
 
   // Hàm tính toán chiều cao của phần mô tả
   const handleToggleCollapse = () => {
@@ -26,15 +45,14 @@ const ProductDetail = () => {
 
   // const [image, setImage] = useState('https://via.placeholder.com/500')
   const thumbnails = [
-    './src/assets/images/product/img-slide-1.jpg',
-    './src/assets/images/product/img-slide-2.webp',
-    './src/assets/images/product/img-slide-3.webp',
-    './src/assets/images/product/img-slide-4.webp',
-    './src/assets/images/product/img-slide-5.webp',
-    './src/assets/images/product/img-slide-6.webp'
+    '/src/assets/images/product/img-slide-1.jpg',
+    '/src/assets/images/product/img-slide-2.webp',
+    '/src/assets/images/product/img-slide-3.webp',
+    '/src/assets/images/product/img-slide-4.webp',
+    '/src/assets/images/product/img-slide-5.webp',
+    '/src/assets/images/product/img-slide-6.webp'
   ]
 
-  const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
@@ -68,7 +86,7 @@ const ProductDetail = () => {
               </div>
 
               <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
-                -29%
+                {product.discount}%
               </span>
 
               {/* Back Button */}
@@ -103,18 +121,16 @@ const ProductDetail = () => {
           {/* Share Section */}
           <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
             <span className='font-light'>Chia sẻ:</span>
-            <img src="./src/assets/images/share/fb.svg" className='w-[30px] h-[30px] ml-4' />
-            <img src="./src/assets/images/share/mess.svg" className='w-[30px] h-[30px] ml-4' />
-            <img src="./src/assets/images/share/twitter.svg" className='w-[30px] h-[30px] ml-4' />
-            <img src="./src/assets/images/share/phone.svg" className='w-[35px] h-[35px] ml-4' />
-            <img src="./src/assets/images/share/link.svg" className='w-[25px] h-[25px] ml-4' />
+            <img src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
+            <img src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
+            <img src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
+            <img src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
+            <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
           </div>
         </div>
         <div className='col-span-1 lg:mt-0 mt-6'>
           <div className='product-heading'>
-            <h1 className='text-[#fca120] font-semibold text-2xl'>
-              Bộ ấm trà bằng sứ BLACK &amp; WHITE hoa văn đen trắng
-            </h1>
+            <h1 className='text-[#fca120] font-semibold text-2xl'>{product.name}</h1>
             <div className='flex gap-[30px] mt-3'>
               <span id='pro_sku' className='text-sm font-light'>
                 Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'>2001256</span>
@@ -124,7 +140,7 @@ const ProductDetail = () => {
               </span>
               <span className='text-sm font-light'>
                 Thương hiệu:
-                <span className='text-[#fca120] font-semibold ml-1'>BLACK WHITE</span>
+                <span className='text-[#fca120] font-semibold ml-1'>{product.brand}</span>
               </span>
             </div>
           </div>
@@ -133,11 +149,11 @@ const ProductDetail = () => {
           <div className='price flex justify-start items-center gap-3 mt-[30px]'>
             <span className='name-price text-[19px] font-semibold'>Giá:</span>
             <div className='pricedetail flex flex-row items-center gap-2 '>
-              <span className='text-[#FF0000] font-semibold text-[24px]'>890,000₫</span>
+              <span className='text-[#FF0000] font-semibold text-[24px]'>{product.price}</span>
               <span className='text-[#878c8f] font-light line-through text-[16px]'>1,250,000₫</span>
 
               {/* Phần Giảm Giá */}
-              <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>-29%</span>
+              <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>{product.discount}%</span>
             </div>
           </div>
 
@@ -203,7 +219,7 @@ const ProductDetail = () => {
             <div className='coupon w-1/2,5 lg:w-[48%]'>
               <CouponCard
                 couponCode={couponCode1}
-                imageUrl='./src/assets/images/coupon/coupon_2_img.webp'
+                imageUrl='/src/assets/images/coupon/coupon_2_img.webp'
                 expirationDate='10/10/2024'
                 title='Miễn phí vận chuyển'
                 description='Đơn hàng từ 300k'
@@ -213,7 +229,7 @@ const ProductDetail = () => {
             <div className='coupon w-1/2,5 lg:w-[48%]'>
               <CouponCard
                 couponCode={couponCode2}
-                imageUrl='./src/assets/images/coupon/coupon_1_img.webp'
+                imageUrl='/src/assets/images/coupon/coupon_1_img.webp'
                 expirationDate='10/10/2024'
                 title='Giảm 20%'
                 description='Đơn hàng từ 200k'
@@ -223,7 +239,7 @@ const ProductDetail = () => {
             <div className='coupon w-1/2,5 lg:w-[48%]'>
               <CouponCard
                 couponCode={couponCode3}
-                imageUrl='./src/assets/images/coupon/coupon_3_img.webp'
+                imageUrl='/src/assets/images/coupon/coupon_3_img.webp'
                 expirationDate='10/10/2024'
                 title='Giảm 10%'
                 description='Đơn hàng từ 100k'
@@ -246,13 +262,7 @@ const ProductDetail = () => {
                 <div
                   className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
                 >
-                  <p>
-                    Như cái tên “ Black &amp; White” đã thể hiện lên tông màu chủ đạo của bộ sưu tập này chỉ với hai màu
-                    đen và trắng kết hợp, sản phẩm đã toát lên vẻ đẹp thuần khiết, phóng khoáng pha chút huyền bí và
-                    sang trọng. Theo phong cách này, khách sử dụng dễ bày biện, trang trí, đặt đồ ăn lên trên. Sản phẩm
-                    được làm từ chất liệu sứ đảm bảo an toàn cho sức khỏe người dùng, dễ dàng bảo quản, tiện lợi khi sử
-                    dụng.
-                  </p>
+                  <p>{product.description}</p>
                   <p>--------------</p>
                   {/* More product description details */}
                   <table className='table-auto w-full border-collapse mt-[10px]'>
@@ -261,13 +271,13 @@ const ProductDetail = () => {
                         <th scope='row' className='btn-th text-left align-top pr-12'>
                           Sản phẩm
                         </th>
-                        <td className=''>Bộ ấm trà</td>
+                        <td className=''>{product.name}</td>
                       </tr>
                       <tr>
                         <th scope='row' className='btn-th text-left align-top pr-12'>
                           Bộ sưu tập
                         </th>
-                        <td className=''>BLACK-&amp;-WHITE</td>
+                        <td className=''>{product.brand}</td>
                       </tr>
                       <tr>
                         <th scope='row' className='btn-th text-left align-top pr-12'>
@@ -317,95 +327,7 @@ const ProductDetail = () => {
       </div>
 
       <div className='mb-20 container'>
-        <div className=''>
-          <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Xem thêm sản phẩm cùng loại</h1>
-          <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
-            <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
-              <div className='relative'>
-                <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                  <img src='./src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
-                </div>
-                <FaRegEye
-                  className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                  title='Xem nhanh'
-                />
-                <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                  -29%
-                </span>
-              </div>
-              <div className='mx-2 text-center space-y-2 mt-3'>
-                <h3>Ấm trà inox không ghỉ</h3>
-                <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                  <span className='text-[#FF0000] font-semibold'>890,000₫</span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px]'>1,250,000₫</span>
-                </div>
-                <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
-                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Cart />
-                  </div>
-                </button>
-              </div>
-            </div>
-            <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
-              <div className='relative'>
-                <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                  <img src='./src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
-                </div>
-                <FaRegEye
-                  className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                  title='Xem nhanh'
-                />
-                <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                  -29%
-                </span>
-              </div>
-              <div className='mx-2 text-center space-y-2 mt-3'>
-                <h3>Ấm trà inox không ghỉ</h3>
-                <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                  <span className='text-[#FF0000] font-semibold'>890,000₫</span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px]'>1,250,000₫</span>
-                </div>
-                <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
-                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Cart />
-                  </div>
-                </button>
-              </div>
-            </div>
-            <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
-              <div className='relative'>
-                <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                  <img src='./src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
-                </div>
-                <FaRegEye
-                  className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                  title='Xem nhanh'
-                />
-                <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                  -29%
-                </span>
-              </div>
-              <div className='mx-2 text-center space-y-2 mt-3'>
-                <h3>Ấm trà inox không ghỉ</h3>
-                <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                  <span className='text-[#FF0000] font-semibold'>890,000₫</span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px]'>1,250,000₫</span>
-                </div>
-                <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
-                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Cart />
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <RelatedProduct id={category._id} />
 
         <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>
@@ -413,8 +335,8 @@ const ProductDetail = () => {
             <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
               <div className='relative'>
                 <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src='./src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                  <img src='./src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.webp' alt='' className='object-cover' />
+                  <img src='/src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
                 </div>
                 <FaRegEye
                   className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'

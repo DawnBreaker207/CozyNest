@@ -81,7 +81,7 @@ const CouponCard = ({ couponCode, imageUrl, expirationDate, title, description, 
             placement='bottom'
             overlayClassName='custom-tooltip'
           >
-            <img src='./src/assets/icon/info.svg' alt='' className='size-5' />
+            <img src='/src/assets/icon/info.svg' alt='' className='size-5' />
           </Tooltip>
         </div>
         <div className='flex justify-between items-center'>

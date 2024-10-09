@@ -33,7 +33,7 @@ function App() {
         { index: true, Component: HomePage },
         { path: 'contact', Component: ContactPage },
         { path: 'news', Component: NewsPage },
-        { path: 'detail', Component: ProductDetail },
+        { path: 'detail/:id', Component: ProductDetail },
         { path: 'cart', Component: CartPage },
         { path: 'cart/check_out_form', Component: pageCheckOut },
         { path: 'intro', Component: Introduction },
