@@ -1,13 +1,44 @@
-import { Form, Input, Button, Checkbox } from 'antd'
-import { NavLink } from 'react-router-dom'
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import instance from '@/configs/axios'
+import { useMutation } from '@tanstack/react-query'
+import { Form, Input, Button, Checkbox, message } from 'antd'
+import { NavLink, useNavigate } from 'react-router-dom'
+type FieldType = {
+  email?: string
+  password?: number
+}
 const Login = () => {
-  const onFinish = (values: any) => {
+  const [messageApi, contextHolder] = message.useMessage()
+  const navigate = useNavigate()
+  const { mutate } = useMutation({
+    mutationFn: async (formData: FieldType) => {
+      try {
+        return await instance.post(`/auth/login`, formData)
+      } catch (error) {
+        throw new Error('Dang nhap that bai')
+      }
+    },
+    onSuccess: (user) => {
+      messageApi.open({
+        type: 'success',
+        content: 'Dang nhap thanh cong'
+      }),
+        localStorage.setItem('user', JSON.stringify(user))
+      setTimeout(() => {
+        navigate(`/`)
+        window.location.reload()
+      }, 600)
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: 'error',
+        content: error.message
+      })
+    }
+  })
+  const onFinish = (values: FieldType) => {
     console.log('Form Values: ', values)
-  }
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed: ', errorInfo)
+    mutate(values)
   }
 
   return (
@@ -21,9 +52,10 @@ const Login = () => {
         backgroundAttachment: 'fixed'
       }}
     >
+      {contextHolder}
       <div className='bg-white p-6 sm:p-8 md:p-10 lg:p-12 xl:p-16 rounded-lg shadow-md w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl bg-opacity-60'>
         <h2 className='text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6'>Đăng nhập</h2>
-        <Form name='login' layout='vertical' onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='off'>
+        <Form name='login' layout='vertical' onFinish={onFinish} autoComplete='off'>
           {/* Trường Email */}
           <Form.Item
             label='Email'

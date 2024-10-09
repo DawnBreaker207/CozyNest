@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Checkbox, Input, Select, Form, RadioChangeEvent, Radio } from 'antd'
 import { BankOutlined, CreditCardOutlined } from '@ant-design/icons'
 import { useState } from 'react'
+import useCart from '@/hooks/useCart'
 
 const { Option } = Select
 const options = [
@@ -30,6 +32,7 @@ const CheckoutPage = () => {
     console.log('radio3 checked', value)
     setValue3(value)
   }
+  const { data, calculateTotal } = useCart() // Sử dụng hook
   return (
     <div className='flex flex-col md:flex-row p-6 bg-background mt-20'>
       {/* Form nhập địa chỉ giao hàng */}
@@ -94,11 +97,11 @@ const CheckoutPage = () => {
       </div>
 
       {/* Tóm tắt đơn hàng */}
-      <div className='w-full md:w-1/3 bg-card p-4 rounded-lg mt-6 md:mt-0 h-[50%] border border-slate-500'>
+      <div className='w-full md:w-1/3 bg-card p-4 rounded-lg mt-6 md:mt-0 border border-slate-500'>
         <h2 className='text-lg font-semibold mb-4'>Tóm tắt đơn hàng</h2>
         <div className='mb-2'>
           <span className='font-medium'>Thành tiền:</span>
-          <span className='float-right'>24,225,000₫</span>
+          <span className='float-right'>{calculateTotal().toLocaleString()}₫</span>
         </div>
         <div className='mb-2'>
           <span className='font-medium'>Vận chuyển:</span>
@@ -106,20 +109,26 @@ const CheckoutPage = () => {
         </div>
         <div className='mb-2'>
           <span className='font-medium'>Tổng cộng:</span>
-          <span className='float-right'>24,225,000₫</span>
+          <span className='float-right'>{calculateTotal().toLocaleString()}₫</span>
         </div>
         <div className='mb-4'>
           <span className='font-medium'>Sản phẩm:</span>
         </div>
         <hr className='mb-4' />
-        <div className='mb-4 flex justify-between lg:gap-4  '>
-          <span className=''>
-            <img src='src/assets/images/product/sp1.2.webp' className='xl:w-20 lg:w-20 w-12 sm:w-[100%] ' alt='' />
-          </span>
-          <span className='font-medium'>Armchair Doulton vintage</span>
-          <span className='float-right'>× 1</span>
-          <span className='float-right'>24,225,000₫</span>
-        </div>
+        {data?.res?.products?.map((product: any) => (
+          <div key={product.productId._id} className='mb-4 flex justify-between lg:gap-4'>
+            <span className='flex items-center'>
+              <img
+                src={product.productId.thumbnail}
+                className='xl:w-20 lg:w-20 w-12 sm:w-[100%]'
+                alt={product.productId.name}
+              />
+            </span>
+            <span className='font-medium'>{product.productId.name}</span>
+            <span className='float-right'>× {product.quantity}</span>
+            <span className='float-right'>{(product.price * product.quantity).toLocaleString()}₫</span>
+          </div>
+        ))}
         <hr className='mb-4' />
         <h2 className='text-lg font-semibold mb-4'>Chính sách bán hàng</h2>
         <p className='text-sm mb-2'>
@@ -136,7 +145,7 @@ const CheckoutPage = () => {
             </Checkbox>
           </Form.Item>
         </Form>
-        <Button block className='bg-destructive text-destructive-foreground mb-4 bg-yellow-600'>
+        <Button block className='bg-yellow-600 text-white mb-4'>
           <span className='hover:text-white'>ĐẶT MUA</span>
         </Button>
       </div>

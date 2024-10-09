@@ -55,7 +55,7 @@ export const removeProduct = async (product: IProduct) => {
 }
 export const editProduct = async (product: IProduct) => {
   try {
-    const response = await instance.put(`/products/${product._id}`, product, {
+    const response = await instance.put(`/products/${product?.res?._id}`, product, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token ? token : ''

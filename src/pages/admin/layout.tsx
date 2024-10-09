@@ -12,7 +12,7 @@ import {
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Avatar, Badge, Button, Dropdown, Input, Layout, Menu, theme } from 'antd'
+import { Avatar, Badge, Button, Input, Layout, Menu, theme } from 'antd'
 import React, { useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useParams } from 'react-router-dom'
 
@@ -25,12 +25,12 @@ const LayoutAdmin: React.FC = () => {
   } = theme.useToken()
   const location = useLocation()
 
-  const menu = (
-    <Menu>
-      <Menu.Item key='1'>1</Menu.Item>
-      <Menu.Item key='2'>2</Menu.Item>
-    </Menu>
-  )
+  // const menu = (
+  //   <Menu>
+  //     <Menu.Item key='1'>1</Menu.Item>
+  //     <Menu.Item key='2'>2</Menu.Item>
+  //   </Menu>
+  // )
   const { id } = useParams()
   const renderHeader = (title: string) => (
     <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
@@ -39,11 +39,9 @@ const LayoutAdmin: React.FC = () => {
           <span className='text-xl text-[#353535] ml-[25px]'>{title}</span>
         </div>
         <div className='flex items-center space-x-4 mr-[14px]'>
-          <Dropdown overlay={menu} trigger={['click']}>
-            <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
-              Nik Shop <DownOutlined className='ml-2' />
-            </button>
-          </Dropdown>
+          <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
+            Nik Shop <DownOutlined className='ml-2' />
+          </button>
           <Badge count={4} className='cursor-pointer'>
             <BellOutlined className='text-xl text-blue-500' />
           </Badge>
@@ -119,11 +117,9 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Category</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Dropdown overlay={menu} trigger={['click']}>
-                      <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
-                        Nik Shop <DownOutlined className='ml-2' />
-                      </button>
-                    </Dropdown>
+                    <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
+                      Nik Shop <DownOutlined className='ml-2' />
+                    </button>
                     <Badge count={4} className='cursor-pointer'>
                       <BellOutlined className='text-xl text-blue-500' />
                     </Badge>
@@ -156,11 +152,9 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Product</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Dropdown overlay={menu} trigger={['click']}>
-                      <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
-                        Nik Shop <DownOutlined className='ml-2' />
-                      </button>
-                    </Dropdown>
+                    <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
+                      Nik Shop <DownOutlined className='ml-2' />
+                    </button>
                     <Badge count={4} className='cursor-pointer'>
                       <BellOutlined className='text-xl text-blue-500' />
                     </Badge>

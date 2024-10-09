@@ -1,10 +1,10 @@
 import { addProduct, editProduct, removeProduct } from '@/services/product'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { message, Modal } from 'antd'
 import { IProduct } from '@/types/product'
 import { ProductZodSchema } from '@/validations/product'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { message } from 'antd'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 type useProductMutationProps = {
   action: 'CREATE' | 'DELETE' | 'UPDATE'
@@ -18,13 +18,18 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
   const form = useForm({
     resolver: zodResolver(ProductZodSchema),
     defaultValues: {
+      originId: null,
       name: '',
-      category: '',
-      base_price: 0,
-      brand: '',
       thumbnail: '',
+      categoryId: '',
+      brand: '',
       description: '',
-      isHidden: false
+      price: 0,
+      discount: 0,
+      sold: 0,
+      isSale: false,
+      isHidden: false,
+      images: [] // Làm mảng cho images
     }
   })
   const { mutate, ...rest } = useMutation({
@@ -32,20 +37,8 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
       switch (action) {
         case 'CREATE':
           return await addProduct(product)
-        case 'DELETE': {
-          return new Promise((resolve) => {
-            Modal.confirm({
-              title: 'Bạn có chắc chắn không?',
-              onOk: async () => {
-                const result = await removeProduct(product)
-                resolve(result)
-              },
-              onCancel: () => {
-                resolve(false)
-              }
-            })
-          })
-        }
+        case 'DELETE':
+          return await removeProduct(product)
         case 'UPDATE':
           return await editProduct(product)
         default:

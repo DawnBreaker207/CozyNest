@@ -1,22 +1,38 @@
-import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined, InboxOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Form, Input, Upload } from 'antd'
-import { Link } from 'react-router-dom'
-
-type FieldType = {
-  name?: string
-  thumbnail?: string
-  isHidden?: boolean
-}
+import { Form, Input, Button, Checkbox, message } from 'antd'
+import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined } from '@ant-design/icons'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ICategory } from '@/types/category'
+import useCategoryMutation from '@/hooks/useCategoryMutations'
+import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Sử dụng hook bạn đã cung cấp
 
 const EditCategoryPage = () => {
-  const onFinish = (values: FieldType) => {
-    console.log('Success:', values)
+  const [messageApi, contextHolder] = message.useMessage()
+  const navigate = useNavigate()
+  const { id } = useParams() // Lấy ID của danh mục từ URL
+
+  const { data, isLoading, isError, error } = useCategoryQuery({ id }) // Lấy danh mục theo ID
+  const { mutate } = useCategoryMutation({
+    action: 'UPDATE',
+    onSuccess: () => {
+      messageApi.success('Cập nhật thành công')
+      setTimeout(() => {
+        navigate(`/admin/categories`)
+      }, 600)
+    }
+  })
+
+  const onFinish = (values: ICategory) => {
+    mutate({ ...data, ...values }) // Kết hợp dữ liệu cũ và mới để cập nhật
   }
+
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>{error.message}</div>
 
   return (
     <>
-      <div className='bg-white rounded-lg '>
-        <Form layout='vertical' onFinish={onFinish}>
+      {contextHolder}
+      <div className='bg-white rounded-lg'>
+        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data?.res }}>
           <div className='flex justify-between'>
             <div>
               <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Edit Category</span>
@@ -38,24 +54,18 @@ const EditCategoryPage = () => {
           <div className='flex justify-between mt-5'>
             <div className='w-[75%] pr-4'>
               <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>General Information</h1>
-              <Form.Item<FieldType> label='Category Name' name='name'>
+              <Form.Item
+                label='Category Name'
+                name='name'
+                rules={[{ required: true, message: 'Tên danh mục là bắt buộc' }]}
+              >
                 <Input placeholder='Type category name here...' className='w-full bg-[#F9F9FC]' />
-              </Form.Item>
-              <h1 className='text-[18px] text-[#353535] font-semibold mb-2'>Media</h1>
-              <Form.Item<FieldType> label='Thumbnail' name='thumbnail'>
-                <Upload.Dragger name='files' action='/upload.do'>
-                  <p className='ant-upload-drag-icon'>
-                    <InboxOutlined />
-                  </p>
-                  <p className='text-[#858D9D] '>Drag and drop image here, or click to upload</p>
-                  <Button className='bg-[#3A5BFF26] text-[#3A5BFF] mt-4 font-semibold'>Add Image</Button>
-                </Upload.Dragger>
               </Form.Item>
             </div>
             <div className='w-[20%]'>
               <div>
                 <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
-                <Form.Item<FieldType> name='isHidden' valuePropName='checked'>
+                <Form.Item name='isHidden' valuePropName='checked'>
                   <Checkbox>Hide Category</Checkbox>
                 </Form.Item>
               </div>
