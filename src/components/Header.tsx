@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
 import {
   DownOutlined,
@@ -25,6 +27,18 @@ const Header = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const products = data?.res?.products || []
   const [quantities, setQuantities] = useState<number[]>([])
+
+  const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    // Thiết lập thời gian ẩn thông báo sau 5 giây
+    const timer = setTimeout(() => {
+      setIsVisible(false)
+    }, 6000)
+
+    // Dọn dẹp để xóa timer khi component unmount
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     // Chỉ thiết lập quantities khi sản phẩm có thay đổi
@@ -147,9 +161,15 @@ const Header = () => {
   ]
   const users: MenuProps['items'] = user
     ? [
-        { label: <a href='#'>{user}</a>, key: '0' },
-        { label: <a href='#'>Đơn hàng</a>, key: '1' },
-        { type: 'divider' },
+        {
+          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+          key: '0'
+        },
+        {
+          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          key: '1'
+        },
+        { type: 'divider' }, // Đường kẻ phân cách
         {
           label: (
             <a href='/' onClick={handleLogout}>
@@ -159,7 +179,12 @@ const Header = () => {
           key: '3'
         }
       ]
-    : [{ label: <NavLink to='/login'>Đăng nhập</NavLink>, key: '1' }]
+    : [
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>, // Hiển thị nút đăng nhập nếu chưa đăng nhập
+          key: '1'
+        }
+      ]
   const { token } = useToken()
 
   const contentStyle: React.CSSProperties = {
@@ -170,6 +195,39 @@ const Header = () => {
   type SearchProps = GetProps<typeof Input.Search>
   const { Search } = Input
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
+
+  const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
+
+  // Lấy dữ liệu từ localStorage khi component render
+  useEffect(() => {
+    const userDataString = localStorage.getItem('user')
+
+    if (userDataString) {
+      const userData = JSON.parse(userDataString)
+
+      // Kiểm tra xem dữ liệu có hợp lệ không
+      if (userData && Object.keys(userData).length > 0) {
+        // Lấy ra ID người dùng từ thuộc tính `res`
+        const retrievedUserId = userData.data.res._id
+        // Gán userId vào state
+        setUserId(retrievedUserId)
+      }
+    }
+  }, []) // useEffect chỉ chạy 1 lần sau khi component mount
+
+  // Sử dụng id từ state
+  const id = userId || null
+  const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+  const userDetail = userData.res
+  // console.log(userDetail.username)
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -237,7 +295,15 @@ const Header = () => {
             <Dropdown menu={{ items: users }} trigger={['click']}>
               <span onClick={(e) => e.preventDefault()}>
                 <Space>
-                  <Button shape='circle' icon={<UserOutlined />} />
+                  {user ? (
+                    <div className='flex'>
+                      <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
+                      {isVisible && <h1 className={`ml-2 mt-1`}>Xin chào {userDetail.username}</h1>}
+                    </div>
+                  ) : (
+                    // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  )}
                 </Space>
               </span>
             </Dropdown>

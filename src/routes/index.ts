@@ -24,6 +24,8 @@ import AdminProductPage from '@/pages/admin/product/ProductPage'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
 import pageCheckOut from '@/pages/website/order/page'
+import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
+import ProfilePage from '@/pages/website/auth/ProfilePage'
 function App() {
   const routes = useRoutes([
     {
@@ -39,6 +41,7 @@ function App() {
         { path: 'intro', Component: Introduction },
         { path: 'login', Component: Login },
         { path: 'register', Component: Register },
+        { path: 'profile', Component: ProfilePage },
         { path: 'reset-password', Component: ResetPassword },
         { path: 'check_out_order', Component: CheckOutOder },
         { path: 'link', Component: LinkPage }
@@ -57,6 +60,7 @@ function App() {
         { path: 'products/:id/edit', Component: ProductEditPage },
         { path: 'order', Component: AdminOrderPage },
         { path: 'customer', Component: AdminCustomerPage },
+        { path: 'customer/:id', Component: AdminCustomerDetailPage },
         { path: 'report', Component: ReportsPage }
       ]
     }

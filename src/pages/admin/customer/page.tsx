@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { download, filters, search } from '@/components/icons'
+import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import { IUsers } from '@/types/user'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, FormProps, Input, Modal, Pagination, Select, Switch } from 'antd'
 import { useState } from 'react'
@@ -7,15 +9,6 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { Link } from 'react-router-dom'
 
-type FieldType = {
-  name?: string
-  email?: string
-  phone?: string
-  address?: string
-  city?: string
-  country?: string
-  state?: string
-}
 const AdminCustomerPage = () => {
   const [checkedId, setCheckedId] = useState<number[]>([])
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -26,7 +19,7 @@ const AdminCustomerPage = () => {
     setIsModalVisible(true)
   }
 
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+  const onFinish: FormProps<IUsers>['onFinish'] = (values) => {
     console.log('Success:', values)
   }
 
@@ -45,31 +38,22 @@ const AdminCustomerPage = () => {
   const handleToggle = (checked: boolean) => {
     setFormVisible(checked)
   }
-  const handleCheckbox = (id: number) => {
-    setCheckedId((prevId) => (prevId.includes(id) ? prevId.filter((existingId) => existingId !== id) : [...prevId, id]))
+  const handleCheckbox = (_id: number) => {
+    setCheckedId((prevId) =>
+      prevId.includes(_id) ? prevId.filter((existingId) => existingId !== _id) : [...prevId, _id]
+    )
   }
-  const users = [
-    { id: 1, name: 'John Bushmill', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 2, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 3, name: 'Mohammad Karim', status: false, orders: '12,091', balance: '$12,091' },
-    { id: 4, name: 'John Bushmill', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 5, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 6, name: 'Mohammad Karim', status: false, orders: '12,091', balance: '$12,091' },
-    { id: 7, name: 'John Bushmill', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 8, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 9, name: 'Mohammad Karim', status: false, orders: '12,091', balance: '$12,091' },
-    { id: 10, name: 'John Bushmill', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 11, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 12, name: 'Mohammad Karim', status: false, orders: '12,091', balance: '$12,091' },
-    { id: 13, name: 'John Bushmill', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 14, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 15, name: 'Mohammad Karim', status: false, orders: '12,091', balance: '$12,091' },
-    { id: 16, name: 'John Bushmill', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 17, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 18, name: 'Mohammad Karim', status: false, orders: '12,091', balance: '$12,091' },
-    { id: 19, name: 'John Bushmill', status: true, orders: '12,091', balance: '$12,091' },
-    { id: 20, name: 'Laura Prichet', status: true, orders: '12,091', balance: '$12,091' }
-  ]
+  const { data, isLoading, error } = useAdminUsersQuery()
+  const users = data?.data || []
+  // console.log(users)
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
   // Tính toán danh sách người dùng cho trang hiện tại
   const startIndex = (currentPage - 1) * pageSize
   const endIndex = startIndex + pageSize
@@ -118,19 +102,15 @@ const AdminCustomerPage = () => {
       </div>
       <section className='mt-6'>
         <div className='grid grid-cols-5 gap-6'>
-          {currentUsers.map((user: any) => (
+          {currentUsers.map((user: any, index: any) => (
             <div
-              key={user.id}
-              className={`p-4 rounded-xl shadow-shadowUser ${checkedId.includes(user.id) ? 'border border-[#3A5BFF]' : ''}`}
+              key={index}
+              className={`p-4 rounded-xl shadow-shadowUser ${checkedId.includes(user._id) ? 'border border-[#3A5BFF]' : ''}`}
             >
               <div className='relative flex justify-center items-center'>
-                <Checkbox className='absolute top-0 left-0' onClick={() => handleCheckbox(user.id)} />
+                <Checkbox className='absolute top-0 left-0' onClick={() => handleCheckbox(user._id)} />
                 <div className='flex items-center justify-center'>
-                  <img
-                    src='https://picsum.photos/200'
-                    alt=''
-                    className='bg-cover bg-center size-20 rounded-full bg-[#E0E2E7]'
-                  />
+                  <img src={user.avatar} alt='' className='bg-cover bg-center size-20 rounded-full bg-[#E0E2E7]' />
                 </div>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -155,8 +135,8 @@ const AdminCustomerPage = () => {
                 </svg>
               </div>
               <div className='text-center mt-4'>
-                <Link to={`/admin/customer/${user.id}`}>
-                  <h3 className='font-medium text-sm text-[#353535] mb-1 cursor-pointer'>{user.name}</h3>
+                <Link to={`/admin/customer/${user._id}`}>
+                  <h3 className='font-medium text-sm text-[#353535] mb-1 cursor-pointer'>{user.username}</h3>
                 </Link>
                 {user.status ? (
                   <span className='text-[#3A5BFF] text-[12px] bg-customBlue px-2 py-[2px] rounded-md'>Active</span>
@@ -166,7 +146,7 @@ const AdminCustomerPage = () => {
               </div>
               <div className=' my-4'>
                 <svg xmlns='http://www.w3.org/2000/svg' width='197' height='2' viewBox='0 0 197 2' fill='none'>
-                  <path d='M0 1H197' stroke='#C2C6CE' stroke-dasharray='2 5' />
+                  <path d='M0 1H197' stroke='#C2C6CE' strokeDasharray='2 5' />
                 </svg>
               </div>
               <div className='grid grid-cols-2 item-center gap-3 text-center'>
