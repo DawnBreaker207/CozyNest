@@ -36,7 +36,7 @@ const Banner = () => {
       {/* Nút sang trái */}
       <Button
         onClick={prev}
-        className='hidden md:block absolute top-1/2 transform -translate-y-2/3 left-4 bg-white text-black px-2  rounded-full shadow-lg hover:bg-gray-200 transition'
+        className='hidden md:flex items-center justify-center absolute top-1/2 transform -translate-y-1/2 left-4 bg-white text-black px-2 rounded-full shadow-lg hover:bg-gray-200'
       >
         <LeftOutlined />
       </Button>
@@ -44,7 +44,7 @@ const Banner = () => {
       {/* Nút sang phải */}
       <Button
         onClick={next}
-        className='hidden md:block absolute top-1/2 transform -translate-y-2/3 right-4 bg-white text-black  px-2 rounded-full shadow-lg hover:bg-gray-200 transition'
+        className='hidden md:flex items-center justify-center absolute top-1/2 transform -translate-y-1/2 right-4 bg-white text-black px-2 rounded-full shadow-lg hover:bg-gray-200'
       >
         <RightOutlined />
       </Button>
