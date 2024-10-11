@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { filters } from '@/components/icons'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 // import { PlusOutlined } from '@ant-design/icons'

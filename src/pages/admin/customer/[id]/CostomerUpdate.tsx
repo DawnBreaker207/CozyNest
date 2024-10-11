@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, Form, Input, Button, Switch, Select, message } from 'antd'
 import PhoneInput from 'react-phone-input-2'
 import { useParams } from 'react-router-dom'
