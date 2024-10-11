@@ -2,6 +2,8 @@
 import { download, filters, search } from '@/components/icons'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { IUsers } from '@/types/user'
+// import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
+// import { IUsers } from '@/types/user'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, FormProps, Input, Modal, Pagination, Select, Switch } from 'antd'
 import { useState } from 'react'
@@ -19,8 +21,14 @@ const AdminCustomerPage = () => {
     setIsModalVisible(true)
   }
 
+  // const { mutate: addUser } = useAdminUsersMutations({
+  //   action: 'CREATE'
+  // })
+
   const onFinish: FormProps<IUsers>['onFinish'] = (values) => {
     console.log('Success:', values)
+    // addUser(values)
+    // handleCancel()
   }
 
   const handleCancel = () => {

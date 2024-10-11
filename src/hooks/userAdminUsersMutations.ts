@@ -1,22 +1,19 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { message, Modal } from 'antd'
-import { ProductZodSchema } from '@/validations/product'
+import { message } from 'antd'
 import { IUsers } from '@/types/user'
-import { addUser, editUser, removeUser } from '@/services/usersAdmin'
+import { editUser } from '@/services/usersAdmin'
 
-type useProductMutationProps = {
-  action: 'CREATE' | 'DELETE' | 'UPDATE'
+type useAdminUsersMutationProps = {
+  action: 'UPDATE'
   onSuccess?: () => void
 }
 
-const useAdminUsersMutations = ({ action, onSuccess }: useProductMutationProps) => {
+const useAdminUsersMutations = ({ action, onSuccess }: useAdminUsersMutationProps) => {
   const queryClient = useQueryClient()
   const [messageApi, contextHolder] = message.useMessage()
 
   const form = useForm({
-    resolver: zodResolver(ProductZodSchema),
     defaultValues: {
       username: '',
       email: '',
@@ -33,22 +30,6 @@ const useAdminUsersMutations = ({ action, onSuccess }: useProductMutationProps) 
   const { mutate, ...rest } = useMutation({
     mutationFn: async (user: IUsers) => {
       switch (action) {
-        case 'CREATE':
-          return await addUser(user)
-        case 'DELETE': {
-          return new Promise((resolve) => {
-            Modal.confirm({
-              title: 'Bạn có chắc chắn không?',
-              onOk: async () => {
-                const result = await removeUser(user)
-                resolve(result)
-              },
-              onCancel: () => {
-                resolve(false)
-              }
-            })
-          })
-        }
         case 'UPDATE':
           return await editUser(user)
         default:
@@ -62,6 +43,7 @@ const useAdminUsersMutations = ({ action, onSuccess }: useProductMutationProps) 
           queryKey: ['USER_KEY']
         })
       } else {
+        // Xử lý trường hợp không có dữ liệu trả về từ API
         messageApi.error({
           content: 'Có lỗi xảy ra, vui lòng thử lại sau',
           duration: 2

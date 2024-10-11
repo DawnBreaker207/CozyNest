@@ -31,7 +31,6 @@ const Header = () => {
   const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
-    // Thiết lập thời gian ẩn thông báo sau 5 giây
     const timer = setTimeout(() => {
       setIsVisible(false)
     }, 6000)
@@ -248,7 +247,7 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menus }}>
               <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs ' />
+                Sản phẩm <DownOutlined className='text-xs max-w-[8px] w-[100%] h-auto' />
               </NavLink>
             </Dropdown>
             <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>

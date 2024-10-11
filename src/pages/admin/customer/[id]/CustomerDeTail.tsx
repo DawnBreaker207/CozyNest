@@ -1,11 +1,36 @@
 import { filters } from '@/components/icons'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+// import { PlusOutlined } from '@ant-design/icons'
 import { Select, Table } from 'antd'
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import CustomerModal from './CostomerUpdate'
 
 const AdminCustomerDetailPage = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [formVisible, setFormVisible] = useState(false)
+
+  const showModal = () => {
+    setIsModalVisible(true)
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+  }
+
+  const handleToggle = (checked: boolean) => {
+    setFormVisible(checked)
+  }
+  const validatePhoneNumber = (_rule: any, value: any) => {
+    if (!value || value.replace(/\D/g, '').length === 10) {
+      return Promise.resolve()
+    }
+    return Promise.reject('Số điện thoại không hợp lệ!')
+  }
+
   const { id } = useParams() // Lấy productId từ URL
   const { data, isLoading, error } = useAdminUsersQuery({ id })
+
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -355,6 +380,21 @@ const AdminCustomerDetailPage = () => {
                   <span className='text-[#353535] text-sm'>1 Day Ago</span>
                 </div>
               </div>
+            </div>
+            <div>
+              <button
+                onClick={showModal}
+                className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm '
+              >
+                Update Customer
+              </button>
+              <CustomerModal
+                isModalVisible={isModalVisible}
+                handleCancel={handleCancel}
+                handleToggle={handleToggle}
+                formVisible={formVisible}
+                validatePhoneNumber={validatePhoneNumber}
+              />
             </div>
           </div>
         </section>

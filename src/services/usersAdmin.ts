@@ -27,35 +27,9 @@ export const getUserById = async (id: number | string) => {
     console.log(error)
   }
 }
-export const addUser = async (users: IUsers) => {
-  try {
-    const response = await instance.post(`/users`, users, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token ? token : ''
-      }
-    })
-    return response.data
-  } catch (error) {
-    console.log(error)
-  }
-}
-export const removeUser = async (users: IUsers) => {
-  try {
-    const response = await instance.delete(`/users/${users._id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token ? token : ''
-      }
-    })
-    return response.data
-  } catch (error) {
-    console.log(error)
-  }
-}
 export const editUser = async (users: IUsers) => {
   try {
-    const response = await instance.put(`/users/${users._id}`, users, {
+    const response = await instance.patch(`/users/${users?._id}`, users, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token ? token : ''
@@ -64,5 +38,6 @@ export const editUser = async (users: IUsers) => {
     return response.data
   } catch (error) {
     console.log(error)
+    throw new Error('Failed to update user')
   }
 }

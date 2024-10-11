@@ -272,7 +272,7 @@ const CustomFooter = () => {
 
         <Row justify='center' className='mt-7'>
           <Col>
-            <p className='text-xs text-center mb-4'>Copyright © 2024 Home Haven. Powered by Haravan</p>
+            <p className='text-xs text-center mb-4'>2024 Created by CozyNest</p>
           </Col>
         </Row>
       </div>
