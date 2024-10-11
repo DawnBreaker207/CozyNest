@@ -26,8 +26,8 @@ const RelatedProduct = ({ id }: { id: string | number }) => {
           <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
             <div className='relative'>
               <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                <img src='/src/assets/images/product/sp1.webp' alt='' className='object-cover' />
-                <img src='/src/assets/images/product/sp1.2.webp' alt='' className='object-cover' />
+                <img src={product?.thumbnail} alt='' className='object-cover' />
+                <img src={product?.thumbnail} alt='' className='object-cover' />
               </div>
               <FaRegEye
                 className='absolute left-[40%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'

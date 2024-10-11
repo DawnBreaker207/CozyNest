@@ -8,11 +8,12 @@ import { useProductQuery } from '@/hooks/useProductQuery'
 import { useParams } from 'react-router-dom'
 import RelatedProduct from '../_components/RelatedProduct'
 const ProductDetail = () => {
-  const { id } = useParams() // Lấy productId từ URL
-  const { data, isLoading, error } = useProductQuery({ id })
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
+
+  const { id } = useParams() // Lấy productId từ URL
+  const { data, isLoading, error } = useProductQuery({ id })
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -26,6 +27,7 @@ const ProductDetail = () => {
   if (!data || !data.res) return <p>Product not found</p>
   const product = data.res
   const category = product.categoryId?.[0]
+  // console.log(category.products)
 
   const increase = () => {
     if (count < 10) setCount(count + 1)

@@ -1,6 +1,7 @@
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import ProfileModal from './ProfileUpdate'
 
 const ProfilePage = () => {
   const navigate = useNavigate()
@@ -23,12 +24,33 @@ const ProfilePage = () => {
     }
   }, []) // useEffect chỉ chạy 1 lần sau khi component mount
 
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [formVisible, setFormVisible] = useState(false)
+  const showModal = () => {
+    setIsModalVisible(true)
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+  }
+
+  const handleToggle = (checked: boolean) => {
+    setFormVisible(checked)
+  }
+
+  const validatePhoneNumber = (_rule: any, value: any) => {
+    if (!value || value.replace(/\D/g, '').length === 10) {
+      return Promise.resolve()
+    }
+    return Promise.reject('Số điện thoại không hợp lệ!')
+  }
+
   // Sử dụng id từ state
   const id = userId || null
   const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div></div>
   }
 
   if (error) {
@@ -166,9 +188,24 @@ const ProfilePage = () => {
             </div>
           </div>
           <div className='flex flex-col gap-2 flex items-center justify-center'>
+            <div>
+              <button
+                onClick={showModal}
+                className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm '
+              >
+                Cập nhật tài khoản
+              </button>
+              <ProfileModal
+                isModalVisible={isModalVisible}
+                handleCancel={handleCancel}
+                handleToggle={handleToggle}
+                formVisible={formVisible}
+                validatePhoneNumber={validatePhoneNumber}
+              />
+            </div>
             <button
               type='button'
-              className='w-[200px] h-[39px] bg-blue-500 rounded-lg flex items-center justify-center'
+              className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm '
             >
               Quên mật khẩu
             </button>
@@ -176,7 +213,7 @@ const ProfilePage = () => {
             <button
               onClick={handleLogout}
               type='button'
-              className='w-[200px] h-[39px] bg-red-500 rounded-lg flex items-center justify-center'
+              className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[red] text-sm '
             >
               Đăng xuất
             </button>

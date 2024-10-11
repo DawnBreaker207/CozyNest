@@ -25,7 +25,7 @@ import AdminOrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
 import pageCheckOut from '@/pages/website/order/page'
 import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
-import ProfilePage from '@/pages/website/auth/ProfilePage'
+import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
 function App() {
   const routes = useRoutes([
     {
