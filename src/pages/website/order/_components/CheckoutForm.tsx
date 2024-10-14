@@ -3,6 +3,7 @@ import { Button, Checkbox, Input, Select, Form, RadioChangeEvent, Radio } from '
 import { BankOutlined, CreditCardOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import useCart from '@/hooks/useCart'
+import { Link } from 'react-router-dom'
 
 const { Option } = Select
 const options = [
@@ -145,9 +146,11 @@ const CheckoutPage = () => {
             </Checkbox>
           </Form.Item>
         </Form>
-        <Button block className='bg-yellow-600 text-white mb-4'>
-          <span className='hover:text-white'>ĐẶT MUA</span>
-        </Button>
+        <Link to={`/check_out_order`}>
+          <Button block className='bg-yellow-600 text-white mb-4'>
+            <span className='hover:text-white'>ĐẶT MUA</span>
+          </Button>
+        </Link>
       </div>
     </div>
   )

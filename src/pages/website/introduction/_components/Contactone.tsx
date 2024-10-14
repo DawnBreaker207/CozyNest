@@ -1,6 +1,6 @@
 const Contactone = () => {
   return (
-    <div className=' md:px-2'>
+    <div className='container mx-auto md:px-2'>
       <h1 className='text-xl font-bold text-center mt-10 -mb-5'>Về chúng tôi</h1>
       <div className='text-center py-8'>
         <div className='flex flex-col md:flex-row justify-around items-center'>

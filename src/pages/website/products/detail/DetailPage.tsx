@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { GrFormNext } from 'react-icons/gr'
 import { GrFormPrevious } from 'react-icons/gr'
 import { useProductQuery } from '@/hooks/useProductQuery'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import RelatedProduct from '../_components/RelatedProduct'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
@@ -175,12 +175,22 @@ const ProductDetail = () => {
             </div>
             <div className=''>
               <div className=' flex gap-[12px] mt-[22px]'>
-                <button className='bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'>
-                  <span className='relative z-10 text-[16px]'>Thêm Vào Giỏ</span>
-                </button>
-                <button className='bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'>
-                  <span className='relative z-10'>Mua Ngay</span>
-                </button>
+                <Link
+                  to=''
+                  className='bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
+                >
+                  <button className='w-full'>
+                    <span className='relative z-10 text-[16px]'>Thêm Vào Giỏ</span>
+                  </button>
+                </Link>
+                <Link
+                  to='/cart'
+                  className='bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
+                >
+                  <button className='w-full'>
+                    <span className='relative z-10'>Mua Ngay</span>
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

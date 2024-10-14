@@ -53,7 +53,7 @@ const Linkone: React.FC = () => {
   ]
 
   return (
-    <div className='lg:px-[75px]'>
+    <div className='lg:px-[75px] container mx-auto'>
       <div className='flex flex-col md:flex-row p-4 mt-[10%]'>
         {/* Main content */}
         <div className='bg-white p-4 mb-6 lg:max-w-[987px] rounded-lg shadow-shadowUser'>

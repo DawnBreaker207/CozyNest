@@ -12,7 +12,7 @@ const News = () => {
       date: '13 Tháng 07, 2023',
       image:
         'https://file.hstatic.net/200000748041/article/screen_shot_2023-07-13_at_10.22.42_899b3463f971438b93e951e8475f69ea_grande.png',
-      link: '/link-1'
+      link: '/link'
     },
     {
       title: 'Những điều cần biết để lựa chọn bộ bàn ăn phù hợp với ngôi nhà bạn',
@@ -20,7 +20,7 @@ const News = () => {
       date: '13 Tháng 07, 2023',
       image:
         'https://file.hstatic.net/200000748041/article/screen_shot_2023-07-13_at_10.21.03_744e96d8ac574728a4b81008f1f4131a_grande.png',
-      link: '/link-2'
+      link: '/link'
     },
     {
       title: 'Mua sofa giường mang cả thiên đường đến những căn hộ nhỏ',
@@ -28,7 +28,7 @@ const News = () => {
       date: '13 Tháng 07, 2023',
       image:
         'https://file.hstatic.net/200000748041/article/screen_shot_2023-07-13_at_10.18.57_c2c5c9603d97452e8661433e95e159b3_grande.png',
-      link: '/link-3'
+      link: '/link'
     },
     {
       title: 'Những điều cần biết để lựa chọn bộ bàn ăn phù hợp với ngôi nhà bạn',
@@ -36,7 +36,7 @@ const News = () => {
       date: '13 Tháng 07, 2023',
       image:
         'https://file.hstatic.net/200000748041/article/screen_shot_2023-07-13_at_10.21.03_744e96d8ac574728a4b81008f1f4131a_grande.png',
-      link: '/link-2'
+      link: '/link'
     }
   ]
 

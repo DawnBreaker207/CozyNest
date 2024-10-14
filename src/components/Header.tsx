@@ -242,7 +242,7 @@ const Header = () => {
             />
           </a>
           <div className='hidden md:flex md:items-center space-x-8 mr-20 text-lg md:text-base md:mr-[5px]'>
-            <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
+            <NavLink to={'/'} className='text-muted hover:text-muted-foreground'>
               Trang chủ
             </NavLink>
             <Dropdown menu={{ items: menus }}>
@@ -250,16 +250,16 @@ const Header = () => {
                 Sản phẩm <DownOutlined className='text-xs max-w-[8px] w-[100%] h-auto' />
               </NavLink>
             </Dropdown>
-            <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
+            <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
               Giới thiệu
             </NavLink>
-            <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
+            <NavLink to={'/link'} className='text-muted hover:text-muted-foreground'>
               Cẩm nang
             </NavLink>
-            <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
+            <NavLink to={'/contact'} className='text-muted hover:text-muted-foreground'>
               Liên hệ
             </NavLink>
-            <NavLink to={'#'} className='text-muted hover:text-muted-foreground'>
+            <NavLink to={'/news'} className='text-muted hover:text-muted-foreground'>
               Thông báo
             </NavLink>
           </div>
