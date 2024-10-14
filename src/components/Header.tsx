@@ -101,6 +101,48 @@ const Header = () => {
       label: <span className='text-muted-foreground'>Chương trình khuyến mãi</span>
     }
   ]
+  const menu1: MenuProps['items'] = [
+    {
+      key: '1',
+      label: (
+        <Link to={`/chinh-sach-ban-hang`} className='text-muted-foreground'>
+          Chính sách bán hàng
+        </Link>
+      )
+    },
+    {
+      key: '2',
+      label: (
+        <Link to={`giao-hang-va-lap-dat`} className='text-muted-foreground'>
+          Chính sách giao hàng & Lắp đặt
+        </Link>
+      )
+    },
+    {
+      key: '3',
+      label: (
+        <Link to={`chinh-sach-doi-tra`} className='text-muted-foreground'>
+          Chính sách đổi trả
+        </Link>
+      )
+    },
+    {
+      key: '4',
+      label: (
+        <Link to={`bao-hanh-va-bao-tri`} className='text-muted-foreground'>
+          Chính sách bảo hành và bảo trì
+        </Link>
+      )
+    },
+    {
+      key: '5',
+      label: (
+        <Link to={`khach-hang-than-thiet`} className='text-muted-foreground'>
+          Khách hàng thân thiết
+        </Link>
+      )
+    }
+  ]
 
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
@@ -259,6 +301,11 @@ const Header = () => {
             <NavLink to={'/contact'} className='text-muted hover:text-muted-foreground'>
               Liên hệ
             </NavLink>
+            <Dropdown menu={{ items: menu1 }}>
+              <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
+                Dịch vụ <DownOutlined className='text-xs max-w-[8px] w-[100%] h-auto' />
+              </NavLink>
+            </Dropdown>
             <NavLink to={'/news'} className='text-muted hover:text-muted-foreground'>
               Thông báo
             </NavLink>
