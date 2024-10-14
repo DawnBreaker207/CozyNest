@@ -160,30 +160,30 @@ const Header = () => {
   ]
   const users: MenuProps['items'] = user
     ? [
-        {
-          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
-          key: '0'
-        },
-        {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={handleLogout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
+      {
+        label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+        key: '0'
+      },
+      {
+        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+        key: '1'
+      },
+      { type: 'divider' }, // Đường kẻ phân cách
+      {
+        label: (
+          <a href='/' onClick={handleLogout}>
+            Đăng xuất
+          </a>
+        ),
+        key: '3'
+      }
+    ]
     : [
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>, // Hiển thị nút đăng nhập nếu chưa đăng nhập
-          key: '1'
-        }
-      ]
+      {
+        label: <NavLink to='/login'>Đăng nhập</NavLink>, // Hiển thị nút đăng nhập nếu chưa đăng nhập
+        key: '1'
+      }
+    ]
   const { token } = useToken()
 
   const contentStyle: React.CSSProperties = {
@@ -207,7 +207,7 @@ const Header = () => {
       // Kiểm tra xem dữ liệu có hợp lệ không
       if (userData && Object.keys(userData).length > 0) {
         // Lấy ra ID người dùng từ thuộc tính `res`
-        const retrievedUserId = userData.data.res._id
+        const retrievedUserId = userData?.data?.res?._id
         // Gán userId vào state
         setUserId(retrievedUserId)
       }
@@ -225,7 +225,7 @@ const Header = () => {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-  const userDetail = userData.res
+  const userDetail = userData?.res
   // console.log(userDetail.username)
 
   return (
