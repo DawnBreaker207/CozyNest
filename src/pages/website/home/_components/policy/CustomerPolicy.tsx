@@ -15,7 +15,7 @@ const CustomerPolicy = () => {
                   <p className='max-w-[1024px] w-[100%] h-auto mt-[0.6em] mb-[0.6em] block mx-auto'>
                     <img
                       src='//file.hstatic.net/200000065946/file/3297_132516859fb5697dc5235265d648591a_9b76952c4e454d8d9e7afce4e244fa7c_1024x1024.jpg'
-                      alt='MOHOmie'
+                      alt='CozyNest'
                     />
                   </p>
                   <p>&nbsp;</p>
@@ -23,8 +23,8 @@ const CustomerPolicy = () => {
                     <em>
                       <strong className='text-black'>“CozyNest&nbsp;– Become COZYNEST’s homies”.</strong>
                     </em>{' '}
-                    Đối với MOHO, mỗi quý khách hàng đều là “người thân” – “homie” của MOHO, người mà MOHO luôn trân
-                    quý.
+                    Đối với CozyNest, mỗi quý khách hàng đều là “người thân” – “homie” của CozyNest, người mà CozyNest
+                    luôn trân quý.
                   </p>
                   <h2 className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
                     <strong className='text-black text-[1.2em]'>1. Cách tích điểm:</strong>
@@ -34,7 +34,7 @@ const CustomerPolicy = () => {
                   </p>
                   <p>
                     - Khi tích đủ 20 điểm tương đương với 2,000,000đ; quý khách hàng sẽ trở thành Khách Hàng Thân Thiết
-                    – MOHOmie của MOHO.
+                    – CozyNest của CozyNest.
                   </p>
                   <p className='max-w-[1024px] w-[100%] h-auto mt-[0.6em] mb-[0.6em] block mx-auto'>
                     <img
@@ -47,16 +47,16 @@ const CustomerPolicy = () => {
                     <strong className='text-black text-[1.2em]'>2. Hạng khách hàng:</strong>
                   </h2>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHOmie Bronze (Hạng Đồng): tích lũy điểm đạt 20 điểm tương đương với 2,000,000đ.
+                    - CozyNest Bronze (Hạng Đồng): tích lũy điểm đạt 20 điểm tương đương với 2,000,000đ.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHOmie Silver (Hạng Bạc): tích lũy điểm đạt 50 điểm tương đương với 5,000,000đ.
+                    - CozyNest Silver (Hạng Bạc): tích lũy điểm đạt 50 điểm tương đương với 5,000,000đ.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHOmie Gold (Hạng Vàng): tích lũy điểm đạt 150 điểm tương đương với 15,000,000đ.
+                    - CozyNest Gold (Hạng Vàng): tích lũy điểm đạt 150 điểm tương đương với 15,000,000đ.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHOmie Diamond (Hạng Kim Cương): tích lũy điểm đạt 500 điểm tương đương với 50,000,000đ.
+                    - CozyNest Diamond (Hạng Kim Cương): tích lũy điểm đạt 500 điểm tương đương với 50,000,000đ.
                   </p>
                   <p className='max-w-[1024px] w-[100%] h-auto mt-[0.6em] mb-[0.6em] block mx-auto'>
                     <img
@@ -69,16 +69,16 @@ const CustomerPolicy = () => {
                     <strong className='text-black text-[1.2em]'>3.&nbsp;Ưu đãi:</strong>
                   </h2>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHOmie Bronze (Hạng Đồng): hạng khởi tạo, chưa có ưu đãi.
+                    - CozyNest Bronze (Hạng Đồng): hạng khởi tạo, chưa có ưu đãi.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHOmie Silver (Hạng Bạc): giảm giá <strong>3%</strong> cho tất cả đơn hàng.
+                    - CozyNest Silver (Hạng Bạc): giảm giá <strong>3%</strong> cho tất cả đơn hàng.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHOmie Gold (Hạng Vàng): giảm giá <strong>5%</strong> cho tất cả đơn hàng.
+                    - CozyNest Gold (Hạng Vàng): giảm giá <strong>5%</strong> cho tất cả đơn hàng.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHOmie Diamond (Hạng Kim Cương): giảm giá <strong>7%</strong> cho tất cả đơn hàng.
+                    - CozyNest Diamond (Hạng Kim Cương): giảm giá <strong>7%</strong> cho tất cả đơn hàng.
                   </p>
                   <p className='max-w-[1024px] w-[100%] h-auto mt-[0.6em] mb-[0.6em] block mx-auto'>
                     <img
@@ -91,7 +91,8 @@ const CustomerPolicy = () => {
                     <strong className='text-black text-[1.2em]'>4. Lưu ý:</strong>
                   </h2>
                   <div>
-                    - Ưu đãi giảm giá dựa trên mức giá đã khuyến mãi theo chương trình khuyến mãi hiện hành của MOHO.
+                    - Ưu đãi giảm giá dựa trên mức giá đã khuyến mãi theo chương trình khuyến mãi hiện hành của
+                    CozyNest.
                   </div>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>- Không áp dụng đối với sản phẩm thanh lý.</p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
@@ -99,8 +100,8 @@ const CustomerPolicy = () => {
                     sinh đơn hàng mới nhưng không giao hàng thành công đơn hàng đó.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - Quyết định của Nội Thất MOHO là quyết định cuối cùng&nbsp;và có thể thay đổi mà không cần thông
-                    báo trước.&nbsp;
+                    - Quyết định của Nội Thất CozyNest là quyết định cuối cùng&nbsp;và có thể thay đổi mà không cần
+                    thông báo trước.&nbsp;
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
                     - Chính sách này không áp dụng cho các sản phẩm trong danh mục Đồ Trang Trí.

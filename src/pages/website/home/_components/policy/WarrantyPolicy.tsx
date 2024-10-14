@@ -20,12 +20,12 @@ const WarrantyPolicy = () => {
                     <strong className='text-black'>2. Phạm vi bảo hành:</strong>
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHO bảo hành miễn phí cho các sản phẩm bị hư hỏng do lỗi chất liệu&nbsp; (không bao gồm yếu tố
+                    - CozyNet bảo hành miễn phí cho các sản phẩm bị hư hỏng do lỗi chất liệu&nbsp; (không bao gồm yếu tố
                     màu sắc do mỗi đợt sản xuất màu gỗ, vân gỗ và mắt gỗ&nbsp;có thể chênh lệch đôi chút vì đặc tính tự
-                    nhiên của&nbsp;gỗ) , lỗi kỹ thuật và lỗi lắp đặt từ phía MOHO.
+                    nhiên của&nbsp;gỗ) , lỗi kỹ thuật và lỗi lắp đặt từ phía CozyNet.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - MOHO <strong className='text-black'>không bảo hành</strong> cho các trường hợp:
+                    - CozyNet <strong className='text-black'>không bảo hành</strong> cho các trường hợp:
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
                     + Thiệt hại do thiên tai, cháy nổ,… các trường hợp bất khả kháng.
@@ -49,16 +49,16 @@ const WarrantyPolicy = () => {
                     nhiên, oxy hóa của bề mặt sản phẩm, xù lông vải, xẹp lún,...
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    + Các sản phẩm thuộc chương trình giảm giá không còn được bán trên website moho.com.vn.
+                    + Các sản phẩm thuộc chương trình giảm giá không còn được bán trên website CozyNet.com.vn.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
                     <b className='text-black'>3. Chính sách bảo trì:</b> đối với các sản phẩm không nằm trong phạm vi
-                    bảo hành hoặc hết thời hạn bảo hành 2 năm, MOHO vẫn nhận bảo trì trọn đời sản phẩm với chi phí hợp
-                    lý tùy theo tình trạng sản phẩm.
+                    bảo hành hoặc hết thời hạn bảo hành 2 năm, CozyNet vẫn nhận bảo trì trọn đời sản phẩm với chi phí
+                    hợp lý tùy theo tình trạng sản phẩm.
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
-                    - Quyết định của <a href='https://moho.com.vn/'>Nội Thất</a> MOHO là quyết định cuối cùng và có thể
-                    thay đổi mà không cần thông báo trước.&nbsp;
+                    - Quyết định của <a href='https://moho.com.vn/'>Nội Thất</a> CozyNet là quyết định cuối cùng và có
+                    thể thay đổi mà không cần thông báo trước.&nbsp;
                   </p>
                   <p className='mt-[0.6em] mb-[0.6em] text-[#666] block'>
                     <em>* Các chính sách này không áp dụng cho các sản phẩm trong danh mục Đồ Trang Trí</em>
