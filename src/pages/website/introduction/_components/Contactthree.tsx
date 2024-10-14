@@ -1,6 +1,6 @@
 const Contactthree = () => {
   return (
-    <div className='mb-50'>
+    <div className='container mx-auto mb-50 mt-20'>
       <div className='bg-gray-100 flex justify-center items-center p-8'>
         <div className='bg-white shadow-lg rounded-lg p-8 flex flex-col md:flex-row w-full max-w-6xl mb-4'>
           {/* Hình ảnh */}

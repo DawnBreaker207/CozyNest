@@ -21,105 +21,11 @@ const ProductList = ({ products }: ProductListProps) => {
     addToCart(productId) // Thêm sản phẩm vào giỏ hàng
     messageApi.success('Thêm vào giỏ hàng thành công!')
   }
-  // const [visible, setVisible] = useState(false)
-  // const [open, setOpen] = useState(false)
-
-  // const show = () => {
-  //   setOpen(true)
-  // }
-
-  // const onClose = () => {
-  //   setVisible(false)
-  //   setOpen(false)
-  // }
-
-  // const menu: MenuProps['items'] = [
-  //   { key: '1', label: 'Giá: Thấp đến Cao', className: 'hover:bg-yellow-500' },
-  //   { key: '2', label: 'Giá: Cao đến Thấp', className: 'hover:bg-yellow-500' },
-  //   { key: '3', label: 'Từ A - Z', className: 'hover:bg-yellow-500' },
-  //   { key: '4', label: 'Từ Z - A', className: 'hover:bg-yellow-500' },
-  //   { key: '5', label: 'Sản phẩm bán chạy', className: 'hover:bg-yellow-500' }
-  // ]
-
   return (
     <>
       {contextHolder}
-      {/* <div className='flex flex-row justify-between items-center my-4 px-8 space-x-2 md:space-x-4'>
-        <Button icon={<FilterOutlined />} onClick={show} className='flex items-center text-sm md:text-base'>
-          Bộ lọc
-        </Button>
-        <Dropdown menu={{ items: menu }} placement='bottomRight'>
-          <Button className='flex items-center text-sm md:text-base'>
-            <SortAscendingOutlined className='mr-2' />
-            Sắp xếp
-          </Button>
-        </Dropdown>
-      </div>
-      <hr className='my-4 ' />
-      <Drawer width={280} title='BỘ LỌC' onClose={onClose} open={open} placement='left'>
-        <div>
-          <div className='p-2'>
-            {/* Product Categories */}
-      {/* <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Danh mục sản phẩm</h4>
-              <Link className='text-black hover:text-yellow-500 ' to='#'>
-                Sản phẩm khuyến mãi
-              </Link>
-              <br />
-              <Link className='text-black hover:text-yellow-500 ' to='#'>
-                sản phẩm nổi bật
-              </Link>
-              <br />
-              <Link className='text-black hover:text-yellow-500 ' to='#'>
-                Tất cả sản phẩm
-              </Link>
-            </div>
-            <hr /> */}
-      {/* Supplier */}
-      {/* <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Nhà cung cấp</h4>
-              <Checkbox>Khác</Checkbox>
-            </div>
-            <hr /> */}
-      {/* Price Filter */}
-      {/* <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Lọc giá</h4>
-              <Checkbox> Dưới 1.000.000₫</Checkbox>
-              <br />
-              <Checkbox> 1.000.000₫ - 2.000.000₫</Checkbox>
-              <br />
-              <Checkbox> 2.000.000₫ - 3.000.000₫</Checkbox>
-              <br />
-              <Checkbox> 3.000.000₫ - 4.000.000₫</Checkbox>
-              <br />
-              <Checkbox> Trên 4.000.000₫</Checkbox>
-            </div>
-            <hr /> */}
-      {/* Color Filter */}
-      {/* <div className='my-4'>
-              <h4 className='mb-2'>Màu sắc</h4>
-              <div className='flex flex-wrap gap-2'>
-                {[
-                  'bg-pink-500',
-                  'bg-orange-500',
-                  'bg-red-500',
-                  'bg-gray-400',
-                  'bg-white',
-                  'bg-black',
-                  'bg-green-500',
-                  'bg-yellow-500',
-                  'bg-blue-500'
-                ].map((colorClass, index) => (
-                  <div key={index} className={`w-6 h-6 border rounded cursor-pointer ${colorClass}`} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div> */}
-      {/* </Drawer> */}
-
       {/* sản phẩm  */}
-      <div className='mx-6 lg:mx-[100px] mt-20'>
+      <div className='mx-auto container mt-20'>
         {/* <span className='m-4'>{pagination?.totalItems} sản phẩm</span> */}
         <h2 className='text-center text-[25px] sm:text-[45px] mb-8 mt-10 md:mt-20 text-[#FCA120]'>
           Sản phẩm mới ra mắt

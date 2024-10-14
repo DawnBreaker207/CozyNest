@@ -25,7 +25,7 @@ const Contactfour = () => {
   ]
 
   return (
-    <div className='bg-white py-10 grid grid-cols-2 md:grid-cols-4 gap-4 p-2 text-center mb-10'>
+    <div className='bg-white py-10 grid grid-cols-2 container mx-auto md:grid-cols-4 gap-4 p-2 text-center mb-10'>
       {Contactfours.map((Contactfour, index) => (
         <div key={index}>
           <div className='flex justify-center mb-4 p-4'>

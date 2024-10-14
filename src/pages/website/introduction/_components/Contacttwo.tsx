@@ -1,6 +1,6 @@
 const Contacttwo = () => {
   return (
-    <div className='grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] lg:h-[65vh] gap-8 items-center bg-yellow-600 p-4 lg:p-8'>
+    <div className='container mx-auto grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr]  gap-8 items-center bg-yellow-600 p-8 lg:p-8'>
       {/* Left side */}
       <div className='lg:col-span-1 space-y-8 text-center lg:text-right'>
         <div>
