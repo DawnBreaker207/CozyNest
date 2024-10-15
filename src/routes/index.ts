@@ -32,6 +32,7 @@ import ReturnPolicy from '@/pages/website/home/_components/policy/ReturnPolicy'
 import WarrantyPolicy from '@/pages/website/home/_components/policy/WarrantyPolicy'
 import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPolicy'
 import SalesPolicy from '@/pages/website/home/_components/policy/SalesPolicy'
+import NotFound from '@/pages/website/home/_components/NotFound'
 function App() {
   const routes = useRoutes([
     {
@@ -52,11 +53,12 @@ function App() {
         { path: 'check_out_order', Component: CheckOutOder },
         { path: 'link', Component: LinkPage },
         { path: 'footerPolicy', Component: FooterPolicy },
-        { path: 'chinh-sach-ban-hang', Component: SalesPolicy },
-        { path: 'giao-hang-va-lap-dat', Component: DeliveryPolicy },
-        { path: 'chinh-sach-doi-tra', Component: ReturnPolicy },
-        { path: 'bao-hanh-va-bao-tri', Component: WarrantyPolicy },
-        { path: 'khach-hang-than-thiet', Component: CustomerPolicy }
+        { path: 'policy/chinh-sach-ban-hang', Component: SalesPolicy },
+        { path: 'policy/giao-hang-va-lap-dat', Component: DeliveryPolicy },
+        { path: 'policy/chinh-sach-doi-tra', Component: ReturnPolicy },
+        { path: 'policy/bao-hanh-va-bao-tri', Component: WarrantyPolicy },
+        { path: 'policy/khach-hang-than-thiet', Component: CustomerPolicy },
+        { path: '*', Component: NotFound }
       ]
     },
     {

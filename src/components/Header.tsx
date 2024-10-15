@@ -105,7 +105,7 @@ const Header = () => {
     {
       key: '1',
       label: (
-        <Link to={`/chinh-sach-ban-hang`} className='text-muted-foreground'>
+        <Link to={`/policy/chinh-sach-ban-hang`} className='text-muted-foreground'>
           Chính sách bán hàng
         </Link>
       )
@@ -113,7 +113,7 @@ const Header = () => {
     {
       key: '2',
       label: (
-        <Link to={`giao-hang-va-lap-dat`} className='text-muted-foreground'>
+        <Link to={`/policy/giao-hang-va-lap-dat`} className='text-muted-foreground'>
           Chính sách giao hàng & Lắp đặt
         </Link>
       )
@@ -121,7 +121,7 @@ const Header = () => {
     {
       key: '3',
       label: (
-        <Link to={`chinh-sach-doi-tra`} className='text-muted-foreground'>
+        <Link to={`/policy/chinh-sach-doi-tra`} className='text-muted-foreground'>
           Chính sách đổi trả
         </Link>
       )
@@ -129,7 +129,7 @@ const Header = () => {
     {
       key: '4',
       label: (
-        <Link to={`bao-hanh-va-bao-tri`} className='text-muted-foreground'>
+        <Link to={`/policy/bao-hanh-va-bao-tri`} className='text-muted-foreground'>
           Chính sách bảo hành và bảo trì
         </Link>
       )
@@ -137,7 +137,7 @@ const Header = () => {
     {
       key: '5',
       label: (
-        <Link to={`khach-hang-than-thiet`} className='text-muted-foreground'>
+        <Link to={`/policy/khach-hang-than-thiet`} className='text-muted-foreground'>
           Khách hàng thân thiết
         </Link>
       )
@@ -249,7 +249,7 @@ const Header = () => {
       // Kiểm tra xem dữ liệu có hợp lệ không
       if (userData && Object.keys(userData).length > 0) {
         // Lấy ra ID người dùng từ thuộc tính `res`
-        const retrievedUserId = userData.data.res._id
+        const retrievedUserId = userData?.data?.res?._id
         // Gán userId vào state
         setUserId(retrievedUserId)
       }
@@ -267,7 +267,7 @@ const Header = () => {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-  const userDetail = userData.res
+  const userDetail = userData?.res
   // console.log(userDetail.username)
 
   return (
