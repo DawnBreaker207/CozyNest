@@ -350,7 +350,7 @@ const Header = () => {
                         <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
                       </Button>
                       {isVisible && window.innerWidth >= 1025 && (
-                        <h1 className='mt-1 text-center notification-section'>Xin chào {userDetail.username}</h1>
+                        <h1 className='mt-3 text-center notification-section'>Xin chào {userDetail.username}</h1>
                       )}
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
