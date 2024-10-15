@@ -26,6 +26,13 @@ import ReportsPage from '@/pages/admin/report/ReportPage'
 import pageCheckOut from '@/pages/website/order/page'
 import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
+import FooterPolicy from '@/pages/website/home/_components/policy/FooterPolicy'
+import DeliveryPolicy from '@/pages/website/home/_components/policy/DeliveryPolicy'
+import ReturnPolicy from '@/pages/website/home/_components/policy/ReturnPolicy'
+import WarrantyPolicy from '@/pages/website/home/_components/policy/WarrantyPolicy'
+import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPolicy'
+import SalesPolicy from '@/pages/website/home/_components/policy/SalesPolicy'
+import NotFound from '@/pages/website/home/_components/NotFound'
 function App() {
   const routes = useRoutes([
     {
@@ -44,7 +51,14 @@ function App() {
         { path: 'profile', Component: ProfilePage },
         { path: 'reset-password', Component: ResetPassword },
         { path: 'check_out_order', Component: CheckOutOder },
-        { path: 'link', Component: LinkPage }
+        { path: 'link', Component: LinkPage },
+        { path: 'footerPolicy', Component: FooterPolicy },
+        { path: 'policy/chinh-sach-ban-hang', Component: SalesPolicy },
+        { path: 'policy/giao-hang-va-lap-dat', Component: DeliveryPolicy },
+        { path: 'policy/chinh-sach-doi-tra', Component: ReturnPolicy },
+        { path: 'policy/bao-hanh-va-bao-tri', Component: WarrantyPolicy },
+        { path: 'policy/khach-hang-than-thiet', Component: CustomerPolicy },
+        { path: '*', Component: NotFound }
       ]
     },
     {

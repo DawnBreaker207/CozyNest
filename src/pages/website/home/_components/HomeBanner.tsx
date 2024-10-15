@@ -14,7 +14,7 @@ const HomeBanner = () => {
                 </picture>
               </div>
               <div className='info-home-banner text-center mt-4 lg:mt-8'>
-                <h4 className='lg:text-[45px] text-[25px] font-normal text-[#fca120]'>
+                <h4 className='lg:text-[43px] text-[25px] font-normal text-[#fca120]'>
                   <a href='' aria-label='Nội thất phòng khách'>
                     Nội thất phòng khách
                   </a>
@@ -48,12 +48,12 @@ const HomeBanner = () => {
               </div>
               <div className='info-home-banner text-center mt-4 lg:mt-8'>
                 <a href=''>
-                  <h4 className='lg:text-[45px] text-[25px] font-normal text-[#fca120]'>Nội thất phòng ngủ</h4>
+                  <h4 className='lg:text-[43px] text-[25px] font-normal text-[#fca120]'>Nội thất phòng ngủ</h4>
                 </a>
                 <p className='text-[#252a2b] lg:text-[18px] text-sm lg:mt-6 mt-2 leading-relaxed'>
-                  Phòng ngủ là không gian quan trọng, là cầu nối giúp cho giấc ngủ được trọn vẹn, tạo không gian riêng
-                  tư để bạn thực hiện sở thích của mình. Việc bố trí các vật dụng nội thất, phối hợp hài hòa màu sắc,
-                  ánh sáng trong phòng ngủ dựa trên các tiêu chuẩn về thẩm mỹ kiến trúc.
+                  Phòng ngủ là không gian quan trọng, là cầu nối giúp cho giấc ngủ được trọn vẹn,là không gian riêng tư
+                  để bạn thực hiện sở thích của mình. Việc bố trí các vật dụng nội thất, ánh sáng trong phòng ngủ dựa
+                  trên các tiêu chuẩn về thẩm mỹ kiến trúc.
                 </p>
                 <div className='action-home-banner'>
                   <a
