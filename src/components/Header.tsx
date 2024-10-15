@@ -202,30 +202,33 @@ const Header = () => {
   ]
   const users: MenuProps['items'] = user
     ? [
-      {
-        label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
-        key: '0'
-      },
-      {
-        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-        key: '1'
-      },
-      { type: 'divider' }, // Đường kẻ phân cách
-      {
-        label: (
-          <a href='/' onClick={handleLogout}>
-            Đăng xuất
-          </a>
-        ),
-        key: '3'
-      }
-    ]
-    : [
-      {
-        label: <NavLink to='/login'>Đăng nhập</NavLink>, // Hiển thị nút đăng nhập nếu chưa đăng nhập
-        key: '1'
-      }
-    ]
+        {
+          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+          key: '0'
+        },
+        {
+          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          key: '1'
+        },
+        { type: 'divider' }, // Đường kẻ phân cách
+        {
+          label: (
+            <a href='/' onClick={handleLogout}>
+              Đăng xuất
+            </a>
+          ),
+          key: '3'
+        }
+      ]
+    : window.innerWidth < 800
+      ? []
+      : [
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '1'
+          }
+        ]
+
   const { token } = useToken()
 
   const contentStyle: React.CSSProperties = {
@@ -289,7 +292,7 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menus }}>
               <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs max-w-[8px] w-[100%] h-auto' />
+                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
@@ -303,7 +306,7 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menu1 }}>
               <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Dịch vụ <DownOutlined className='text-xs max-w-[8px] w-[100%] h-auto' />
+                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/news'} className='text-muted hover:text-muted-foreground'>
@@ -343,11 +346,19 @@ const Header = () => {
                 <Space>
                   {user ? (
                     <div className='flex'>
-                      <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
-                      {isVisible && <h1 className={`ml-2 mt-1`}>Xin chào {userDetail.username}</h1>}
+                      <Button shape='circle' className='mt-1.5'>
+                        <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
+                      </Button>
+                      {isVisible && window.innerWidth >= 1025 && (
+                        <h1 className='mt-1 text-center notification-section'>Xin chào {userDetail.username}</h1>
+                      )}
                     </div>
+                  ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
+                  window.innerWidth < 800 ? (
+                    <Link to={`login`}>
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    </Link>
                   ) : (
-                    // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
                     <Button shape='circle' icon={<UserOutlined />} />
                   )}
                 </Space>

@@ -28,7 +28,7 @@ const Contactthree = () => {
       </div>
 
       <div className='bg-gray-100 flex justify-center items-center p-8'>
-        <div className='bg-white shadow-lg rounded-lg p-8 flex flex-col md:flex-row md:space-x-4 w-full max-w-6x'>
+        <div className='bg-white shadow-lg rounded-lg p-8 flex flex-col md:flex-row w-full max-w-6xl mb-4'>
           {/* Hình ảnh */}
           <div className='md:w-1/3 w-full mb-6 md:mb-0 mt-9 order-1 md:order-2'>
             <img
@@ -39,7 +39,7 @@ const Contactthree = () => {
           </div>
 
           {/* Nội dung văn bản */}
-          <div className='md:w-2/3 w-full pl-0 md:pl-8 order-2 md:order-1'>
+          <div className='md:w-2/3 w-full pl-0 md:pl-2 order-2 md:order-1'>
             <h2 className='text-3xl font-bold text-gray-800 mb-6'>Về công ty</h2>
             <p className='text-gray-600 mb-4'>
               Mew Furniture không chỉ đơn thuần là một nơi để mua sắm nội thất, mà còn là một cộng đồng kiến trúc, nơi

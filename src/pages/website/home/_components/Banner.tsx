@@ -17,7 +17,7 @@ const Banner = () => {
     <div className='w-full mx-auto top-0  relative pt-14 md:pt-[auto] -mt-[56px]'>
       <Carousel ref={carouselRef} effect='fade' autoplay className='overflow-hidden shadow-lg'>
         <img
-          src='https://theme.hstatic.net/200000748041/1001116292/14/slide_1_img.jpg?v=31,1'
+          src='https://theme.hstatic.net/200000748041/1001116292/14/slide_3_img.jpg?v=31'
           alt='Slide 1'
           className='w-full object-cover'
         />

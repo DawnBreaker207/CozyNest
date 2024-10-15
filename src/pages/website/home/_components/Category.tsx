@@ -3,6 +3,7 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import './slider.css'
+
 interface ArrowProps {
   className?: string
   style?: React.CSSProperties
@@ -10,22 +11,30 @@ interface ArrowProps {
 }
 
 const CustomPrevArrow: React.FC<ArrowProps> = (props) => {
+  const windowWidth = window.innerWidth // Lấy chiều rộng của cửa sổ
   const { className, style, onClick } = props
+  // Kiểm tra các kích thước màn hình
+  const isSmallScreen = windowWidth < 800
+  const isMediumScreen = windowWidth >= 800 && windowWidth <= 1024
   return (
     <div
       className={`${className} slick-prev`}
       style={{
         ...style,
-        width: '40px', // Kích thước của nút
+        width: '40px',
         height: '40px',
-        lineHeight: '50px', // Canh giữa nội dung theo chiều dọc
-        color: 'white', // Màu văn bản
-        borderRadius: '50%', // Làm nút thành hình tròn
-        display: 'flex', // Sử dụng flexbox để căn giữa nội dung
-        alignItems: 'center', // Căn giữa theo chiều dọc
-        justifyContent: 'center', // Căn giữa theo chiều ngang
-        zIndex: 1000, // Đảm bảo nút nằm trên các phần tử khác
-        cursor: 'pointer' // Con trỏ chuột để dễ sử dụng
+        lineHeight: '50px',
+        color: 'white',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        cursor: 'pointer',
+        position: 'absolute',
+        top: isSmallScreen ? '36%' : isMediumScreen ? '36%' : '44%', // Căn giữa theo chiều dọc
+        left: '10px', // Khoảng cách từ bên trái
+        transform: 'translateY(-50%)' // Căn giữa theo chiều dọc
       }}
       onClick={onClick}
     ></div>
@@ -33,7 +42,13 @@ const CustomPrevArrow: React.FC<ArrowProps> = (props) => {
 }
 
 const CustomNextArrow: React.FC<ArrowProps> = (props) => {
+  const windowWidth = window.innerWidth // Lấy chiều rộng của cửa sổ
   const { className, style, onClick } = props
+
+  // Kiểm tra các kích thước màn hình
+  const isSmallScreen = windowWidth < 800
+  const isMediumScreen = windowWidth >= 800 && windowWidth <= 1024
+
   return (
     <div
       className={`${className} slick-next`}
@@ -48,12 +63,17 @@ const CustomNextArrow: React.FC<ArrowProps> = (props) => {
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1000,
-        cursor: 'pointer'
+        cursor: 'pointer',
+        position: 'absolute',
+        top: isSmallScreen ? '36%' : isMediumScreen ? '36%' : '44%', // Căn giữa theo chiều dọc
+        right: '10px', // Khoảng cách từ bên phải
+        transform: 'translateY(-50%)' // Căn giữa theo chiều dọc
       }}
       onClick={onClick}
     ></div>
   )
 }
+
 const Category = () => {
   const settings = {
     dots: true,
@@ -84,7 +104,6 @@ const Category = () => {
       }
     ]
   }
-
   return (
     <div className='mx-auto container mt-[50px] lg:mt-[100px]'>
       <div className='mx-auto'>
@@ -209,7 +228,6 @@ const Category = () => {
                 </h4>
               </div>
             </div>
-            {/* Các item khác */}
           </Slider>
         </div>
       </div>

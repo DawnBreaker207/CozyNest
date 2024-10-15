@@ -1,10 +1,10 @@
 const Contactone = () => {
   return (
-    <div className='container mx-auto md:px-2'>
+    <div className='container mx-auto md:px-7'>
       <h1 className='text-xl font-bold text-center mt-10 -mb-5'>Về chúng tôi</h1>
       <div className='text-center py-8'>
         <div className='flex flex-col md:flex-row justify-around items-center'>
-          <div className='max-w-xs bg-white  rounded-lg overflow-hidden mb-4 md:mb-0 md:mr-2'>
+          <div className='max-w-[380px] bg-white  rounded-lg overflow-hidden mb-4 md:mb-0 md:mr-2'>
             <img
               className='w-full h-48 object-cover'
               src='https://file.hstatic.net/200000804441/file/7_16944769ad624250addfd6e66a28e588_large.png'
@@ -19,7 +19,7 @@ const Contactone = () => {
             </div>
           </div>
 
-          <div className='max-w-xs bg-white  rounded-lg overflow-hidden mb-4 md:mb-0 md:mr-2'>
+          <div className='max-w-[380px] bg-white  rounded-lg overflow-hidden mb-4 md:mb-0 md:mr-2'>
             <img
               className='w-full h-48 object-cover'
               src='https://file.hstatic.net/200000804441/file/8_6bf70e035241456a9eb04abe849bc59a_large.png'
@@ -34,7 +34,7 @@ const Contactone = () => {
             </div>
           </div>
 
-          <div className='max-w-xs bg-white rounded-lg overflow-hidden md:mr-2'>
+          <div className='max-w-[380px] bg-white rounded-lg overflow-hidden md:mr-2'>
             <img
               className='w-full h-48 object-cover'
               src='https://file.hstatic.net/200000804441/file/9_fcbfc9ce490e4416a9d90ded046f0763_large.png'
