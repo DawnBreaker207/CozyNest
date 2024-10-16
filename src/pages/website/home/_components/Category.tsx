@@ -87,19 +87,25 @@ const Category = () => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 4
+          slidesToShow: 4,
+          dots: true, // Hiển thị dấu chấm
+          arrows: true // Hiển thị mũi tên
         }
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2
+          slidesToShow: 2,
+          dots: true, // Hiển thị dấu chấm
+          arrows: false // Ẩn mũi tên
         }
       },
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 2
+          slidesToShow: 2,
+          dots: true, // Hiển thị dấu chấm
+          arrows: false // Ẩn mũi tên
         }
       }
     ]
