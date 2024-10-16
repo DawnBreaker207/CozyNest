@@ -298,9 +298,9 @@ const Header = () => {
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
               Giới thiệu
             </NavLink>
-            <NavLink to={'/link'} className='text-muted hover:text-muted-foreground'>
+            {/* <NavLink to={'/link'} className='text-muted hover:text-muted-foreground'>
               Cẩm nang
-            </NavLink>
+            </NavLink> */}
             <NavLink to={'/contact'} className='text-muted hover:text-muted-foreground'>
               Liên hệ
             </NavLink>

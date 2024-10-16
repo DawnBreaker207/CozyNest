@@ -85,7 +85,7 @@ const CustomFooter = () => {
           <Col xs={24} md={6}>
             <div className='md:hidden'>
               <h4 className='text-lg font-semibold  cursor-pointer' onClick={() => toggleSection('about')}>
-                Về Home Haven <PlusOutlined className='float-right mt-2.5 text-xs' />
+                Về CozyNet <PlusOutlined className='float-right mt-2.5 text-xs' />
               </h4>
 
               {activeSection === 'about' && (
@@ -114,7 +114,7 @@ const CustomFooter = () => {
 
             {/* Nội dung hiển thị trên màn hình lớn */}
             <div className='hidden md:block'>
-              <h4 className='text-lg font-semibold mb-4'>Về Home Haven</h4>
+              <h4 className='text-lg font-semibold mb-4'>Về CozyNet</h4>
               <p className='text-sm'>
                 Với các giải pháp công nghệ tốt nhất, Haravan là tất cả những gì bạn cần để xây dựng thương hiệu online,
                 thành công trong bán lẻ và marketing đột phá.
