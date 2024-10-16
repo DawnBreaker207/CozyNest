@@ -1,4 +1,4 @@
-import { Layout, Row, Col, Input, Button } from 'antd'
+import { Row, Col, Input, Button } from 'antd'
 import {
   EnvironmentOutlined,
   PhoneOutlined,
@@ -11,6 +11,7 @@ import {
   PlusOutlined
 } from '@ant-design/icons'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const CustomFooter = () => {
   const [activeSection, setActiveSection] = useState<string | undefined>(undefined)
@@ -85,7 +86,7 @@ const CustomFooter = () => {
           <Col xs={24} md={6}>
             <div className='md:hidden'>
               <h4 className='text-lg font-semibold  cursor-pointer' onClick={() => toggleSection('about')}>
-                Về Home Haven <PlusOutlined className='float-right mt-2.5 text-xs' />
+                Về CozyNet <PlusOutlined className='float-right mt-2.5 text-xs' />
               </h4>
 
               {activeSection === 'about' && (
@@ -98,14 +99,18 @@ const CustomFooter = () => {
                     <EnvironmentOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
                     Tầng 4, tòa nhà Flemington, số 182, đường Lê Đại Hành, phường 15, quận 11, Tp. Hồ Chí Minh.
                   </p>
-                  <p className='mt-2 text-sm'>
-                    <PhoneOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                    1900.000.XXX
-                  </p>
-                  <p className='text-sm'>
-                    <MailOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                    hi@home-haven.abc
-                  </p>
+                  <Link to={`tel:19000091`}>
+                    <p className='mt-2 text-sm text-white'>
+                      <PhoneOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                      1900.000.XXX
+                    </p>
+                  </Link>
+                  <Link to={`mailto:admin@gmail.com text-white`}>
+                    <p className='text-sm text-white'>
+                      <MailOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                      admin@gmail.com
+                    </p>
+                  </Link>
                 </div>
               )}
               <br />
@@ -114,7 +119,7 @@ const CustomFooter = () => {
 
             {/* Nội dung hiển thị trên màn hình lớn */}
             <div className='hidden md:block'>
-              <h4 className='text-lg font-semibold mb-4'>Về Home Haven</h4>
+              <h4 className='text-lg font-semibold mb-4'>Về CozyNet</h4>
               <p className='text-sm'>
                 Với các giải pháp công nghệ tốt nhất, Haravan là tất cả những gì bạn cần để xây dựng thương hiệu online,
                 thành công trong bán lẻ và marketing đột phá.
@@ -123,14 +128,18 @@ const CustomFooter = () => {
                 <EnvironmentOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
                 Tầng 4, tòa nhà Flemington, số 182, đường Lê Đại Hành, phường 15, quận 11, Tp. Hồ Chí Minh.
               </p>
-              <p className='mt-2 text-sm'>
-                <PhoneOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                1900.000.XXX
-              </p>
-              <p className='text-sm'>
-                <MailOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                hi@home-haven.abc
-              </p>
+              <Link to={`tel:19000091`}>
+                <p className='mt-2 text-sm text-white'>
+                  <PhoneOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                  1900.000.XXX
+                </p>
+              </Link>
+              <Link to={`mailto:admin@gmail.com`}>
+                <p className='text-sm text-white'>
+                  <MailOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                  admin@gmail.com
+                </p>
+              </Link>
             </div>
           </Col>
 

@@ -22,8 +22,8 @@ const Contacttwo = () => {
       {/* Vertical divider with dots */}
       <div className='relative flex justify-center items-center lg:col-span-1'>
         <div className='h-full w-1 border-r-2 border-gray-400'></div>
-        <div className='absolute top-1/4 w-4 h-4 bg-orange-500 rounded-full'></div>
-        <div className='absolute top-3/4 w-4 h-4 bg-orange-500 rounded-full'></div>
+        {/* <div className='absolute top-1/4 w-4 h-4 bg-orange-500 rounded-full'></div> */}
+        {/* <div className='absolute top-3/4 w-4 h-4 bg-orange-500 rounded-full'></div> */}
       </div>
 
       {/* Right side */}

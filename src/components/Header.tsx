@@ -202,30 +202,33 @@ const Header = () => {
   ]
   const users: MenuProps['items'] = user
     ? [
-      {
-        label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
-        key: '0'
-      },
-      {
-        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-        key: '1'
-      },
-      { type: 'divider' }, // Đường kẻ phân cách
-      {
-        label: (
-          <a href='/' onClick={handleLogout}>
-            Đăng xuất
-          </a>
-        ),
-        key: '3'
-      }
-    ]
-    : [
-      {
-        label: <NavLink to='/login'>Đăng nhập</NavLink>, // Hiển thị nút đăng nhập nếu chưa đăng nhập
-        key: '1'
-      }
-    ]
+        {
+          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+          key: '0'
+        },
+        {
+          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          key: '1'
+        },
+        { type: 'divider' }, // Đường kẻ phân cách
+        {
+          label: (
+            <a href='/' onClick={handleLogout}>
+              Đăng xuất
+            </a>
+          ),
+          key: '3'
+        }
+      ]
+    : window.innerWidth < 800
+      ? []
+      : [
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '1'
+          }
+        ]
+
   const { token } = useToken()
 
   const contentStyle: React.CSSProperties = {
@@ -289,21 +292,21 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menus }}>
               <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs max-w-[8px] w-[100%] h-auto' />
+                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
               Giới thiệu
             </NavLink>
-            <NavLink to={'/link'} className='text-muted hover:text-muted-foreground'>
+            {/* <NavLink to={'/link'} className='text-muted hover:text-muted-foreground'>
               Cẩm nang
-            </NavLink>
+            </NavLink> */}
             <NavLink to={'/contact'} className='text-muted hover:text-muted-foreground'>
               Liên hệ
             </NavLink>
             <Dropdown menu={{ items: menu1 }}>
               <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Dịch vụ <DownOutlined className='text-xs max-w-[8px] w-[100%] h-auto' />
+                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/news'} className='text-muted hover:text-muted-foreground'>
@@ -343,11 +346,19 @@ const Header = () => {
                 <Space>
                   {user ? (
                     <div className='flex'>
-                      <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
-                      {isVisible && <h1 className={`ml-2 mt-1`}>Xin chào {userDetail.username}</h1>}
+                      <Button shape='circle' className='mt-1.5'>
+                        <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
+                      </Button>
+                      {isVisible && window.innerWidth >= 1025 && (
+                        <h1 className='mt-3 text-center notification-section'>Xin chào {userDetail.username}</h1>
+                      )}
                     </div>
+                  ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
+                  window.innerWidth < 800 ? (
+                    <Link to={`login`}>
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    </Link>
                   ) : (
-                    // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
                     <Button shape='circle' icon={<UserOutlined />} />
                   )}
                 </Space>
@@ -361,7 +372,7 @@ const Header = () => {
             <Button className='md:hidden' shape='circle' icon={<MenuOutlined />} onClick={showDrawer} />
           </div>
           <Drawer title='DANH MỤC' placement='right' onClose={onClose} open={visible} width={320}>
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
+            <NavLink to={'/'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Trang chủ
             </NavLink>
             <div className='p-2  '>
@@ -371,12 +382,17 @@ const Header = () => {
                 </span>
               </Dropdown>
             </div>
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
+            <NavLink to={'/intro'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Giới thiệu
             </NavLink>
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
+            <Dropdown menu={{ items: menu1 }} trigger={['click']}>
+              <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4'>
+                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
+              </NavLink>
+            </Dropdown>
+            {/* <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Cẩm nang trang trí
-            </NavLink>
+            </NavLink> */}
             <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Hệ thống cửa hàng
             </NavLink>
@@ -388,12 +404,16 @@ const Header = () => {
             </NavLink>
             <hr />
             <span className='block  text-yellow-600 hover:text-muted-foreground mb-6 mt-4'>BẠN CẦN HỖ TRỢ ?</span>
-            <span className='block  text-black hover:text-yellow-600 mb-6 mt-2'>
-              <PhoneOutlined /> 1900 0091
-            </span>
-            <span className='block  text-black hover:text-yellow-600 mb-6 mt-2'>
-              <MailOutlined /> admin@gmail.com
-            </span>
+            <Link to={`tel:19000091`}>
+              <span className='block  text-black hover:text-yellow-600 mb-6 mt-2'>
+                <PhoneOutlined /> 1900 0091
+              </span>
+            </Link>
+            <Link to={`mailto:admin@gmail.com`}>
+              <span className='block  text-black hover:text-yellow-600 mb-6 mt-2'>
+                <MailOutlined /> admin@gmail.com
+              </span>
+            </Link>
           </Drawer>
           {/* giỏ hàng  */}
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
