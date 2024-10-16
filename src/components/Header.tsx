@@ -372,7 +372,7 @@ const Header = () => {
             <Button className='md:hidden' shape='circle' icon={<MenuOutlined />} onClick={showDrawer} />
           </div>
           <Drawer title='DANH MỤC' placement='right' onClose={onClose} open={visible} width={320}>
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
+            <NavLink to={'/'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Trang chủ
             </NavLink>
             <div className='p-2  '>
@@ -382,12 +382,17 @@ const Header = () => {
                 </span>
               </Dropdown>
             </div>
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
+            <NavLink to={'/intro'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Giới thiệu
             </NavLink>
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
+            <Dropdown menu={{ items: menu1 }} trigger={['click']}>
+              <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4'>
+                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
+              </NavLink>
+            </Dropdown>
+            {/* <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Cẩm nang trang trí
-            </NavLink>
+            </NavLink> */}
             <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Hệ thống cửa hàng
             </NavLink>
@@ -399,12 +404,16 @@ const Header = () => {
             </NavLink>
             <hr />
             <span className='block  text-yellow-600 hover:text-muted-foreground mb-6 mt-4'>BẠN CẦN HỖ TRỢ ?</span>
-            <span className='block  text-black hover:text-yellow-600 mb-6 mt-2'>
-              <PhoneOutlined /> 1900 0091
-            </span>
-            <span className='block  text-black hover:text-yellow-600 mb-6 mt-2'>
-              <MailOutlined /> admin@gmail.com
-            </span>
+            <Link to={`tel:19000091`}>
+              <span className='block  text-black hover:text-yellow-600 mb-6 mt-2'>
+                <PhoneOutlined /> 1900 0091
+              </span>
+            </Link>
+            <Link to={`mailto:admin@gmail.com`}>
+              <span className='block  text-black hover:text-yellow-600 mb-6 mt-2'>
+                <MailOutlined /> admin@gmail.com
+              </span>
+            </Link>
           </Drawer>
           {/* giỏ hàng  */}
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>

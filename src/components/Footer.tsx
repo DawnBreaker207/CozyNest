@@ -1,4 +1,4 @@
-import { Layout, Row, Col, Input, Button } from 'antd'
+import { Row, Col, Input, Button } from 'antd'
 import {
   EnvironmentOutlined,
   PhoneOutlined,
@@ -11,6 +11,7 @@ import {
   PlusOutlined
 } from '@ant-design/icons'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const CustomFooter = () => {
   const [activeSection, setActiveSection] = useState<string | undefined>(undefined)
@@ -98,14 +99,18 @@ const CustomFooter = () => {
                     <EnvironmentOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
                     Tầng 4, tòa nhà Flemington, số 182, đường Lê Đại Hành, phường 15, quận 11, Tp. Hồ Chí Minh.
                   </p>
-                  <p className='mt-2 text-sm'>
-                    <PhoneOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                    1900.000.XXX
-                  </p>
-                  <p className='text-sm'>
-                    <MailOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                    hi@home-haven.abc
-                  </p>
+                  <Link to={`tel:19000091`}>
+                    <p className='mt-2 text-sm text-white'>
+                      <PhoneOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                      1900.000.XXX
+                    </p>
+                  </Link>
+                  <Link to={`mailto:admin@gmail.com text-white`}>
+                    <p className='text-sm text-white'>
+                      <MailOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                      admin@gmail.com
+                    </p>
+                  </Link>
                 </div>
               )}
               <br />
@@ -123,14 +128,18 @@ const CustomFooter = () => {
                 <EnvironmentOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
                 Tầng 4, tòa nhà Flemington, số 182, đường Lê Đại Hành, phường 15, quận 11, Tp. Hồ Chí Minh.
               </p>
-              <p className='mt-2 text-sm'>
-                <PhoneOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                1900.000.XXX
-              </p>
-              <p className='text-sm'>
-                <MailOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
-                hi@home-haven.abc
-              </p>
+              <Link to={`tel:19000091`}>
+                <p className='mt-2 text-sm text-white'>
+                  <PhoneOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                  1900.000.XXX
+                </p>
+              </Link>
+              <Link to={`mailto:admin@gmail.com`}>
+                <p className='text-sm text-white'>
+                  <MailOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
+                  admin@gmail.com
+                </p>
+              </Link>
             </div>
           </Col>
 
