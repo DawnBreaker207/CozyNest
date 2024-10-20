@@ -5,7 +5,8 @@ import useCart from '@/hooks/useCart'
 import { Link } from 'react-router-dom'
 
 const CartPage = () => {
-  const { data, calculateTotal, mutate } = useCart()
+  const { data, calculateTotal, mutate, deleteCart } = useCart()
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const products = data?.res?.products || [] // Cập nhật để lấy sản phẩm
   const [quantities, setQuantities] = useState<number[]>([]) // Mảng để lưu số lượng của từng sản phẩm
@@ -55,7 +56,16 @@ const CartPage = () => {
         </span>
         <div className='flex flex-col lg:flex-row mt-5 gap-6 w-full'>
           <div className='lg:w-[70%] w-full p-3 border border-gray-300 rounded-xl h-min'>
-            <h2 className='text-xl font-semibold mb-2 text-[#fca120]'>Giỏ hàng của bạn</h2>
+            <div className='flex items-center'>
+              <h2 className='text-xl font-semibold mb-2 text-[#fca120]'>Giỏ hàng của bạn</h2>
+              <button
+                onClick={() => deleteCart(data?.res?.cartId)}
+                className='bg-[#fca120] text-white py-[10px] px-[10px] border rounded-lg mb-3 border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300 ml-auto'
+              >
+                Xóa giỏ hàng
+              </button>
+            </div>
+
             <hr />
             <p className='text-[#252A2B] my-3'>
               Bạn đang có <span className='font-semibold text-[#fca120]'>{products.length} sản phẩm</span> trong giỏ

@@ -151,8 +151,12 @@ const Header = () => {
     // setOpen(true)
   }
   const show = () => {
-    // setVisible(true)
-    setOpen(true)
+    if (!userId) {
+      // Nếu không có userId, chuyển hướng đến trang đăng nhập
+      window.location.href = '/login'
+    } else {
+      setOpen(true) // Mở Drawer nếu đã đăng nhập
+    }
   }
   const onClose = () => {
     setVisible(false)
@@ -207,7 +211,7 @@ const Header = () => {
           key: '0'
         },
         {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
           key: '1'
         },
         { type: 'divider' }, // Đường kẻ phân cách

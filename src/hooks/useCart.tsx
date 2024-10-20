@@ -15,9 +15,9 @@ const useCart = () => {
     queryFn: async () => {
       if (userId) {
         const { data } = await instance.get(`/cart/${userId}`)
-        return data // Dữ liệu từ API
+        return data // Dữ liệu từ API, bao gồm cả cartId
       }
-      return { res: { products: [] } } // Giá trị mặc định khi không có userId
+      return { res: { products: [], cartId: '' } } // Giá trị mặc định khi không có userId
     }
   })
 
@@ -35,7 +35,7 @@ const useCart = () => {
   }
 
   const { mutate } = useMutation({
-    mutationFn: async ({ action, productId }: { action: string; productId: string }) => {
+    mutationFn: async ({ action, productId, cartId }: { action: string; productId?: string; cartId?: string }) => {
       switch (action) {
         case 'INCREMENT':
           await instance.post(`/cart/increase`, {
@@ -59,9 +59,11 @@ const useCart = () => {
           await instance.post(`/cart/add-to-cart`, {
             userId,
             productId,
-            quantity: 1, // Đặt mặc định số lượng là 1
-            price: data.res.products.find((product: any) => product._id === productId)?.price // Lấy giá từ dữ liệu hiện có
+            quantity: 1 // Đặt mặc định số lượng là 1
           })
+          break
+        case 'DELETE': // Thêm case DELETE để xóa toàn bộ giỏ hàng theo cartId
+          await instance.delete(`/cart/remove-cart/${cartId}`) // Xóa giỏ hàng theo cartId
           break
         default:
           break
@@ -97,6 +99,13 @@ const useCart = () => {
   const addToCart = (productId: string) => {
     mutate({ action: 'ADD', productId })
   }
+  const deleteCart = (cartId: string) => {
+    mutate({
+      action: 'DELETE',
+      cartId
+    }) // Gọi case DELETE để xóa giỏ hàng theo cartId
+  }
+
   return {
     data,
     mutate,
@@ -104,7 +113,8 @@ const useCart = () => {
     handleQuantityChange,
     quantities,
     setQuantities, // Thêm setQuantities vào return để có thể cập nhật số lượng từ ngoài
-    addToCart, // Trả về hàm addToCart
+    addToCart,
+    deleteCart, // Trả về hàm addToCart
     ...restQuery
   }
 }

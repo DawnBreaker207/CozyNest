@@ -1,5 +1,6 @@
 import { Cart } from '@/components/icons/index'
 import useCart from '@/hooks/useCart'
+import { useLocalStorage } from '@/hooks/useStorage'
 import { IProduct } from '@/types/product'
 import { message } from 'antd'
 import { FaRegEye } from 'react-icons/fa'
@@ -17,7 +18,14 @@ type ProductListProps = {
 const ProductList = ({ products }: ProductListProps) => {
   const { addToCart } = useCart() // Sử dụng hook useCart
   const [messageApi, contextHolder] = message.useMessage()
+  const [user] = useLocalStorage('user', {})
+  const userId = user?.data?.res?._id
   const handleAddToCart = (productId: string) => {
+    if (!userId) {
+      messageApi.warning('Bạn chưa đăng nhập.') // Thông báo khi chưa đăng nhập
+      return // Dừng thêm vào giỏ hàng nếu không có userId
+    }
+    console.log(products)
     addToCart(productId) // Thêm sản phẩm vào giỏ hàng
     messageApi.success('Thêm vào giỏ hàng thành công!')
   }

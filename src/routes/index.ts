@@ -32,6 +32,7 @@ import WarrantyPolicy from '@/pages/website/home/_components/policy/WarrantyPoli
 import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPolicy'
 import SalesPolicy from '@/pages/website/home/_components/policy/SalesPolicy'
 import NotFound from '@/pages/website/home/_components/NotFound'
+import OrderPage from '@/pages/website/order/_components/OrderPage'
 function App() {
   const routes = useRoutes([
     {
@@ -45,6 +46,7 @@ function App() {
         { path: 'cart', Component: CartPage },
         { path: 'cart/check_out_form', Component: pageCheckOut },
         { path: 'intro', Component: Introduction },
+        { path: 'orders', Component: OrderPage },
         { path: 'login', Component: Login },
         { path: 'register', Component: Register },
         { path: 'profile', Component: ProfilePage },

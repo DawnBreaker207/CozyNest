@@ -1,55 +1,223 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Checkbox, Input, Select, Form, RadioChangeEvent, Radio } from 'antd'
-import { BankOutlined, CreditCardOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import instance from '@/configs/axios'
 import useCart from '@/hooks/useCart'
-import { Link } from 'react-router-dom'
+import { Button, Checkbox, Form, Input, Radio, notification } from 'antd'
+import { useState } from 'react'
 
-const { Option } = Select
-const options = [
-  {
-    label: (
-      <>
-        <BankOutlined /> Chuyển khoản ngân hàng
-      </>
-    ),
-    value: 'Orange',
-    title: 'Orange'
-  }
-]
-const option = [
-  {
-    label: (
-      <div>
-        <CreditCardOutlined /> Thanh toán khi nhận hàng
-      </div>
-    ),
-    value: 'Apple'
-  }
-]
 const CheckoutPage = () => {
-  const [value3, setValue3] = useState('Apple')
-  const onChange3 = ({ target: { value } }: RadioChangeEvent) => {
-    console.log('radio3 checked', value)
-    setValue3(value)
+  const { data, calculateTotal } = useCart()
+
+  const userId = JSON.parse(localStorage.getItem('user') || '{}').data?.res?._id || null
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('COD')
+
+  const handleChange = (e: any) => {
+    setSelectedPaymentMethod(e.target.value)
   }
-  const { data, calculateTotal } = useCart() // Sử dụng hook
+
+  // Hàm xử lý khi submit form thành công
+  const onFinish = async (values: any) => {
+    const orderData = {
+      userId,
+      billTotals: calculateTotal(),
+      paymentMethod: selectedPaymentMethod,
+      customerName: values.customerName,
+      phoneNumber: values.phoneNumber,
+      email: values.email,
+      note: values.note || null,
+      addressShipping: values.address || '',
+      receivedDate: null,
+      paid: false,
+      status: 'Pending',
+      products:
+        data?.res?.products.map((product: any) => {
+          return {
+            productId: product.productId._id,
+            originName: product.productId.name,
+            productName: product.productId.name,
+            thumbnail: product.productId.thumbnail,
+            quantity: product.quantity,
+            price: product.price * product.quantity
+          }
+        }) || []
+    }
+
+    // Xử lý thanh toán MoMo
+    if (selectedPaymentMethod === 'MoMo') {
+      const momoRequestData = {
+        partnerCode: 'MOMO',
+        partnerName: 'Test',
+        storeId: 'MomoTestStore',
+        requestId: `MOMO${Date.now()}`,
+        amount: orderData.billTotals,
+        orderId: `MOMO${Date.now()}`,
+        orderInfo: 'pay with MoMo',
+        redirectUrl: '{redirectUrl của bạn}',
+        ipnUrl: '{ipnUrl của bạn}',
+        lang: 'vi',
+        requestType: 'payWithMethod',
+        autoCapture: true,
+        extraData: '',
+        orderGroupId: '',
+        signature: '{signature đã ký HMAC SHA256}'
+      }
+
+      try {
+        const response = await instance.post('/payment/create-momo', momoRequestData)
+        // const payload = {
+        //   orderId: response.data.orderId,
+        //   partnerCode: response.data.partnerCode,
+        //   requestId: response.data.requestId,
+        //   lang: response.data.lang
+        // }
+
+        // const checkPaymentStatus = async (payload: any) => {
+        //   try {
+        //     const response2 = await instance.get('/payment/transaction-status', payload)
+
+        //     if (response2?.data?.resultCode === 0 && response2?.data?.message === 'Thành công.') {
+        //       console.log('Trạng thái thanh toán MoMo thành công')
+        //       clearInterval(paymentStatusInterval)
+        //       instance
+        //         .post('/orders', orderData)
+        //         .then((response) => {
+        //           window.location.href = `/check_out_order?orderId=${response.data?.res?._id}`
+        //         })
+        //         .catch((error) => {
+        //           console.error('Error:', error)
+        //         })
+        //     } else {
+        //       console.log('Trạng thái thanh toán MoMo không thành công:', response2?.data?.message)
+        //     }
+        //   } catch (error) {
+        //     console.error('Lỗi kiểm tra trạng thái thanh toán MoMo:', error)
+        //   }
+        // }
+
+        window.open(`${response.data.payUrl}`, '_blank')
+
+        // const paymentStatusInterval = setInterval(() => {
+        //   checkPaymentStatus(payload)
+        // }, 5000)
+      } catch (error) {
+        console.error('MoMo Payment Error:', error)
+        notification.error({ message: 'Lỗi thanh toán với MoMo' })
+      }
+
+      // Xử lý thanh toán ZaloPay
+    } else if (selectedPaymentMethod === 'ZaloPay') {
+      const zaloPayRequestData = {
+        app_id: 'ZALOPAY_APP_ID',
+        app_trans_id: `ZALOPAY${Date.now()}`,
+        app_time: Date.now(),
+        amount: orderData.billTotals,
+        app_user: userId,
+        embed_data: JSON.stringify({}),
+        item: JSON.stringify(orderData.products),
+        description: `Thanh toán đơn hàng ZaloPay ${Date.now()}`,
+        bank_code: ''
+      }
+
+      try {
+        const response = await instance.post('/payment/create-zalopay', zaloPayRequestData)
+        // const payload = {
+        //   app_trans_id: response.data.app_trans_id
+        // }
+
+        // const checkPaymentStatus = async (payload: any) => {
+        //   try {
+        //     const response2 = await instance.post('/payment/transaction-status', payload)
+        //     if (response2?.data?.return_code === 1) {
+        //       console.log('Trạng thái thanh toán ZaloPay thành công')
+        //       clearInterval(paymentStatusInterval)
+        //       instance
+        //         .post('/orders', orderData)
+        //         .then((response) => {
+        //           window.location.href = `/check_out_order?orderId=${response.data?.res?._id}`
+        //         })
+        //         .catch((error) => {
+        //           console.error('Error:', error)
+        //         })
+        //     } else {
+        //       console.log('Trạng thái thanh toán ZaloPay không thành công:', response2?.data?.message)
+        //     }
+        //   } catch (error) {
+        //     console.error('Lỗi kiểm tra trạng thái thanh toán ZaloPay:', error)
+        //   }
+        // }
+
+        window.open(`${response.data.order_url}`, '_blank')
+
+        // const paymentStatusInterval = setInterval(() => {
+        //   checkPaymentStatus(payload)
+        // }, 5000)
+      } catch (error) {
+        console.error('ZaloPay Payment Error:', error)
+        notification.error({ message: 'Lỗi thanh toán với ZaloPay' })
+      }
+    } else if (selectedPaymentMethod === 'VnPay') {
+      // Xử lý thanh toán VNPAY
+      const vnPayRequestData = {
+        amount: orderData.billTotals,
+        orderInfo: 'Thanh toán đơn hàng qua VNPAY',
+        orderType: 'billpayment',
+        locale: 'vn',
+        bankCode: '',
+        returnUrl: '{returnUrl của bạn}',
+        ipnUrl: '{ipnUrl của bạn}',
+        txnRef: `VNPAY${Date.now()}`,
+        createDate: new Date().toISOString(),
+        currCode: 'VND'
+      }
+
+      try {
+        const response = await instance.post('/payment/create-vnpay', vnPayRequestData)
+        window.open(`${response.data.res}`, '_blank')
+      } catch (error) {
+        console.error('VNPAY Payment Error:', error)
+        notification.error({ message: 'Lỗi thanh toán với VNPAY' })
+      }
+      // Thanh toán khi nhận hàng (COD)
+    } else {
+      instance
+        .post('/orders', orderData)
+        .then((response) => {
+          window.location.href = `/check_out_order?orderId=${response.data?.res?._id}`
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+        })
+    }
+  }
+
   return (
-    <div className='flex flex-col md:flex-row p-6 bg-background mt-20'>
+    <div className='flex flex-col md:flex-row p-6 bg-background lg:px-28  '>
       {/* Form nhập địa chỉ giao hàng */}
       <div className='w-full md:w-2/3 pr-0 md:pr-6 px-4'>
         <h2 className='text-lg font-semibold mb-4'>Địa chỉ giao hàng</h2>
-        <Form layout='vertical'>
-          <Form.Item label='Họ và tên' name='name' rules={[{ required: true }]}>
+        <Form
+          layout='vertical'
+          onFinish={onFinish} // Tích hợp hàm onFinish
+          initialValues={{
+            customerName: '', // Có thể lấy từ localStorage hoặc API
+            phoneNumber: '',
+            email: '',
+            city: '',
+            district: '',
+            address: '',
+            note: ''
+          }}
+        >
+          <Form.Item label='Họ và tên' name='customerName' rules={[{ required: true }]}>
             <Input placeholder='Nhập họ và tên' />
           </Form.Item>
-          <Form.Item label='Số điện thoại' name='phone' rules={[{ required: true }]}>
+          <Form.Item label='Số điện thoại' name='phoneNumber' rules={[{ required: true }]}>
             <Input placeholder='Nhập số điện thoại của bạn' />
           </Form.Item>
           <Form.Item label='Địa chỉ email' name='email' rules={[{ required: true }]}>
             <Input type='email' placeholder='Nhập email' />
           </Form.Item>
-          <div className='flex flex-col md:flex-row'>
+          {/* <div className='flex flex-col md:flex-row'>
             <Form.Item
               className='w-full md:w-1/2 md:pr-2'
               label='Tỉnh / Thành phố'
@@ -59,7 +227,6 @@ const CheckoutPage = () => {
               <Select placeholder='Chọn tỉnh / thành phố'>
                 <Option value='hanoi'>Hà Nội</Option>
                 <Option value='hcm'>TP. Hồ Chí Minh</Option>
-                {/* Add more options */}
               </Select>
             </Form.Item>
             <Form.Item
@@ -71,29 +238,62 @@ const CheckoutPage = () => {
               <Select placeholder='Chọn quận / huyện'>
                 <Option value='district1'>Quận 1</Option>
                 <Option value='district2'>Quận 2</Option>
-                {/* Add more options */}
               </Select>
             </Form.Item>
-          </div>
+          </div> */}
           <Form.Item label='Địa chỉ' name='address' rules={[{ required: true }]}>
             <Input placeholder='Nhập địa chỉ' />
-          </Form.Item>
-          <Form.Item name='createAccount' valuePropName='checked'>
-            <Checkbox>Create an account?</Checkbox>
           </Form.Item>
           <Form.Item label='Thông tin thêm' name='note'>
             <Input.TextArea placeholder='Viết các lưu ý cho đơn hàng của bạn' rows={3} />
           </Form.Item>
           <h2 className='text-lg font-semibold mb-4 '>Phương thức thanh toán</h2>
-          <Radio.Group
-            options={option}
-            onChange={onChange3}
-            value={value3}
-            optionType='button'
-            buttonStyle='solid'
-            className='mb-2 mr-2'
-          />
-          <Radio.Group options={options} onChange={onChange3} value={value3} optionType='button' buttonStyle='solid' />
+          <div className='p-6 bg-white rounded-lg shadow-md'>
+            <Radio.Group onChange={handleChange} value={selectedPaymentMethod} className='flex flex-col space-y-4'>
+              <Radio className='flex items-center border border-2px p-4' value='COD'>
+                <img src='/path/to/icon1.png' alt='' className='mr-2' /> {/* Thay thế bằng icon thích hợp */}
+                Thanh toán khi giao hàng (COD)
+              </Radio>
+              <Radio className='flex items-center border border-2px p-4' value='MoMo'>
+                <div className='flex items-center w-10 space-x-1'>
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/momo_iroppc.svg'
+                    width={50} // Giảm kích thước hình ảnh nếu cần
+                    alt='Ví MOMO'
+                    className='mr-2'
+                  />
+                  <p className='whitespace-nowrap'>Ví MoMo</p> {/* Thêm thuộc tính này nếu cần */}
+                </div>
+              </Radio>
+              <Radio className='flex items-center border border-2px p-4' value='VnPay'>
+                <div className='flex items-center w-10 space-x-1'>
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/vnpay_new_lzopgz.svg'
+                    width={50}
+                    alt='Ví VNPAY'
+                    className='mr-2'
+                  />
+                  <p className='whitespace-nowrap'>Ví Vn Pay</p>
+                </div>
+              </Radio>
+              <Radio className='flex items-center border border-2px p-4' value='ZaloPay'>
+                <div className='flex items-center w-10 space-x-1'>
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/zalopay_qazloz.svg'
+                    width={50} // Giảm kích thước hình ảnh nếu cần
+                    alt='Ví ZALOPAY'
+                    className='mr-2'
+                  />
+                  <p className='whitespace-nowrap'>Ví Zalo Pay</p> {/* Thêm thuộc tính này nếu cần */}
+                </div>
+              </Radio>
+            </Radio.Group>
+          </div>
+          <Form.Item>
+            <Button type='primary' className='mt-5' htmlType='submit' block>
+              Hoàn Tất Đơn Hàng
+            </Button>
+          </Form.Item>
         </Form>
       </div>
 
@@ -146,11 +346,6 @@ const CheckoutPage = () => {
             </Checkbox>
           </Form.Item>
         </Form>
-        <Link to={`/check_out_order`}>
-          <Button block className='bg-yellow-600 text-white mb-4'>
-            <span className='hover:text-white'>ĐẶT MUA</span>
-          </Button>
-        </Link>
       </div>
     </div>
   )
