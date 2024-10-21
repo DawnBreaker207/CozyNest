@@ -12,10 +12,22 @@ const Login = () => {
   const navigate = useNavigate()
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
+      // try {
+      //   const response = await instance.post(`/auth/login`, formData)
+
+      //   // Kiểm tra nếu API trả về thông báo rằng email không tồn tại
+      //   // if (!response.data.exists) {
+      //   //   throw new Error('Email không tồn tại')
+      //   // }
+
+      //   return response.data // Trả về dữ liệu người dùng nếu thành công
+      // } catch (error) {
+      //   throw new Error(error.response?.data?.message || 'Tai khoan hoac mat khau khong chinh x')
+      // }
       try {
         return await instance.post(`/auth/login`, formData)
       } catch (error) {
-        throw new Error('Dang nhap that bai')
+        throw new Error('Tai khoan hoac mat khau khong chinh xac')
       }
     },
     onSuccess: (user) => {
@@ -91,9 +103,13 @@ const Login = () => {
               <NavLink to={'/reset-password'} className='text-blue-500'>
                 Quên mật khẩu?
               </NavLink>
-              <a href='/register' className='text-blue-500'>
-                Đăng ký
-              </a>
+              <p>
+                Bạn chưa có tài khoản?
+                <a href='/register' className='text-blue-500'>
+                  {' '}
+                  Đăng ký
+                </a>
+              </p>
             </div>
           </Form.Item>
         </Form>
