@@ -1,7 +1,8 @@
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ProfileModal from './ProfileUpdate'
+import UpdatePasswordModal from './UpdatePasswod'
 
 const ProfilePage = () => {
   const navigate = useNavigate()
@@ -17,27 +18,39 @@ const ProfilePage = () => {
       // Kiểm tra xem dữ liệu có hợp lệ không
       if (userData && Object.keys(userData).length > 0) {
         // Lấy ra ID người dùng từ thuộc tính `res`
-        const retrievedUserId = userData.data.res._id
+        const retrievedUserId = userData?.data?.res?._id
         // Gán userId vào state
         setUserId(retrievedUserId)
       }
     }
   }, []) // useEffect chỉ chạy 1 lần sau khi component mount
 
-  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isAccountModalVisible, setIsAccountModalVisible] = useState(false)
+  const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false)
   const [formVisible, setFormVisible] = useState(false)
-  const showModal = () => {
-    setIsModalVisible(true)
+
+  // Hiển thị modal cập nhật tài khoản
+  const showAccountModal = () => {
+    setIsAccountModalVisible(true)
   }
 
+  // Hiển thị modal cập nhật mật khẩu
+  const showPasswordModal = () => {
+    setIsPasswordModalVisible(true)
+  }
+
+  // Ẩn cả hai modal
   const handleCancel = () => {
-    setIsModalVisible(false)
+    setIsAccountModalVisible(false)
+    setIsPasswordModalVisible(false)
   }
 
+  // Bật/tắt form bên trong modal
   const handleToggle = (checked: boolean) => {
     setFormVisible(checked)
   }
 
+  // Xác thực số điện thoại (10 chữ số không bao gồm ký tự đặc biệt)
   const validatePhoneNumber = (_rule: any, value: any) => {
     if (!value || value.replace(/\D/g, '').length === 10) {
       return Promise.resolve()
@@ -56,8 +69,7 @@ const ProfilePage = () => {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-  const userDetail = userData.res
-  //   console.log(userDetail.username)
+  const userDetail = userData?.res
 
   const handleLogout = () => {
     localStorage.removeItem('user')
@@ -190,25 +202,41 @@ const ProfilePage = () => {
           <div className='flex flex-col gap-2 flex items-center justify-center'>
             <div>
               <button
-                onClick={showModal}
+                onClick={showAccountModal}
                 className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm '
               >
                 Cập nhật tài khoản
               </button>
               <ProfileModal
-                isModalVisible={isModalVisible}
+                isModalVisible={isAccountModalVisible}
                 handleCancel={handleCancel}
                 handleToggle={handleToggle}
                 formVisible={formVisible}
                 validatePhoneNumber={validatePhoneNumber}
               />
             </div>
-            <button
-              type='button'
-              className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm '
-            >
-              Quên mật khẩu
-            </button>
+            <div>
+              <button
+                onClick={showPasswordModal}
+                className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm '
+              >
+                Cập nhật mật khẩu
+              </button>
+              <UpdatePasswordModal
+                isModalVisible={isPasswordModalVisible}
+                handleCancel={handleCancel}
+                handleToggle={handleToggle}
+                formVisible={formVisible}
+              />
+            </div>
+            <Link to={`/reset-password`}>
+              <button
+                type='button'
+                className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm '
+              >
+                Quên mật khẩu
+              </button>
+            </Link>
 
             <button
               onClick={handleLogout}
