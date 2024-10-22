@@ -135,6 +135,7 @@ const ProductsPage = () => {
 
   // Bộ lọc
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]) // Lưu trạng thái checkbox
+  console.log(selectedPriceRanges)
 
   const handlePriceRangeChange = (priceRange: string) => {
     setSelectedPriceRanges((prev) => {
@@ -163,6 +164,11 @@ const ProductsPage = () => {
   }
 
   const filteredProducts = filterProductsByPrice(products, selectedPriceRanges)
+
+  // Bỏ lọc
+  const removeFilter = (itemToRemove: string) => {
+    setSelectedPriceRanges((prev) => prev.filter((item) => item !== itemToRemove))
+  }
 
   // Phân trang
   const productsPerPage = 15 // Số lượng sản phẩm trên mỗi trang
@@ -220,6 +226,7 @@ const ProductsPage = () => {
 
         {/* Dropdown Sắp xếp */}
         <Dropdown
+          className=''
           menu={{
             items: menuItems,
             onClick: (e) => handleMenuClick(e.key)
@@ -229,6 +236,17 @@ const ProductsPage = () => {
         </Dropdown>
       </div>
       <hr className='my-4 ' />
+      <div className='flex flex-row justify-left my-4 px-8 space-x-2 md:space-x-4'>
+        {selectedPriceRanges?.map((item) => (
+          <div key={item} className='flex items-center border border-gray-300 rounded-lg px-3 py-1 bg-gray-100'>
+            <p className='mr-2'>{item}</p>
+            <button onClick={() => removeFilter(item)} className='text-red-500 hover:text-red-700'>
+              &times;
+            </button>
+          </div>
+        ))}
+      </div>
+
       <Drawer width={280} title='BỘ LỌC' onClose={onClose} open={open} placement='left'>
         <div>
           <div className='p-2'>
