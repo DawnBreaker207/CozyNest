@@ -31,6 +31,7 @@ const ProductsPage = () => {
     setOpen(false)
   }
 
+  // Sắp xếp
   useEffect(() => {
     if (data?.res) {
       setProducts(data.res) // Cập nhật trạng thái khi có dữ liệu từ API
@@ -130,6 +131,37 @@ const ProductsPage = () => {
     }
   ]
 
+  // Bộ lọc
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]) // Lưu trạng thái checkbox
+
+  const handlePriceRangeChange = (priceRange: string) => {
+    setSelectedPriceRanges((prev) => {
+      if (prev.includes(priceRange)) {
+        return prev.filter((range) => range !== priceRange) // Bỏ chọn
+      } else {
+        return [...prev, priceRange] // Chọn
+      }
+    })
+  }
+
+  const filterProductsByPrice = (products: IProduct[], priceRanges: string[]) => {
+    if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
+
+    return products.filter((product) => {
+      if (priceRanges.includes('Dưới 1.000.000₫') && product.price < 1000000) return true
+      if (priceRanges.includes('1.000.000₫ - 2.000.000₫') && product.price >= 1000000 && product.price <= 2000000)
+        return true
+      if (priceRanges.includes('2.000.000₫ - 3.000.000₫') && product.price >= 2000000 && product.price <= 3000000)
+        return true
+      if (priceRanges.includes('3.000.000₫ - 4.000.000₫') && product.price >= 3000000 && product.price <= 4000000)
+        return true
+      if (priceRanges.includes('Trên 4.000.000₫') && product.price > 4000000) return true
+      return false
+    })
+  }
+
+  const filteredProducts = filterProductsByPrice(products, selectedPriceRanges)
+
   return (
     <>
       {contextHolder}
@@ -202,16 +234,42 @@ const ProductsPage = () => {
             {/* Price Filter */}
             <div className='my-4'>
               <h4 className='mb-2 text-lg'>Lọc giá</h4>
-              <Checkbox> Dưới 1.000.000₫</Checkbox>
+              <Checkbox
+                checked={selectedPriceRanges.includes('Dưới 1.000.000₫')}
+                onChange={() => handlePriceRangeChange('Dưới 1.000.000₫')}
+              >
+                Dưới 1.000.000₫
+              </Checkbox>
               <br />
-              <Checkbox> 1.000.000₫ - 2.000.000₫</Checkbox>
+              <Checkbox
+                checked={selectedPriceRanges.includes('1.000.000₫ - 2.000.000₫')}
+                onChange={() => handlePriceRangeChange('1.000.000₫ - 2.000.000₫')}
+              >
+                1.000.000₫ - 2.000.000₫
+              </Checkbox>
               <br />
-              <Checkbox> 2.000.000₫ - 3.000.000₫</Checkbox>
+              <Checkbox
+                checked={selectedPriceRanges.includes('2.000.000₫ - 3.000.000₫')}
+                onChange={() => handlePriceRangeChange('2.000.000₫ - 3.000.000₫')}
+              >
+                2.000.000₫ - 3.000.000₫
+              </Checkbox>
               <br />
-              <Checkbox> 3.000.000₫ - 4.000.000₫</Checkbox>
+              <Checkbox
+                checked={selectedPriceRanges.includes('3.000.000₫ - 4.000.000₫')}
+                onChange={() => handlePriceRangeChange('3.000.000₫ - 4.000.000₫')}
+              >
+                3.000.000₫ - 4.000.000₫
+              </Checkbox>
               <br />
-              <Checkbox> Trên 4.000.000₫</Checkbox>
+              <Checkbox
+                checked={selectedPriceRanges.includes('Trên 4.000.000₫')}
+                onChange={() => handlePriceRangeChange('Trên 4.000.000₫')}
+              >
+                Trên 4.000.000₫
+              </Checkbox>
             </div>
+
             <hr />
             {/* Color Filter */}
             <div className='my-4'>
@@ -237,7 +295,7 @@ const ProductsPage = () => {
       </Drawer>
       {/* sản phẩm  */}
       <div className='grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 items-center gap-8 mx-8 mb-4 '>
-        {products?.map((product: IProduct, index: number) => (
+        {filteredProducts?.map((product: IProduct, index: number) => (
           <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
             <Link to={`/detail/${product._id}`}>
               <div className='relative'>
