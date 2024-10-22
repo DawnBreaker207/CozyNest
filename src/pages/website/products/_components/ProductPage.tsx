@@ -13,7 +13,6 @@ import { MdOutlineArrowBackIos } from 'react-icons/md'
 const ProductsPage = () => {
   const { data } = useProductQuery()
   const [products, setProducts] = useState<IProduct[]>(data?.res || [])
-  //   console.log(products)
 
   const { addToCart } = useCart() // Sử dụng hook useCart
   const [messageApi, contextHolder] = message.useMessage()
@@ -135,7 +134,6 @@ const ProductsPage = () => {
 
   // Bộ lọc
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]) // Lưu trạng thái checkbox
-  console.log(selectedPriceRanges)
 
   const handlePriceRangeChange = (priceRange: string) => {
     setSelectedPriceRanges((prev) => {
@@ -236,16 +234,29 @@ const ProductsPage = () => {
         </Dropdown>
       </div>
       <hr className='my-4 ' />
-      <div className='flex flex-row justify-left my-4 px-8 space-x-2 md:space-x-4'>
-        {selectedPriceRanges?.map((item) => (
-          <div key={item} className='flex items-center border border-gray-300 rounded-lg px-3 py-1 bg-gray-100'>
-            <p className='mr-2'>{item}</p>
-            <button onClick={() => removeFilter(item)} className='text-red-500 hover:text-red-700'>
-              &times;
-            </button>
-          </div>
-        ))}
-      </div>
+      {window.innerWidth >= 600 ? (
+        <div className='flex flex-row justify-left my-4 px-8 space-x-2 md:space-x-4'>
+          {selectedPriceRanges?.map((item) => (
+            <div key={item} className='flex items-center border border-gray-300 rounded-lg px-3 py-1 bg-gray-100'>
+              <p className='mr-2'>{item}</p>
+              <button onClick={() => removeFilter(item)} className='text-red-500 hover:text-red-700'>
+                &times;
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className='grid grid-cols-2 gap-2 my-4 px-8 sm:gap-4'>
+          {selectedPriceRanges?.map((item) => (
+            <div key={item} className='flex items-center border border-gray-300 rounded-lg px-3 py-1 bg-gray-100'>
+              <p className='mr-2'>{item}</p>
+              <button onClick={() => removeFilter(item)} className='text-red-500 hover:text-red-700'>
+                &times;
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       <Drawer width={280} title='BỘ LỌC' onClose={onClose} open={open} placement='left'>
         <div>
