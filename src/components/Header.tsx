@@ -294,7 +294,7 @@ const Header = () => {
               Trang chủ
             </NavLink>
             <Dropdown menu={{ items: menus }}>
-              <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
+              <NavLink to={'/products_page'} className='bg-white md:items-center md:flex md:justify-between '>
                 Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
               </NavLink>
             </Dropdown>
