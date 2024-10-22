@@ -7,6 +7,8 @@ import { Button, Checkbox, Drawer, Dropdown, MenuProps, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import { GrNext } from 'react-icons/gr'
+import { MdOutlineArrowBackIos } from 'react-icons/md'
 
 const ProductsPage = () => {
   const { data } = useProductQuery()
@@ -162,6 +164,26 @@ const ProductsPage = () => {
 
   const filteredProducts = filterProductsByPrice(products, selectedPriceRanges)
 
+  const productsPerPage = 15 // Số lượng sản phẩm trên mỗi trang
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const startIndex = (currentPage - 1) * productsPerPage
+  const endIndex = startIndex + productsPerPage
+  const currentProducts = filteredProducts?.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1)
+    }
+  }
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1)
+    }
+  }
+
   return (
     <>
       {contextHolder}
@@ -294,16 +316,15 @@ const ProductsPage = () => {
         </div>
       </Drawer>
       {/* sản phẩm  */}
-      <div className='grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 items-center gap-8 mx-8 mb-4 '>
-        {filteredProducts?.map((product: IProduct, index: number) => (
-          <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
+      <div className='grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 items-center gap-8 mx-8 mb-4'>
+        {currentProducts?.map((product: IProduct, index: number) => (
+          <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
             <Link to={`/detail/${product._id}`}>
               <div className='relative'>
                 <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
                   <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
                   <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
                 </div>
-
                 <FaRegEye
                   className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
                   title='Xem nhanh'
@@ -325,7 +346,7 @@ const ProductsPage = () => {
                 className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
                 onClick={() => handleAddToCart(String(product._id))}
               >
-                <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
+                <span className='text-[12px] uppercase font-semibold text-ellipsis'>Thêm vào giỏ</span>
                 <div className='p-[6px] bg-[#FCA120] rounded-full'>
                   <Cart />
                 </div>
@@ -333,6 +354,25 @@ const ProductsPage = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className='flex justify-between w-[18%] items-center my-4 max-w-screen-lg mx-auto px-4'>
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className='border-solid border-2 text-white px-4 py-2 rounded'
+        >
+          <MdOutlineArrowBackIos className='text-black' />
+        </button>
+        <span>
+          Trang {currentPage} / {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className='border-solid border-2 text-white px-4 py-2 rounded'
+        >
+          <GrNext className='text-black' />
+        </button>
       </div>
     </>
   )
