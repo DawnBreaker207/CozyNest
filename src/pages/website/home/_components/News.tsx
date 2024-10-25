@@ -1,7 +1,7 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { Card, Carousel, Button } from 'antd'
 import Meta from 'antd/es/card/Meta'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 const News = () => {
