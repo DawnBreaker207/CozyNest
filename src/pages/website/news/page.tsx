@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Layout, Menu, Card, Row, Col, Typography, Modal } from 'antd'
 import { Link } from 'react-router-dom'
 

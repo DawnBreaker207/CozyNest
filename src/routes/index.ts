@@ -33,6 +33,10 @@ import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPoli
 import SalesPolicy from '@/pages/website/home/_components/policy/SalesPolicy'
 import NotFound from '@/pages/website/home/_components/NotFound'
 import ProductsPage from '@/pages/website/products/_components/ProductPage'
+import ColorPage from '@/pages/admin/color/ColorPage'
+import ColorAddPage from '@/pages/admin/color/_components/AddPage'
+import DetailPage from '@/pages/admin/color/_components/DetailPage'
+import ColorEditPage from '@/pages/admin/color/_components/EditPage'
 function App() {
   const routes = useRoutes([
     {
@@ -72,6 +76,10 @@ function App() {
         { path: 'products', Component: AdminProductPage },
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
+        { path: 'colors', Component: ColorPage },
+        { path: 'color/:id/detail_color', Component: DetailPage },
+        { path: 'color/:id/add', Component: ColorAddPage },
+        { path: 'color/:id/edit', Component: ColorEditPage },
         { path: 'order', Component: AdminOrderPage },
         { path: 'customer', Component: AdminCustomerPage },
         { path: 'customer/:id', Component: AdminCustomerDetailPage },

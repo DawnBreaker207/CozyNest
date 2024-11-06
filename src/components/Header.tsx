@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons'
 
 import { Button, Divider, Drawer, Dropdown, GetProps, Input, MenuProps, message, Space, theme } from 'antd'
+import Cookies from 'js-cookie'
 
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
@@ -22,6 +23,7 @@ const { useToken } = theme
 
 const Header = () => {
   const [user, setUser] = useState(null)
+  // console.log(user)
   const [messageApi, contextHolder] = message.useMessage()
   const { data, calculateTotal, mutate } = useCart()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,15 +77,17 @@ const Header = () => {
   }, [quantities, calculateTotal])
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
+    const storedUser = Cookies.get('user')
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser)
-      setUser(parsedUser?.data?.res?.username || null)
+      setUser(parsedUser?.username || null)
     }
   }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
+    Cookies.remove('user')
+    Cookies.remove('accessToken')
+    Cookies.remove('refreshToken')
     messageApi.success('Đăng xuất thành công!')
     setUser(null)
   }
@@ -221,7 +225,16 @@ const Header = () => {
         }
       ]
     : window.innerWidth < 800
-      ? []
+      ? [
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
       : [
           {
             label: <NavLink to='/register'>Đăng ký</NavLink>,
@@ -246,35 +259,45 @@ const Header = () => {
 
   const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
 
-  // Lấy dữ liệu từ localStorage khi component render
+  // Lấy dữ liệu từ Cookies khi component render
   useEffect(() => {
-    const userDataString = localStorage.getItem('user')
+    const userDataString = Cookies.get('user')
+    // console.log(userDataString)
 
     if (userDataString) {
-      const userData = JSON.parse(userDataString)
+      try {
+        const userData = JSON.parse(userDataString)
+        // console.log(userData)
 
-      // Kiểm tra xem dữ liệu có hợp lệ không
-      if (userData && Object.keys(userData).length > 0) {
-        // Lấy ra ID người dùng từ thuộc tính `res`
-        const retrievedUserId = userData?.data?.res?._id
-        // Gán userId vào state
-        setUserId(retrievedUserId)
+        // Kiểm tra tính hợp lệ của dữ liệu
+        if (userData && userData?._id) {
+          const retrievedUserId = userData?._id
+          // console.log(retrievedUserId)
+          setUserId(retrievedUserId)
+        }
+      } catch (error) {
+        console.error('Error parsing user data from cookie:', error)
       }
     }
   }, []) // useEffect chỉ chạy 1 lần sau khi component mount
 
   // Sử dụng id từ state
   const id = userId || null
+  // console.log(id);
+
   const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
+  // console.log(data)
 
   if (isLoading) {
     return <div>Loading...</div>
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>
+    handleLogout()
+    return window.location.reload()
   }
   const userDetail = userData?.res
+  // console.log(userDetail.avatar)
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -358,9 +381,8 @@ const Header = () => {
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
                   window.innerWidth < 800 ? (
-                    <Link to={`login`}>
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    </Link>
+                    // <Link to={`login`}>
+                    <Button shape='circle' icon={<UserOutlined />} />
                   ) : (
                     <Button shape='circle' icon={<UserOutlined />} />
                   )}

@@ -15,6 +15,7 @@ import {
 import { Avatar, Badge, Button, Input, Layout, Menu, theme } from 'antd'
 import React, { useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useParams } from 'react-router-dom'
+import { MdOutlineColorLens } from 'react-icons/md'
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -56,6 +57,10 @@ const LayoutAdmin: React.FC = () => {
   const isEditCategoryPage = location.pathname === `/admin/categories/${id}/edit`
   const isCategoryPage = location.pathname === `/admin/categories`
   const isProductPage = location.pathname === `/admin/products`
+  const isColorPage = location.pathname === `/admin/colors`
+  const isAddColorPage = location.pathname === `/admin/colors/${id}/add`
+  const isEditColorPage = location.pathname === `/admin/colors/${id}/edit`
+  const isDetailColorPage = location.pathname === `/admin/colors/${id}/detail_color`
   const isOrderPage = location.pathname === `/admin/order`
   const isCustomer = location.pathname === `/admin/customer`
 
@@ -80,21 +85,26 @@ const LayoutAdmin: React.FC = () => {
             },
             {
               key: '3',
+              icon: <ApartmentOutlined />,
+              label: <NavLink to={`/admin/colors`}>Color Manager</NavLink>
+            },
+            {
+              key: '4',
               icon: <OrderedListOutlined />,
               label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
             },
             {
-              key: '4',
+              key: '5',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
             },
             {
-              key: '5',
+              key: '6',
               icon: <UserOutlined />,
               label: <NavLink to={`/admin/customer`}>Customer Manager</NavLink>
             },
             {
-              key: '6',
+              key: '7',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/report`}>Reports</NavLink>
             }
@@ -108,6 +118,9 @@ const LayoutAdmin: React.FC = () => {
         {isAddCategoryPage && renderHeader('Add Category')}
         {isEditProductPage && renderHeader('Edit Product')}
         {isEditCategoryPage && renderHeader('Edit Category')}
+        {isAddColorPage && renderHeader('Add Color')}
+        {isEditColorPage && renderHeader('Edit Color')}
+        {isDetailColorPage && renderHeader('Detail Color')}
         <Content>
           {isCategoryPage && (
             <>
@@ -204,9 +217,69 @@ const LayoutAdmin: React.FC = () => {
               </div>
             </>
           )}
+          {isColorPage && (
+            <>
+              <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
+                <div className='flex justify-between h-[60px] items-center'>
+                  <div>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Color</span>
+                  </div>
+                  <div className='flex items-center space-x-4 mr-[14px]'>
+                    <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
+                      Nik Shop <DownOutlined className='ml-2' />
+                    </button>
+                    <Badge count={4} className='cursor-pointer'>
+                      <BellOutlined className='text-xl text-blue-500' />
+                    </Badge>
+                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                  </div>
+                </div>
+              </Header>
+              <div className='flex items-center justify-between p-4 bg-white shadow-md'>
+                <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' />
+                <div className='flex items-center space-x-2'>
+                  <Button
+                    icon={<DownloadOutlined />}
+                    size='large'
+                    className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
+                  >
+                    Export
+                  </Button>
+                  <Button type='primary' icon={<MdOutlineColorLens className='text-xl' />} size='large'>
+                    Color
+                  </Button>
+                </div>
+              </div>
+              <div className='flex items-center justify-between bg-white p-4 shadow-md '>
+                <div className='flex items-center space-x-4 border border-black-100 rounded-lg'>
+                  <div className='flex space-x-4'>
+                    <Button type='link' className='text-blue-500'>
+                      All Color
+                    </Button>
+                    <Button type='link'>Published</Button>
+                    <Button type='link'>Low Stock</Button>
+                    <Button type='link'>Draft</Button>
+                  </div>
+                </div>
+                <div className='flex items-center space-x-4 '>
+                  <Input className='w-64' placeholder='Search product...' prefix={<SearchOutlined />} />
+                  <div className='border border-black-100'>
+                    <Button icon={<CalendarOutlined />} className='border-none shadow-none '>
+                      Select Date
+                    </Button>
+                  </div>
+                  <div className='border border-black-100'>
+                    <Button icon={<FilterOutlined />} className='border-none shadow-none'>
+                      Filters
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
           <div
             style={{
-              padding: 24,
+              padding: 16,
               minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG

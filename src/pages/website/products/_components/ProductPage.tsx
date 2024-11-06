@@ -149,14 +149,36 @@ const ProductsPage = () => {
     if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
 
     return products.filter((product) => {
-      if (priceRanges.includes('Dưới 1.000.000₫') && product.price < 1000000) return true
-      if (priceRanges.includes('1.000.000₫ - 2.000.000₫') && product.price >= 1000000 && product.price <= 2000000)
+      console.log(product)
+
+      if (
+        priceRanges.includes('Dưới 1.000.000₫') &&
+        product?.price - product?.price * (product?.discount / 100) < 1000000
+      )
         return true
-      if (priceRanges.includes('2.000.000₫ - 3.000.000₫') && product.price >= 2000000 && product.price <= 3000000)
+      if (
+        priceRanges.includes('1.000.000₫ - 2.000.000₫') &&
+        product?.price - product?.price * (product?.discount / 100) >= 1000000 &&
+        product?.price - product?.price * (product?.discount / 100) <= 2000000
+      )
         return true
-      if (priceRanges.includes('3.000.000₫ - 4.000.000₫') && product.price >= 3000000 && product.price <= 4000000)
+      if (
+        priceRanges.includes('2.000.000₫ - 3.000.000₫') &&
+        product?.price - product?.price * (product?.discount / 100) >= 2000000 &&
+        product?.price - product?.price * (product?.discount / 100) <= 3000000
+      )
         return true
-      if (priceRanges.includes('Trên 4.000.000₫') && product.price > 4000000) return true
+      if (
+        priceRanges.includes('3.000.000₫ - 4.000.000₫') &&
+        product?.price - product?.price * (product?.discount / 100) >= 3000000 &&
+        product?.price - product?.price * (product?.discount / 100) <= 4000000
+      )
+        return true
+      if (
+        priceRanges.includes('Trên 4.000.000₫') &&
+        product?.price - product?.price * (product?.discount / 100) > 4000000
+      )
+        return true
       return false
     })
   }
@@ -237,7 +259,10 @@ const ProductsPage = () => {
       {window.innerWidth >= 600 ? (
         <div className='flex flex-row justify-left my-4 px-8 space-x-2 md:space-x-4'>
           {selectedPriceRanges?.map((item) => (
-            <div key={item} className='flex items-center border border-gray-300 rounded-lg px-3 py-1 bg-gray-100'>
+            <div
+              key={item}
+              className='flex items-center justify-between border border-gray-300 rounded-lg px-3 py-1 bg-gray-50'
+            >
               <p className='mr-2'>{item}</p>
               <button onClick={() => removeFilter(item)} className='text-red-500 hover:text-red-700'>
                 &times;
@@ -246,10 +271,13 @@ const ProductsPage = () => {
           ))}
         </div>
       ) : (
-        <div className='grid grid-cols-2 gap-2 my-4 px-8 sm:gap-4'>
+        <div className='grid grid-cols-2 gap-2 my-4 px-5 sm:gap-4'>
           {selectedPriceRanges?.map((item) => (
-            <div key={item} className='flex items-center border border-gray-300 rounded-lg px-3 py-1 bg-gray-100'>
-              <p className='mr-2'>{item}</p>
+            <div
+              key={item}
+              className='flex items-center justify-between border border-gray-300 rounded-lg px-3 py-1 bg-gray-50'
+            >
+              <p className='mr-2 text-xs'>{item}</p>
               <button onClick={() => removeFilter(item)} className='text-red-500 hover:text-red-700'>
                 &times;
               </button>
@@ -264,25 +292,34 @@ const ProductsPage = () => {
             {/* Product Categories */}
             <div className='my-4'>
               <h4 className='mb-2 text-lg'>Danh mục sản phẩm</h4>
+
+              <Link className='text-black hover:text-yellow-500 ' to='#'>
+                Tất cả sản phẩm
+              </Link>
+              <br />
               <Link className='text-black hover:text-yellow-500 ' to='#'>
                 Sản phẩm khuyến mãi
               </Link>
               <br />
               <Link className='text-black hover:text-yellow-500 ' to='#'>
-                sản phẩm nổi bật
+                Nội thất phòng khách
               </Link>
               <br />
               <Link className='text-black hover:text-yellow-500 ' to='#'>
-                Tất cả sản phẩm
+                Nội thất phòng ngủ
+              </Link>
+              <br />
+              <Link className='text-black hover:text-yellow-500 ' to='#'>
+                Nội thất phòng bếp
               </Link>
             </div>
             <hr />
             {/* Supplier */}
-            <div className='my-4'>
+            {/* <div className='my-4'>
               <h4 className='mb-2 text-lg'>Nhà cung cấp</h4>
               <Checkbox>Khác</Checkbox>
-            </div>
-            <hr />
+            </div> */}
+            {/* <hr /> */}
             {/* Price Filter */}
             <div className='my-4'>
               <h4 className='mb-2 text-lg'>Lọc giá</h4>
@@ -294,6 +331,7 @@ const ProductsPage = () => {
               </Checkbox>
               <br />
               <Checkbox
+                className=''
                 checked={selectedPriceRanges.includes('1.000.000₫ - 2.000.000₫')}
                 onChange={() => handlePriceRangeChange('1.000.000₫ - 2.000.000₫')}
               >
@@ -392,11 +430,11 @@ const ProductsPage = () => {
         )}
       </div>
 
-      <div className='flex justify-center w-[18%] items-center my-4 max-w-screen-lg mx-auto'>
+      <div className='flex justify-center w-[22%] items-center my-4 gap-8 max-w-screen-lg mx-auto'>
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          className='border-solid border-2 text-white px-4 py-2 rounded'
+          className='border-solid border-2 text-white px-3 py-2 rounded'
         >
           <MdOutlineArrowBackIos className='text-black' />
         </button>
@@ -406,7 +444,7 @@ const ProductsPage = () => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className='border-solid border-2 text-white px-4 py-2 rounded'
+          className='border-solid border-2 text-white px-3 py-2 rounded'
         >
           <GrNext className='text-black' />
         </button>
