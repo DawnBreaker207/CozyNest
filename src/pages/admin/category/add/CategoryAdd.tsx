@@ -1,4 +1,4 @@
-import { Form, Input, Button, Checkbox, message } from 'antd'
+import { Form, Input, Button, Checkbox, message, Select } from 'antd'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { ICategory } from '@/types/category'
@@ -16,9 +16,16 @@ const AddCategoryPage = () => {
       }, 600)
     }
   })
-
+  const { Option } = Select
   const onFinish = (values: ICategory) => {
-    mutate(values)
+    // Đảm bảo isHidden có giá trị hợp lệ
+    const categoryData = {
+      ...values,
+      isHidden: values.isHidden !== undefined ? values.isHidden : false // Mặc định isHidden là false
+    }
+    console.log(categoryData)
+
+    mutate(categoryData)
   }
 
   return (
@@ -53,6 +60,16 @@ const AddCategoryPage = () => {
                 rules={[{ required: true, message: 'Tên danh mục là bắt buộc' }]}
               >
                 <Input placeholder='Type category name here...' className='w-full bg-[#F9F9FC]' />
+              </Form.Item>
+              <Form.Item
+                label='Category Type'
+                name='type'
+                rules={[{ required: true, message: 'Loại danh mục là bắt buộc' }]}
+              >
+                <Select placeholder='Select category type' className='w-full'>
+                  <Option value='normal'>Normal</Option>
+                  <Option value='default'>Default</Option>
+                </Select>
               </Form.Item>
             </div>
             <div className='w-[20%]'>

@@ -43,7 +43,7 @@ const ProductDetail = () => {
   //Kiểm tra dữ liệu product
   if (!data || !data.res) return <p>Product not found</p>
   const product = data?.res
-  const category = product?.categoryId?.[0]?._id
+  const category = product?.categoryId?._id
   // console.log(category)
 
   const increase = () => {

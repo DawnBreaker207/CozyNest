@@ -14,7 +14,6 @@ export const getAllProducts = async (params?: IProduct[]): Promise<IProduct[]> =
     const response = await instance.get('/products', { params })
     return response.data
   } catch (error) {
-    console.error('Lỗi khi lấy tất cả sản phẩm:', error)
     return [] // Trả về mảng rỗng nếu có lỗi
   }
 }
@@ -33,7 +32,6 @@ export const getProductById = async (id: number | string) => {
 export const addProduct = async (product: IProduct) => {
   const token = getToken()
   if (!token) {
-    console.error('Không có token để gửi request')
     return null
   }
   try {
@@ -53,7 +51,6 @@ export const addProduct = async (product: IProduct) => {
 export const removeProduct = async (product: IProduct) => {
   const token = getToken()
   if (!token) {
-    console.error('Không có token để gửi request')
     return null
   }
   try {
@@ -72,12 +69,10 @@ export const removeProduct = async (product: IProduct) => {
 export const editProduct = async (product: IProduct) => {
   const token = getToken()
   if (!token) {
-    console.error('Không có token để gửi request')
     return null
   }
 
   if (!product._id) {
-    console.error('Không có _id trong sản phẩm:', product)
     return null // Trả về null nếu không có _id
   }
 

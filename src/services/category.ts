@@ -5,19 +5,6 @@ import Cookies from 'js-cookie'
 // Cấu hình axios để gửi cookie trong mỗi request
 instance.defaults.withCredentials = true // Đảm bảo gửi cookie đi cùng với yêu cầu
 
-// Lấy thông tin người dùng từ cookie (dữ liệu không phải là refreshToken)
-const getUserData = () => {
-  const dataUser = Cookies.get('user') // Cookies không phải là HttpOnly
-  if (dataUser) {
-    try {
-      return JSON.parse(dataUser) // Trả về dữ liệu người dùng đã phân tích
-    } catch (error) {
-      console.error('Không thể phân tích dữ liệu từ cookie:', error)
-    }
-  }
-  return null // Nếu không có thông tin người dùng trong cookie
-}
-
 // Lấy token từ cookie
 const getToken = (): string | null => {
   const token = Cookies.get('refreshToken') // Lấy token từ cookie
@@ -26,16 +13,9 @@ const getToken = (): string | null => {
 
 // Lấy tất cả danh mục (categories)
 export const getAllCategories = async (params?: ICategory[]): Promise<ICategory[]> => {
-  const userData = getUserData() // Lấy thông tin người dùng từ cookie
-  if (!userData || userData.role !== 'admin') {
-    console.error('User is not admin or no user data available.')
-    return [] // Nếu không phải admin hoặc không có người dùng, trả về mảng rỗng
-  }
-
   const token = getToken() // Lấy token từ cookie
 
   if (!token) {
-    console.error('Không có token để gửi request')
     return [] // Nếu không có token, trả về mảng rỗng
   }
 

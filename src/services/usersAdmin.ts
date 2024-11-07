@@ -21,7 +21,6 @@ const getUserData = () => {
 // Lấy token từ cookie
 const getToken = (): string | null => {
   const token = Cookies.get('refreshToken') // Lấy token từ cookie
-  // console.log('Refresh token in cookie:', token) // Kiểm tra xem token có tồn tại trong cookie không
   return token || null // Trả về token hoặc null nếu không có
 }
 
@@ -29,14 +28,13 @@ const getToken = (): string | null => {
 export const getAllUser = async (): Promise<IUsers[]> => {
   const userData = getUserData() // Lấy thông tin người dùng từ cookie
   if (!userData || userData.role !== 'admin') {
-    console.error('User is not admin or no user data available.')
     return [] // Nếu không phải admin hoặc không có người dùng, trả về mảng rỗng
   }
 
   const token = getToken() // Lấy token từ cookie (sử dụng hàm getToken đã định nghĩa)
 
   if (!token) {
-    console.error('Không có token để gửi request')
+    // console.error('Không có token để gửi request')
     return [] // Nếu không có token, trả về mảng rỗng
   }
 
@@ -47,7 +45,6 @@ export const getAllUser = async (): Promise<IUsers[]> => {
       },
       withCredentials: true // Đảm bảo gửi cookie
     })
-    // console.log('Response:', response.data)
     return response.data
   } catch (error) {
     console.error('Lỗi khi lấy dữ liệu người dùng:', error)
