@@ -1,29 +1,13 @@
-import instance from '@/configs/axios'
+import instance from '@/configs/axios' // instance của axios
 import { IUsers } from '@/types/user'
 import Cookies from 'js-cookie'
 
-// Lấy dữ liệu cookie và parse nó
-const getToken = () => {
-  const userDataString = Cookies.get('refreshToken') // Lấy cookie refreshToken
-  // console.log('User data in cookie:', userDataString) // In ra cookie để kiểm tra
+// Cấu hình axios để gửi cookie trong mỗi request
+instance.defaults.withCredentials = true // Đảm bảo gửi cookie đi cùng với yêu cầu
 
-  if (userDataString) {
-    try {
-      // console.log('Token extracted:', userDataString) // Kiểm tra token
-      return userDataString || ''
-    } catch (error) {
-      console.error('Không thể phân tích dữ liệu từ cookie:', error)
-    }
-  }
-  return '' // Nếu không có token thì trả về rỗng
-}
-
-// const token = getToken()
-// console.log('Token extracted from cookie:', token) // Kiểm tra token lấy từ cookie
-
-// Lấy thông tin người dùng từ cookie và kiểm tra quyền admin
+// Lấy thông tin người dùng từ cookie (dữ liệu không phải là refreshToken)
 const getUserData = () => {
-  const dataUser = Cookies.get('user')
+  const dataUser = Cookies.get('user') // Cookies không phải là HttpOnly
   if (dataUser) {
     try {
       return JSON.parse(dataUser) // Trả về dữ liệu người dùng đã phân tích
@@ -34,44 +18,47 @@ const getUserData = () => {
   return null // Nếu không có thông tin người dùng trong cookie
 }
 
+// Lấy token từ cookie
+const getToken = (): string | null => {
+  const token = Cookies.get('refreshToken') // Lấy token từ cookie
+  // console.log('Refresh token in cookie:', token) // Kiểm tra xem token có tồn tại trong cookie không
+  return token || null // Trả về token hoặc null nếu không có
+}
+
 // Lấy tất cả người dùng
 export const getAllUser = async (): Promise<IUsers[]> => {
-  const userData = getUserData()
+  const userData = getUserData() // Lấy thông tin người dùng từ cookie
   if (!userData || userData.role !== 'admin') {
+    console.error('User is not admin or no user data available.')
     return [] // Nếu không phải admin hoặc không có người dùng, trả về mảng rỗng
   }
 
-  const token = getToken() // Lấy token từ cookie
+  const token = getToken() // Lấy token từ cookie (sử dụng hàm getToken đã định nghĩa)
+
   if (!token) {
     console.error('Không có token để gửi request')
     return [] // Nếu không có token, trả về mảng rỗng
   }
 
-  // console.log('Headers being sent:', { Authorization: `Bearer ${token}` })
-
   try {
     const response = await instance.get('/users', {
       headers: {
         Authorization: `Bearer ${token}` // Gửi token trong header
-      }
+      },
+      withCredentials: true // Đảm bảo gửi cookie
     })
-    console.log('Response:', response.data)
+    // console.log('Response:', response.data)
     return response.data
   } catch (error) {
-    // console.error('Lỗi khi lấy dữ liệu người dùng:', error)
+    console.error('Lỗi khi lấy dữ liệu người dùng:', error)
     return [] // Trả về mảng rỗng nếu có lỗi
   }
 }
 
 // Lấy thông tin người dùng theo ID
 export const getUserById = async (id: number | string) => {
-  const token = getToken() // Lấy token từ cookie
   try {
-    const response = await instance.get(`/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+    const response = await instance.get(`/users/${id}`) // Gửi request mà không cần token trong header
     return response.data
   } catch (error) {
     console.log(error)
@@ -80,12 +67,12 @@ export const getUserById = async (id: number | string) => {
 
 // Cập nhật thông tin người dùng
 export const editUser = async (users: IUsers) => {
-  const token = getToken() // Lấy token từ cookie
+  const token = getToken()
   try {
     const response = await instance.patch(`/users/${users?._id}`, users, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: 'Bearer ' + token ? token : ''
       }
     })
     return response.data

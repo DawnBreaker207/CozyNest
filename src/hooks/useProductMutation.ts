@@ -32,6 +32,7 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
       images: [] // Làm mảng cho images
     }
   })
+
   const { mutate, ...rest } = useMutation({
     mutationFn: async (product: IProduct) => {
       switch (action) {
@@ -40,6 +41,10 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
         case 'DELETE':
           return await removeProduct(product)
         case 'UPDATE':
+          // Ensure the product has the _id for update action
+          if (!product._id) {
+            throw new Error('Product ID is missing for update')
+          }
           return await editProduct(product)
         default:
           return null
@@ -60,7 +65,7 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
       }
     },
     onError: (error) => {
-      console.log(error)
+      console.error('Mutation error:', error)
       messageApi.error({
         content: 'Có lỗi xảy ra trong quá trình xử lý',
         duration: 2
@@ -68,7 +73,7 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
     }
   })
 
-  const onSubmit: SubmitHandler<IProduct> = async (product) => {
+  const onSubmit: SubmitHandler<IProduct> = (product) => {
     mutate(product)
   }
 
