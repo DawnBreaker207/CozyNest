@@ -7,6 +7,7 @@ import { GrFormPrevious } from 'react-icons/gr'
 import { useProductQuery } from '@/hooks/useProductQuery'
 import { Link, useParams } from 'react-router-dom'
 import RelatedProduct from '../_components/RelatedProduct'
+import ReviewComponent from './_components/Review'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -58,77 +59,80 @@ const ProductDetail = () => {
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
-        <div className='flex flex-col'>
-          <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
-            {/* List of Thumbnails */}
-            <div className='lg:flex flex-wrap flex-col hidden'>
-              {thumbnails.map((thumbnail, index) => (
-                <img
-                  key={index}
-                  src={thumbnail}
-                  alt={`Product Thumbnail ${index + 1}`}
-                  className='w-16 h-16 mb-3 cursor-pointer'
-                  onClick={() => setActiveImageIndex(index)}
-                />
-              ))}
-            </div>
-            <div className='relative lg:mx-0 md:w-[450px] md:h-[450px] h-auto w-full overflow-hidden'>
-              <div
-                className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
-                style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
-              >
+        <div>
+          <div className='flex flex-col'>
+            <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
+              {/* List of Thumbnails */}
+              <div className='lg:flex flex-wrap flex-col hidden'>
                 {thumbnails.map((thumbnail, index) => (
                   <img
                     key={index}
                     src={thumbnail}
-                    alt={`Product Image ${index + 1}`}
-                    className='max-w-full h-auto' // Keep image aspect ratio and fit within container
+                    alt={`Product Thumbnail ${index + 1}`}
+                    className='w-16 h-16 mb-3 cursor-pointer'
+                    onClick={() => setActiveImageIndex(index)}
                   />
                 ))}
               </div>
+              <div className='relative lg:mx-0 md:w-[450px] md:h-[450px] h-auto w-full overflow-hidden'>
+                <div
+                  className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
+                  style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+                >
+                  {thumbnails.map((thumbnail, index) => (
+                    <img
+                      key={index}
+                      src={thumbnail}
+                      alt={`Product Image ${index + 1}`}
+                      className='max-w-full h-auto' // Keep image aspect ratio and fit within container
+                    />
+                  ))}
+                </div>
 
-              <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
-                {product.discount}%
-              </span>
+                <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
+                  {product.discount}%
+                </span>
 
-              {/* Back Button */}
-              <button
-                className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
-                onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
-              >
-                <GrFormPrevious className='w-[35px] h-[35px]' />
-              </button>
+                {/* Back Button */}
+                <button
+                  className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
+                  onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
+                >
+                  <GrFormPrevious className='w-[35px] h-[35px]' />
+                </button>
 
-              {/* Next Button */}
-              <button
-                className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
-                onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
-              >
-                <GrFormNext className='w-[35px] h-[35px]' />
-              </button>
+                {/* Next Button */}
+                <button
+                  className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
+                  onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
+                >
+                  <GrFormNext className='w-[35px] h-[35px]' />
+                </button>
+              </div>
+              {/* List of Thumbnails */}
+              <div className='flex flex-wrap gap-2 flex-row mx-auto lg:hidden'>
+                {thumbnails.map((thumbnail, index) => (
+                  <img
+                    key={index}
+                    src={thumbnail}
+                    alt={`Product Thumbnail ${index + 1}`}
+                    className='sm:w-16 sm:h-16 w-12 h-12 mb-[10px] cursor-pointer'
+                    onClick={() => setActiveImageIndex(index)}
+                  />
+                ))}
+              </div>
             </div>
-            {/* List of Thumbnails */}
-            <div className='flex flex-wrap gap-2 flex-row mx-auto lg:hidden'>
-              {thumbnails.map((thumbnail, index) => (
-                <img
-                  key={index}
-                  src={thumbnail}
-                  alt={`Product Thumbnail ${index + 1}`}
-                  className='sm:w-16 sm:h-16 w-12 h-12 mb-[10px] cursor-pointer'
-                  onClick={() => setActiveImageIndex(index)}
-                />
-              ))}
+            {/* Share Section */}
+            <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
+              <span className='font-light'>Chia sẻ:</span>
+              <img src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
+              <img src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
+              <img src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
+              <img src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
+              <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
             </div>
           </div>
-          {/* Share Section */}
-          <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
-            <span className='font-light'>Chia sẻ:</span>
-            <img src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
-            <img src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
-            <img src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
-            <img src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
-            <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
-          </div>
+          <ReviewComponent />
         </div>
         <div className='col-span-1 lg:mt-0 mt-6'>
           <div className='product-heading'>
@@ -338,7 +342,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <div className='mb-20 container'>
+      {/* <div className='mb-20 container'>
         <RelatedProduct id={category._id} />
 
         <div className='mt-[60px]'>
@@ -374,7 +378,7 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* </div> */}
     </div>
   )
