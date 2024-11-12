@@ -37,6 +37,7 @@ import ColorPage from '@/pages/admin/color/ColorPage'
 import ColorAddPage from '@/pages/admin/color/_components/AddPage'
 import DetailPage from '@/pages/admin/color/_components/DetailPage'
 import ColorEditPage from '@/pages/admin/color/_components/EditPage'
+import ProductsPageDetail from '@/pages/website/products/_components/ProductPageDetail'
 function App() {
   const routes = useRoutes([
     {
@@ -48,6 +49,7 @@ function App() {
         { path: 'news', Component: NewsPage },
         { path: 'detail/:id', Component: ProductDetail },
         { path: 'products_page', Component: ProductsPage },
+        { path: 'products_page/:id', Component: ProductsPageDetail },
         { path: 'cart', Component: CartPage },
         { path: 'cart/check_out_form', Component: pageCheckOut },
         { path: 'intro', Component: Introduction },
