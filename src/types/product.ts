@@ -1,6 +1,7 @@
+import { ResAPI } from './category'
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface IProduct {
-  res: any
+export interface IProduct extends ResAPI<IProduct> {
   _id: string | number
   originId?: string | null
   name: string

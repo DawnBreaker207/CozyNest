@@ -40,41 +40,54 @@ function App() {
       Component: LayoutWebsite,
       children: [
         { index: true, Component: HomePage },
-        { path: 'contact', Component: ContactPage },
-        { path: 'news', Component: NewsPage },
+        // Product
         { path: 'detail/:id', Component: ProductDetail },
         { path: 'products_page', Component: ProductsPage },
+        // Cart
         { path: 'cart', Component: CartPage },
         { path: 'cart/check_out_form', Component: pageCheckOut },
-        { path: 'intro', Component: Introduction },
+        // Auth
         { path: 'login', Component: Login },
         { path: 'register', Component: Register },
         { path: 'profile', Component: ProfilePage },
         { path: 'reset-password', Component: ResetPassword },
+        // Order
         { path: 'check_out_order', Component: CheckOutOder },
-        { path: 'link', Component: LinkPage },
+        // Policy
+        // TODO: Rename
         { path: 'policy/chinh-sach-ban-hang', Component: SalesPolicy },
         { path: 'policy/giao-hang-va-lap-dat', Component: DeliveryPolicy },
         { path: 'policy/chinh-sach-doi-tra', Component: ReturnPolicy },
         { path: 'policy/bao-hanh-va-bao-tri', Component: WarrantyPolicy },
         { path: 'policy/khach-hang-than-thiet', Component: CustomerPolicy },
+        // Others
+        { path: 'link', Component: LinkPage },
+        { path: 'news', Component: NewsPage },
+        { path: 'contact', Component: ContactPage },
+        { path: 'intro', Component: Introduction },
+        // Not found
         { path: '*', Component: NotFound }
       ]
     },
     {
       path: 'admin',
-      Component: LayoutAdmin, // ensure this is a component
+      Component: LayoutAdmin,
       children: [
         { index: true, Component: DashboardPage },
+        // Category
         { path: 'categories', Component: CategoryPage },
         { path: 'categories/add', Component: AddCategoryPage },
         { path: 'categories/:id/edit', Component: EditCategoryPage },
+        // Product
         { path: 'products', Component: AdminProductPage },
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
+        // Order
         { path: 'order', Component: AdminOrderPage },
+        // Customer
         { path: 'customer', Component: AdminCustomerPage },
         { path: 'customer/:id', Component: AdminCustomerDetailPage },
+        // Report
         { path: 'report', Component: ReportsPage }
       ]
     }

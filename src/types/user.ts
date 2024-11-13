@@ -1,4 +1,6 @@
-export interface IUsers {
+import { ResAPI } from './category'
+
+export interface IUsers extends ResAPI<IUsers> {
   _id?: number | string
   username: string
   email: string

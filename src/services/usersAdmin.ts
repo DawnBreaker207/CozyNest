@@ -1,5 +1,6 @@
 import instance from '@/configs/axios'
 import { IUsers } from '@/types/user'
+// TODO: Fix
 const userDataString = localStorage.getItem('user')
 let token = ''
 if (userDataString) {

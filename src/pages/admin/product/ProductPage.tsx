@@ -80,7 +80,8 @@ const AdminProductPage = () => {
             .join(', ') // Ghép các tên danh mục thành chuỗi
           return categoryNames || 'Không xác định'
         } else {
-          return 'Không xác định' // Nếu không có categoryId
+          // Nếu không có categoryId
+          return 'Không xác định'
         }
       }
     },

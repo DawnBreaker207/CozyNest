@@ -1,10 +1,10 @@
 import useCategoryMutation from '@/hooks/useCategoryMutations'
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
-import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 
 const CategoryPage = () => {
   const queryClient = useQueryClient()

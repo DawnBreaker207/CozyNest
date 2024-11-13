@@ -1,5 +1,6 @@
 import instance from '@/configs/axios'
 import { ICategory } from '@/types/category'
+// TODO: Fix
 const userDataString = localStorage.getItem('user')
 let token = ''
 if (userDataString) {

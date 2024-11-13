@@ -35,6 +35,7 @@ const AdminCustomerPage = () => {
   const handleCancel = () => {
     setIsModalVisible(false)
   }
+  // Todo : Update
   const validatePhoneNumber = (_rule: Rule, value: string) => {
     if (!value || value.replace(/\D/g, '').length === 10) {
       return Promise.resolve()

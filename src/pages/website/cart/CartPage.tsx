@@ -8,7 +8,8 @@ const CartPage = () => {
   const { data, calculateTotal, mutate } = useCart()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const products = data?.res?.products || [] // Cập nhật để lấy sản phẩm
-  const [quantities, setQuantities] = useState<number[]>([]) // Mảng để lưu số lượng của từng sản phẩm
+  // Mảng để lưu số lượng của từng sản phẩm
+  const [quantities, setQuantities] = useState<number[]>([])
 
   useEffect(() => {
     // Cập nhật số lượng ban đầu từ products

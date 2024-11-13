@@ -50,6 +50,8 @@ const LayoutAdmin: React.FC = () => {
       </div>
     </Header>
   )
+
+  //TODO: ???????
   const isAddProductPage = location.pathname === '/admin/products/add'
   const isEditProductPage = location.pathname === `/admin/products/${id}/edit`
   const isAddCategoryPage = location.pathname === '/admin/categories/add'
