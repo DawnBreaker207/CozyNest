@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ProfileModal from './ProfileUpdate'
 import UpdatePasswordModal from './UpdatePasswod'
+import { Rule } from 'antd/es/form'
 
 const ProfilePage = () => {
   const navigate = useNavigate()
@@ -51,7 +52,7 @@ const ProfilePage = () => {
   }
 
   // Xác thực số điện thoại (10 chữ số không bao gồm ký tự đặc biệt)
-  const validatePhoneNumber = (_rule: any, value: any) => {
+  const validatePhoneNumber = (_rule: Rule, value: string) => {
     if (!value || value.replace(/\D/g, '').length === 10) {
       return Promise.resolve()
     }

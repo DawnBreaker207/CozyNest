@@ -15,9 +15,11 @@ const useCart = () => {
     queryFn: async () => {
       if (userId) {
         const { data } = await instance.get(`/cart/${userId}`)
-        return data // Dữ liệu từ API
+        // Dữ liệu từ API
+        return data
       }
-      return { res: { products: [] } } // Giá trị mặc định khi không có userId
+      // Giá trị mặc định khi không có userId
+      return { res: { products: [] } }
     }
   })
 
@@ -59,8 +61,10 @@ const useCart = () => {
           await instance.post(`/cart/add-to-cart`, {
             userId,
             productId,
-            quantity: 1, // Đặt mặc định số lượng là 1
-            price: data.res.products.find((product: any) => product._id === productId)?.price // Lấy giá từ dữ liệu hiện có
+            // Đặt mặc định số lượng là 1
+            quantity: 1,
+            // Lấy giá từ dữ liệu hiện có
+            price: data.res.products.find((product: any) => product._id === productId)?.price
           })
           break
         default:
@@ -78,7 +82,8 @@ const useCart = () => {
 
   useEffect(() => {
     if (data && data.res && data.res.products) {
-      setQuantities(data.res.products.map((product: any) => product.quantity)) // Khởi tạo số lượng từ dữ liệu
+      // Khởi tạo số lượng từ dữ liệu
+      setQuantities(data.res.products.map((product: any) => product.quantity))
     }
   }, [data])
 
@@ -87,8 +92,10 @@ const useCart = () => {
     return reduce(
       data.res.products,
       (total, product, index: number) => {
-        const quantity = quantities[index] || product.quantity // Lấy số lượng từ state `quantities`
-        return total + product.price * quantity // Tính tổng
+        // Lấy số lượng từ state `quantities`
+        const quantity = quantities[index] || product.quantity
+        // Tính tổng
+        return total + product.price * quantity
       },
       0
     )
@@ -103,8 +110,10 @@ const useCart = () => {
     calculateTotal,
     handleQuantityChange,
     quantities,
-    setQuantities, // Thêm setQuantities vào return để có thể cập nhật số lượng từ ngoài
-    addToCart, // Trả về hàm addToCart
+    // Thêm setQuantities vào return để có thể cập nhật số lượng từ ngoài
+    setQuantities,
+    // Trả về hàm addToCart
+    addToCart,
     ...restQuery
   }
 }

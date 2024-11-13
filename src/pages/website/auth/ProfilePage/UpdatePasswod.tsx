@@ -21,7 +21,7 @@ const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, han
     mutate(values)
   }
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = (errorInfo: unknown) => {
     console.log('Failed:', errorInfo)
   }
 

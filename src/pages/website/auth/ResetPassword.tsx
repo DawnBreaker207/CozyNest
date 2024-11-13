@@ -1,18 +1,18 @@
 import instance from '@/configs/axios'
 import { useMutation } from '@tanstack/react-query'
-import { Form, Input, Button, message } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 const ResetPassword = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
-  const onFinish = (values: any) => {
+  const onFinish = (values: { email: string }) => {
     console.log('Reset Password Info:', values)
     // Gửi yêu cầu lấy lại mật khẩu đến server ở đây
     mutate(values)
   }
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = (errorInfo: unknown) => {
     console.log('Failed:', errorInfo)
   }
 

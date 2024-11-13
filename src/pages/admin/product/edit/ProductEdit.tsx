@@ -15,7 +15,7 @@ const ProductEditPage = () => {
 
   // Lấy dữ liệu sản phẩm
   const { data, isLoading, isError, error } = useProductQuery({ id })
-  const categoryId = data?.res?.categoryId?.[0]?._id;
+  const categoryId = data?.res?.categoryId?.[0]?._id
   // Mutation để cập nhật sản phẩm
   const { mutate } = useProductMutation({
     action: 'UPDATE',
@@ -51,7 +51,7 @@ const ProductEditPage = () => {
           onFinish={onFinish}
           // Đặt giá trị mặc định cho form, bao gồm categoryId từ sản phẩm
           initialValues={{
-            ...data?.res,  // Giá trị sản phẩm trả về từ API
+            ...data?.res, // Giá trị sản phẩm trả về từ API
             categoryId
           }}
         >

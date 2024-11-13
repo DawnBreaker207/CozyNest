@@ -6,6 +6,7 @@ import { IUsers } from '@/types/user'
 // import { IUsers } from '@/types/user'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, FormProps, Input, Modal, Pagination, Select, Switch } from 'antd'
+import { Rule } from 'antd/es/form'
 import { useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
@@ -34,8 +35,7 @@ const AdminCustomerPage = () => {
   const handleCancel = () => {
     setIsModalVisible(false)
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const validatePhoneNumber = (_rule: any, value: any) => {
+  const validatePhoneNumber = (_rule: Rule, value: string) => {
     if (!value || value.replace(/\D/g, '').length === 10) {
       return Promise.resolve()
     }

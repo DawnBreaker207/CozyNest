@@ -4,13 +4,14 @@ import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
 import { useEffect, useState } from 'react'
+import { Rule } from 'antd/es/form'
 
 interface CustomerModalProps {
   isModalVisible: boolean
   handleCancel: () => void
   handleToggle: (checked: boolean) => void
   formVisible: boolean
-  validatePhoneNumber: (rule: any, value: string) => Promise<any>
+  validatePhoneNumber: (rule: Rule, value: string) => Promise<void>
 }
 
 const ProfileModal: React.FC<CustomerModalProps> = ({
@@ -22,7 +23,8 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
 }) => {
   const [messageApi, contextHolder] = message.useMessage()
 
-  const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
+  // Khai báo state cho userId
+  const [userId, setUserId] = useState<number | string | null>(null)
 
   useEffect(() => {
     const userDataString = localStorage.getItem('user')
