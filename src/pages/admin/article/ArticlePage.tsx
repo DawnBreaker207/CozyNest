@@ -1,5 +1,5 @@
 import useArticleMutation from '@/hooks/useArticleMutation';
-import { Button, Table, Space, message, Tooltip, Typography, Collapse, Image } from 'antd';
+import { Button, Table, Space, message, Tooltip, Typography, Collapse, Image, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useArticleQuery } from '@/hooks/useArticleQuery';
@@ -23,12 +23,10 @@ const AdminArticlePage = () => {
     }
    
   });
-  const data = Articledata?.res?.map((item:IArticle) =>(
-    {
-      key: item._id,
-      ...item
-    }
-  ))
+  const data = Articledata?.res.map((item: IArticle) => ({
+    key: item._id,
+    ...item
+  }))
   const columns = [
     {
       title: 'Title',
@@ -71,15 +69,21 @@ const AdminArticlePage = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (text: string, record: any) => (
+      render: (text: string, record: IArticle) => (
         <Space size="middle">
           <Link to={`/admin/articles/${record._id}`}>
             <Button icon={<EditOutlined />} />
           </Link>
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={() => deleteArticle(record._id)}
-          />
+          <Popconfirm
+            title='Xóa sản phẩm'
+            description='Bạn có chắc chắn muốn xóa sản phẩm này?'
+            onConfirm={() => deleteArticle({ _id: record._id } as IArticle)}
+            okText='Có'
+            cancelText='Không'
+
+          >
+            <Button icon={<DeleteOutlined />} />
+          </Popconfirm>
         </Space>
       )
     }

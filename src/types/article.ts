@@ -1,5 +1,6 @@
 export default interface IArticle {
-  _id: number
+  _id?: string | number
+  res: any
   title: string
   content: [
     {

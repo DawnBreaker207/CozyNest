@@ -8,16 +8,16 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 const ArticleEditPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>()
 
   // Kiểm tra nếu id tồn tại
   if (!id) {
-    return <div>Error: Invalid article ID</div>;
+    return <div>Error: Invalid article ID</div>
   }
 
   // Lấy dữ liệu bài viết
-  const { data, isLoading, isError, error } = useArticleQuery({ id })
-  
+  const { data, isLoading, isError, error, } = useArticleQuery({ id })
+
   // Mutation để cập nhật bài viết
   const { mutate } = useArticleMutation({
     action: 'UPDATE',
@@ -31,15 +31,13 @@ const ArticleEditPage = () => {
 
   // Hàm xử lý khi form submit
   const onFinish = (values: IArticle) => {
-    if (id) {
-      // Gọi mutate với ID từ useParams
-      mutate({ ...data, ...values });
+    if (data) {
+      // Chắc chắn thêm _id vào values trước khi gửi đi
+      mutate({ ...data, ...values, _id: id })
     } else {
-      messageApi.error('Article ID is missing');
+      messageApi.error('Dữ liệu bài viết không hợp lệ')
     }
-  };
-  
-  
+  }
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>{error.message}</div>

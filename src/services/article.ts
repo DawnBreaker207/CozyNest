@@ -44,7 +44,8 @@ export const addArticle = async (article: IArticle) => {
 // Xóa bài viết
 export const removeArticle = async (article: IArticle) => {
   try {
-    const response = await instance.delete(`http://localhost:8888/api/v1/articles/${article?._id}`, {
+    if (!article._id) throw new Error("Article ID is required for deletion");
+    const response = await instance.delete(`http://localhost:8888/api/v1/articles/${article._id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token') || ''}`
@@ -58,17 +59,27 @@ export const removeArticle = async (article: IArticle) => {
 };
 
 // Cập nhật bài viết
-export const editArticle = async ( article: IArticle) => {
+export const editArticle = async (article: IArticle) => {
+  
   try {
-    const response = await instance.put(`http://localhost:8888/api/v1/articles/${article?._id}`, article, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token') || ''}`
+    // Kiểm tra `_id` của bài viết
+    if (!article._id) throw new Error("Article ID is required for editing");
+    
+    // Gửi yêu cầu PUT để cập nhật bài viết
+    const {data} = await instance.put(
+      `http://localhost:8888/api/v1/articles/${article?._id}`, // Sử dụng article._id
+      article, // Truyền toàn bộ bài viết trong phần body
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+        },
       }
-    });
-    return response.data;
+    );
+
+    return data;
   } catch (error) {
     console.error('Failed to edit article:', error);
-    return null;
+    throw error; // Nên ném lỗi để mutation xử lý
   }
 };
+

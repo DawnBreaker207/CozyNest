@@ -6,7 +6,6 @@ import IArticle from '@/types/article';
 import { ArticleZodSchema } from '@/validations/article';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
 
 type useArticleMutationProps = {
   action: 'CREATE' | 'DELETE' | 'UPDATE';
@@ -16,9 +15,8 @@ type useArticleMutationProps = {
 const useArticleMutation = ({ action, onSuccess }: useArticleMutationProps) => {
   const queryClient = useQueryClient();
   const [messageApi, contextHolder] = message.useMessage();
-  const [status, setStatus] = useState<'success' | 'error' | null>(null);
 
-  const form = useForm<IArticle>({
+  const form = useForm({
     resolver: zodResolver(ArticleZodSchema),
     defaultValues: {
       title: '',
@@ -27,46 +25,50 @@ const useArticleMutation = ({ action, onSuccess }: useArticleMutationProps) => {
     },
   });
 
-  const mutation = useMutation({
+  const { mutate, ...rest } = useMutation({
     mutationFn: async (article: IArticle) => {
+      console.log('Article data for mutation:', article);
+      // Kiểm tra _id trước khi thực hiện các hành động
+      if (!article._id) {
+        throw new Error("Article ID is required for editing");
+      }
       switch (action) {
         case 'CREATE':
           return await addArticle(article);
         case 'DELETE':
-          if (!article._id) throw new Error("Article ID is required for deletion");
           return await removeArticle(article); 
         case 'UPDATE':
-          if (!article._id) throw new Error("Article ID is required for updating");
           return await editArticle(article);
         default:
-          throw new Error('Invalid action type');
+          throw new Error("Invalid action type");
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ARTICLE_KEY'] });
-      setStatus('success');
-      onSuccess && onSuccess();
+    onSuccess: (data) => {
+      if (data) {
+        onSuccess && onSuccess();
+        queryClient.invalidateQueries({
+          queryKey: ['ARTICLE_KEY'],
+        });
+      } else {
+        messageApi.error("Có lỗi xảy ra, vui lòng thử lại sau");
+      }
     },
-    onError: () => {
-      setStatus('error');
+    onError: (error) => {
+      console.error("Mutation error:", error);
+      messageApi.error("Có lỗi xảy ra, vui lòng thử lại sau");
     },
   });
 
-  // Use effect to handle messages outside of render
-  useEffect(() => {
-    if (status === 'success') {
-      message.success('Action completed successfully');
-    } else if (status === 'error') {
-      message.error('Failed to perform the action');
-    }
-  }, [status, messageApi]);
-
-  // Form submit handler to trigger mutation
   const onSubmit: SubmitHandler<IArticle> = async (article) => {
-    console.log("Submitting article:", article);
-    mutation.mutate(article);
+    console.log('Data before mutation submission:', article);
+    if (!article._id) {
+      console.error("Missing _id for editing");
+      return;
+    }
+    mutate(article);
   };
-  return { form, onSubmit, contextHolder, ...mutation };
+
+  return { mutate, form, onSubmit, contextHolder, ...rest };
 };
 
 export default useArticleMutation;
