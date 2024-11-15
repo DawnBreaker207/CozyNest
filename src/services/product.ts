@@ -1,12 +1,5 @@
 import instance from '@/configs/axios'
 import { IProduct } from '@/types/product'
-import Cookies from 'js-cookie'
-
-// Lấy token từ cookie
-const getToken = (): string | null => {
-  const token = Cookies.get('refreshToken') // Lấy token từ cookie
-  return token || null // Trả về token hoặc null nếu không có
-}
 
 // Lấy tất cả sản phẩm
 export const getAllProducts = async (params?: IProduct[]): Promise<IProduct[]> => {
@@ -30,16 +23,12 @@ export const getProductById = async (id: number | string) => {
 
 // Thêm sản phẩm mới
 export const addProduct = async (product: IProduct) => {
-  const token = getToken()
-  if (!token) {
-    return null
-  }
   try {
     const response = await instance.post(`/products`, product, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true
     })
     return response.data
   } catch (error) {
@@ -49,16 +38,12 @@ export const addProduct = async (product: IProduct) => {
 
 // Xóa sản phẩm
 export const removeProduct = async (product: IProduct) => {
-  const token = getToken()
-  if (!token) {
-    return null
-  }
   try {
     const response = await instance.delete(`/products/${product._id}`, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true
     })
     return response.data
   } catch (error) {
@@ -67,11 +52,6 @@ export const removeProduct = async (product: IProduct) => {
 }
 
 export const editProduct = async (product: IProduct) => {
-  const token = getToken()
-  if (!token) {
-    return null
-  }
-
   if (!product._id) {
     return null // Trả về null nếu không có _id
   }
@@ -79,9 +59,9 @@ export const editProduct = async (product: IProduct) => {
   try {
     const response = await instance.put(`/products/${product._id}`, product, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true
     })
     return response.data
   } catch (error) {
