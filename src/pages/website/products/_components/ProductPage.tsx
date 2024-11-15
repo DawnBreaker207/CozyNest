@@ -21,7 +21,6 @@ const ProductsPage = () => {
     queryKey: ['categories'],
     queryFn: async () => await instance.get(`/categories`)
   })
-  console.log(categories?.data?.res)
 
   const { addToCart } = useCart() // Sử dụng hook useCart
   const [messageApi, contextHolder] = message.useMessage()
@@ -158,8 +157,6 @@ const ProductsPage = () => {
     if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
 
     return products.filter((product) => {
-      console.log(product)
-
       if (
         priceRanges.includes('Dưới 1.000.000₫') &&
         product?.price - product?.price * (product?.discount / 100) < 1000000
