@@ -33,6 +33,9 @@ import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPoli
 import SalesPolicy from '@/pages/website/home/_components/policy/SalesPolicy'
 import NotFound from '@/pages/website/home/_components/NotFound'
 import ProductsPage from '@/pages/website/products/_components/ProductPage'
+import AdminArticlePage from '@/pages/admin/article/ArticlePage'
+import ArticleAddPage from '@/pages/admin/article/add/ArticleAdd'
+import ArticleEditPage from '@/pages/admin/article/edit/ArticleEdit'
 function App() {
   const routes = useRoutes([
     {
@@ -72,6 +75,9 @@ function App() {
         { path: 'products', Component: AdminProductPage },
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
+        { path: 'articles',Component: AdminArticlePage},
+        { path: 'articles/add',Component: ArticleAddPage},
+        { path: 'articles/:id',Component: ArticleEditPage},
         { path: 'order', Component: AdminOrderPage },
         { path: 'customer', Component: AdminCustomerPage },
         { path: 'customer/:id', Component: AdminCustomerDetailPage },
