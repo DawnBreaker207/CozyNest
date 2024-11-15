@@ -1,3 +1,4 @@
+import React, { useState } from 'react'; // Để quản lý trang hiện tại
 import useArticleMutation from '@/hooks/useArticleMutation';
 import { Button, Table, Space, message, Tooltip, Typography, Collapse, Image, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -10,34 +11,35 @@ const { Paragraph } = Typography;
 const { Panel } = Collapse;
 
 const AdminArticlePage = () => {
-  const queryClient = useQueryClient()
-  const [messageApi, contextHolder] = message.useMessage()
-  const {
-    data: Articledata, isLoading,isError
-  } = useArticleQuery()
+  const queryClient = useQueryClient();
+  const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
+  const [messageApi, contextHolder] = message.useMessage();
+  const { data: Articledata, isLoading, isError } = useArticleQuery();
   const { mutate: deleteArticle } = useArticleMutation({
     action: 'DELETE',
     onSuccess: () => {
       message.success('Article deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['ARTICLE_KEY'] });
-    }
-   
+    },
   });
+
+  const articlesPerPage = 5; // Số bài viết mỗi trang
   const data = Articledata?.res.map((item: IArticle) => ({
     key: item._id,
-    ...item
-  }))
+    ...item,
+  }));
+
   const columns = [
     {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: (text: string) => <strong>{text}</strong>
+      render: (text: string) => <strong>{text}</strong>,
     },
     {
       title: 'Author',
       dataIndex: 'author',
-      key: 'author'
+      key: 'author',
     },
     {
       title: 'Content',
@@ -64,7 +66,7 @@ const AdminArticlePage = () => {
             </Panel>
           ))}
         </Collapse>
-      )
+      ),
     },
     {
       title: 'Actions',
@@ -75,18 +77,17 @@ const AdminArticlePage = () => {
             <Button icon={<EditOutlined />} />
           </Link>
           <Popconfirm
-            title='Xóa sản phẩm'
-            description='Bạn có chắc chắn muốn xóa sản phẩm này?'
+            title="Xóa sản phẩm"
+            description="Bạn có chắc chắn muốn xóa sản phẩm này?"
             onConfirm={() => deleteArticle({ _id: record._id } as IArticle)}
-            okText='Có'
-            cancelText='Không'
-
+            okText="Có"
+            cancelText="Không"
           >
             <Button icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
-      )
-    }
+      ),
+    },
   ];
 
   if (isLoading) return <p>Loading...</p>;
@@ -95,7 +96,17 @@ const AdminArticlePage = () => {
   return (
     <>
       {contextHolder}
-      <Table dataSource={data} columns={columns} rowKey="_id" /> {/* Đảm bảo `dataSource` là một mảng */}
+      <Table
+        dataSource={data}
+        columns={columns}
+        rowKey="_id"
+        pagination={{
+          current: currentPage, // Trang hiện tại
+          pageSize: articlesPerPage, // Số bài viết mỗi trang
+          total: data?.length, // Tổng số bài viết
+          onChange: (page) => setCurrentPage(page), // Cập nhật trang hiện tại khi thay đổi
+        }}
+      />
     </>
   );
 };

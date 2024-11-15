@@ -27,11 +27,7 @@ const useArticleMutation = ({ action, onSuccess }: useArticleMutationProps) => {
 
   const { mutate, ...rest } = useMutation({
     mutationFn: async (article: IArticle) => {
-      console.log('Article data for mutation:', article);
-      // Kiểm tra _id trước khi thực hiện các hành động
-      if (!article._id) {
-        throw new Error("Article ID is required for editing");
-      }
+     
       switch (action) {
         case 'CREATE':
           return await addArticle(article);
