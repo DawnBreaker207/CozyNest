@@ -2,6 +2,7 @@ export default interface IArticle {
   _id?: string | number
   res: any
   title: string
+  thumbnail: string
   content: [
     {
       heading: string,

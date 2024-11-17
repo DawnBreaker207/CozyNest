@@ -3,7 +3,7 @@ import instance from '@/configs/axios';
 import IArticle from '@/types/article';
 
 // Lấy tất cả bài viết với các tham số lọc, phân trang nếu có
-export const getAll = async () => {
+ const getAllArticles = async () => {
   try {
     const {data} = await instance.get('http://localhost:8888/api/v1/articles');
     console.log(data)
@@ -15,7 +15,7 @@ export const getAll = async () => {
 };
 
 // Lấy bài viết theo ID
-export const getArticleById = async (id: number | string) => {
+ const getArticleById = async (id: number | string) => {
   try {
     const response = await instance.get(`http://localhost:8888/api/v1/articles/${id}`);
     return response.data;
@@ -26,7 +26,7 @@ export const getArticleById = async (id: number | string) => {
 };
 
 // Thêm bài viết mới
-export const addArticle = async (article: IArticle) => {
+ const addArticle = async (article: IArticle) => {
   try {
     const response = await instance.post('http://localhost:8888/api/v1/articles', article, {
       headers: {
@@ -42,7 +42,7 @@ export const addArticle = async (article: IArticle) => {
 };
 
 // Xóa bài viết
-export const removeArticle = async (article: IArticle) => {
+ const removeArticle = async (article: IArticle) => {
   try {
     if (!article._id) throw new Error("Article ID is required for deletion");
     const response = await instance.delete(`http://localhost:8888/api/v1/articles/${article._id}`, {
@@ -59,7 +59,7 @@ export const removeArticle = async (article: IArticle) => {
 };
 
 // Cập nhật bài viết
-export const editArticle = async (article: IArticle) => {
+ const editArticle = async (article: IArticle) => {
   
   try {
     // Kiểm tra `_id` của bài viết
@@ -83,3 +83,4 @@ export const editArticle = async (article: IArticle) => {
   }
 };
 
+export default { getAllArticles, getArticleById, addArticle, removeArticle, editArticle };
