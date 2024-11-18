@@ -1,11 +1,13 @@
+import instance from '@/configs/axios'
+import { IReview } from '@/types/review'
 import { StarFilled } from '@ant-design/icons'
-import { Button, Modal, Rate, Select } from 'antd'
+import { useMutation } from '@tanstack/react-query'
+import { Form, FormProps, message, Modal, Rate, Select } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import React, { useState } from 'react'
-import { UploadOutlined } from '@ant-design/icons'
-import type { UploadProps } from 'antd'
-import { message, Upload } from 'antd'
+import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
+const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 const reviews = [
   {
     user: 'Nguyễn Văn A',
@@ -16,7 +18,7 @@ const reviews = [
   },
   {
     user: 'Nguyễn Văn B',
-    rating: 4.5,
+    rating: 4,
     comment: 'Chất lượng ổn nhưng giá hơi cao một chút.',
     userImage: 'https://picsum.photos/200/300',
     productImage: 'https://picsum.photos/200/300'
@@ -33,52 +35,75 @@ const reviews = [
 const ReviewComponent = () => {
   const [showAll, setShowAll] = useState(false)
   const [selectedRating, setSelectedRating] = useState(null)
+  const [messageApi, contextHolder] = message.useMessage()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { id } = useParams()
+  const [form] = Form.useForm()
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  const userId = user.data.res._id
+  const { mutate } = useMutation({
+    mutationFn: async (formData: IReview) => {
+      try {
+        return instance.post(`/review`, formData)
+      } catch (error) {
+        throw new Error('Thêm đánh giá thất bại')
+      }
+    },
+    onSuccess: () => {
+      messageApi.open({
+        type: 'success',
+        content: 'Thêm đánh giá thành công'
+      })
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: 'error',
+        content: error.message
+      })
+    }
+  })
 
   const showModal = () => {
     setIsModalOpen(true)
   }
 
-  const handleOk = () => {
-    setIsModalOpen(false)
+  const handleOk = async () => {
+    try {
+      await form.validateFields()
+      form.submit()
+      setIsModalOpen(false)
+    } catch (error) {
+      console.error('error:', error)
+    }
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
+  }
+  const onFinish: FormProps<IReview>['onFinish'] = async (values) => {
+    const reviewData = {
+      ...values,
+      productId: id,
+      user_id: userId
+    }
+    console.log('Data review:', reviewData)
+    // mutate(reviewData)
+    form.resetFields()
   }
   const ratings = [10, 1, 0, 0, 0]
 
   // Tính tổng số lượng đánh giá
   const totalRatings = ratings.reduce((total, rating) => total + rating, 0)
 
-  // Tính tổng điểm (5 * số lượng đánh giá 5 sao + 4 * số lượng đánh giá 4 sao + ...)
+  // Tính tổng điểm
   const totalPoints = ratings.reduce((total, rating, index) => total + rating * (5 - index), 0)
 
   // Tính trung bình
   const averageRating = totalRatings === 0 ? 0 : (totalPoints / totalRatings).toFixed(1)
 
-  // Lọc các đánh giá dựa trên rating
-  const filteredReviews = selectedRating ? reviews.filter((review) => review.rating >= selectedRating) : reviews
-
-  const props: UploadProps = {
-    name: 'file',
-    action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-    headers: {
-      authorization: 'authorization-text'
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList)
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`)
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
-      }
-    }
-  }
   return (
-    <div className='p-6 border border-gray-200 rounded-lg mt-24 w-1/2'>
+    <div className='p-6 border border-gray-200 rounded-lg mt-24 mr-10'>
+      {contextHolder}
       <h4 className='text-lg font-semibold mb-4'>Đánh giá & nhận xét</h4>
       <div className='flex items-center justify-between mb-5'>
         <div className='text-center'>
@@ -193,10 +218,14 @@ const ReviewComponent = () => {
         <div>
           <h2 className='text-xl font-bold'>Đánh giá & nhận xét</h2>
           <h3 className='text-lg font-bold mt-4'>Sofa 1 chỗ Orientale da beige R5</h3>
-          <TextArea rows={5} />
-          <Upload {...props}>
-            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-          </Upload>
+          <Form form={form} onFinish={onFinish}>
+            <Form.Item name='rating' rules={[{ required: true, message: 'Vui lòng chọn đánh giá!' }]}>
+              <Rate tooltips={desc} />
+            </Form.Item>
+            <Form.Item name='comment' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+              <TextArea rows={5} placeholder='Nhập nhận xét của bạn...' />
+            </Form.Item>
+          </Form>
         </div>
       </Modal>
     </div>
