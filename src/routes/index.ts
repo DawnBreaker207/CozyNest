@@ -44,7 +44,7 @@ function App() {
       children: [
         { index: true, Component: HomePage },
         { path: 'contact', Component: ContactPage },
-        { path: 'news', Component: NewsPage },
+        { path: 'articles', Component: NewsPage },
         { path: 'detail/:id', Component: ProductDetail },
         { path: 'products_page', Component: ProductsPage },
         { path: 'cart', Component: CartPage },
@@ -55,7 +55,7 @@ function App() {
         { path: 'profile', Component: ProfilePage },
         { path: 'reset-password', Component: ResetPassword },
         { path: 'check_out_order', Component: CheckOutOder },
-        { path: 'link', Component: LinkPage },
+        { path: 'articles/:id', Component: LinkPage },
         { path: 'policy/chinh-sach-ban-hang', Component: SalesPolicy },
         { path: 'policy/giao-hang-va-lap-dat', Component: DeliveryPolicy },
         { path: 'policy/chinh-sach-doi-tra', Component: ReturnPolicy },

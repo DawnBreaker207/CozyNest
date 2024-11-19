@@ -312,7 +312,7 @@ const Header = () => {
                 Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
               </NavLink>
             </Dropdown>
-            <NavLink to={'/news'} className='text-muted hover:text-muted-foreground'>
+            <NavLink to={'/articles'} className='text-muted hover:text-muted-foreground'>
               Thông báo
             </NavLink>
           </div>

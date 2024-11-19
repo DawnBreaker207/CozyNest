@@ -1,85 +1,112 @@
-import { useEffect, useState } from 'react';
-import { Layout, Menu, Card, Row, Col, Typography, Modal, Pagination } from 'antd';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useEffect, useState } from 'react'
+import { Layout, Menu, Card, Row, Col, Typography, Modal, Pagination } from 'antd'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
 
-const { Header, Content, Sider } = Layout;
-const { Title, Paragraph, Text } = Typography;
+const { Header, Content, Sider } = Layout
+const { Title, Paragraph, Text } = Typography
 
 interface IArticle {
-  title: string;
-  thumbnail: string;
-  content: [];
-  author: string;
-  createdAt: string;
+  _id: string
+  title: string
+  thumbnail: string
+  content: []
+  author: string
+  createdAt: string
 }
 
 const NewsPage = () => {
-  const [articles, setArticles] = useState<IArticle[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalImage, setModalImage] = useState('');
-  const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-  const articlesPerPage = 6; // Số bài viết mỗi trang
+  const [articles, setArticles] = useState<IArticle[]>([])
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [modalImage, setModalImage] = useState('')
+  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
+  const articlesPerPage = 6 // Số bài viết mỗi trang
 
   const getAllArticles = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8888/api/v1/articles');
-      setArticles(data.res);
+      const { data } = await axios.get('http://localhost:8888/api/v1/articles')
+      setArticles(data.res)
     } catch (error) {
-      console.error('Failed to fetch articles:', error);
+      console.error('Failed to fetch articles:', error)
     }
-  };
+  }
 
   const showModal = (image: string) => {
-    setModalImage(image);
-    setIsModalVisible(true);
-  };
+    setModalImage(image)
+    setIsModalVisible(true)
+  }
 
   const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+    setIsModalVisible(false)
+  }
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+    setCurrentPage(page)
+  }
 
   useEffect(() => {
-    getAllArticles();
-  }, []);
+    getAllArticles()
+  }, [])
 
   // Tính toán bài viết được hiển thị dựa trên trang hiện tại
-  const startIndex = (currentPage - 1) * articlesPerPage;
-  const currentArticles = articles.slice(startIndex, startIndex + articlesPerPage);
+  const startIndex = (currentPage - 1) * articlesPerPage
+  const currentArticles = articles.slice(startIndex, startIndex + articlesPerPage)
 
   return (
-    <Layout style={{ backgroundColor: '#f0f2f5' }} className="py-10 container">
+    <Layout style={{ backgroundColor: '#f0f2f5' }} className='py-10 container'>
       <Row gutter={[16, 16]}>
         {/* Sidebar */}
         <Col xs={24} sm={8} md={6}>
-          <Sider width="100%" theme="light" style={{ padding: 24, backgroundColor: '#fff' }}>
-            <div className="mb-4">
+          <Sider width='100%' theme='light' style={{ padding: 24, backgroundColor: '#fff' }}>
+            <div className='mb-4'>
               <Title level={4} style={{ color: '#fa8c16', fontSize: '20px' }}>
                 Danh mục tin
               </Title>
-              <div className="border-t-2 border-orange-500 mb-2" />
-              <Menu mode="inline" style={{ border: 'none' }} theme="light">
-                <Menu.Item key="1">
-                  <Link to="/tin-moi-nhat">Tin mới nhất (8)</Link>
+              <div className='border-t-2 border-orange-500 mb-2' />
+              <Menu mode='inline' style={{ border: 'none' }} theme='light'>
+                <Menu.Item key='1'>
+                  <Link to='/tin-moi-nhat'>Tin mới nhất (8)</Link>
                 </Menu.Item>
-                <Menu.Item key="2">
-                  <Link to="/kien-thuc-nha-dep">Kiến thức nhà đẹp</Link>
+                <Menu.Item key='2'>
+                  <Link to='/kien-thuc-nha-dep'>Kiến thức nhà đẹp</Link>
                 </Menu.Item>
-                <Menu.Item key="3">
-                  <Link to="/kien-truc-phong-thuy">Kiến trúc phong thủy</Link>
+                <Menu.Item key='3'>
+                  <Link to='/kien-truc-phong-thuy'>Kiến trúc phong thủy</Link>
                 </Menu.Item>
-                <Menu.Item key="4">
-                  <Link to="/video-du-an">Video dự án</Link>
+                <Menu.Item key='4'>
+                  <Link to='/video-du-an'>Video dự án</Link>
                 </Menu.Item>
               </Menu>
             </div>
+            <div>
+              <Title level={4} style={{ color: '#fa8c16', fontSize: '20px' }}>
+                Gợi Ý Sản Phẩm
+              </Title>
+              <div className='border-t-2 border-orange-500 mb-2' />
+              {[...Array(2)].map((_, index) => (
+                <Card
+                  key={index}
+                  hoverable
+                  cover={
+                    <img
+                      alt='Sofa set'
+                      src='https://file.hstatic.net/200000804441/article/ban-an-peak-hien-dai-van-may-ceramic-22__1__3f8b8a96c4d74f339260960ee46c3f7c_grande.jpg'
+                      style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                    />
+                  }
+                >
+                  <Paragraph className='mb-0'>
+                    <strong>Bàn trà sofa Missouri (Mặt Ceramic)</strong>
+                  </Paragraph>
+                  <Paragraph className='text-red-500 font-bold mb-0'>
+                    <strong>7,460,000₫</strong>
+                    <span className='line-through text-gray-500'> 10,600,000₫</span>
+                  </Paragraph>
+                </Card>
+              ))}
+            </div>
           </Sider>
         </Col>
-
         {/* Main Content */}
         <Col xs={24} sm={16} md={18}>
           <Layout>
@@ -104,15 +131,15 @@ const NewsPage = () => {
                           />
                         }
                       >
-                        <Text type="secondary" style={{ fontSize: '16px' }}>
-                          {new Date(article.createdAt).toLocaleDateString('vi-VN')}
-                        </Text>
-                        <Title level={4} style={{ color: '#000', fontSize: '20px', marginTop: '8px' }}>
-                          {article.title.substring(0, 50) + '...'}
-                        </Title>
-                        <Paragraph style={{ fontSize: '13px', color: 'gray' }}>
-                          {article.author}
-                        </Paragraph>
+                        <Link to={`/articles/${article._id}`}>
+                          <Text type='secondary' style={{ fontSize: '16px' }}>
+                            {new Date(article.createdAt).toLocaleDateString('vi-VN')}
+                          </Text>
+                          <Title level={4} style={{ color: '#000', fontSize: '20px', marginTop: '8px' }}>
+                            {article.title.substring(0, 50) + '...'}
+                          </Title>
+                          <Paragraph style={{ fontSize: '13px', color: 'gray' }}>{article.author}</Paragraph>
+                        </Link>
                       </Card>
                     </Col>
                   ))
@@ -128,14 +155,14 @@ const NewsPage = () => {
                 onChange={handlePageChange}
               />
               <Modal visible={isModalVisible} onCancel={handleCancel} footer={null} centered>
-                <img src={modalImage} alt="Phóng to" style={{ width: '100%' }} />
+                <img src={modalImage} alt='Phóng to' style={{ width: '100%' }} />
               </Modal>
             </Content>
           </Layout>
         </Col>
       </Row>
     </Layout>
-  );
-};
+  )
+}
 
-export default NewsPage;
+export default NewsPage
