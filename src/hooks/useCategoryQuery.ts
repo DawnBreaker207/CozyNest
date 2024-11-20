@@ -1,8 +1,7 @@
 import { getAllCategories, getCategoryById } from '@/services/category'
 import { useQuery } from '@tanstack/react-query'
-import { IQuery } from './useArticleQuery'
 
-export const useCategoryQuery = (options?: Partial<IQuery>) => {
+export const useCategoryQuery = (options?: any) => {
   // {_limit: 2, _page: 1, id: 1}
   const { data, ...rest } = useQuery({
     queryKey: ['CATEGORY_KEY', options],

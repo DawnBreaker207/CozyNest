@@ -1,8 +1,7 @@
 import { getAllUser, getUserById } from '@/services/usersAdmin'
 import { useQuery } from '@tanstack/react-query'
-import { IQuery } from './useArticleQuery'
 
-export const useAdminUsersQuery = (options?: Partial<IQuery>) => {
+export const useAdminUsersQuery = (options?: any) => {
   // {_limit: 2, _page: 1, id: 1}
 
   const { data, ...rest } = useQuery({

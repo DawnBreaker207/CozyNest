@@ -14,7 +14,6 @@ const ShopPage = () => {
   const [currentPage, setCurrentPage] = useState(page || 1)
 
   const { data, isLoading, refetch } = useProductQuery({ _page: page, _limit: limit })
-  console.log(data) // Kiểm tra dữ liệu API
 
   useEffect(() => {
     if (page && +page !== currentPage) {

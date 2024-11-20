@@ -1,6 +1,8 @@
-// import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
+import { useProducts } from '@/hooks/useProductQuery'
+import { useUser } from '@/hooks/useUser'
+import { useCartStore } from '@/stores/cart'
 import { CartProduct } from '@/types/cart'
 import {
   DownOutlined,
@@ -12,45 +14,25 @@ import {
   ShoppingCartOutlined,
   UserOutlined
 } from '@ant-design/icons'
-
 import { Button, Divider, Drawer, Dropdown, GetProps, Input, MenuProps, message, Space, theme } from 'antd'
-import Cookies from 'js-cookie'
-
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
 
 const { useToken } = theme
 
 const Header = () => {
-  const { Search } = Input
-  const { token } = useToken()
-  const [user, setUser] = useState<string | null>('')
   const [messageApi, contextHolder] = message.useMessage()
+  const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const products = data?.res?.products || []
-  const [quantities, setQuantities] = useState<number[]>([])
+  const { handleLogout, user, userId } = useUser()
+  const { increase, decrease } = useProducts(data?.products || [], mutate)
+  const products = useMemo(() => data?.res?.products || [], [data])
+  const quantities = useCartStore((state) => state.quantities)
+  const setQuantities = useCartStore((state) => state.setQuantities)
   const [isVisible, setIsVisible] = useState(true)
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
-  const [userId, setUserId] = useState<string | null>('')
-  const contentStyle: React.CSSProperties = {
-    backgroundColor: token.colorBgElevated,
-    borderRadius: token.borderRadiusLG,
-    boxShadow: token.boxShadowSecondary
-  }
-  type SearchProps = GetProps<typeof Input.Search>
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
-
-  const handleLogout = () => {
-    Cookies.remove('user')
-    Cookies.remove('accessToken')
-    Cookies.remove('refreshToken')
-    messageApi.success('Đăng xuất thành công!')
-    setUser(null)
-  }
-
   const showDrawer = () => {
     setVisible(true)
     // setOpen(true)
@@ -79,62 +61,7 @@ const Header = () => {
       const initialQuantities = products.map((product: CartProduct) => product.quantity)
       setQuantities(initialQuantities)
     }
-  }, [products])
-
-  const increase = (index: number) => {
-    setQuantities((prevQuantities) => {
-      const newQuantities = [...prevQuantities]
-      if (newQuantities[index] < 10) {
-        newQuantities[index]++
-        mutate({ action: 'INCREMENT', productId: products[index].productId._id })
-      }
-      return newQuantities
-    })
-  }
-
-  const decrease = (index: number) => {
-    setQuantities((prevQuantities) => {
-      const newQuantities = [...prevQuantities]
-      if (newQuantities[index] > 1) {
-        newQuantities[index]--
-        mutate({ action: 'DECREMENT', productId: products[index].productId._id })
-      }
-      return newQuantities
-    })
-  }
-
-  useEffect(() => {
-    // Cập nhật lại tổng tiền khi quantities thay đổi
-    calculateTotal()
-  }, [quantities, calculateTotal])
-
-  useEffect(() => {
-    const storedUser = Cookies.get('user')
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser)
-      setUser(parsedUser?.username || null)
-    }
-  }, [])
-
-  // Lấy dữ liệu từ Cookies khi component render
-  useEffect(() => {
-    const userDataString = Cookies.get('user')
-    // console.log(userDataString)
-
-    if (userDataString) {
-      try {
-        const userData = JSON.parse(userDataString)
-        // console.log(userData)
-
-        // Kiểm tra tính hợp lệ của dữ liệu
-        if (userData && userData?._id) {
-          setUserId(userData?._id || '')
-        }
-      } catch (error) {
-        console.error('Error parsing user data from cookie:', error)
-      }
-    }
-  }, [])
+  }, [products, quantities.length, setQuantities])
 
   const { data: userData, isLoading, error } = useAdminUsersQuery({ _id: userId ?? '' })
 
@@ -144,7 +71,21 @@ const Header = () => {
 
   if (error) {
     handleLogout()
-    // return window.location.reload()
+    return window.location.reload()
+  }
+
+  const contentStyle: React.CSSProperties = {
+    backgroundColor: token.colorBgElevated,
+    borderRadius: token.borderRadiusLG,
+    boxShadow: token.boxShadowSecondary
+  }
+  type SearchProps = GetProps<typeof Input.Search>
+  const { Search } = Input
+  const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
+
+  if (error) {
+    handleLogout()
+    return window.location.reload()
   }
   const users: MenuProps['items'] = user
     ? [
@@ -187,6 +128,7 @@ const Header = () => {
             key: '2'
           }
         ]
+
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -268,6 +210,7 @@ const Header = () => {
                       )}
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
+
                   window.innerWidth < 800 ? (
                     // <Link to={`login`}>
                     <Button shape='circle' icon={<UserOutlined />} />

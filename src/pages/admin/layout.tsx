@@ -88,16 +88,11 @@ const LayoutAdmin: React.FC = () => {
             },
             {
               key: '3',
-              icon: <ApartmentOutlined />,
-              label: <NavLink to={`/admin/colors`}>Color Manager</NavLink>
-            },
-            {
-              key: '4',
               icon: <OrderedListOutlined />,
               label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
             },
             {
-              key: '5',
+              key: '4',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
             },

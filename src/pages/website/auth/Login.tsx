@@ -1,5 +1,6 @@
 import { login } from '@/services/auth'
 import { IUsers } from '@/types/user'
+import { openNotify } from '@/utils/notification'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, message } from 'antd'
 import Cookies from 'js-cookie'
@@ -18,27 +19,21 @@ const Login = () => {
       console.log('Access Token:', accessToken)
       console.log('Refresh Token:', refreshToken) // Kiểm tra giá trị refresh token
 
-      messageApi.open({
-        type: 'success',
-        content: 'Đăng nhập thành công'
-      })
-
+      openNotify('Success', 'Đăng nhập thành công!')
       // Lưu trữ token vào cookie
       Cookies.set('accessToken', accessToken, { expires: 1 })
       Cookies.set('refreshToken', refreshToken, { expires: 1 })
       Cookies.set('user', JSON.stringify(res), { expires: 1 }) // Lưu thông tin người dùng
 
       // Điều hướng và làm mới trang
+
       setTimeout(() => {
         navigate(`/`)
         window.location.reload()
       }, 600)
     },
     onError: (error) => {
-      messageApi.open({
-        type: 'error',
-        content: error.message
-      })
+      openNotify('Error', error.message)
     }
   })
 

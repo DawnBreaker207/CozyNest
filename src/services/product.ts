@@ -1,13 +1,13 @@
 import instance from '@/configs/axios'
-import { IQuery } from '@/hooks/useArticleQuery'
 import { IProduct } from '@/types/product'
-import { ResAPI } from '@/types/responseApi'
+import { IQuery, ResAPI } from '@/types/responseApi'
 
 // Lấy tất cả sản phẩm
 export const getAllProducts = async (params?: Partial<IQuery>) => {
   try {
     const { data } = await instance.get<ResAPI<IProduct[]>>('/products', { params })
-    return data.res
+
+    return data
   } catch (error) {
     console.error('Lỗi khi lấy sản phẩm:', error)
     throw error
@@ -17,8 +17,8 @@ export const getAllProducts = async (params?: Partial<IQuery>) => {
 // Lấy thông tin sản phẩm theo ID
 export const getProductById = async (id: number | string) => {
   try {
-    const { data } = await instance.get<ResAPI<IProduct>>(`/products/${id}`)
-    return data.res
+    const { data } = await instance.get(`/products/${id}`)
+    return data
   } catch (error) {
     console.error('Lỗi khi lấy sản phẩm:', error)
     throw error
@@ -26,10 +26,11 @@ export const getProductById = async (id: number | string) => {
 }
 
 // Thêm sản phẩm mới
-export const addProduct = async (product: Partial<IProduct>): Promise<IProduct> => {
+
+export const addProduct = async (product: Partial<IProduct>) => {
   try {
     const { data } = await instance.post<ResAPI<IProduct>>(`/products`, product)
-    return data.res
+    return data
   } catch (error) {
     console.error('Lỗi khi thêm sản phẩm:', error)
     throw error
@@ -47,14 +48,14 @@ export const removeProduct = async (product: Partial<IProduct>): Promise<void> =
   }
 }
 
-export const editProduct = async (product: Partial<IProduct>): Promise<IProduct> => {
+export const editProduct = async (product: Partial<IProduct>) => {
   if (!product._id) {
     throw new Error('Id not exist') // Trả về null nếu không có _id
   }
 
   try {
     const { data } = await instance.put<ResAPI<IProduct>>(`/products/${product._id}`, product)
-    return data.res
+    return data
   } catch (error) {
     console.error('Lỗi khi cập nhật sản phẩm:', error)
     throw error

@@ -1,7 +1,6 @@
 import instance from '@/configs/axios' // instance của axios
-import { IQuery } from '@/hooks/useArticleQuery'
 import { ICategory } from '@/types/category'
-import { ResAPI } from '@/types/responseApi'
+import { IQuery, ResAPI } from '@/types/responseApi'
 
 // Cấu hình axios để gửi cookie trong mỗi request
 instance.defaults.withCredentials = true // Đảm bảo gửi cookie đi cùng với yêu cầu

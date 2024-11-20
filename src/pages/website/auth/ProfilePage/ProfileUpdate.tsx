@@ -59,7 +59,7 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
   })
 
   const onFinish = (values: Partial<IUsers>) => {
-    mutate({ ...data, ...values, _id: userId! })
+    mutate({ ...data, ...values, _id: userId })
   }
 
   if (isLoading) return <div>Loading...</div>

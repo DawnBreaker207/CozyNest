@@ -1,17 +1,16 @@
-import HomeBanner from './_components/HomeBanner'
+import { useProductQuery } from '@/hooks/useProductQuery'
+import ProductList from '../products/_components/ProductList'
+import AboutUs from './_components/AboutUs'
+import Banner from './_components/Banner'
 import BannerSection from './_components/BannerSection'
 import Category from './_components/Category'
-import Banner from './_components/Banner'
+import HomeBanner from './_components/HomeBanner'
 import News from './_components/News'
-import AboutUs from './_components/AboutUs'
 import Service from './_components/Service'
-import ProductList from '../products/_components/ProductList'
-import { useProductQuery } from '@/hooks/useProductQuery'
-import { IProduct } from '@/types/product'
 
 const HomePage = () => {
   const { data } = useProductQuery({ _limit: 10 })
-  const products = data as IProduct[]
+  const products = data.res
   return (
     <div>
       <Banner />

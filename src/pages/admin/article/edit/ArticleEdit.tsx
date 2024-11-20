@@ -18,7 +18,7 @@ const ArticleEditPage = () => {
   const [thumbnail, setThumbnail] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
 
-  const { data, isLoading, isError, error } = useArticleQuery({ _id: id })
+  const { data, isLoading, isError, error } = useArticleQuery({ id })
   const { mutate } = useArticleMutation({
     action: 'UPDATE',
     onSuccess: () => {
@@ -30,14 +30,15 @@ const ArticleEditPage = () => {
   })
 
   useEffect(() => {
-    if (data?.thumbnail) {
-      setThumbnail(data.thumbnail)
+    if (data?.res?.thumbnail) {
+      setThumbnail(data?.res?.thumbnail)
     }
   }, [data])
 
   if (!id) {
     return <div>Error: Invalid article ID</div>
   }
+
   const handleUpload = async (file: RcFile) => {
     setUploading(true)
     try {

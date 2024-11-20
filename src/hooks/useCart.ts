@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import instance from '@/configs/axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useLocalStorage } from './useStorage'
 import axios from 'axios'
 import { debounce, reduce } from 'lodash'
-import { ChangeEvent, useState, useEffect } from 'react'
-import instance from '@/configs/axios'
+import { ChangeEvent, useEffect, useState } from 'react'
+import { useCookie } from './useStorage'
 
 const useCart = () => {
   const queryClient = useQueryClient()
-  const [user] = useLocalStorage('user', {})
+  const [user] = useCookie('user', {})
   const userId = user?.data?.res?._id
   const { data, ...restQuery } = useQuery({
     queryKey: ['cart', userId],

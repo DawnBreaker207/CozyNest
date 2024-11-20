@@ -80,15 +80,15 @@
 // }
 
 import instance from '@/configs/axios'
-import { IQuery } from '@/hooks/useArticleQuery'
 import { ResAPI } from '@/types/responseApi'
 import { IUsers } from '@/types/user'
 
 // Lấy tất cả người dùng
-export const getAllUser = async (params?: Partial<IQuery>) => {
+
+export const getAllUser = async (params: Partial<IUsers>): Promise<IUsers[]> => {
   try {
-    const { data } = await instance.get<ResAPI<IUsers[]>>('/users', { params })
-    return data.res
+    const { data } = await instance.get('/users', { params })
+    return data
   } catch (error) {
     console.error('Lỗi khi lấy dữ liệu người dùng:', error)
     throw error
