@@ -48,7 +48,7 @@ const AdminCustomerPage = () => {
     )
   }
   const { data, isLoading, error } = useAdminUsersQuery()
-  const users = Array.isArray(data) ? data : [];
+  const users = Array.isArray(data) ? data : []
 
   if (isLoading) {
     return <div>Loading...</div>

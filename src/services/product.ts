@@ -2,7 +2,6 @@ import instance from '@/configs/axios'
 import { IQuery } from '@/hooks/useArticleQuery'
 import { IProduct } from '@/types/product'
 import { ResAPI } from '@/types/responseApi'
-import { error } from 'console'
 
 // Lấy tất cả sản phẩm
 export const getAllProducts = async (params?: Partial<IQuery>) => {
@@ -50,7 +49,7 @@ export const removeProduct = async (product: Partial<IProduct>): Promise<void> =
 
 export const editProduct = async (product: Partial<IProduct>): Promise<IProduct> => {
   if (!product._id) {
-    throw error // Trả về null nếu không có _id
+    throw new Error('Id not exist') // Trả về null nếu không có _id
   }
 
   try {
@@ -68,5 +67,6 @@ export const deleteOption = async (input?: { id: string; optionId: string | unde
   } catch (error) {
     // Hiển thị lỗi nếu có
     console.error('Failed to delete color:', error)
+    throw error
   }
 }

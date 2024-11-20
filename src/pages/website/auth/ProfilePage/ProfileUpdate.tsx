@@ -45,7 +45,6 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
     }
   }, []) // useEffect chỉ chạy 1 lần sau khi component mount
 
-
   const { data, isLoading, isError, error } = useAdminUsersQuery({ _id: userId })
   // console.log(data)
 

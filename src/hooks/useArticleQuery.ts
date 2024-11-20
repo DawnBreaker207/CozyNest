@@ -9,7 +9,7 @@ export type IQuery = {
   _page: number | string
   _limit: number
   _category: number
-  _id: string
+  _id: string | null
 }
 export const useArticleQuery = (options?: Partial<IQuery>) => {
   const { data, ...rest } = useQuery({
