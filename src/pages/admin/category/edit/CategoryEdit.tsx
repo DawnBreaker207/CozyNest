@@ -22,7 +22,21 @@ const EditCategoryPage = () => {
   })
 
   const onFinish = (values: ICategory) => {
-    mutate({ ...data, ...values }) // Kết hợp dữ liệu cũ và mới để cập nhật
+    if (!id) {
+      messageApi.error('ID danh mục không hợp lệ')
+      return
+    }
+
+    // Đảm bảo rằng _id từ dữ liệu ban đầu (data) được giữ lại trong category khi gửi đi
+    const updatedCategory = {
+      ...data?.res, // Dữ liệu danh mục hiện tại
+      ...values, // Giá trị form mới
+      _id: data?.res?._id // Đảm bảo rằng _id không bị mất
+    }
+
+    console.log(updatedCategory)
+
+    mutate(updatedCategory) // Gửi dữ liệu danh mục đã được cập nhật
   }
 
   if (isLoading) return <div>Loading...</div>

@@ -5,17 +5,17 @@ export default interface IArticle {
   thumbnail: string
   content: [
     {
-      heading: string,
-      paragraph:string,
+      heading: string
+      paragraph: string
       images: [
         {
-          url: string,
+          url: string
           caption: string
         }
       ]
     }
-  ],
-  author: string,
+  ]
+  author: string
   created_at: string
   updated_at: string
 }

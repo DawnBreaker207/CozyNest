@@ -36,6 +36,8 @@ import ProductsPage from '@/pages/website/products/_components/ProductPage'
 import AdminArticlePage from '@/pages/admin/article/ArticlePage'
 import ArticleAddPage from '@/pages/admin/article/add/ArticleAdd'
 import ArticleEditPage from '@/pages/admin/article/edit/ArticleEdit'
+import ProductsPageDetail from '@/pages/website/products/_components/ProductPageDetail'
+
 function App() {
   const routes = useRoutes([
     {
@@ -47,6 +49,7 @@ function App() {
         { path: 'articles', Component: NewsPage },
         { path: 'detail/:id', Component: ProductDetail },
         { path: 'products_page', Component: ProductsPage },
+        { path: 'products_page/:id', Component: ProductsPageDetail },
         { path: 'cart', Component: CartPage },
         { path: 'cart/check_out_form', Component: pageCheckOut },
         { path: 'intro', Component: Introduction },
@@ -75,9 +78,9 @@ function App() {
         { path: 'products', Component: AdminProductPage },
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
-        { path: 'articles',Component: AdminArticlePage},
-        { path: 'articles/add',Component: ArticleAddPage},
-        { path: 'articles/:id',Component: ArticleEditPage},
+        { path: 'articles', Component: AdminArticlePage },
+        { path: 'articles/add', Component: ArticleAddPage },
+        { path: 'articles/:id', Component: ArticleEditPage },
         { path: 'order', Component: AdminOrderPage },
         { path: 'customer', Component: AdminCustomerPage },
         { path: 'customer/:id', Component: AdminCustomerDetailPage },
