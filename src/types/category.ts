@@ -6,6 +6,7 @@ export interface ICategory {
   _id: string | number
   name: string
   isHidden: boolean
+  thumbnail: string
   products: IProduct[]
   createdAt: string
   updatedAt: string

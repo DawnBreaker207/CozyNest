@@ -6,7 +6,6 @@ import IArticle from '@/types/article';
 export const getAllArticles = async () => {
   try {
     const {data} = await instance.get('http://localhost:8888/api/v1/articles');
-    console.log(data)
     return data;
   } catch (error) {
     console.error('Failed to fetch articles:', error);

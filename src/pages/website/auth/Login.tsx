@@ -8,7 +8,7 @@ type FieldType = {
   password?: number
 }
 const Login = () => {
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate()
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
@@ -27,13 +27,13 @@ const Login = () => {
       try {
         return await instance.post(`/auth/login`, formData)
       } catch (error) {
-        throw new Error('Tai khoan hoac mat khau khong chinh xac')
+        throw new Error('Tài khoản mật khẩu không chính xác')
       }
     },
     onSuccess: (user) => {
       messageApi.open({
         type: 'success',
-        content: 'Dang nhap thanh cong'
+        content: 'Đăng nhập thành công'
       }),
         localStorage.setItem('user', JSON.stringify(user))
       setTimeout(() => {

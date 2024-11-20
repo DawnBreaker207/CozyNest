@@ -60,7 +60,7 @@ export const removeCategory = async (category: ICategory) => {
 
 export const editCategory = async (category: ICategory) => {
   try {
-    const response = await instance.put(`/categories/${category?.res?._id}`, category, {
+    const response = await instance.put(`http://localhost:8888/api/v1/categories/${category?._id}`, category, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + (token ? token : '')

@@ -5,8 +5,8 @@ import Banner from './_components/Banner'
 import News from './_components/News'
 import AboutUs from './_components/AboutUs'
 import Service from './_components/Service'
-import ProductList from '../products/_components/ProductList'
 import { useProductQuery } from '@/hooks/useProductQuery'
+import ProductList from './_components/ProductList'
 
 const HomePage = () => {
   const { data } = useProductQuery({ _limit: 10 })
@@ -18,7 +18,6 @@ const HomePage = () => {
       <Category />
       <ProductList products={products} />
       <BannerSection />
-      <ProductList products={products} />
       <News />
       <AboutUs />
       <Service />

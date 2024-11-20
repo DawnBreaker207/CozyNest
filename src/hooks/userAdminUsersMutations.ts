@@ -26,7 +26,6 @@ const useAdminUsersMutations = ({ action, onSuccess }: useAdminUsersMutationProp
       status: false
     }
   })
-
   const { mutate, ...rest } = useMutation({
     mutationFn: async (user: IUsers) => {
       switch (action) {
