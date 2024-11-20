@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useState, useEffect } from 'react'
 
 export function useLocalStorage<T>(key: string, defaultValue: T | (() => T)) {

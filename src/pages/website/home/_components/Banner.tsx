@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { Button, Carousel } from 'antd'
 import { CarouselRef } from 'antd/es/carousel'

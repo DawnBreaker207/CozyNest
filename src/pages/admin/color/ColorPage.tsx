@@ -24,7 +24,7 @@ const ColorPage = () => {
   } = useCategoryQuery()
 
   // Chuẩn bị dữ liệu cho bảng với cột màu sắc
-  const dataSource = productsData?.res?.map((item: IProduct) => {
+  const dataSource: IProduct[] = productsData?.map((item: IProduct) => {
     const color =
       item.variants && item.variants.length > 0
         ? item.variants.map((variant) => variant.option_value_id.value).join(', ')

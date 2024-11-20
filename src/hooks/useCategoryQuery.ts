@@ -1,15 +1,16 @@
 import { getAllCategories, getCategoryById } from '@/services/category'
 import { useQuery } from '@tanstack/react-query'
+import { IQuery } from './useArticleQuery'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useCategoryQuery = (options?: any) => {
+export const useCategoryQuery = (options?: Partial<IQuery>) => {
   // {_limit: 2, _page: 1, id: 1}
   const { data, ...rest } = useQuery({
     queryKey: ['CATEGORY_KEY', options],
     queryFn: async () => {
-      return options?.id ? await getCategoryById(options.id as number | string) : await getAllCategories(options)
+      options?._id ? await getCategoryById(options._id as number | string) : await getAllCategories(options)
     }
   })
+  const category = Array.isArray(data) ? data[0] : data
 
-  return { data, ...rest }
+  return { data: category, ...rest }
 }

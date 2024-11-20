@@ -9,7 +9,3 @@ export interface ICategory {
   updatedAt: string
   type: 'normal' | 'default' // Chỉ chấp nhận hai giá trị như trên backend
 }
-
-export interface ResAPI<T> {
-  res: T
-}

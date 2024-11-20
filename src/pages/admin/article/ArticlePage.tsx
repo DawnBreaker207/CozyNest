@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
 import useArticleMutation from '@/hooks/useArticleMutation'
-import { Button, Table, Space, message, Tooltip, Typography, Collapse, Image, Popconfirm, Empty } from 'antd'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
 import { useArticleQuery } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
+import { Button, Collapse, Empty, Image, message, Popconfirm, Space, Table, Tooltip, Typography } from 'antd'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const { Paragraph } = Typography
 const { Panel } = Collapse
@@ -15,7 +15,7 @@ const AdminArticlePage = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [messageApi, contextHolder] = message.useMessage()
 
-  const { data: Articledata, isLoading, isError } = useArticleQuery()
+  const { data: articleData, isLoading, isError } = useArticleQuery()
   const { mutate: deleteArticle } = useArticleMutation({
     action: 'DELETE',
     onSuccess: () => {
@@ -27,7 +27,7 @@ const AdminArticlePage = () => {
   const articlesPerPage = 5
 
   const data =
-    Articledata?.res.map((item: IArticle) => ({
+    articleData?.map((item: IArticle) => ({
       key: item._id,
       ...item
     })) || []
@@ -61,12 +61,12 @@ const AdminArticlePage = () => {
       render: (_text: string, record: IArticle) => (
         <Collapse>
           {record.content && record.content.length > 0 ? (
-            record.content.map((section: any, index: number) => (
+            record.content.map((section, index: number) => (
               <Panel header={section.heading || `Section ${index + 1}`} key={index}>
                 <Paragraph>{section.paragraph}</Paragraph>
                 {section.images && section.images.length > 0 && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {section.images.map((image: any, imgIndex: number) => (
+                    {section.images.map((image, imgIndex: number) => (
                       <div key={imgIndex} style={{ width: 100, textAlign: 'center' }}>
                         <Image src={image.url} alt={image.caption} width={100} />
                         <Tooltip title={image.caption}>

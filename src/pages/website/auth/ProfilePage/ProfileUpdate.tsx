@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Modal, Form, Input, Button, Switch, message } from 'antd'
-import PhoneInput from 'react-phone-input-2'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
-import { useEffect, useState } from 'react'
+import { Button, Form, Input, Modal, Switch, message } from 'antd'
 import { Rule } from 'antd/es/form'
 import Cookies from 'js-cookie'
-
+import { useEffect, useState } from 'react'
+import PhoneInput from 'react-phone-input-2'
 
 interface CustomerModalProps {
   isModalVisible: boolean
@@ -27,7 +25,7 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
   const [messageApi, contextHolder] = message.useMessage()
 
   // Khai báo state cho userId
-  const [userId, setUserId] = useState<number | string | null>(null)
+  const [userId, setUserId] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const userDataString = Cookies.get('user')
@@ -46,10 +44,9 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
       }
     }
   }, []) // useEffect chỉ chạy 1 lần sau khi component mount
-  const id = userId || null
-  // console.log(id)
 
-  const { data, isLoading, isError, error } = useAdminUsersQuery({ id })
+
+  const { data, isLoading, isError, error } = useAdminUsersQuery({ _id: userId })
   // console.log(data)
 
   const { mutate } = useAdminUsersMutations({
@@ -62,9 +59,8 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
     }
   })
 
-  const onFinish = (values: IUsers) => {
-    const userId = id
-    mutate({ ...data, ...values, _id: userId })
+  const onFinish = (values: Partial<IUsers>) => {
+    mutate({ ...data, ...values, _id: userId! })
   }
 
   if (isLoading) return <div>Loading...</div>
@@ -82,7 +78,7 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
         width={900}
         footer={null}
       >
-        <Form layout='vertical' autoComplete='off' onFinish={onFinish} initialValues={{ ...data?.res }}>
+        <Form layout='vertical' autoComplete='off' onFinish={onFinish} initialValues={{ ...data }}>
           {/* Thêm prop form vào đây */}
           <h2 className='text-[#8B8D97] font-medium mb-5'>Customer Information</h2>
           <Form.Item name='username' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>

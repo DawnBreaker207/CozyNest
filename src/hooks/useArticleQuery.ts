@@ -3,14 +3,22 @@
 import { getAllArticles, getArticleById } from '@/services/article'
 import { useQuery } from '@tanstack/react-query'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useArticleQuery = (options?: any) => {
+export type IQuery = {
+  _order: string
+  _sort: string
+  _page: number | string
+  _limit: number
+  _category: number
+  _id: string
+}
+export const useArticleQuery = (options?: Partial<IQuery>) => {
   const { data, ...rest } = useQuery({
     queryKey: ['ARTICLE_KEY', options],
     queryFn: async () => {
-      return options?.id ? await getArticleById(options.id) : await getAllArticles()
+      return options?._id ? await getArticleById(options._id) : await getAllArticles()
     }
   })
+  const article = Array.isArray(data) ? data[0] : data
 
-  return { data, ...rest }
+  return { data: article, ...rest }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FaRegEye } from 'react-icons/fa'
 import CouponCard from '../../cart/_components/CouponCard'
 import { Cart } from '@/components/icons/index'
@@ -8,6 +7,7 @@ import { GrFormPrevious } from 'react-icons/gr'
 import { useProductQuery } from '@/hooks/useProductQuery'
 import { Link, useParams } from 'react-router-dom'
 import RelatedProduct from '../_components/RelatedProduct'
+import { Variants } from '@/types/product'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -16,7 +16,7 @@ const ProductDetail = () => {
   // console.log(selectedColorId)
 
   const { id } = useParams() // Lấy productId từ URL
-  const { data, isLoading, error } = useProductQuery({ id })
+  const { data, isLoading, error } = useProductQuery({ _id: id })
   // console.log(data)
 
   if (isLoading) {
@@ -28,21 +28,21 @@ const ProductDetail = () => {
   }
 
   // Lấy tất cả các màu sắc từ variants
-  const variants = data?.res?.variants || [] // Đảm bảo variants không undefined
+  const variants = data?.variants || [] // Đảm bảo variants không undefined
   const colors = variants
-    .map((variant: any) => ({
+    .map((variant: Variants) => ({
       id: variant?.sku_id?._id, // Lưu id của màu sắc
       value: variant?.option_value_id?.value // Lưu giá trị của màu sắc
     }))
-    .filter((color: any) => color.value) // Lọc các màu sắc hợp lệ
+    .filter((color) => color.value) // Lọc các màu sắc hợp lệ
 
   const handleColorSelect = (id: any) => {
     setSelectedColorId(id) // Cập nhật id màu sắc được chọn
   }
 
   //Kiểm tra dữ liệu product
-  if (!data || !data.res) return <p>Product not found</p>
-  const product = data?.res
+  if (!data || !data) return <p>Product not found</p>
+  const product = data
   const category = product?.categoryId?._id
   // console.log(category)
 

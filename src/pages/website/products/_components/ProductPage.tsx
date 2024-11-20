@@ -15,7 +15,7 @@ import { ICategory } from '@/types/category'
 
 const ProductsPage = () => {
   const { data } = useProductQuery()
-  const [products, setProducts] = useState<IProduct[]>(data?.res || [])
+  const [products, setProducts] = useState<IProduct[]>(data || [])
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
@@ -42,8 +42,8 @@ const ProductsPage = () => {
 
   // Sắp xếp
   useEffect(() => {
-    if (data?.res) {
-      setProducts(data.res) // Cập nhật trạng thái khi có dữ liệu từ API
+    if (data) {
+      setProducts(data) // Cập nhật trạng thái khi có dữ liệu từ API
     }
   }, [data])
   // Chức năng sắp xếp giá từ thấp đến cao

@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { filters } from '@/components/icons'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 // import { PlusOutlined } from '@ant-design/icons'
+import { validatePhoneNumber } from '@/utils/validatorPhoneNumber'
 import { Select, Table } from 'antd'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import CustomerModal from './CostomerUpdate'
-import { Rule } from 'antd/es/form'
+import CustomerModal from './CustomerUpdate'
 
 const AdminCustomerDetailPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -23,16 +22,9 @@ const AdminCustomerDetailPage = () => {
   const handleToggle = (checked: boolean) => {
     setFormVisible(checked)
   }
-  // TODO: Update
-  const validatePhoneNumber = (_rule: Rule, value: string) => {
-    if (!value || value.replace(/\D/g, '').length === 10) {
-      return Promise.resolve()
-    }
-    return Promise.reject('Số điện thoại không hợp lệ!')
-  }
 
   const { id } = useParams() // Lấy productId từ URL
-  const { data, isLoading, error } = useAdminUsersQuery({ id })
+  const { data, isLoading, error } = useAdminUsersQuery({ _id: id })
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -42,11 +34,10 @@ const AdminCustomerDetailPage = () => {
     return <div>Error: {error.message}</div>
   }
 
-  if (!data || !data.res) return <p>Product not found</p>
-  const user = data.res
+  if (!data || !data) return <p>Product not found</p>
+  const user = data
 
   // console.log(users.password)
-  // TODO : Move to another file
   const dataSource = [
     {
       key: '1',

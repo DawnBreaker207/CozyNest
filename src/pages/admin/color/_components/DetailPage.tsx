@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
-import { Avatar, Badge, Button, Input, Popconfirm, Space, Table } from 'antd'
-import { Link, useParams } from 'react-router-dom'
+import { useProductQuery } from '@/hooks/useProductQuery'; // Import hook để lấy sản phẩm
+import { deleteOption } from '@/services/product';
+import { Variants } from '@/types/product';
 import {
   BellOutlined,
   CalendarOutlined,
@@ -12,13 +11,14 @@ import {
   FilterOutlined,
   PlusOutlined,
   SearchOutlined
-} from '@ant-design/icons'
-import axios from 'axios'
-import { Header } from 'antd/es/layout/layout'
+} from '@ant-design/icons';
+import { Avatar, Badge, Button, Input, Popconfirm, Space, Table } from 'antd';
+import { Header } from 'antd/es/layout/layout';
+import { Link, useParams } from 'react-router-dom';
 
 const DetailPage = () => {
   const { id } = useParams()
-  const { data, isLoading, error } = useProductQuery({ id })
+  const { data, isLoading, error } = useProductQuery({ _id: id })
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -29,12 +29,12 @@ const DetailPage = () => {
   }
 
   // Chuẩn bị dữ liệu cho bảng với cột tên sản phẩm và màu sắc
-  const productName = data?.res?.name || 'Không có tên' // Lấy tên sản phẩm hoặc hiển thị 'Không có tên'
-  const variants = data?.res?.variants || [] // Đảm bảo variants không undefined
+  const productName = data?.name || 'Không có tên' // Lấy tên sản phẩm hoặc hiển thị 'Không có tên'
+  const variants = data?.variants || [] // Đảm bảo variants không undefined
   // console.log(variants)
 
   // Khi bạn lấy dữ liệu từ variants
-  const colors = variants.map((variant: any) => ({
+  const colors = variants.map((variant: Variants) => ({
     key: variant.sku_id?._id,
     name: productName,
     color: variant.option_value_id?.value || 'Không có màu sắc',
@@ -42,17 +42,6 @@ const DetailPage = () => {
     optionValueId: variant.option_value_id?._id, // Thêm ID option value
     skuId: variant.sku_id?._id
   }))
-
-  // Hàm xóa màu sắc
-  const deleteProduct = async (optionId: string) => {
-    try {
-      const response = await axios.delete(`http://localhost:8888/api/v1/options/${id}/${optionId}`)
-      console.log(response.data) // Hiển thị kết quả trả về từ API
-      // Cập nhật lại bảng sau khi xóa (có thể sử dụng state để trigger render lại)
-    } catch (error) {
-      console.error('Failed to delete color:', error) // Hiển thị lỗi nếu có
-    }
-  }
 
   // Cấu trúc các cột của bảng
   const columns = [
@@ -69,14 +58,14 @@ const DetailPage = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (text: any, record: any) => (
+      render: (record: Partial<Variants>) => (
         <Space size='middle'>
           <Link
             to={`/admin/color/${id}/edit`}
             state={{
-              optionId: record.optionId, // Chỉ truyền ID của option
-              optionValueId: record.optionValueId, // Chỉ truyền ID của optional value
-              variantId: record.skuId // Giả sử key là ID của variant
+              optionId: record.option_id, // Chỉ truyền ID của option
+              optionValueId: record.option_value_id, // Chỉ truyền ID của optional value
+              variantId: record.sku_id // Giả sử key là ID của variant
             }}
           >
             <Button icon={<EditOutlined />} />
@@ -84,13 +73,13 @@ const DetailPage = () => {
           <Popconfirm
             title='Xóa màu này'
             description='Bạn có chắc chắn muốn xóa màu này?'
-            onConfirm={() => deleteProduct(record.optionId)} // Truyền optionId vào hàm deleteProduct
+            onConfirm={() => deleteOption({ id: id || '', optionId: record?.option_id?._id })} // Truyền optionId vào hàm deleteProduct
             okText='Có'
             cancelText='Không'
           >
             <Button icon={<DeleteOutlined />} />
           </Popconfirm>
-        </Space>
+        </Space >
       )
     }
   ]

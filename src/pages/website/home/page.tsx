@@ -7,10 +7,11 @@ import AboutUs from './_components/AboutUs'
 import Service from './_components/Service'
 import ProductList from '../products/_components/ProductList'
 import { useProductQuery } from '@/hooks/useProductQuery'
+import { IProduct } from '@/types/product'
 
 const HomePage = () => {
   const { data } = useProductQuery({ _limit: 10 })
-  const products = data?.res
+  const products = data as IProduct[]
   return (
     <div>
       <Banner />

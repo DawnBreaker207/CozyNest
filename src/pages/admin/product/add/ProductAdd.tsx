@@ -1,13 +1,13 @@
-import { useState } from 'react'
 import instance from '@/configs/axios'
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useProductMutation from '@/hooks/useProductMutation'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, InputNumber, message, Select, Upload } from 'antd'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 
 const ProductAddPage = () => {
   const [messageApi, contextHolder] = message.useMessage()

@@ -12,14 +12,15 @@ const uploadFileCloudinary = async (file: File) => {
     formData.append('file', file)
     formData.append('upload_preset', 'cozynest-upload') // Thay bằng upload preset của bạn
     formData.append('folder', 'CozyNest')
-    const response = await axios.post(
+    const { data } = await axios.post(
       'https://api.cloudinary.com/v1_1/didbnrsmz/upload', // Thay bằng cloudinary name của bạn
       formData
     )
-    return response.data.url
+    return data.url
   } catch (error) {
     // handle error here
     console.error(error)
+    throw error
   }
 }
 

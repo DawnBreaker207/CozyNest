@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
+import { CartProduct } from '@/types/cart'
 import {
   DownOutlined,
   MailOutlined,
@@ -22,7 +22,7 @@ import { Link, NavLink } from 'react-router-dom'
 const { useToken } = theme
 
 const Header = () => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<string | undefined>(undefined)
   // console.log(user)
   const [messageApi, contextHolder] = message.useMessage()
   const { data, calculateTotal, mutate } = useCart()
@@ -44,7 +44,7 @@ const Header = () => {
   useEffect(() => {
     // Chỉ thiết lập quantities khi sản phẩm có thay đổi
     if (products.length) {
-      const initialQuantities = products.map((product: any) => product.quantity)
+      const initialQuantities = products.map((product: CartProduct) => product.quantity)
       setQuantities(initialQuantities)
     }
   }, [products])
@@ -80,7 +80,7 @@ const Header = () => {
     const storedUser = Cookies.get('user')
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser)
-      setUser(parsedUser?.username || null)
+      setUser(parsedUser?.username || undefined)
     }
   }, [])
 
@@ -89,7 +89,7 @@ const Header = () => {
     Cookies.remove('accessToken')
     Cookies.remove('refreshToken')
     messageApi.success('Đăng xuất thành công!')
-    setUser(null)
+    setUser(undefined)
   }
   const menu: MenuProps['items'] = [
     {
@@ -206,45 +206,45 @@ const Header = () => {
   ]
   const users: MenuProps['items'] = user
     ? [
-        {
-          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
-          key: '0'
-        },
-        {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={handleLogout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
+      {
+        label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+        key: '0'
+      },
+      {
+        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+        key: '1'
+      },
+      { type: 'divider' }, // Đường kẻ phân cách
+      {
+        label: (
+          <a href='/' onClick={handleLogout}>
+            Đăng xuất
+          </a>
+        ),
+        key: '3'
+      }
+    ]
     : window.innerWidth < 800
       ? [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
       : [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
 
   const { token } = useToken()
 
@@ -257,7 +257,7 @@ const Header = () => {
   const { Search } = Input
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
-  const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
+  const [userId, setUserId] = useState<string | undefined>(undefined) // Khai báo state cho userId
 
   // Lấy dữ liệu từ Cookies khi component render
   useEffect(() => {
@@ -273,7 +273,7 @@ const Header = () => {
         if (userData && userData?._id) {
           const retrievedUserId = userData?._id
           // console.log(retrievedUserId)
-          setUserId(retrievedUserId)
+          setUserId(retrievedUserId || null)
         }
       } catch (error) {
         console.error('Error parsing user data from cookie:', error)
@@ -282,10 +282,8 @@ const Header = () => {
   }, []) // useEffect chỉ chạy 1 lần sau khi component mount
 
   // Sử dụng id từ state
-  const id = userId || null
-  // console.log(id);
 
-  const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
+  const { data: userData, isLoading, error } = useAdminUsersQuery({ _id: userId })
   // console.log(data)
 
   if (isLoading) {
@@ -296,7 +294,7 @@ const Header = () => {
     handleLogout()
     return window.location.reload()
   }
-  const userDetail = userData?.res
+  const userDetail = userData
   // console.log(userDetail.avatar)
 
   return (
@@ -373,19 +371,19 @@ const Header = () => {
                   {user ? (
                     <div className='flex'>
                       <Button shape='circle' className='mt-1.5'>
-                        <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
+                        <img src={userDetail?.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
                       </Button>
                       {isVisible && window.innerWidth >= 1025 && (
-                        <h1 className='mt-3 text-center notification-section'>Xin chào {userDetail.username}</h1>
+                        <h1 className='mt-3 text-center notification-section'>Xin chào {userDetail?.username}</h1>
                       )}
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-                  window.innerWidth < 800 ? (
-                    // <Link to={`login`}>
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  ) : (
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  )}
+                    window.innerWidth < 800 ? (
+                      // <Link to={`login`}>
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    ) : (
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    )}
                 </Space>
               </span>
             </Dropdown>
@@ -458,6 +456,8 @@ const Header = () => {
             <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
               {products.length > 0 ? (
                 <div>
+                  {/* TODO: Fix type */}
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {products.map((product: any, index: number) => (
                     <div key={product.productId._id} className='flex justify-between items-center mb-4 border-b pb-4'>
                       <div className='flex items-center'>

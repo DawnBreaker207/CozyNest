@@ -1,29 +1,17 @@
-import instance from '@/configs/axios'
+import { login } from '@/services/auth'
+import { IUsers } from '@/types/user'
 import { useMutation } from '@tanstack/react-query'
-import { Form, Input, Button, Checkbox, message } from 'antd'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Button, Checkbox, Form, Input, message } from 'antd'
 import Cookies from 'js-cookie'
-
-type FieldType = {
-  email?: string
-  password?: string // Cập nhật loại dữ liệu cho mật khẩu
-}
+import { NavLink, useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
 
   const { mutate } = useMutation({
-    mutationFn: async (formData: FieldType) => {
-      try {
-        const response = await instance.post(`/auth/login`, formData)
-        // console.log('API Response:', response.data) // In ra phản hồi để kiểm tra
-        return response.data // Trả về dữ liệu từ phản hồi
-      } catch (error: any) {
-        // Lấy thông báo từ server nếu có
-        const errorMessage = error.response?.data?.message || 'Tài khoản hoặc mật khẩu không chính xác'
-        throw new Error(errorMessage)
-      }
+    mutationFn: async (formData: Partial<IUsers>) => {
+      return await login(formData)
     },
     onSuccess: (data) => {
       const { accessToken, refreshToken, res } = data // Giả sử response trả về chứa accessToken, refreshToken, và res
@@ -54,7 +42,7 @@ const Login = () => {
     }
   })
 
-  const onFinish = (values: FieldType) => {
+  const onFinish = (values: Partial<IUsers>) => {
     console.log('Form Values: ', values)
     mutate(values)
   }

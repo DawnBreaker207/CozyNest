@@ -18,11 +18,7 @@ const ArticleEditPage = () => {
   const [thumbnail, setThumbnail] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
 
-  if (!id) {
-    return <div>Error: Invalid article ID</div>
-  }
-
-  const { data, isLoading, isError, error } = useArticleQuery({ id })
+  const { data, isLoading, isError, error } = useArticleQuery({ _id: id })
   const { mutate } = useArticleMutation({
     action: 'UPDATE',
     onSuccess: () => {
@@ -34,11 +30,14 @@ const ArticleEditPage = () => {
   })
 
   useEffect(() => {
-    if (data?.res?.thumbnail) {
-      setThumbnail(data.res.thumbnail)
+    if (data?.thumbnail) {
+      setThumbnail(data.thumbnail)
     }
   }, [data])
 
+  if (!id) {
+    return <div>Error: Invalid article ID</div>
+  }
   const handleUpload = async (file: RcFile) => {
     setUploading(true)
     try {
@@ -68,7 +67,7 @@ const ArticleEditPage = () => {
       thumbnail
     }
 
-    mutate({ ...data?.res, ...updatedValues, _id: id })
+    mutate({ ...data, ...updatedValues, _id: id })
   }
 
   if (isLoading) return <div>Loading...</div>
@@ -82,7 +81,7 @@ const ArticleEditPage = () => {
           layout='vertical'
           onFinish={onFinish}
           initialValues={{
-            ...data?.res
+            ...data
           }}
         >
           <div className='flex justify-between'>

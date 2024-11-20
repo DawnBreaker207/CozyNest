@@ -116,7 +116,7 @@ const CheckoutPage = () => {
           <span className='font-medium'>Sản phẩm:</span>
         </div>
         <hr className='mb-4' />
-        {data?.res?.products?.map((product: any) => (
+        {data?.products?.map((product: any) => (
           <div key={product.productId._id} className='mb-4 flex justify-between lg:gap-4'>
             <span className='flex items-center'>
               <img

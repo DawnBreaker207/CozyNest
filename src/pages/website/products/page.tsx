@@ -4,10 +4,11 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductList from './_components/ProductList'
 import { Skeleton } from 'antd'
+import { parseInt } from 'lodash'
 
 const ShopPage = () => {
   const [params] = useSearchParams()
-  const page = params.get('page')
+  const page = parseInt(params.get('page') as string)
 
   const [limit, setLimit] = useState(10)
   const [currentPage, setCurrentPage] = useState(page || 1)

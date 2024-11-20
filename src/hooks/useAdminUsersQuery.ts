@@ -1,16 +1,17 @@
 import { getAllUser, getUserById } from '@/services/usersAdmin'
 import { useQuery } from '@tanstack/react-query'
+import { IQuery } from './useArticleQuery'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useAdminUsersQuery = (options?: any) => {
+export const useAdminUsersQuery = (options?: Partial<IQuery>) => {
   // {_limit: 2, _page: 1, id: 1}
 
   const { data, ...rest } = useQuery({
     queryKey: ['USER_KEY', options],
     queryFn: async () => {
-      return options?.id ? await getUserById(options.id as number | string) : await getAllUser(options)
+      return options?._id ? await getUserById(options._id) : await getAllUser(options)
     }
   })
+  const users = Array.isArray(data) ? data[0] : data
 
-  return { data, ...rest }
+  return { data: users, ...rest }
 }

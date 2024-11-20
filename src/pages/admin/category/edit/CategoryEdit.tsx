@@ -10,7 +10,7 @@ const EditCategoryPage = () => {
   const navigate = useNavigate()
   const { id } = useParams() // Lấy ID của danh mục từ URL
 
-  const { data, isLoading, isError, error } = useCategoryQuery({ id }) // Lấy danh mục theo ID
+  const { data, isLoading, isError, error } = useCategoryQuery({ _id: id }) // Lấy danh mục theo ID
   const { mutate } = useCategoryMutation({
     action: 'UPDATE',
     onSuccess: () => {
@@ -29,14 +29,16 @@ const EditCategoryPage = () => {
 
     // Đảm bảo rằng _id từ dữ liệu ban đầu (data) được giữ lại trong category khi gửi đi
     const updatedCategory = {
-      ...data?.res, // Dữ liệu danh mục hiện tại
-      ...values, // Giá trị form mới
-      _id: data?.res?._id // Đảm bảo rằng _id không bị mất
+      // Dữ liệu danh mục hiện tại
+      ...data,
+      // Giá trị form mới
+      ...values,
+      // Đảm bảo rằng _id không bị mất
+      _id: data?._id
     }
 
-    console.log(updatedCategory)
-
-    mutate(updatedCategory) // Gửi dữ liệu danh mục đã được cập nhật
+    // Gửi dữ liệu danh mục đã được cập nhật
+    mutate(updatedCategory)
   }
 
   if (isLoading) return <div>Loading...</div>

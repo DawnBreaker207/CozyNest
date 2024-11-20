@@ -1,17 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ProfileModal from './ProfileUpdate'
 import UpdatePasswordModal from './UpdatePasswod'
-import { Rule } from 'antd/es/form'
-
+import { validatePhoneNumber } from '@/utils/validatorPhoneNumber'
 import Cookies from 'js-cookie'
-
 
 const ProfilePage = () => {
   const navigate = useNavigate()
-  const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
+  const [userId, setUserId] = useState<string | undefined>(undefined) // Khai báo state cho userId
 
   // Lấy dữ liệu từ localStorage khi component render
   useEffect(() => {
@@ -61,17 +58,9 @@ const ProfilePage = () => {
     setFormVisible(checked)
   }
 
-  // Xác thực số điện thoại (10 chữ số không bao gồm ký tự đặc biệt)
-  const validatePhoneNumber = (_rule: Rule, value: string) => {
-    if (!value || value.replace(/\D/g, '').length === 10) {
-      return Promise.resolve()
-    }
-    return Promise.reject('Số điện thoại không hợp lệ!')
-  }
-
   // Sử dụng id từ state
-  const id = userId || null
-  const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
+  const id = userId || undefined
+  const { data: userData, isLoading, error } = useAdminUsersQuery({ _id: id })
 
   if (isLoading) {
     return <div></div>
@@ -80,7 +69,7 @@ const ProfilePage = () => {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-  const userDetail = userData?.res
+  const userDetail = userData
 
   const handleLogout = () => {
     // Xóa cookie 'user'
@@ -112,13 +101,13 @@ const ProfilePage = () => {
               <div className='bg-customBlue w-[full] h-[148px] rounded'></div>
               <div className='mx-auto relative -mt-24'>
                 <img
-                  src={userDetail.avatar}
+                  src={userDetail?.avatar}
                   alt=''
                   className='bg-cover bg-center size-[148px] rounded-full bg-[#E0E2E7]'
                 />
                 <div className='text-center mt-3'>
                   <h3 className='font-medium text-[#353535] mb-2 cursor-pointer'></h3>
-                  {userDetail.status ? (
+                  {userDetail?.status ? (
                     <span className='text-[#3A5BFF] text-[12px] bg-customBlue px-2 py-[2px] rounded-md'>Active</span>
                   ) : (
                     <span className='text-[#CC5F5F] text-[12px] bg-customWarning px-2 py-[2px] rounded-md'>
@@ -175,7 +164,7 @@ const ProfilePage = () => {
                   </div>
                   <div>
                     <h4 className='text-[#667085] text-sm mb-1'>E-mail</h4>
-                    <span className='text-[#353535] text-sm'>{userDetail.email}</span>
+                    <span className='text-[#353535] text-sm'>{userDetail?.email}</span>
                   </div>
                 </div>
               </div>
@@ -198,7 +187,7 @@ const ProfilePage = () => {
                   </div>
                   <div>
                     <h4 className='text-[#667085] text-sm mb-1'>Address</h4>
-                    <span className='text-[#353535] text-sm'>{userDetail.city}</span>
+                    <span className='text-[#353535] text-sm'>{userDetail?.city}</span>
                   </div>
                 </div>
               </div>
@@ -225,7 +214,7 @@ const ProfilePage = () => {
                   </div>
                   <div>
                     <h4 className='text-[#667085] text-sm mb-1'>Phone Number</h4>
-                    <span className='text-[#353535] text-sm'>{userDetail.phoneNumber}</span>
+                    <span className='text-[#353535] text-sm'>{userDetail?.phoneNumber}</span>
                   </div>
                 </div>
               </div>
