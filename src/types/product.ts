@@ -17,4 +17,9 @@ export interface IProduct extends ResAPI<IProduct> {
   images: string[]
   createdAt: string
   updatedAt: string
+  variants?: Array<{
+    option_id: { _id: string; name: string }
+    option_value_id: { _id: string; value: string }
+    sku_id: { _id: string; SKU: string; name: string; price: number; stock: number }
+  }>
 }

@@ -1,42 +1,43 @@
-import React, { useState } from 'react';
-import useArticleMutation from '@/hooks/useArticleMutation';
-import { Button, Table, Space, message, Tooltip, Typography, Collapse, Image, Popconfirm, Empty } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { useArticleQuery } from '@/hooks/useArticleQuery';
-import IArticle from '@/types/article';
-import { useQueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react'
+import useArticleMutation from '@/hooks/useArticleMutation'
+import { Button, Table, Space, message, Tooltip, Typography, Collapse, Image, Popconfirm, Empty } from 'antd'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Link } from 'react-router-dom'
+import { useArticleQuery } from '@/hooks/useArticleQuery'
+import IArticle from '@/types/article'
+import { useQueryClient } from '@tanstack/react-query'
 
-const { Paragraph } = Typography;
-const { Panel } = Collapse;
+const { Paragraph } = Typography
+const { Panel } = Collapse
 
 const AdminArticlePage = () => {
-  const queryClient = useQueryClient();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [messageApi, contextHolder] = message.useMessage();
+  const queryClient = useQueryClient()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [messageApi, contextHolder] = message.useMessage()
 
-  const { data: Articledata, isLoading, isError } = useArticleQuery();
+  const { data: Articledata, isLoading, isError } = useArticleQuery()
   const { mutate: deleteArticle } = useArticleMutation({
     action: 'DELETE',
     onSuccess: () => {
-      messageApi.success('Article deleted successfully');
-      queryClient.invalidateQueries({ queryKey: ['ARTICLE_KEY'] });
-    },
-  });
+      messageApi.success('Article deleted successfully')
+      queryClient.invalidateQueries({ queryKey: ['ARTICLE_KEY'] })
+    }
+  })
 
-  const articlesPerPage = 5;
+  const articlesPerPage = 5
 
-  const data = Articledata?.res.map((item: IArticle) => ({
-    key: item._id,
-    ...item,
-  })) || [];
+  const data =
+    Articledata?.res.map((item: IArticle) => ({
+      key: item._id,
+      ...item
+    })) || []
 
   const columns = [
     {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: (text: string) => <strong>{text}</strong>,
+      render: (text: string) => <strong>{text}</strong>
     },
     {
       title: 'Thumbnail',
@@ -44,20 +45,15 @@ const AdminArticlePage = () => {
       key: 'thumbnail',
       render: (url: string) =>
         url ? (
-          <Image
-            src={url}
-            alt="Thumbnail"
-            width={80}
-            style={{ borderRadius: 8, objectFit: 'cover' }}
-          />
+          <Image src={url} alt='Thumbnail' width={80} style={{ borderRadius: 8, objectFit: 'cover' }} />
         ) : (
           <Paragraph>No Thumbnail</Paragraph>
-        ),
+        )
     },
     {
       title: 'Author',
       dataIndex: 'author',
-      key: 'author',
+      key: 'author'
     },
     {
       title: 'Content',
@@ -88,56 +84,53 @@ const AdminArticlePage = () => {
             <Paragraph>No content available</Paragraph>
           )}
         </Collapse>
-      ),
+      )
     },
     {
       title: 'Actions',
       key: 'actions',
       render: (_text: string, record: IArticle) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Link to={`/admin/articles/${record._id}`}>
             <Button icon={<EditOutlined />} />
           </Link>
           <Popconfirm
-            title="Delete Article"
-            description="Are you sure you want to delete this article?"
+            title='Delete Article'
+            description='Are you sure you want to delete this article?'
             onConfirm={() => deleteArticle({ _id: record._id } as IArticle)}
-            okText="Yes"
-            cancelText="No"
+            okText='Yes'
+            cancelText='No'
           >
             <Button danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
-      ),
-    },
-  ];
+      )
+    }
+  ]
 
-  if (isLoading) return <p>Loading articles...</p>;
-  if (isError) return <p>Error loading articles. Please try again later.</p>;
+  if (isLoading) return <p>Loading articles...</p>
+  if (isError) return <p>Error loading articles. Please try again later.</p>
 
   return (
     <>
       {contextHolder}
       {data.length > 0 ? (
         <Table
-          dataSource={data.slice(
-            (currentPage - 1) * articlesPerPage,
-            currentPage * articlesPerPage
-          )}
+          dataSource={data.slice((currentPage - 1) * articlesPerPage, currentPage * articlesPerPage)}
           columns={columns}
-          rowKey="_id"
+          rowKey='_id'
           pagination={{
             current: currentPage,
             pageSize: articlesPerPage,
             total: data.length,
-            onChange: (page) => setCurrentPage(page),
+            onChange: (page) => setCurrentPage(page)
           }}
         />
       ) : (
-        <Empty description="No articles found" />
+        <Empty description='No articles found' />
       )}
     </>
-  );
-};
+  )
+}
 
-export default AdminArticlePage;
+export default AdminArticlePage

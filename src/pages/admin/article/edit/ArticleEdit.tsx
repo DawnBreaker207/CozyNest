@@ -1,156 +1,158 @@
-import useArticleMutation from '@/hooks/useArticleMutation';
-import { useArticleQuery } from '@/hooks/useArticleQuery';
-import IArticle from '@/types/article';
-import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Input, message, Upload } from 'antd';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { RcFile } from 'antd/es/upload';
-import { uploadFileCloudinary } from '@/hooks/uploadCloudinary';
-import ReactQuill from 'react-quill'; // Import ReactQuill
-import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import useArticleMutation from '@/hooks/useArticleMutation'
+import { useArticleQuery } from '@/hooks/useArticleQuery'
+import IArticle from '@/types/article'
+import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Form, Input, message, Upload } from 'antd'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { RcFile } from 'antd/es/upload'
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import ReactQuill from 'react-quill' // Import ReactQuill
+import 'react-quill/dist/quill.snow.css' // Import Quill styles
 
 const ArticleEditPage = () => {
-  const [form] = Form.useForm();
-  const [messageApi, contextHolder] = message.useMessage();
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const [thumbnail, setThumbnail] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [form] = Form.useForm()
+  const [messageApi, contextHolder] = message.useMessage()
+  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>()
+  const [thumbnail, setThumbnail] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
 
   if (!id) {
-    return <div>Error: Invalid article ID</div>;
+    return <div>Error: Invalid article ID</div>
   }
 
-  const { data, isLoading, isError, error } = useArticleQuery({ id });
+  const { data, isLoading, isError, error } = useArticleQuery({ id })
   const { mutate } = useArticleMutation({
     action: 'UPDATE',
     onSuccess: () => {
-      messageApi.success('Cập nhật bài viết thành công');
+      messageApi.success('Cập nhật bài viết thành công')
       setTimeout(() => {
-        navigate(`/admin/articles`);
-      }, 900);
-    },
-  });
+        navigate(`/admin/articles`)
+      }, 900)
+    }
+  })
 
   useEffect(() => {
     if (data?.res?.thumbnail) {
-      setThumbnail(data.res.thumbnail);
+      setThumbnail(data.res.thumbnail)
     }
-  }, [data]);
+  }, [data])
 
   const handleUpload = async (file: RcFile) => {
-    setUploading(true);
+    setUploading(true)
     try {
-      const response = await uploadFileCloudinary(file);
+      const response = await uploadFileCloudinary(file)
       if (response) {
-        setThumbnail(response);
-        messageApi.success('Upload thumbnail thành công');
+        setThumbnail(response)
+        messageApi.success('Upload thumbnail thành công')
       } else {
-        messageApi.error('Không thể upload thumbnail');
+        messageApi.error('Không thể upload thumbnail')
       }
     } catch (err) {
-      messageApi.error('Lỗi upload ảnh');
+      messageApi.error('Lỗi upload ảnh')
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
-    return false;
-  };
+    return false
+  }
 
   const onFinish = (values: IArticle) => {
     if (!thumbnail) {
-      messageApi.error('Vui lòng upload thumbnail');
-      return;
+      messageApi.error('Vui lòng upload thumbnail')
+      return
     }
 
     const updatedValues = {
       ...values,
-      thumbnail,
-    };
+      thumbnail
+    }
 
-    mutate({ ...data?.res, ...updatedValues, _id: id });
-  };
+    mutate({ ...data?.res, ...updatedValues, _id: id })
+  }
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>{error.message}</div>;
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>{error.message}</div>
 
   return (
     <>
       {contextHolder}
-      <div className="bg-white rounded-lg">
+      <div className='bg-white rounded-lg'>
         <Form
-          layout="vertical"
+          layout='vertical'
           onFinish={onFinish}
           initialValues={{
-            ...data?.res,
+            ...data?.res
           }}
         >
-          <div className="flex justify-between">
+          <div className='flex justify-between'>
             <div>
-              <span className="text-[#3A5BFF]">Article</span> <CaretRightOutlined /> <span>Edit Article</span>
+              <span className='text-[#3A5BFF]'>Article</span> <CaretRightOutlined /> <span>Edit Article</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <Button icon={<CloseOutlined />} className="text-[#858D9D] border border-gray-400 hover:bg-gray-200">
+            <div className='flex items-center space-x-2'>
+              <Button icon={<CloseOutlined />} className='text-[#858D9D] border border-gray-400 hover:bg-gray-200'>
                 <Link to={`/admin/articles`}>Cancel</Link>
               </Button>
-              <Button type="primary" htmlType="submit" icon={<PlusOutlined />} className="bg-blue-500 hover:bg-blue-600">
+              <Button
+                type='primary'
+                htmlType='submit'
+                icon={<PlusOutlined />}
+                className='bg-blue-500 hover:bg-blue-600'
+              >
                 Edit Article
               </Button>
             </div>
           </div>
 
-          <div className="mt-5">
-            <Form.Item
-              label="Title"
-              name="title"
-              rules={[{ required: true, message: 'Title is required' }]}>
-              <Input placeholder="Enter article title..." className="w-full bg-[#F9F9FC]" />
+          <div className='mt-5'>
+            <Form.Item label='Title' name='title' rules={[{ required: true, message: 'Title is required' }]}>
+              <Input placeholder='Enter article title...' className='w-full bg-[#F9F9FC]' />
             </Form.Item>
 
-            <Form.Item label="Thumbnail">
+            <Form.Item label='Thumbnail'>
               <Upload beforeUpload={handleUpload} showUploadList={false}>
                 <Button icon={<UploadOutlined />} disabled={uploading}>
                   {uploading ? 'Uploading...' : 'Upload Thumbnail'}
                 </Button>
               </Upload>
-              <div className="mt-2">
+              <div className='mt-2'>
                 {thumbnail ? (
-                  <img src={thumbnail} alt="Thumbnail" className="w-40 h-40 object-cover rounded" />
+                  <img src={thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
                   <span>No thumbnail uploaded</span>
                 )}
               </div>
             </Form.Item>
 
-            <Form.List name="content">
+            <Form.List name='content'>
               {(fields, { add, remove }) => (
                 <>
                   {fields.map((field, index) => (
-                    <div key={field.key} className="border p-4 mb-4 rounded-lg bg-gray-50">
+                    <div key={field.key} className='border p-4 mb-4 rounded-lg bg-gray-50'>
                       <Form.Item
                         label={`Heading ${index + 1}`}
                         name={[field.name, 'heading']}
-                        rules={[{ required: true, message: 'Heading is required' }]}>
-                        <Input placeholder="Enter heading..." />
+                        rules={[{ required: true, message: 'Heading is required' }]}
+                      >
+                        <Input placeholder='Enter heading...' />
                       </Form.Item>
 
                       {/* Sử dụng ReactQuill cho paragraph */}
                       <Form.Item
-                        label="Paragraph"
+                        label='Paragraph'
                         name={[field.name, 'paragraph']}
-                        rules={[{ required: true, message: 'Paragraph is required' }]}>
+                        rules={[{ required: true, message: 'Paragraph is required' }]}
+                      >
                         <ReactQuill
                           value={form.getFieldValue(['content', field.name, 'paragraph'])}
-                          onChange={(value) =>
-                            form.setFieldValue(['content', field.name, 'paragraph'], value)
-                          }
+                          onChange={(value) => form.setFieldValue(['content', field.name, 'paragraph'], value)}
                           modules={{
                             toolbar: [
-                              [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
-                              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                              [{ header: '1' }, { header: '2' }, { font: [] }],
+                              [{ list: 'ordered' }, { list: 'bullet' }],
                               ['bold', 'italic', 'underline'],
-                              ['link'], // Thêm chức năng chèn ảnh
-                            ],
+                              ['link'] // Thêm chức năng chèn ảnh
+                            ]
                           }}
                         />
                       </Form.Item>
@@ -159,80 +161,82 @@ const ArticleEditPage = () => {
                         {(imageFields, { add: addImage, remove: removeImage }) => (
                           <>
                             {imageFields.map((imageField) => (
-                              <div key={imageField.key} className="mb-2">
+                              <div key={imageField.key} className='mb-2'>
                                 <Form.Item
-                                  label="Image"
+                                  label='Image'
                                   name={[imageField.name, 'url']}
-                                  rules={[{ required: true, message: 'Image is required' }]}>
+                                  rules={[{ required: true, message: 'Image is required' }]}
+                                >
                                   <Upload
                                     beforeUpload={async (file) => {
                                       try {
-                                        const response = await uploadFileCloudinary(file);
+                                        const response = await uploadFileCloudinary(file)
                                         if (response) {
                                           form.setFieldValue(
                                             ['content', field.name, 'images', imageField.name, 'url'],
                                             response
-                                          );
-                                          messageApi.success('Image uploaded successfully');
+                                          )
+                                          messageApi.success('Image uploaded successfully')
                                         }
                                       } catch (err) {
-                                        messageApi.error('Image upload failed');
+                                        messageApi.error('Image upload failed')
                                       }
-                                      return false;
+                                      return false
                                     }}
-                                    showUploadList={false}>
+                                    showUploadList={false}
+                                  >
                                     <Button icon={<UploadOutlined />}>Upload Image</Button>
                                   </Upload>
-                                  <div className="mt-2">
+                                  <div className='mt-2'>
                                     <img
                                       src={form.getFieldValue([
                                         'content',
                                         field.name,
                                         'images',
                                         imageField.name,
-                                        'url',
+                                        'url'
                                       ])}
-                                      alt="Uploaded"
-                                      className="w-20 h-20 object-cover rounded"
+                                      alt='Uploaded'
+                                      className='w-20 h-20 object-cover rounded'
                                     />
                                   </div>
                                 </Form.Item>
 
-                                <Form.Item label="Image Caption" name={[imageField.name, 'caption']}>
-                                  <Input placeholder="Enter image caption..." />
+                                <Form.Item label='Image Caption' name={[imageField.name, 'caption']}>
+                                  <Input placeholder='Enter image caption...' />
                                 </Form.Item>
-                                <Button type="dashed" onClick={() => removeImage(imageField.name)}>
+                                <Button type='dashed' onClick={() => removeImage(imageField.name)}>
                                   Remove Image
                                 </Button>
                               </div>
                             ))}
-                            <Button type="dashed" onClick={() => addImage()}>
+                            <Button type='dashed' onClick={() => addImage()}>
                               Add Image
                             </Button>
                           </>
                         )}
                       </Form.List>
 
-                      <Button type="dashed" onClick={() => remove(field.name)}>
+                      <Button type='dashed' onClick={() => remove(field.name)}>
                         Remove Section
                       </Button>
                     </div>
                   ))}
-                  <Button type="dashed" onClick={() => add()}>
+                  <Button type='dashed' onClick={() => add()}>
                     Add Section
                   </Button>
                 </>
               )}
             </Form.List>
 
-            <Form.Item label="Author" name="author" rules={[{ required: true, message: 'Author is required' }]}>
-              <Input placeholder="Enter author name..." className="w-full bg-[#F9F9FC]" />
+            <Form.Item label='Author' name='author' rules={[{ required: true, message: 'Author is required' }]}>
+              <Input placeholder='Enter author name...' className='w-full bg-[#F9F9FC]' />
             </Form.Item>
           </div>
         </Form>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ArticleEditPage;
+export default ArticleEditPage

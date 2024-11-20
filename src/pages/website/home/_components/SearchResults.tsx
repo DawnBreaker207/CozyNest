@@ -9,18 +9,10 @@ import { FaRegEye } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { GrNext } from 'react-icons/gr'
 import { MdOutlineArrowBackIos } from 'react-icons/md'
-import instance from '@/configs/axios'
-import { useQuery } from '@tanstack/react-query'
-import { ICategory } from '@/types/category'
 
-const ProductsPage = () => {
+const SearchResults = () => {
   const { data } = useProductQuery()
   const [products, setProducts] = useState<IProduct[]>(data?.res || [])
-
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => await instance.get(`/categories`)
-  })
 
   const { addToCart } = useCart() // Sử dụng hook useCart
   const [messageApi, contextHolder] = message.useMessage()
@@ -227,7 +219,7 @@ const ProductsPage = () => {
               <img src='//theme.hstatic.net/200000748041/1001116292/14/collection_banner.jpg?v=31' alt='Products' />
             </div>
             <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
-              <h1 className='text-[#FFCC00] w-[80%] ml-12 text-5xl font-medium'>Tất cả sản phẩm</h1>
+              <h1 className='text-[#FFCC00] w-[80%] ml-12 text-5xl font-medium'>Danh sách tìm kiếm</h1>
             </div>
           </div>
         </div>
@@ -238,7 +230,7 @@ const ProductsPage = () => {
               <img src='//theme.hstatic.net/200000748041/1001116292/14/collection_banner.jpg?v=31' alt='Products' />
             </div>
             <div className='w-[100%] h-[80px] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
-              <h1 className='text-[#FFCC00] ml-5 text-3xl font-medium'>Tất cả sản phẩm</h1>
+              <h1 className='text-[#FFCC00] ml-5 text-3xl font-medium'>Danh sách tìm kiếm</h1>
             </div>
           </div>
         </div>
@@ -299,23 +291,26 @@ const ProductsPage = () => {
             <div className='my-4'>
               <h4 className='mb-2 text-lg'>Danh mục sản phẩm</h4>
 
-              <Link className='text-black hover:text-yellow-500' to={`/products_page`}>
+              <Link className='text-black hover:text-yellow-500 ' to='#'>
                 Tất cả sản phẩm
               </Link>
               <br />
-
-              {categories?.data?.res?.map((category: ICategory) => (
-                <div key={category._id}>
-                  {' '}
-                  {/* Thêm key để tránh lỗi React */}
-                  <Link className='text-black hover:text-yellow-500' to={`/products_page/${category._id}`}>
-                    {category.name}
-                  </Link>
-                  <br />
-                </div>
-              ))}
+              <Link className='text-black hover:text-yellow-500 ' to='#'>
+                Sản phẩm khuyến mãi
+              </Link>
+              <br />
+              <Link className='text-black hover:text-yellow-500 ' to='#'>
+                Nội thất phòng khách
+              </Link>
+              <br />
+              <Link className='text-black hover:text-yellow-500 ' to='#'>
+                Nội thất phòng ngủ
+              </Link>
+              <br />
+              <Link className='text-black hover:text-yellow-500 ' to='#'>
+                Nội thất phòng bếp
+              </Link>
             </div>
-
             <hr />
             {/* Supplier */}
             {/* <div className='my-4'>
@@ -435,7 +430,6 @@ const ProductsPage = () => {
 
       <div className='flex justify-center w-[22%] items-center my-4 gap-8 max-w-screen-lg mx-auto'>
         <button
-          title='Previous'
           onClick={handlePrevPage}
           disabled={currentPage === 1}
           className='border-solid border-2 text-white px-3 py-2 rounded'
@@ -446,7 +440,6 @@ const ProductsPage = () => {
           Trang {currentPage} / {totalPages}
         </span>
         <button
-          title='Next'
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           className='border-solid border-2 text-white px-3 py-2 rounded'
@@ -458,4 +451,4 @@ const ProductsPage = () => {
   )
 }
 
-export default ProductsPage
+export default SearchResults

@@ -4,13 +4,14 @@ import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { IUsers } from '@/types/user'
 // import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 // import { IUsers } from '@/types/user'
-import { PlusOutlined } from '@ant-design/icons'
+// import { PlusOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, FormProps, Input, Modal, Pagination, Select, Switch } from 'antd'
 import { Rule } from 'antd/es/form'
 import { useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { Link } from 'react-router-dom'
+import { FaUsersCog } from 'react-icons/fa'
 
 const AdminCustomerPage = () => {
   const [checkedId, setCheckedId] = useState<number[]>([])
@@ -93,8 +94,8 @@ const AdminCustomerPage = () => {
             className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm '
             onClick={showModal}
           >
-            <PlusOutlined />
-            Add Customer
+            <FaUsersCog className='text-xl' />
+            Customer
           </button>
         </div>
       </div>

@@ -1,70 +1,69 @@
-import { SubmitHandler } from 'react-hook-form';
-import { message } from 'antd';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addArticle, editArticle, removeArticle } from '@/services/article';
-import IArticle from '@/types/article';
-import { ArticleZodSchema } from '@/validations/article';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler } from 'react-hook-form'
+import { message } from 'antd'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { addArticle, editArticle, removeArticle } from '@/services/article'
+import IArticle from '@/types/article'
+import { ArticleZodSchema } from '@/validations/article'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
 type useArticleMutationProps = {
-  action: 'CREATE' | 'DELETE' | 'UPDATE';
-  onSuccess?: () => void;
-};
+  action: 'CREATE' | 'DELETE' | 'UPDATE'
+  onSuccess?: () => void
+}
 
 const useArticleMutation = ({ action, onSuccess }: useArticleMutationProps) => {
-  const queryClient = useQueryClient();
-  const [messageApi, contextHolder] = message.useMessage();
+  const queryClient = useQueryClient()
+  const [messageApi, contextHolder] = message.useMessage()
 
   const form = useForm({
     resolver: zodResolver(ArticleZodSchema),
     defaultValues: {
       title: '',
       content: [{ heading: '', paragraph: '', images: [] }],
-      author: '',
-    },
-  });
+      author: ''
+    }
+  })
 
   const { mutate, ...rest } = useMutation({
     mutationFn: async (article: IArticle) => {
-     
       switch (action) {
         case 'CREATE':
-          return await addArticle(article);
+          return await addArticle(article)
         case 'DELETE':
-          return await removeArticle(article); 
+          return await removeArticle(article)
         case 'UPDATE':
-          return await editArticle(article);
+          return await editArticle(article)
         default:
-          throw new Error("Invalid action type");
+          throw new Error('Invalid action type')
       }
     },
     onSuccess: (data) => {
       if (data) {
-        onSuccess && onSuccess();
+        onSuccess && onSuccess()
         queryClient.invalidateQueries({
-          queryKey: ['ARTICLE_KEY'],
-        });
+          queryKey: ['ARTICLE_KEY']
+        })
       } else {
-        messageApi.error("Có lỗi xảy ra, vui lòng thử lại sau");
+        messageApi.error('Có lỗi xảy ra, vui lòng thử lại sau')
       }
     },
     onError: (error) => {
-      console.error("Mutation error:", error);
-      messageApi.error("Có lỗi xảy ra, vui lòng thử lại sau");
-    },
-  });
+      console.error('Mutation error:', error)
+      messageApi.error('Có lỗi xảy ra, vui lòng thử lại sau')
+    }
+  })
 
   const onSubmit: SubmitHandler<IArticle> = async (article) => {
-    console.log('Data before mutation submission:', article);
+    console.log('Data before mutation submission:', article)
     if (!article._id) {
-      console.error("Missing _id for editing");
-      return;
+      console.error('Missing _id for editing')
+      return
     }
-    mutate(article);
-  };
+    mutate(article)
+  }
 
-  return { mutate, form, onSubmit, contextHolder, ...rest };
-};
+  return { mutate, form, onSubmit, contextHolder, ...rest }
+}
 
-export default useArticleMutation;
+export default useArticleMutation

@@ -35,8 +35,13 @@ const ProductEditPage = () => {
 
   // Hàm xử lý khi form submit
   const onFinish = (values: IProduct) => {
-    console.log('Form Values:', values)
-    mutate({ ...data, ...values })
+    // Đảm bảo rằng _id từ dữ liệu ban đầu (data) được giữ lại trong product khi gửi đi
+    const updatedProduct = {
+      ...data?.res, // Dữ liệu sản phẩm hiện tại
+      ...values, // Giá trị form mới
+      _id: data?.res?._id // Đảm bảo rằng _id không bị mất
+    }
+    mutate(updatedProduct) // Gửi dữ liệu sản phẩm đã được cập nhật
   }
 
   if (isLoading) return <div>Loading...</div>

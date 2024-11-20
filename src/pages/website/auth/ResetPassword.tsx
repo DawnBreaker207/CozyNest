@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Form, Input, message } from 'antd'

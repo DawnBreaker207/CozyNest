@@ -1,6 +1,6 @@
 // hooks/useArticleQuery.ts
 
-import {  getAllArticles, getArticleById } from '@/services/article'
+import { getAllArticles, getArticleById } from '@/services/article'
 import { useQuery } from '@tanstack/react-query'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
