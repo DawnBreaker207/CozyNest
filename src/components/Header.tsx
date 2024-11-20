@@ -473,7 +473,7 @@ const Header = () => {
                               -
                             </button>
                             <input
-                            title='Quantity'
+                              title='Quantity'
                               type='number'
                               value={quantities[index]}
                               className='w-12 text-center border'

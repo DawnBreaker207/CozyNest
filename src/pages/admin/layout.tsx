@@ -105,7 +105,6 @@ const LayoutAdmin: React.FC = () => {
               label: <NavLink to={`/admin/articles`}>Articles</NavLink>
             },
             {
-
               key: '6',
               icon: <UserOutlined />,
               label: <NavLink to={`/admin/customer`}>Customer Manager</NavLink>
@@ -114,8 +113,7 @@ const LayoutAdmin: React.FC = () => {
               key: '7',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/report`}>Reports</NavLink>
-            },
-
+            }
           ]}
         />
       </Sider>
