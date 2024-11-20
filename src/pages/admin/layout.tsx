@@ -63,6 +63,7 @@ const LayoutAdmin: React.FC = () => {
   const isDetailColorPage = location.pathname === `/admin/colors/${id}/detail_color`
   const isOrderPage = location.pathname === `/admin/order`
   const isCustomer = location.pathname === `/admin/customer`
+  const isArticles = location.pathname === `/admin/articles`
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -99,6 +100,12 @@ const LayoutAdmin: React.FC = () => {
               label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
             },
             {
+              key: '5',
+              icon: <CalendarOutlined />,
+              label: <NavLink to={`/admin/articles`}>Articles</NavLink>
+            },
+            {
+
               key: '6',
               icon: <UserOutlined />,
               label: <NavLink to={`/admin/customer`}>Customer Manager</NavLink>
@@ -107,7 +114,8 @@ const LayoutAdmin: React.FC = () => {
               key: '7',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/report`}>Reports</NavLink>
-            }
+            },
+
           ]}
         />
       </Sider>
@@ -152,6 +160,41 @@ const LayoutAdmin: React.FC = () => {
                   </Button>
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`categories/add`}>Add Category</Link>
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+          {isArticles && (
+            <>
+              <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
+                <div className='flex justify-between h-[60px] items-center'>
+                  <div>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Articles</span>
+                  </div>
+                  <div className='flex items-center space-x-4 mr-[14px]'>
+                    <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
+                      Nik Shop <DownOutlined className='ml-2' />
+                    </button>
+                    <Badge count={4} className='cursor-pointer'>
+                      <BellOutlined className='text-xl text-blue-500' />
+                    </Badge>
+                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                  </div>
+                </div>
+              </Header>
+              <div className='flex items-center justify-between p-4 bg-white shadow-md'>
+                <Input className='w-3/4' placeholder='Search articles...' prefix={<SearchOutlined />} size='large' />
+                <div className='flex items-center space-x-2'>
+                  <Button
+                    icon={<DownloadOutlined />}
+                    size='large'
+                    className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
+                  >
+                    Export
+                  </Button>
+                  <Button type='primary' icon={<PlusOutlined />} size='large'>
+                    <Link to={`articles/add`}>Add Articles</Link>
                   </Button>
                 </div>
               </div>
