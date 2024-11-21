@@ -7,7 +7,7 @@ import Cookies from 'js-cookie'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 const Login = () => {
-  const [messageApi, contextHolder] = message.useMessage()
+  const [, contextHolder] = message.useMessage()
   const navigate = useNavigate()
 
   const { mutate } = useMutation({

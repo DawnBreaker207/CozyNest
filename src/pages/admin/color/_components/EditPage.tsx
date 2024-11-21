@@ -2,7 +2,7 @@
 import instance from '@/configs/axios'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Form, Input } from 'antd'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 
 const ColorEditPage = () => {
@@ -11,7 +11,7 @@ const ColorEditPage = () => {
   const { id } = useParams()
 
   const [form] = Form.useForm() // Tạo instance của Form
-  const Api = async () => {
+  const Api = useCallback(async () => {
     try {
       const { data } = await instance.get(`/variants/${id}/${variantId}`)
       // console.log(data) // Kiểm tra dữ liệu
@@ -37,11 +37,11 @@ const ColorEditPage = () => {
     } catch (error) {
       console.error('Failed to fetch variant data:', error)
     }
-  }
+  }, [id, variantId, form])
 
   useEffect(() => {
     Api()
-  }, [variantId]) // Gọi lại API khi variantId thay đổi
+  }, [Api]) // Gọi lại API khi variantId thay đổi
 
   // Form submission handler
   const onFinish = async (values: any) => {

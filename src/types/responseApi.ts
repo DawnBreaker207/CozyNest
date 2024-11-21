@@ -1,5 +1,10 @@
 export interface ResAPI<T> {
   res: T
+  pagination?: {
+    currentPage?: number
+    totalPages?: number
+    totalItems?: number
+  }
 }
 
 export type IQuery = {

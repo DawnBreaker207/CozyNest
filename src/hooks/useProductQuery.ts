@@ -1,11 +1,11 @@
 import { getAllProducts, getProductById } from '@/services/product'
 import { IProduct } from '@/types/product'
-import { IQuery } from '@/types/responseApi'
+import { IQuery, ResAPI } from '@/types/responseApi'
 import { useQuery } from '@tanstack/react-query'
 
 export const useProductQuery = (options?: Partial<IQuery>) => {
   // {_limit: 2, _page: 1, id: 1}
-  const { data, ...rest } = useQuery<IProduct[]>({
+  const { data, ...rest } = useQuery<ResAPI<IProduct[]>>({
     queryKey: ['PRODUCT_KEY', options],
     queryFn: async () => await getAllProducts(options)
   })

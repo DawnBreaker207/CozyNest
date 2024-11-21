@@ -1,22 +1,21 @@
-import { FaRegEye } from 'react-icons/fa'
-import CouponCard from '../../cart/_components/CouponCard'
 import { Cart } from '@/components/icons/index'
-import { useState } from 'react'
-import { GrFormNext } from 'react-icons/gr'
-import { GrFormPrevious } from 'react-icons/gr'
-import { useProductQuery } from '@/hooks/useProductQuery'
-import { Link, useParams } from 'react-router-dom'
-import RelatedProduct from '../_components/RelatedProduct'
+import { useProduct } from '@/hooks/useProductQuery'
 import { Variants } from '@/types/product'
+import { useState } from 'react'
+import { FaRegEye } from 'react-icons/fa'
+import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
+import { Link, useParams } from 'react-router-dom'
+import CouponCard from '../../cart/_components/CouponCard'
+import RelatedProduct from '../_components/RelatedProduct'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
-  const [selectedColorId, setSelectedColorId] = useState(null) // State để lưu id màu sắc được chọn
+  const [selectedColorId, setSelectedColorId] = useState<string | null>(null) // State để lưu id màu sắc được chọn
   // console.log(selectedColorId)
 
   const { id } = useParams() // Lấy productId từ URL
-  const { data, isLoading, error } = useProductQuery({ _id: id })
+  const { data, isLoading, error } = useProduct(id)
   // console.log(data)
 
   if (isLoading) {
@@ -36,7 +35,7 @@ const ProductDetail = () => {
     }))
     .filter((color) => color.value) // Lọc các màu sắc hợp lệ
 
-  const handleColorSelect = (id: any) => {
+  const handleColorSelect = (id: string) => {
     setSelectedColorId(id) // Cập nhật id màu sắc được chọn
   }
 
@@ -44,7 +43,6 @@ const ProductDetail = () => {
   if (!data || !data) return <p>Product not found</p>
   const product = data
   const category = product?.categoryId?._id
-  // console.log(category)
 
   const increase = () => {
     if (count < 10) setCount(count + 1)

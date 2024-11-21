@@ -1,4 +1,4 @@
-import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
+import { useProduct } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
 import { deleteOption } from '@/services/product'
 import { Variants } from '@/types/product'
 import {
@@ -18,7 +18,7 @@ import { Link, useParams } from 'react-router-dom'
 
 const DetailPage = () => {
   const { id } = useParams()
-  const { data, isLoading, error } = useProductQuery({ _id: id })
+  const { data, isLoading, error } = useProduct(id)
 
   if (isLoading) {
     return <div>Loading...</div>

@@ -1,9 +1,10 @@
 import { getAllUser, getUserById } from '@/services/usersAdmin'
+import { ResAPI } from '@/types/responseApi'
 import { IUsers } from '@/types/user'
 import { useQuery } from '@tanstack/react-query'
 
 export const useAdminUsersQuery = (options?: Partial<IUsers>) => {
-  const { data, ...rest } = useQuery({
+  const { data, ...rest } = useQuery<ResAPI<IUsers[]>>({
     queryKey: ['USER_KEY', options],
     queryFn: async () => await getAllUser(options)
   })

@@ -1,9 +1,10 @@
 import { getAllArticles, getArticleById } from '@/services/article'
-import { IQuery } from '@/types/responseApi'
+import IArticle from '@/types/article'
+import { IQuery, ResAPI } from '@/types/responseApi'
 import { useQuery } from '@tanstack/react-query'
 
 export const useArticleQuery = (options?: Partial<IQuery>) => {
-  const { data, ...rest } = useQuery({
+  const { data, ...rest } = useQuery<ResAPI<IArticle[]>>({
     queryKey: ['ARTICLE_KEY', options],
     queryFn: async () => await getAllArticles(options)
   })

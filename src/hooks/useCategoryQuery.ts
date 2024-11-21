@@ -1,9 +1,10 @@
 import { getAllCategories, getCategoryById } from '@/services/category'
-import { IQuery } from '@/types/responseApi'
+import { ICategory } from '@/types/category'
+import { IQuery, ResAPI } from '@/types/responseApi'
 import { useQuery } from '@tanstack/react-query'
 
 export const useCategoryQuery = (options?: Partial<IQuery>) => {
-  const { data, ...rest } = useQuery({
+  const { data, ...rest } = useQuery<ResAPI<ICategory[]>>({
     queryKey: ['CATEGORY_KEY', options],
     queryFn: async () => await getAllCategories(options)
   })

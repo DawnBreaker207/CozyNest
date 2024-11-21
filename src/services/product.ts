@@ -6,8 +6,7 @@ import { IQuery } from '@/types/responseApi'
 export const getAllProducts = async (params?: Partial<IQuery>) => {
   try {
     const { data } = await instance.get('/products', { params })
-
-    return data.res
+    return data
   } catch (error) {
     console.error('Lỗi khi lấy sản phẩm:', error)
     throw error

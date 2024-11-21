@@ -5,12 +5,12 @@ import { Cart } from '@/components/icons'
 import { IProduct } from '@/types/product'
 import { Link } from 'react-router-dom'
 
-const RelatedProduct = ({ id }: { id: string | number }) => {
+const RelatedProduct = ({ id }: { id: string | number | undefined }) => {
   const { data, isLoading } = useQuery({
     queryKey: ['RELATED_PRODUCT', id],
     queryFn: async () => {
       const { data } = await instance.get(`/categories/${id}`)
-      return data
+      return data.res
     }
   })
 

@@ -8,9 +8,9 @@ import { Link } from 'react-router-dom'
 type ProductListProps = {
   products?: IProduct[]
   pagination?: {
-    currentPage: number
-    totalPages: number
-    totalItems: number
+    currentPage?: number
+    totalPages?: number
+    totalItems?: number
   }
 }
 

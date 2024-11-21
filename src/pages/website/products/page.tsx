@@ -26,7 +26,10 @@ const ShopPage = () => {
     refetch() // Gọi lại API với limit mới và trang đầu tiên
   }
 
-  const { res: products = [], pagination } = data || { res: [], pagination: {} } // Lấy sản phẩm từ `res`
+  const { res: products = [], pagination } = data || {
+    res: [],
+    pagination: { currentPage: 1, totalPages: 1, totalItems: 0 }
+  } // Lấy sản phẩm từ `res`
 
   if (isLoading)
     return (

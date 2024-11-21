@@ -7,7 +7,7 @@ import { IQuery } from '@/types/responseApi'
 export const getAllArticles = async (params?: Partial<IQuery>) => {
   try {
     const { data } = await instance.get('/articles', { params })
-    return data.res
+    return data
   } catch (error) {
     console.error('Failed to fetch articles:', error)
     throw error

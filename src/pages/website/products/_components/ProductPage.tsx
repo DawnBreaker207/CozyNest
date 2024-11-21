@@ -21,7 +21,7 @@ const ProductsPage = () => {
     queryFn: async () => await getAllCategories()
   })
   const { data } = useProductQuery()
-  const [products, setProducts] = useState<IProduct[]>(data || [])
+  const [products, setProducts] = useState<IProduct[]>(data?.res || [])
   const [selectedKey, setSelectedKey] = useState('')
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([])
   const { addToCart } = useCart() // Sử dụng hook useCart
@@ -40,7 +40,7 @@ const ProductsPage = () => {
   } = usePaginate(filteredProducts, 15)
 
   useEffect(() => {
-    if (data) setProducts(data)
+    if (data) setProducts(data.res)
   }, [data])
   const show = () => {
     // setVisible(true)

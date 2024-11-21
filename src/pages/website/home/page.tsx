@@ -10,7 +10,7 @@ import Service from './_components/Service'
 
 const HomePage = () => {
   const { data } = useProductQuery({ _limit: 10 })
-  const products = data
+  const products = data?.res
 
   return (
     <div>
