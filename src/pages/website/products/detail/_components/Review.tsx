@@ -83,11 +83,11 @@ const ReviewComponent = () => {
   const onFinish: FormProps<IReview>['onFinish'] = async (values) => {
     const reviewData = {
       ...values,
-      productId: id,
+      product_id: id,
       user_id: userId
     }
     console.log('Data review:', reviewData)
-    // mutate(reviewData)
+    mutate(reviewData)
     form.resetFields()
   }
   const ratings = [10, 1, 0, 0, 0]
