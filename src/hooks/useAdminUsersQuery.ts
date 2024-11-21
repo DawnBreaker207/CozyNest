@@ -1,16 +1,19 @@
 import { getAllUser, getUserById } from '@/services/usersAdmin'
+import { IUsers } from '@/types/user'
 import { useQuery } from '@tanstack/react-query'
 
-export const useAdminUsersQuery = (options?: any) => {
-  // {_limit: 2, _page: 1, id: 1}
-
+export const useAdminUsersQuery = (options?: Partial<IUsers>) => {
   const { data, ...rest } = useQuery({
     queryKey: ['USER_KEY', options],
-    queryFn: async () => {
-      return options?._id ? await getUserById(options._id) : await getAllUser(options)
-    }
+    queryFn: async () => await getAllUser(options)
   })
-  const users = Array.isArray(data) ? data[0] : data
+  return { data, ...rest }
+}
+export const useAdminUser = (id?: string) => {
+  const { data, ...rest } = useQuery({
+    queryKey: ['USER_KEY', id],
+    queryFn: async () => await getUserById(id)
+  })
 
-  return { data: users, ...rest }
+  return { data, ...rest }
 }

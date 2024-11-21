@@ -28,7 +28,7 @@ const CategoryPage = () => {
   })
 
   // Chuẩn bị dữ liệu cho bảng
-  const dataSource = data?.res?.map((item: ICategory) => ({
+  const dataSource = data?.map((item: ICategory) => ({
     key: item._id,
     ...item
   }))

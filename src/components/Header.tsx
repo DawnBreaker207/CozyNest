@@ -1,6 +1,6 @@
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
-import { useProducts } from '@/hooks/useProductQuery'
+import { useProductCart } from '@/hooks/useProductQuery'
 import { useUser } from '@/hooks/useUser'
 import { useCartStore } from '@/stores/cart'
 import { CartProduct } from '@/types/cart'
@@ -22,11 +22,11 @@ import { menu, menu1, menus } from './data/Header'
 const { useToken } = theme
 
 const Header = () => {
-  const [messageApi, contextHolder] = message.useMessage()
+  const [, contextHolder] = message.useMessage()
   const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
   const { handleLogout, user, userId } = useUser()
-  const { increase, decrease } = useProducts(data?.products || [], mutate)
+  const { increase, decrease } = useProductCart(data?.products || [], mutate)
   const products = useMemo(() => data?.res?.products || [], [data])
   const quantities = useCartStore((state) => state.quantities)
   const setQuantities = useCartStore((state) => state.setQuantities)

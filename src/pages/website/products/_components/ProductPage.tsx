@@ -1,36 +1,47 @@
 import { Cart } from '@/components/icons'
 import useCart from '@/hooks/useCart'
+import { useFilterProducts, usePaginate, useSortProducts } from '@/hooks/useProduct'
 import { useProductQuery } from '@/hooks/useProductQuery'
+import { getAllCategories } from '@/services/category'
+import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { CheckOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Drawer, Dropdown, MenuProps, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
 import { GrNext } from 'react-icons/gr'
 import { MdOutlineArrowBackIos } from 'react-icons/md'
-import instance from '@/configs/axios'
-import { useQuery } from '@tanstack/react-query'
-import { ICategory } from '@/types/category'
+import { Link } from 'react-router-dom'
 
 const ProductsPage = () => {
-  const { data } = useProductQuery()
-  const [products, setProducts] = useState<IProduct[]>(data || [])
-
+  const [messageApi, contextHolder] = message.useMessage()
   const { data: categories } = useQuery({
     queryKey: ['categories'],
-    queryFn: async () => await instance.get(`/categories`)
+    queryFn: async () => await getAllCategories()
   })
-
+  const { data } = useProductQuery()
+  const [products, setProducts] = useState<IProduct[]>(data || [])
+  const [selectedKey, setSelectedKey] = useState('')
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([])
   const { addToCart } = useCart() // Sử dụng hook useCart
-  const [messageApi, contextHolder] = message.useMessage()
-  const handleAddToCart = (productId: string) => {
-    addToCart(productId) // Thêm sản phẩm vào giỏ hàng
-    messageApi.success('Thêm vào giỏ hàng thành công!')
-  }
-
   const [, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
+  const { sortProducts } = useSortProducts(products)
+  const { filterProductsByPrice } = useFilterProducts(products)
+  const filteredProducts = filterProductsByPrice(selectedPriceRanges)
+
+  const {
+    currentPage,
+    totalPages,
+    currentItems: currentProducts,
+    handleNextPage,
+    handlePrevPage
+  } = usePaginate(filteredProducts, 15)
+
+  useEffect(() => {
+    if (data) setProducts(data)
+  }, [data])
   const show = () => {
     // setVisible(true)
     setOpen(true)
@@ -39,57 +50,24 @@ const ProductsPage = () => {
     setVisible(false)
     setOpen(false)
   }
-
-  // Sắp xếp
-  useEffect(() => {
-    if (data) {
-      setProducts(data) // Cập nhật trạng thái khi có dữ liệu từ API
-    }
-  }, [data])
-  // Chức năng sắp xếp giá từ thấp đến cao
-  const sortPriceAsc = (products: IProduct[]) => {
-    return products.sort((a, b) => a.price - b.price)
+  const handleAddToCart = (productId: string) => {
+    addToCart(productId) // Thêm sản phẩm vào giỏ hàng
+    messageApi.success('Thêm vào giỏ hàng thành công!')
   }
-
-  // Chức năng sắp xếp giá từ cao đến thấp
-  const sortPriceDesc = (products: IProduct[]) => {
-    return products.sort((a, b) => b.price - a.price)
-  }
-
-  // Chức năng sắp xếp theo tên từ A-Z
-  const sortNameAsc = (products: IProduct[]) => {
-    return products.sort((a, b) => a.name.localeCompare(b.name))
-  }
-
-  // Chức năng sắp xếp theo tên từ Z-A
-  const sortNameDesc = (products: IProduct[]) => {
-    return products.sort((a, b) => b.name.localeCompare(a.name))
-  }
-
-  const [selectedKey, setSelectedKey] = useState('')
   const handleMenuClick = (key: string) => {
-    let sortedProducts: IProduct[] = []
-    switch (key) {
-      case '1':
-        sortedProducts = sortPriceAsc([...products])
-        break
-      case '2':
-        sortedProducts = sortPriceDesc([...products])
-        break
-      case '3':
-        sortedProducts = sortNameAsc([...products])
-        break
-      case '4':
-        sortedProducts = sortNameDesc([...products])
-        break
-      case '5':
-        return products
-        break
-      default:
-        break
-    }
-    setProducts(sortedProducts) // Cập nhật lại danh sách sản phẩm sau khi sắp xếp
-    setSelectedKey(key) // Lưu lại mục đã chọn
+    setProducts(sortProducts(key))
+    setSelectedKey(key)
+  }
+
+  const handlePriceRangeChange = (priceRange: string) => {
+    setSelectedPriceRanges((prev) =>
+      prev.includes(priceRange) ? prev.filter((range) => range !== priceRange) : [...prev, priceRange]
+    )
+  }
+
+  // Bỏ lọc
+  const removeFilter = (itemToRemove: string) => {
+    setSelectedPriceRanges((prev) => prev.filter((item) => item !== itemToRemove))
   }
 
   const menuItems: MenuProps['items'] = [
@@ -139,84 +117,6 @@ const ProductsPage = () => {
       )
     }
   ]
-
-  // Bộ lọc
-  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]) // Lưu trạng thái checkbox
-
-  const handlePriceRangeChange = (priceRange: string) => {
-    setSelectedPriceRanges((prev) => {
-      if (prev.includes(priceRange)) {
-        return prev.filter((range) => range !== priceRange) // Bỏ chọn
-      } else {
-        return [...prev, priceRange] // Chọn
-      }
-    })
-  }
-
-  const filterProductsByPrice = (products: IProduct[], priceRanges: string[]) => {
-    if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
-
-    return products.filter((product) => {
-      if (
-        priceRanges.includes('Dưới 1.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) < 1000000
-      )
-        return true
-      if (
-        priceRanges.includes('1.000.000₫ - 2.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) >= 1000000 &&
-        product?.price - product?.price * (product?.discount / 100) <= 2000000
-      )
-        return true
-      if (
-        priceRanges.includes('2.000.000₫ - 3.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) >= 2000000 &&
-        product?.price - product?.price * (product?.discount / 100) <= 3000000
-      )
-        return true
-      if (
-        priceRanges.includes('3.000.000₫ - 4.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) >= 3000000 &&
-        product?.price - product?.price * (product?.discount / 100) <= 4000000
-      )
-        return true
-      if (
-        priceRanges.includes('Trên 4.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) > 4000000
-      )
-        return true
-      return false
-    })
-  }
-
-  const filteredProducts = filterProductsByPrice(products, selectedPriceRanges)
-
-  // Bỏ lọc
-  const removeFilter = (itemToRemove: string) => {
-    setSelectedPriceRanges((prev) => prev.filter((item) => item !== itemToRemove))
-  }
-
-  // Phân trang
-  const productsPerPage = 15 // Số lượng sản phẩm trên mỗi trang
-  const [currentPage, setCurrentPage] = useState(1)
-
-  const startIndex = (currentPage - 1) * productsPerPage
-  const endIndex = startIndex + productsPerPage
-  const currentProducts = filteredProducts?.slice(startIndex, endIndex)
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1)
-    }
-  }
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1)
-    }
-  }
-
   return (
     <>
       {contextHolder}
@@ -304,7 +204,7 @@ const ProductsPage = () => {
               </Link>
               <br />
 
-              {categories?.data?.res?.map((category: ICategory) => (
+              {categories?.map((category: ICategory) => (
                 <div key={category._id}>
                   {' '}
                   {/* Thêm key để tránh lỗi React */}

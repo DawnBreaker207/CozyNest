@@ -1,15 +1,21 @@
 import { getAllCategories, getCategoryById } from '@/services/category'
+import { IQuery } from '@/types/responseApi'
 import { useQuery } from '@tanstack/react-query'
 
-export const useCategoryQuery = (options?: any) => {
-  // {_limit: 2, _page: 1, id: 1}
+export const useCategoryQuery = (options?: Partial<IQuery>) => {
   const { data, ...rest } = useQuery({
     queryKey: ['CATEGORY_KEY', options],
-    queryFn: async () => {
-      options?._id ? await getCategoryById(options._id as number | string) : await getAllCategories(options)
-    }
+    queryFn: async () => await getAllCategories(options)
   })
-  const category = Array.isArray(data) ? data[0] : data
 
-  return { data: category, ...rest }
+  return { data, ...rest }
+}
+
+export const useCategory = (id: string | undefined) => {
+  const { data, ...rest } = useQuery({
+    queryKey: ['CATEGORY_DETAIL', id],
+    queryFn: async () => getCategoryById(id)
+  })
+
+  return { data, ...rest }
 }

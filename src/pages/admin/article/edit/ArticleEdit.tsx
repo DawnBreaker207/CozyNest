@@ -1,14 +1,14 @@
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useArticleMutation from '@/hooks/useArticleMutation'
-import { useArticleQuery } from '@/hooks/useArticleQuery'
+import { useArticle } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Form, Input, message, Upload } from 'antd'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
 import { RcFile } from 'antd/es/upload'
-import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill' // Import ReactQuill
 import 'react-quill/dist/quill.snow.css' // Import Quill styles
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const ArticleEditPage = () => {
   const [form] = Form.useForm()
@@ -18,7 +18,7 @@ const ArticleEditPage = () => {
   const [thumbnail, setThumbnail] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
 
-  const { data, isLoading, isError, error } = useArticleQuery({ id })
+  const { data, isLoading, isError, error } = useArticle(id)
   const { mutate } = useArticleMutation({
     action: 'UPDATE',
     onSuccess: () => {

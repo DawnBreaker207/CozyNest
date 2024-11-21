@@ -10,7 +10,8 @@ import Service from './_components/Service'
 
 const HomePage = () => {
   const { data } = useProductQuery({ _limit: 10 })
-  const products = data.res
+  const products = data
+
   return (
     <div>
       <Banner />

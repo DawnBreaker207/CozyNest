@@ -1,7 +1,7 @@
 import { IProduct } from './product'
 
 export interface ICategory {
-  _id: string | number
+  _id: string | number | undefined
   name: string
   isHidden: boolean
   products: IProduct[]

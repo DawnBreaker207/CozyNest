@@ -1,10 +1,10 @@
-import { Modal, Form, Input, Button, Switch, Select, message } from 'antd'
-import PhoneInput from 'react-phone-input-2'
-import { useParams } from 'react-router-dom'
-import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
+import { Button, Form, Input, Modal, Select, Switch, message } from 'antd'
 import { Rule } from 'antd/es/form'
+import PhoneInput from 'react-phone-input-2'
+import { useParams } from 'react-router-dom'
 
 interface CustomerModalProps {
   isModalVisible: boolean
@@ -24,7 +24,7 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
   const [messageApi, contextHolder] = message.useMessage()
   const { id } = useParams() // Lấy ID của danh mục từ URL
 
-  const { data, isLoading, isError, error } = useAdminUsersQuery({ _id: id })
+  const { data, isLoading, isError, error } = useAdminUser(id)
 
   const { mutate } = useAdminUsersMutations({
     action: 'UPDATE',

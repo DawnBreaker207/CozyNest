@@ -1,16 +1,16 @@
-import { Form, Input, Button, Checkbox, message } from 'antd'
-import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined } from '@ant-design/icons'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ICategory } from '@/types/category'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
-import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Sử dụng hook bạn đã cung cấp
+import { useCategory } from '@/hooks/useCategoryQuery' // Sử dụng hook bạn đã cung cấp
+import { ICategory } from '@/types/category'
+import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Form, Input, message } from 'antd'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const EditCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
   const { id } = useParams() // Lấy ID của danh mục từ URL
 
-  const { data, isLoading, isError, error } = useCategoryQuery({ _id: id }) // Lấy danh mục theo ID
+  const { data, isLoading, isError, error } = useCategory(id) // Lấy danh mục theo ID
   const { mutate } = useCategoryMutation({
     action: 'UPDATE',
     onSuccess: () => {
@@ -48,7 +48,7 @@ const EditCategoryPage = () => {
     <>
       {contextHolder}
       <div className='bg-white rounded-lg'>
-        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data?.res }}>
+        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data }}>
           <div className='flex justify-between'>
             <div>
               <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Edit Category</span>

@@ -27,7 +27,7 @@ const AdminArticlePage = () => {
   const articlesPerPage = 5
 
   const data =
-    articleData?.res.map((item: IArticle) => ({
+    articleData?.map((item: IArticle) => ({
       key: item._id,
       ...item
     })) || []

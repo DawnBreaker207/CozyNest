@@ -9,7 +9,7 @@ instance.defaults.withCredentials = true // Đảm bảo gửi cookie đi cùng 
 export const getAllCategories = async (params?: Partial<IQuery>) => {
   try {
     const { data } = await instance.get<ResAPI<ICategory[]>>('/categories', { params })
-    return data
+    return data.res
   } catch (error) {
     console.error('Lỗi khi lấy danh mục:', error)
     throw error
@@ -17,10 +17,10 @@ export const getAllCategories = async (params?: Partial<IQuery>) => {
 }
 
 // Lấy thông tin danh mục theo ID
-export const getCategoryById = async (id: number | string) => {
+export const getCategoryById = async (id: number | string | undefined) => {
   try {
     const { data } = await instance.get<ResAPI<ICategory>>(`/categories/${id}`, {})
-    return data
+    return data.res
   } catch (error) {
     console.log(error)
     throw error
@@ -31,7 +31,7 @@ export const getCategoryById = async (id: number | string) => {
 export const addCategory = async (category: Partial<ICategory>) => {
   try {
     const { data } = await instance.post<ResAPI<ICategory>>('/categories', category)
-    return data
+    return data.res
   } catch (error) {
     console.log(error)
     throw error
@@ -53,7 +53,7 @@ export const removeCategory = async (category: Partial<ICategory>): Promise<void
 export const editCategory = async (category: Partial<ICategory>) => {
   try {
     const { data } = await instance.put<ResAPI<ICategory>>(`/categories/${category?._id}`, category)
-    return data
+    return data.res
   } catch (error) {
     console.log(error)
     throw error

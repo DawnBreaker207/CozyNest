@@ -40,7 +40,7 @@ const AdminProductPage = () => {
     }
   })
   // Chuẩn bị dữ liệu cho bảng
-  const dataSource = productsData?.res?.map((item: IProduct) => ({
+  const dataSource = productsData?.map((item: IProduct) => ({
     key: item._id,
     ...item
   }))
@@ -74,7 +74,7 @@ const AdminProductPage = () => {
 
           const categoryNames = categoryIds
             .map((categoryId) => {
-              const category = categoriesData?.res?.find((category: ICategory) => category._id === categoryId)
+              const category = categoriesData?.find((category: ICategory) => category._id === categoryId)
               return category ? category.name : 'Không xác định' // Đảm bảo trả về tên danh mục
             })
             .join(', ') // Ghép các tên danh mục thành chuỗi

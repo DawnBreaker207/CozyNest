@@ -1,6 +1,6 @@
 import instance from '@/configs/axios'
 import useProductMutation from '@/hooks/useProductMutation'
-import { useProductQuery } from '@/hooks/useProductQuery'
+import { useProduct } from '@/hooks/useProductQuery'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
@@ -14,7 +14,7 @@ const ProductEditPage = () => {
   const { id } = useParams()
 
   // Lấy dữ liệu sản phẩm
-  const { data, isLoading, isError, error } = useProductQuery({ _id: id })
+  const { data, isLoading, isError, error } = useProduct(id as string)
   const categoryId = data?.categoryId?._id
   // Mutation để cập nhật sản phẩm
   const { mutate } = useProductMutation({

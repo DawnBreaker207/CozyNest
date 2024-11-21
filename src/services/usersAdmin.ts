@@ -80,12 +80,11 @@
 // }
 
 import instance from '@/configs/axios'
-import { ResAPI } from '@/types/responseApi'
 import { IUsers } from '@/types/user'
 
 // Lấy tất cả người dùng
 
-export const getAllUser = async (params: Partial<IUsers>): Promise<IUsers[]> => {
+export const getAllUser = async (params?: Partial<IUsers>) => {
   try {
     const { data } = await instance.get('/users', { params })
     return data
@@ -96,9 +95,9 @@ export const getAllUser = async (params: Partial<IUsers>): Promise<IUsers[]> => 
 }
 
 // Lấy thông tin người dùng theo ID
-export const getUserById = async (id: number | string) => {
+export const getUserById = async (id: string | undefined) => {
   try {
-    const { data } = await instance.get<ResAPI<IUsers>>(`/users/${id}`)
+    const { data } = await instance.get(`/users/${id}`)
     return data.res
   } catch (error) {
     console.log(error)
@@ -109,7 +108,7 @@ export const getUserById = async (id: number | string) => {
 // Cập nhật thông tin người dùng
 export const editUser = async (users: Partial<IUsers>) => {
   try {
-    const { data } = await instance.patch<ResAPI<IUsers>>(`/users/${users._id}`, users)
+    const { data } = await instance.patch(`/users/${users._id}`, users)
     return data.res
   } catch (error) {
     console.log(error)

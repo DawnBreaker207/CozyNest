@@ -1,12 +1,10 @@
 import { openNotify } from '@/utils/notification'
-import { message } from 'antd'
 import Cookies from 'js-cookie'
 import { useEffect, useMemo, useState } from 'react'
 
 export const useUser = () => {
   const [user, setUser] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
-  const [messageApi] = message.useMessage()
 
   // Hàm đọc thông tin user từ cookie
   const getUserFromCookie = useMemo(() => {

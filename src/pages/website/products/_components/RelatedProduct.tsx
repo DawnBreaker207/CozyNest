@@ -17,7 +17,7 @@ const RelatedProduct = ({ id }: { id: string | number }) => {
   if (isLoading) return <div>Loading...</div>
 
   // Ensure we access the correct array from the response
-  const products = data?.res?.products || []
+  const products = data?.products || []
 
   return (
     <div className=''>

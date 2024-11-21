@@ -1,13 +1,13 @@
 import instance from '@/configs/axios'
 import { IProduct } from '@/types/product'
-import { IQuery, ResAPI } from '@/types/responseApi'
+import { IQuery } from '@/types/responseApi'
 
 // Lấy tất cả sản phẩm
 export const getAllProducts = async (params?: Partial<IQuery>) => {
   try {
-    const { data } = await instance.get<ResAPI<IProduct[]>>('/products', { params })
+    const { data } = await instance.get('/products', { params })
 
-    return data
+    return data.res
   } catch (error) {
     console.error('Lỗi khi lấy sản phẩm:', error)
     throw error
@@ -15,10 +15,10 @@ export const getAllProducts = async (params?: Partial<IQuery>) => {
 }
 
 // Lấy thông tin sản phẩm theo ID
-export const getProductById = async (id: number | string) => {
+export const getProductById = async (id: string | undefined) => {
   try {
     const { data } = await instance.get(`/products/${id}`)
-    return data
+    return data.res
   } catch (error) {
     console.error('Lỗi khi lấy sản phẩm:', error)
     throw error
@@ -29,8 +29,8 @@ export const getProductById = async (id: number | string) => {
 
 export const addProduct = async (product: Partial<IProduct>) => {
   try {
-    const { data } = await instance.post<ResAPI<IProduct>>(`/products`, product)
-    return data
+    const { data } = await instance.post(`/products`, product)
+    return data.res
   } catch (error) {
     console.error('Lỗi khi thêm sản phẩm:', error)
     throw error
@@ -54,8 +54,8 @@ export const editProduct = async (product: Partial<IProduct>) => {
   }
 
   try {
-    const { data } = await instance.put<ResAPI<IProduct>>(`/products/${product._id}`, product)
-    return data
+    const { data } = await instance.put(`/products/${product._id}`, product)
+    return data.res
   } catch (error) {
     console.error('Lỗi khi cập nhật sản phẩm:', error)
     throw error
