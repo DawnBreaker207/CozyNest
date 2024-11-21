@@ -207,7 +207,7 @@ const Header = () => {
   const users: MenuProps['items'] = user
     ? [
         {
-          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+          label: <a href='/profile'>Thông tin tài khoản</a>,
           key: '0'
         },
         {
