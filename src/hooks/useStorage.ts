@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useState, useEffect } from 'react'
 
-export function useLocalStorage(key, defaultValue) {
+export function useLocalStorage(key: string, defaultValue: unknown) {
   return useStorage(key, defaultValue, window.localStorage)
 }
 
-export function useSessionStorage(key, defaultValue) {
+export function useSessionStorage(key: any, defaultValue: any) {
   return useStorage(key, defaultValue, window.sessionStorage)
 }
 
-function useStorage(key, defaultValue, storageObject) {
+function useStorage(key: unknown, defaultValue: unknown, storageObject: any) {
   const [value, setValue] = useState(() => {
     const jsonValue = storageObject.getItem(key)
     if (jsonValue != null) return JSON.parse(jsonValue)

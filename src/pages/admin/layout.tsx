@@ -58,6 +58,9 @@ const LayoutAdmin: React.FC = () => {
   const isProductPage = location.pathname === `/admin/products`
   const isOrderPage = location.pathname === `/admin/order`
   const isCustomer = location.pathname === `/admin/customer`
+  const isCoupon = location.pathname === `/admin/coupons`
+  const isCouponAdd = location.pathname === `/admin/coupons/add`
+  const isCouponEdit = location.pathname === `/admin/coupons/${id}/edit`
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -84,6 +87,11 @@ const LayoutAdmin: React.FC = () => {
               label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
             },
             {
+              key: '9',
+              icon: <OrderedListOutlined />,
+              label: <NavLink to={`/admin/coupons`}>Coupon Manager</NavLink>
+            },
+            {
               key: '4',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
@@ -108,6 +116,10 @@ const LayoutAdmin: React.FC = () => {
         {isAddCategoryPage && renderHeader('Add Category')}
         {isEditProductPage && renderHeader('Edit Product')}
         {isEditCategoryPage && renderHeader('Edit Category')}
+        {isCoupon && renderHeader('Coupon')}
+        {isCouponAdd && renderHeader('Coupon Add')}
+        {isCouponEdit && renderHeader('Coupon Edit')}
+
         <Content>
           {isCategoryPage && (
             <>

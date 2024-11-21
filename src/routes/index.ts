@@ -23,7 +23,6 @@ import AdminCustomerPage from '@/pages/admin/customer/page'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
-import pageCheckOut from '@/pages/website/order/page'
 import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
 import DeliveryPolicy from '@/pages/website/home/_components/policy/DeliveryPolicy'
@@ -33,6 +32,12 @@ import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPoli
 import SalesPolicy from '@/pages/website/home/_components/policy/SalesPolicy'
 import NotFound from '@/pages/website/home/_components/NotFound'
 import OrderPage from '@/pages/website/order/_components/OrderPage'
+import CheckoutPage from '@/pages/website/order/page'
+import PaymentResultPage from '@/pages/website/order/_components/PaymentResultPage '
+import CouponPage from '@/pages/admin/coupon/CouponPage'
+import CouponAdd from '@/pages/admin/coupon/add/CouponAdd'
+import CouponEdit from '@/pages/admin/coupon/edit/CouponEdit'
+import OrderDetail from '@/pages/website/order/_components/OrderDetail'
 function App() {
   const routes = useRoutes([
     {
@@ -44,7 +49,9 @@ function App() {
         { path: 'news', Component: NewsPage },
         { path: 'detail/:id', Component: ProductDetail },
         { path: 'cart', Component: CartPage },
-        { path: 'cart/check_out_form', Component: pageCheckOut },
+        { path: 'cart/check_out_form', Component: CheckoutPage },
+        { path: 'paymentresult', Component: PaymentResultPage },
+        { path: 'orders/orderdetail', Component: OrderDetail },
         { path: 'intro', Component: Introduction },
         { path: 'orders', Component: OrderPage },
         { path: 'login', Component: Login },
@@ -73,6 +80,9 @@ function App() {
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
         { path: 'order', Component: AdminOrderPage },
+        { path: 'coupons', Component: CouponPage },
+        { path: 'coupons/add', Component: CouponAdd },
+        { path: 'coupons/:id/edit', Component: CouponEdit },
         { path: 'customer', Component: AdminCustomerPage },
         { path: 'customer/:id', Component: AdminCustomerDetailPage },
         { path: 'report', Component: ReportsPage }

@@ -34,7 +34,6 @@ const AdminCustomerPage = () => {
   const handleCancel = () => {
     setIsModalVisible(false)
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validatePhoneNumber = (_rule: any, value: any) => {
     if (!value || value.replace(/\D/g, '').length === 10) {
       return Promise.resolve()

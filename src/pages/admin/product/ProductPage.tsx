@@ -1,6 +1,6 @@
-import { useCategoryQuery } from '@/hooks/useCategoryQuery'; // Import hook để lấy danh mục
+import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Import hook để lấy danh mục
 import useProductMutation from '@/hooks/useProductMutation'
-import { useProductQuery } from '@/hooks/useProductQuery'; // Import hook để lấy sản phẩm
+import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
@@ -27,7 +27,7 @@ const AdminProductPage = () => {
     error: errorCategories
   } = useCategoryQuery()
   // Mutation để xóa sản phẩm
-  const { mutate: deleteProduct} = useProductMutation({
+  const { mutate: deleteProduct } = useProductMutation({
     action: 'DELETE',
     onSuccess: () => {
       messageApi.open({
@@ -128,7 +128,6 @@ const AdminProductPage = () => {
             onConfirm={() => deleteProduct({ _id: product._id } as IProduct)}
             okText='Có'
             cancelText='Không'
-
           >
             <Button icon={<DeleteOutlined />} />
           </Popconfirm>

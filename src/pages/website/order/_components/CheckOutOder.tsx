@@ -3,9 +3,9 @@ import instance from '@/configs/axios'
 import useCart from '@/hooks/useCart'
 import { CheckOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Table } from 'antd'
+import { Button, Spin, Table, Typography, message } from 'antd'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const fetchOrder = async (orderId: string) => {
   const { data } = await instance.get(`/orders/orderByOrderId/${orderId}`)
@@ -14,38 +14,55 @@ const fetchOrder = async (orderId: string) => {
 
 const CheckOutOrder = () => {
   const [isOrderDetailsVisible, setIsOrderDetailsVisible] = useState(false)
+  const [hasDeletedCart, setHasDeletedCart] = useState(false)
   const location = useLocation()
-  const { data: cartData, deleteCart } = useCart()
-
-
-  // Lấy orderId từ URL query params
+  const { data: cartData, removeAllProductsFromCart } = useCart()
   const params = new URLSearchParams(location.search)
   const orderId = params.get('orderId')
+  const navigate = useNavigate()
+  const { Title } = Typography
 
   const {
     data: order,
     isLoading,
-    error
+    isError
   } = useQuery({
     queryKey: ['order', orderId],
     queryFn: () => fetchOrder(orderId as string),
-    enabled: !!orderId // Chỉ gọi query nếu có orderId
+    enabled: !!orderId
   })
-  console.log(order)
+
   const orderData = order?.res
 
   useEffect(() => {
-    if (orderData && cartData?.res?.cartId) {
-      deleteCart(cartData?.res?.cartId) // Xóa giỏ hàng khi có dữ liệu đơn hàng và giỏ hàng không rỗng
+    if (orderData && cartData?.res?.cartId && !hasDeletedCart) {
+      removeAllProductsFromCart()
+      setHasDeletedCart(true) // Đánh dấu đã xóa giỏ hàng
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }, [orderData, cartData, deleteCart])
-  if (isLoading) {
-    return <p>Đang tải...</p>
-  }
+  }, [orderData, cartData, removeAllProductsFromCart, hasDeletedCart])
 
-  if (error) {
-    return <p>Có lỗi xảy ra khi lấy thông tin đơn hàng.</p>
-  }
+  // Xử lý khi có lỗi hoặc không có orderId
+  useEffect(() => {
+    if (isError) {
+      message.error('Đơn hàng không hợp lệ hoặc không tồn tại!')
+      setTimeout(() => {
+        navigate(`/`)
+      }, 5000)
+    }
+  }, [isError, navigate])
+
+  if (isLoading) return <Spin size='large' />
+  if (isError)
+    return (
+      <div className='text-center mb-10 mt-20'>
+        <Title level={2}>Đơn hàng không tồn tại</Title>
+        <p>Vui lòng thử lại sau.</p>
+        <Link to='/'>
+          <Button type='primary'>Trở về trang chủ</Button>
+        </Link>
+      </div>
+    )
 
   const columns = [
     {
@@ -54,37 +71,21 @@ const CheckOutOrder = () => {
       key: 'thumbnail',
       render: (text: string) => <img src={text} alt='product' className='w-16 h-16' />
     },
-    {
-      title: 'Mô tả',
-      dataIndex: 'productName',
-      key: 'productName'
-    },
-    // {
-    //   title: 'Số lượng',
-    //   dataIndex: 'quantity',
-    //   key: 'quantity'
-    // },
-    {
-      title: 'Giá',
-      dataIndex: 'price',
-      key: 'price',
-      render: (price: number) => `${price.toLocaleString()}₫`
-    }
+    { title: 'Mô tả', dataIndex: 'productName', key: 'productName' },
+    { title: 'Giá', dataIndex: 'price', key: 'price', render: (price: number) => `${price.toLocaleString()}₫` }
   ]
 
-  const data = orderData.products.map((product: any, index: number) => ({
+  const data = orderData?.products?.map((product: any, index: number) => ({
     key: index,
     thumbnail: product.thumbnail,
     productName: product.originName,
     quantity: product.quantity,
     price: product.price
   }))
-  console.log(data)
 
   return (
     <div className='mx-auto'>
       <div className='flex flex-col lg:flex-row justify-between pt-10'>
-        {/* Thông tin đặt hàng */}
         <div className='lg:w-1/2 lg:p-[66px] px-4 lg:pl-[66px] mb-8 lg:mb-0'>
           <h1 className='text-3xl font-bold'>CozyNest</h1>
           <div className='flex items-center'>
@@ -116,7 +117,7 @@ const CheckOutOrder = () => {
             <Button type='primary' href='/' className='mt-6'>
               Tiếp tục mua hàng
             </Button>
-            <Button type='primary' href='/orders' className='mt-6'>
+            <Button type='primary' href={`/orders/orderdetail/?orderId=${orderId}`} className='mt-6'>
               Xem tình trạng đơn hàng
             </Button>
           </div>
@@ -134,7 +135,6 @@ const CheckOutOrder = () => {
         <div className='lg:w-1/2 border-l mb-10 px-6'>
           <h2 className='text-lg font-semibold'>Thông tin đơn hàng</h2>
 
-          {/* Chỉ hiển thị nút trên mobile */}
           <div className='block lg:hidden mt-4'>
             <button
               className='w-full text-left bg-gray-200 p-2 rounded'
@@ -144,41 +144,23 @@ const CheckOutOrder = () => {
             </button>
           </div>
 
-          {/* Hiển thị bảng thông tin đơn hàng chỉ trên PC */}
           <div className='hidden lg:block'>
             <Table columns={columns} dataSource={data} pagination={false} className='my-4' />
             <div className='border-t mt-4 pt-4'>
-              <div className='flex justify-between'>
-                <span>Tạm tính</span>
-                <span>{orderData.billTotals.toLocaleString()}₫</span>
-              </div>
-              <div className='flex justify-between mt-2'>
-                <span>Phí vận chuyển</span>
-                <span>20,000₫</span>
-              </div>
               <div className='flex justify-between mt-4 font-bold text-lg'>
-                <span>Tổng cộng</span>
-                <span>{(orderData.billTotals + 20000).toLocaleString()}₫</span>
+                <span>Tổng cộng đơn hàng</span>
+                <span>{orderData.billTotals.toLocaleString()}₫</span>
               </div>
             </div>
           </div>
 
-          {/* Hiển thị thông tin chi tiết đơn hàng trên mobile nếu đã mở */}
           {isOrderDetailsVisible && (
             <div className='lg:hidden'>
               <Table columns={columns} dataSource={data} pagination={false} className='my-4' />
               <div className='border-t mt-4 pt-4'>
-                <div className='flex justify-between'>
-                  <span>Tạm tính</span>
-                  <span>{orderData.billTotals.toLocaleString()}₫</span>
-                </div>
-                <div className='flex justify-between mt-2'>
-                  <span>Phí vận chuyển</span>
-                  <span>20,000₫</span>
-                </div>
                 <div className='flex justify-between mt-4 font-bold text-lg'>
-                  <span>Tổng cộng</span>
-                  <span>{(orderData.billTotals + 20000).toLocaleString()}₫</span>
+                  <span>Tổng cộng đơn hàng</span>
+                  <span>{orderData.billTotals.toLocaleString()}₫</span>
                 </div>
               </div>
             </div>

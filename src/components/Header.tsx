@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
 import {
@@ -25,8 +26,7 @@ const Header = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const { data, calculateTotal, mutate } = useCart()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const products = data?.res?.products || []
-  const [quantities, setQuantities] = useState<number[]>([])
+  const { products, quantities, setQuantity } = useCartStore()
 
   const [isVisible, setIsVisible] = useState(true)
 
@@ -39,36 +39,21 @@ const Header = () => {
     return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
-    // Chỉ thiết lập quantities khi sản phẩm có thay đổi
-    if (products.length) {
-      const initialQuantities = products.map((product: any) => product.quantity)
-      setQuantities(initialQuantities)
-    }
-  }, [products])
-
+  // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    setQuantities((prevQuantities) => {
-      const newQuantities = [...prevQuantities]
-      if (newQuantities[index] < 10) {
-        newQuantities[index]++
-        mutate({ action: 'INCREMENT', productId: products[index].productId._id })
-      }
-      return newQuantities
-    })
+    if (quantities[index] < 10) {
+      setQuantity(index, quantities[index] + 1)
+      mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
+    }
   }
 
+  // Giảm số lượng sản phẩm
   const decrease = (index: number) => {
-    setQuantities((prevQuantities) => {
-      const newQuantities = [...prevQuantities]
-      if (newQuantities[index] > 1) {
-        newQuantities[index]--
-        mutate({ action: 'DECREMENT', productId: products[index].productId._id })
-      }
-      return newQuantities
-    })
+    if (quantities[index] > 1) {
+      setQuantity(index, quantities[index] - 1)
+      mutate({ action: 'DECREMENT', sku_id: products[index].sku_id._id })
+    }
   }
-
   useEffect(() => {
     // Cập nhật lại tổng tiền khi quantities thay đổi
     calculateTotal()
@@ -424,54 +409,67 @@ const Header = () => {
             {products.length > 0 ? (
               <div>
                 {products.map((product: any, index: number) => (
-                  <div key={product.productId._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                  <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                    {/* Hình ảnh và thông tin sản phẩm */}
                     <div className='flex items-center'>
                       <img
-                        src={product.productId.thumbnail}
-                        alt={product.productId.name}
+                        src={product.sku_id.product_id.thumbnail}
+                        alt={product.sku_id.name}
                         className='w-16 h-16 object-cover'
                       />
-                      <div className='ml-2'>
-                        <p className='font-semibold'>{product.productId.name}</p>
-                        <div className='flex items-center'>
-                          <button className='border px-2 py-1' onClick={() => decrease(index)}>
+                      <div className='ml-2 flex flex-col justify-between'>
+                        <p className='font-semibold'>{product.sku_id.name}</p>
+                        <div className='flex items-center justify-center mt-2'>
+                          <button
+                            onClick={() => decrease(index)} // Truyền index để giảm số lượng
+                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                          >
                             -
                           </button>
-                          <input type='number' value={quantities[index]} className='w-12 text-center border' readOnly />
-                          <button className='border px-2 py-1' onClick={() => increase(index)}>
+                          <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
+                          <button
+                            onClick={() => increase(index)} // Truyền index để tăng số lượng
+                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                          >
                             +
                           </button>
                         </div>
                       </div>
                     </div>
-                    <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
-                    <button onClick={() => mutate({ action: 'REMOVE', productId: product.productId._id })}>
-                      <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
-                    </button>
+
+                    {/* Giá sản phẩm */}
+                    <div className='flex flex-col items-end'>
+                      <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.sku_id._id })}>
+                        <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                      </button>
+                      <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
+                    </div>
                   </div>
                 ))}
-                <Divider />
-                <div className='flex justify-between items-center font-bold'>
-                  <span>Tổng tiền:</span>
-                  <span>{calculateTotal().toLocaleString()}₫</span>
+                {/* Tổng tiền */}
+                <div className='mt-4'>
+                  <div className='flex justify-between font-semibold'>
+                    <span>Tổng tiền:</span>
+                    <span className='text-red-500'>{calculateTotal().toLocaleString()}₫</span>
+                  </div>
+                  <Link to={`/cart`}>
+                    <button
+                      className='mt-4 bg-red-500 hover:bg-red-600 text-white w-full py-2 rounded'
+                      onClick={() => onClose()}
+                    >
+                      XEM GIỎ HÀNG
+                    </button>
+                  </Link>
                 </div>
-                <Link to={`/cart`}>
-                  {' '}
-                  <Button type='primary' className='mt-4 w-full' onClick={() => onClose()}>
-                    XEM GIỎ HÀNG
-                  </Button>
-                </Link>
               </div>
             ) : (
               <div className='text-center'>
-                <span>
+                <span className='text-gray-400 text-2xl'>
                   <MehOutlined />
                 </span>
-                <br />
-                <span>Không có sản phẩm trong giỏ hàng</span>
-                <br />
-                <NavLink to={'#'} className='text-sm'>
-                  trở về trang sản phẩm
+                <p className='mt-2'>Không có sản phẩm trong giỏ hàng</p>
+                <NavLink to='/products' className='text-blue-500 hover:underline text-sm mt-2 block'>
+                  Trở về trang sản phẩm
                 </NavLink>
               </div>
             )}

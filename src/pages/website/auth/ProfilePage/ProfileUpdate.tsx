@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, Form, Input, Button, Switch, message } from 'antd'
 import PhoneInput from 'react-phone-input-2'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
+import { useLocalStorage } from '@/hooks/useStorage'
 import { DeleteOutlined, DownloadOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, DatePicker, Form, Input, Modal, Space, Table } from 'antd'
@@ -84,6 +85,8 @@ const AdminOrderPage = () => {
   const [form] = Form.useForm()
   const [, setFormValues] = useState<Values>()
   const [open, setOpen] = useState(false)
+  const [user] = useLocalStorage('user', {})
+  const token = user?.data?.accessToken
 
   const onCreate = (values: Values) => {
     console.log('Received values of form: ', values)
@@ -95,7 +98,11 @@ const AdminOrderPage = () => {
     queryKey: ['orders'],
     queryFn: async () => {
       try {
-        return await instance.get(`/orders`)
+        return await instance.get(`/orders`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
       } catch (error) {
         throw new Error('Call api that bai')
       }

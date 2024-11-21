@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, Input, Button } from 'antd'
 
 const ResetPassword = () => {

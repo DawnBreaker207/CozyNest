@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IProduct {
+  variants: any
+  sku_id: any
   res: any
   _id: string | number
   originId?: string | null
