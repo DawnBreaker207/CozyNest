@@ -77,24 +77,10 @@ const ProductDetail = () => {
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
         <div className='flex flex-col'>
-          <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
-            {/* List of Thumbnails */}
-            <div className='lg:flex flex-wrap flex-col hidden'>
-              {thumbnails.map((thumbnail, index) => (
-                <img
-                  key={index}
-                  src={thumbnail}
-                  alt={`Product Thumbnail ${index + 1}`}
-                  className='w-16 h-16 mb-3 cursor-pointer'
-                  onClick={() => setActiveImageIndex(index)}
-                />
-              ))}
-            </div>
-            <div className='relative lg:mx-0 md:w-[520px] md:h-[520px] h-auto w-full overflow-hidden'>
-              <div
-                className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
-                style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
-              >
+          <div className='flex flex-col'>
+            <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
+              {/* List of Thumbnails */}
+              <div className='lg:flex flex-wrap flex-col hidden'>
                 {thumbnails.map((thumbnail, index) => (
                   <img
                     key={index}
@@ -105,7 +91,7 @@ const ProductDetail = () => {
                   />
                 ))}
               </div>
-              <div className='relative lg:mx-0 md:w-[450px] md:h-[450px] h-auto w-full overflow-hidden'>
+              <div className='relative lg:mx-0 md:w-[520px] md:h-[520px] h-auto w-full overflow-hidden'>
                 <div
                   className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
                   style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
@@ -163,7 +149,9 @@ const ProductDetail = () => {
               <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
             </div>
           </div>
-          <ReviewComponent />
+          <div>
+            <ReviewComponent />
+          </div>
         </div>
         <div className='col-span-1 lg:mt-0 mt-6'>
           <div className='product-heading'>
