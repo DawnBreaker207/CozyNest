@@ -31,6 +31,9 @@ const useCategoryMutation = ({ action, onSuccess }: useCategoryMutationProps) =>
         case 'DELETE':
           return await removeCategory(category)
         case 'UPDATE':
+          if (!category._id) {
+            throw new Error('Product ID is missing for update')
+          }
           return await editCategory(category)
         default:
           return null

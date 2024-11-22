@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FaRegEye } from 'react-icons/fa'
 import CouponCard from '../../cart/_components/CouponCard'
 import { Cart } from '@/components/icons/index'
@@ -12,9 +13,12 @@ const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
+  const [selectedColorId, setSelectedColorId] = useState(null) // State để lưu id màu sắc được chọn
+  // console.log(selectedColorId)
 
   const { id } = useParams() // Lấy productId từ URL
   const { data, isLoading, error } = useProductQuery({ id })
+  // console.log(data)
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -24,11 +28,24 @@ const ProductDetail = () => {
     return <div>Error: {error.message}</div>
   }
 
+  // Lấy tất cả các màu sắc từ variants
+  const variants = data?.res?.variants || [] // Đảm bảo variants không undefined
+  const colors = variants
+    .map((variant: any) => ({
+      id: variant?.sku_id?._id, // Lưu id của màu sắc
+      value: variant?.option_value_id?.value // Lưu giá trị của màu sắc
+    }))
+    .filter((color: any) => color.value) // Lọc các màu sắc hợp lệ
+
+  const handleColorSelect = (id: any) => {
+    setSelectedColorId(id) // Cập nhật id màu sắc được chọn
+  }
+
   //Kiểm tra dữ liệu product
   if (!data || !data.res) return <p>Product not found</p>
-  const product = data.res
-  const category = product.categoryId?.[0]
-  // console.log(category.products)
+  const product = data?.res
+  const category = product?.categoryId?._id
+  // console.log(category)
 
   const increase = () => {
     if (count < 10) setCount(count + 1)
@@ -59,11 +76,25 @@ const ProductDetail = () => {
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
-        <div>
-          <div className='flex flex-col'>
-            <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
-              {/* List of Thumbnails */}
-              <div className='lg:flex flex-wrap flex-col hidden'>
+        <div className='flex flex-col'>
+          <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
+            {/* List of Thumbnails */}
+            <div className='lg:flex flex-wrap flex-col hidden'>
+              {thumbnails.map((thumbnail, index) => (
+                <img
+                  key={index}
+                  src={thumbnail}
+                  alt={`Product Thumbnail ${index + 1}`}
+                  className='w-16 h-16 mb-3 cursor-pointer'
+                  onClick={() => setActiveImageIndex(index)}
+                />
+              ))}
+            </div>
+            <div className='relative lg:mx-0 md:w-[520px] md:h-[520px] h-auto w-full overflow-hidden'>
+              <div
+                className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
+                style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+              >
                 {thumbnails.map((thumbnail, index) => (
                   <img
                     key={index}
@@ -155,14 +186,27 @@ const ProductDetail = () => {
           <div className='price flex justify-start items-center gap-3 mt-[30px]'>
             <span className='name-price text-[19px] font-semibold'>Giá:</span>
             <div className='pricedetail flex flex-row items-center gap-2 '>
-              <span className='text-[#FF0000] font-semibold text-[24px]'>{product.price}</span>
-              <span className='text-[#878c8f] font-light line-through text-[16px]'>1,250,000₫</span>
+              <span className='text-[#FF0000] font-semibold text-[24px]'>
+                {product?.price - product?.price * (product?.discount / 100)}₫
+              </span>
+              <span className='text-[#878c8f] font-light line-through text-[16px]'>{product.price}</span>
 
               {/* Phần Giảm Giá */}
               <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>{product.discount}%</span>
             </div>
           </div>
-
+          <div className='flex flex-wrap items-center gap-3'>
+            <h2 className='font-semibold'>Màu sắc:</h2>
+            {colors.map((color: any) => (
+              <button
+                key={color.id}
+                onClick={() => handleColorSelect(color.id)}
+                className={`p-2 border rounded ${selectedColorId === color.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              >
+                {color.value}
+              </button>
+            ))}
+          </div>
           {/* Quantity Section */}
           <div className='btn_1'>
             <div className='flex items-center gap-4 mt-4'>
@@ -342,8 +386,8 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* <div className='mb-20 container'>
-        <RelatedProduct id={category._id} />
+      <div className='mb-20 container'>
+        <RelatedProduct id={category} />
 
         <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>
@@ -378,7 +422,7 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
       {/* </div> */}
     </div>
   )

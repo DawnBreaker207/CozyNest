@@ -1,13 +1,34 @@
-import React, { useState } from 'react'
-import { Layout, Menu, Card, Row, Col, Typography, Modal } from 'antd'
+import { useEffect, useState } from 'react'
+import { Layout, Menu, Card, Row, Col, Typography, Modal, Pagination } from 'antd'
 import { Link } from 'react-router-dom'
-
+import axios from 'axios'
 const { Header, Content, Sider } = Layout
 const { Title, Paragraph, Text } = Typography
 
+interface IArticle {
+  _id: string
+  title: string
+  thumbnail: string
+  content: []
+  author: string
+  createdAt: string
+}
+
 const NewsPage = () => {
+  const [articles, setArticles] = useState<IArticle[]>([])
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState('')
+  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
+  const articlesPerPage = 6 // Số bài viết mỗi trang
+
+  const getAllArticles = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:8888/api/v1/articles')
+      setArticles(data.res)
+    } catch (error) {
+      console.error('Failed to fetch articles:', error)
+    }
+  }
 
   const showModal = (image: string) => {
     setModalImage(image)
@@ -17,6 +38,18 @@ const NewsPage = () => {
   const handleCancel = () => {
     setIsModalVisible(false)
   }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  useEffect(() => {
+    getAllArticles()
+  }, [])
+
+  // Tính toán bài viết được hiển thị dựa trên trang hiện tại
+  const startIndex = (currentPage - 1) * articlesPerPage
+  const currentArticles = articles.slice(startIndex, startIndex + articlesPerPage)
 
   return (
     <Layout style={{ backgroundColor: '#f0f2f5' }} className='py-10 container'>
@@ -49,7 +82,7 @@ const NewsPage = () => {
                 Gợi Ý Sản Phẩm
               </Title>
               <div className='border-t-2 border-orange-500 mb-2' />
-              {[...Array(3)].map((_, index) => (
+              {[...Array(2)].map((_, index) => (
                 <Card
                   key={index}
                   hoverable
@@ -73,7 +106,6 @@ const NewsPage = () => {
             </div>
           </Sider>
         </Col>
-
         {/* Main Content */}
         <Col xs={24} sm={16} md={18}>
           <Layout>
@@ -84,38 +116,43 @@ const NewsPage = () => {
             </Header>
             <Content style={{ padding: 20 }}>
               <Row gutter={[16, 16]}>
-                {[...Array(6)].map((_, index) => (
-                  <Col xs={24} sm={12} md={8} key={index}>
-                    <Card
-                      hoverable
-                      cover={
-                        <img
-                          alt={`Tin tức ${index + 1}`}
-                          src={`https://file.hstatic.net/200000804441/article/${index % 2 === 0 ? 'bridge-4_8eb55e22c2644c21b934610b2ee2f262_grande.jpg' : 'nha-xinh-phong-khach-hien-dai-poppy-311021_2d548868a5894762a931c513fdec27ec_grande.jpg'}`}
-                          style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                          onClick={() =>
-                            showModal(
-                              `https://file.hstatic.net/200000804441/article/${index % 2 === 0 ? 'bridge-4_8eb55e22c2644c21b934610b2ee2f262_grande.jpg' : 'nha-xinh-phong-khach-hien-dai-poppy-311021_2d548868a5894762a931c513fdec27ec_grande.jpg'}`
-                            )
-                          }
-                        />
-                      }
-                    >
-                      <Text type='secondary' style={{ fontSize: '16px' }}>
-                        31/10/2023
-                      </Text>
-                      <Title level={4} style={{ color: '#000', fontSize: '20px' }}>
-                        {index % 2 === 0
-                          ? 'Tạo lập phòng ăn chất lượng với 5 cách đơn giản'
-                          : 'Mang làn gió Lagom đến không gian sống của bạn'}
-                      </Title>
-                      <Paragraph style={{ fontSize: '16px', color: '#000' }}>
-                        Phòng ăn là không gian kết nối và thư giãn của mỗi gia đình...
-                      </Paragraph>
-                    </Card>
-                  </Col>
-                ))}
+                {currentArticles.length > 0 ? (
+                  currentArticles.map((article, index) => (
+                    <Col xs={24} sm={12} md={8} key={index}>
+                      <Card
+                        hoverable
+                        cover={
+                          <img
+                            alt={article.title}
+                            src={article.thumbnail}
+                            style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                            onClick={() => showModal(article.thumbnail)}
+                          />
+                        }
+                      >
+                        <Link to={`/articles/${article._id}`}>
+                          <Text type='secondary' style={{ fontSize: '16px' }}>
+                            {new Date(article.createdAt).toLocaleDateString('vi-VN')}
+                          </Text>
+                          <Title level={4} style={{ color: '#000', fontSize: '20px', marginTop: '8px' }}>
+                            {article.title.substring(0, 50) + '...'}
+                          </Title>
+                          <Paragraph style={{ fontSize: '13px', color: 'gray' }}>{article.author}</Paragraph>
+                        </Link>
+                      </Card>
+                    </Col>
+                  ))
+                ) : (
+                  <div>Không có bài viết nào</div>
+                )}
               </Row>
+              <Pagination
+                style={{ marginTop: '20px', textAlign: 'center' }}
+                current={currentPage}
+                pageSize={articlesPerPage}
+                total={articles.length}
+                onChange={handlePageChange}
+              />
               <Modal visible={isModalVisible} onCancel={handleCancel} footer={null} centered>
                 <img src={modalImage} alt='Phóng to' style={{ width: '100%' }} />
               </Modal>
