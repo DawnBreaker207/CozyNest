@@ -55,10 +55,10 @@ const HomeBanner = () => {
                   để bạn thực hiện sở thích của mình. Việc bố trí các vật dụng nội thất, ánh sáng trong phòng ngủ dựa
                   trên các tiêu chuẩn về thẩm mỹ kiến trúc.
                 </p>
-                <div className='action-home-banner'>
+                <div className='action-home-banner mt-5'>
                   <a
                     href='#'
-                    className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out mt-4 inline-block'
+                    className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out  inline-block'
                   >
                     Mua ngay
                   </a>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, Form, Input, Button, Switch, message } from 'antd'
 import PhoneInput from 'react-phone-input-2'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
@@ -5,6 +6,7 @@ import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
 import { useEffect, useState } from 'react'
 import CustomLoadingPage from '@/components/Loading'
+import Cookies from 'js-cookie'
 
 interface CustomerModalProps {
   isModalVisible: boolean
@@ -26,22 +28,27 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
   const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
 
   useEffect(() => {
-    const userDataString = localStorage.getItem('user')
+    const userDataString = Cookies.get('user')
+    // console.log(userDataString)
 
     if (userDataString) {
       const userData = JSON.parse(userDataString)
+      // console.log(userData)
 
       // Kiểm tra xem dữ liệu có hợp lệ không
       if (userData && Object.keys(userData).length > 0) {
         // Lấy ra ID người dùng từ thuộc tính `res`
-        const retrievedUserId = userData.data.res._id
+        const retrievedUserId = userData?._id
         // Gán userId vào state
         setUserId(retrievedUserId)
       }
     }
   }, []) // useEffect chỉ chạy 1 lần sau khi component mount
   const id = userId || null
+  // console.log(id)
+
   const { data, isLoading, isError, error } = useAdminUsersQuery({ id })
+  // console.log(data)
 
   const { mutate } = useAdminUsersMutations({
     action: 'UPDATE',

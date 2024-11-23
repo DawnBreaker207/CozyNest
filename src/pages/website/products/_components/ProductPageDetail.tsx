@@ -1,38 +1,46 @@
 import { Cart } from '@/components/icons'
 import useCart from '@/hooks/useCart'
-import { useProductQuery } from '@/hooks/useProductQuery'
 import { IProduct } from '@/types/product'
 import { CheckOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Drawer, Dropdown, MenuProps, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { GrNext } from 'react-icons/gr'
 import { MdOutlineArrowBackIos } from 'react-icons/md'
 import instance from '@/configs/axios'
 import { useQuery } from '@tanstack/react-query'
 import { ICategory } from '@/types/category'
 
-const ProductsPage = () => {
-  const { data } = useProductQuery()
-  const [products, setProducts] = useState<IProduct[]>(data?.res || [])
+const ProductsPageDetail = () => {
+  const { id } = useParams()
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => await instance.get(`/categories`)
   })
+  const { data } = useQuery({
+    queryKey: ['RELATED_PRODUCT', id],
+    queryFn: async () => {
+      const { data } = await instance.get(`/categories/${id}`)
+      return data
+    }
+  })
 
-  const { addToCart } = useCart() // Sử dụng hook useCart
+  const [products, setProducts] = useState<IProduct[]>(data?.res?.products || [])
+
+  const product = products.length > 0 ? products : data?.res?.products || []
+
+  const { addToCart } = useCart()
   const [messageApi, contextHolder] = message.useMessage()
   const handleAddToCart = (productId: string) => {
-    addToCart(productId) // Thêm sản phẩm vào giỏ hàng
+    addToCart(productId)
     messageApi.success('Thêm vào giỏ hàng thành công!')
   }
 
   const [, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
   const show = () => {
-    // setVisible(true)
     setOpen(true)
   }
   const onClose = () => {
@@ -42,26 +50,22 @@ const ProductsPage = () => {
 
   // Sắp xếp
   useEffect(() => {
-    if (data?.res) {
-      setProducts(data.res) // Cập nhật trạng thái khi có dữ liệu từ API
+    if (data?.res?.productss) {
+      setProducts(data.res.productss)
     }
   }, [data])
-  // Chức năng sắp xếp giá từ thấp đến cao
   const sortPriceAsc = (products: IProduct[]) => {
     return products.sort((a, b) => a.price - b.price)
   }
 
-  // Chức năng sắp xếp giá từ cao đến thấp
   const sortPriceDesc = (products: IProduct[]) => {
     return products.sort((a, b) => b.price - a.price)
   }
 
-  // Chức năng sắp xếp theo tên từ A-Z
   const sortNameAsc = (products: IProduct[]) => {
     return products.sort((a, b) => a.name.localeCompare(b.name))
   }
 
-  // Chức năng sắp xếp theo tên từ Z-A
   const sortNameDesc = (products: IProduct[]) => {
     return products.sort((a, b) => b.name.localeCompare(a.name))
   }
@@ -71,25 +75,25 @@ const ProductsPage = () => {
     let sortedProducts: IProduct[] = []
     switch (key) {
       case '1':
-        sortedProducts = sortPriceAsc([...products])
+        sortedProducts = sortPriceAsc([...product])
         break
       case '2':
-        sortedProducts = sortPriceDesc([...products])
+        sortedProducts = sortPriceDesc([...product])
         break
       case '3':
-        sortedProducts = sortNameAsc([...products])
+        sortedProducts = sortNameAsc([...product])
         break
       case '4':
-        sortedProducts = sortNameDesc([...products])
+        sortedProducts = sortNameDesc([...product])
         break
       case '5':
-        return products
+        sortedProducts = [...product]
         break
       default:
-        break
+        return
     }
-    setProducts(sortedProducts) // Cập nhật lại danh sách sản phẩm sau khi sắp xếp
-    setSelectedKey(key) // Lưu lại mục đã chọn
+    setProducts([...sortedProducts])
+    setSelectedKey(key)
   }
 
   const menuItems: MenuProps['items'] = [
@@ -141,7 +145,7 @@ const ProductsPage = () => {
   ]
 
   // Bộ lọc
-  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]) // Lưu trạng thái checkbox
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([])
 
   const handlePriceRangeChange = (priceRange: string) => {
     setSelectedPriceRanges((prev) => {
@@ -189,7 +193,7 @@ const ProductsPage = () => {
     })
   }
 
-  const filteredProducts = filterProductsByPrice(products, selectedPriceRanges)
+  const filteredProducts = filterProductsByPrice(product, selectedPriceRanges)
 
   // Bỏ lọc
   const removeFilter = (itemToRemove: string) => {
@@ -221,13 +225,13 @@ const ProductsPage = () => {
     <>
       {contextHolder}
       {window.innerWidth > 800 ? (
-        <div className='wrapper-collection-header banner-header '>
+        <div className='wrapper-collection-header banner-header mt-8'>
           <div className='flex my-auto d-flex flex-wrap'>
-            <div className='w-[50%] collection-banner  col-lg-6 col-12 pl-0 pr-0'>
-              <img src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg' alt='Products' />
+            <div className='w-[50%] collection-banner col-lg-6 col-12 pl-0 pr-0'>
+              <img src='//theme.hstatic.net/200000748041/1001116292/14/collection_banner.jpg?v=31' alt='Products' />
             </div>
             <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
-              <h1 className='text-[#FFCC00] w-[80%] ml-12 text-5xl font-medium'>Tất cả sản phẩm</h1>
+              <h1 className='text-[#FFCC00] ml-10 text-5xl font-medium'>{data?.res?.name}</h1>
             </div>
           </div>
         </div>
@@ -235,10 +239,10 @@ const ProductsPage = () => {
         <div className='wrapper-collection-header banner-header mt-8'>
           <div className='my-auto d-flex flex-wrap'>
             <div className='w-[100%] collection-banner col-lg-6 col-12 pl-0 pr-0'>
-              <img src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg' alt='Products' />
+              <img src='//theme.hstatic.net/200000748041/1001116292/14/collection_banner.jpg?v=31' alt='Products' />
             </div>
             <div className='w-[100%] h-[80px] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
-              <h1 className='text-[#FFCC00] ml-5 text-3xl font-medium'>Tất cả sản phẩm</h1>
+              <h1 className='text-[#FFCC00] ml-5 text-3xl font-medium'>{data?.res?.name}</h1>
             </div>
           </div>
         </div>
@@ -435,7 +439,6 @@ const ProductsPage = () => {
 
       <div className='flex justify-center w-[22%] items-center my-4 gap-8 max-w-screen-lg mx-auto'>
         <button
-          title='Previous'
           onClick={handlePrevPage}
           disabled={currentPage === 1}
           className='border-solid border-2 text-white px-3 py-2 rounded'
@@ -446,7 +449,6 @@ const ProductsPage = () => {
           Trang {currentPage} / {totalPages}
         </span>
         <button
-          title='Next'
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           className='border-solid border-2 text-white px-3 py-2 rounded'
@@ -458,4 +460,4 @@ const ProductsPage = () => {
   )
 }
 
-export default ProductsPage
+export default ProductsPageDetail

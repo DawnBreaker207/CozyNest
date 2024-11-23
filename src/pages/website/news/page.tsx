@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Layout, Menu, Card, Row, Col, Typography, Modal, Pagination } from 'antd'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-
 const { Header, Content, Sider } = Layout
 const { Title, Paragraph, Text } = Typography
 
