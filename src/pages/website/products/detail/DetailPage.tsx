@@ -42,10 +42,8 @@ const ProductDetail = () => {
 
   //Kiểm tra dữ liệu product
   if (!data || !data.res) return <p>Product not found</p>
-  const product = data?.res
-  const category = product?.categoryId?._id
-  // console.log(category)
-
+  const product = data.res
+  const category = product.categoryId?.[0]
   const increase = () => {
     if (count < 10) setCount(count + 1)
   }
@@ -110,6 +108,7 @@ const ProductDetail = () => {
 
               {/* Back Button */}
               <button
+               title='Back'
                 className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
                 onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
               >
@@ -118,6 +117,7 @@ const ProductDetail = () => {
 
               {/* Next Button */}
               <button
+               title='Next'
                 className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
                 onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
               >
@@ -140,11 +140,11 @@ const ProductDetail = () => {
           {/* Share Section */}
           <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
             <span className='font-light'>Chia sẻ:</span>
-            <img src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
-            <img src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
-            <img src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
-            <img src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
-            <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
+            <img title='img' src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
+            <img title='img' src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
+            <img title='img' src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
+            <img title='img' src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
+            <img title='img' src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
           </div>
         </div>
         <div className='col-span-1 lg:mt-0 mt-6'>
@@ -369,7 +369,7 @@ const ProductDetail = () => {
       </div>
 
       <div className='mb-20 container'>
-        <RelatedProduct id={category} />
+<!--         <RelatedProduct id={category} /> -->
 
         <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>

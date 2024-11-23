@@ -16,12 +16,12 @@ const Contactthree = () => {
           <div className='md:w-2/3 w-full pl-0 md:pl-8'>
             <h2 className='text-3xl font-bold text-gray-800 mb-6'>Về công ty</h2>
             <p className='text-gray-600 mb-4'>
-              Chào mừng đến với Mew Furniture, nơi mang đến vẻ đẹp tự nhiên và không gian sống tuyệt vời. Chúng tôi tự
-              hào là một trong những đơn vị hàng đầu cung cấp sản phẩm nội thất chất lượng cao.
+              Chào mừng đến với Cozynest, nơi mang đến vẻ đẹp tự nhiên và không gian sống lý tưởng. Chúng tôi tự hào là
+              một trong những đơn vị hàng đầu cung cấp sản phẩm nội thất chất lượng cao.
             </p>
             <p className='text-gray-600 mb-4'>
-              Chúng tôi đặt sự chăm sóc khách hàng và chuyên nghiệp lên hàng đầu, cam kết mang đến sản phẩm chính hãng
-              tốt nhất cho quý khách.
+              Cozynest đặt sự chăm sóc khách hàng và tính chuyên nghiệp lên hàng đầu, cam kết mang đến sản phẩm chính
+              hãng và dịch vụ tốt nhất cho quý khách.
             </p>
           </div>
         </div>
@@ -42,21 +42,16 @@ const Contactthree = () => {
           <div className='md:w-2/3 w-full pl-0 md:pl-2 order-2 md:order-1'>
             <h2 className='text-3xl font-bold text-gray-800 mb-6'>Về công ty</h2>
             <p className='text-gray-600 mb-4'>
-              Mew Furniture không chỉ đơn thuần là một nơi để mua sắm nội thất, mà còn là một cộng đồng kiến trúc, nơi
-              bạn có thể trao đổi kinh nghiệm và chia sẻ niềm đam mê với những người đam mê kiến trúc khác. Chúng tôi tổ
-              chức các buổi workshop và sự kiện liên quan đến thiết kế, kiến trúc để mang đến cho bạn cơ hội học hỏi và
-              giao lưu với những người có chuyên ngành. Đặc biệt, Mew Furniture cam kết với việc bảo vệ môi trường và
-              phát triển bền vững. Chúng tôi ưu tiên sử dụng các phương pháp tái chế trong việc sản xuất, thu hồi sản
-              phẩm. Chúng tôi hy vọng rằng việc góp phần tạo ra một không gian sống kiểu cách, độc đáo nhưng thân thiện
-              với môi trường sẽ truyền cảm hứng và khuyến khích mọi người tham gia vào cuộc sống xanh hơn. Tại Mew
-              Furniture, chúng tôi đặt trọng tâm vào việc chăm sóc khách hàng, sự chuyên nghiệp. Chúng tôi hiểu rằng nội
-              thất không chỉ là những vật trang trí tuyệt đẹp, mà còn có thể mang lại nhiều lợi ích về tinh thần cho chủ
-              nhân của những căn hộ. Vì vậy, chúng tôi cam kết mang đến cho khách hàng những sản phẩm chính hãng và tốt
-              nhất cho quý khách.
-            </p>
-            <p className='text-gray-600 mb-4'>
-              Chúng tôi đặt sự chăm sóc khách hàng và chuyên nghiệp lên hàng đầu, cam kết mang đến sản phẩm chính hãng
-              tốt nhất cho quý khách.
+              Cozynest không chỉ đơn thuần là nơi để mua sắm nội thất, mà còn là một cộng đồng của những người yêu thích
+              thiết kế và kiến trúc. Tại đây, bạn có thể trao đổi kinh nghiệm, chia sẻ niềm đam mê với những người cùng
+              chí hướng. Chúng tôi tổ chức các buổi workshop và sự kiện liên quan đến thiết kế và kiến trúc, mang đến cơ
+              hội học hỏi và giao lưu với các chuyên gia trong ngành. Đặc biệt, Cozynest cam kết bảo vệ môi trường và
+              phát triển bền vững. Chúng tôi ưu tiên sử dụng các phương pháp tái chế trong sản xuất và thu hồi sản phẩm,
+              với mong muốn truyền cảm hứng và khuyến khích mọi người tham gia vào lối sống xanh. Chúng tôi tự hào tạo
+              ra những không gian sống vừa độc đáo, vừa thân thiện với môi trường. Tại Cozynest, chúng tôi hiểu rằng nội
+              thất không chỉ đơn thuần là vật trang trí, mà còn là yếu tố quan trọng ảnh hưởng đến tinh thần và cuộc
+              sống của mỗi người. Với sự chăm sóc khách hàng tận tâm và tính chuyên nghiệp cao, chúng tôi cam kết mang
+              đến những sản phẩm chính hãng, chất lượng tốt nhất để phục vụ quý khách.
             </p>
           </div>
         </div>

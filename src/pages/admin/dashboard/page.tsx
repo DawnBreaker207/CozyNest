@@ -1,4 +1,6 @@
+import CustomLoadingPage from '@/components/Loading'
 import { Card, Table } from 'antd'
+import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, Tooltip, XAxis, YAxis } from 'recharts'
 const { Column } = Table
 
@@ -149,60 +151,67 @@ const data3 = [
     value: 189
   }
 ]
-const colors = ['red', 'green', 'blue', 'yellow']
+const colors = ['red', 'green', 'blue', 'yellow'];
+
 
 // const maxValue = Math.max(...data.map((d) => d.value))
 const DashboardPage = () => {
-  return (
-    <div className='grid grid-cols-2 md:grid-cols-2  '>
-      <Card className='bg-white p-4 w-auto rounded-lg shadow' title='Customer Volume'>
-        <PieChart width={530} height={250}>
-          <Pie data={data01} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={50} fill='#8884d8' />
-          <Pie
-            data={data02}
-            dataKey='value'
-            nameKey='name'
-            cx='50%'
-            cy='50%'
-            innerRadius={60}
-            outerRadius={80}
-            fill='#82ca9d'
-            label
-          />
-        </PieChart>
-      </Card>
-      <div className='bg-white p-4 w-auto rounded-lg shadow'>
-        <span className='text-xl ml-6'>Customer Volume</span>
-        <BarChart style={{ marginTop: 50 }} width={550} height={250} data={data}>
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='name' />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey='pv' fill='#8884d8' />
-          <Bar dataKey='uv' fill='#82ca9d' />
-        </BarChart>
-      </div>
-
-      <Card className='bg-white p-4 w-auto rounded-lg shadow' title='Customer Behavior'>
-        <PieChart width={530} height={250}>
-          <Pie data={data3} cx='50%' cy='50%' outerRadius={80} label dataKey='value'>
-            {data.map((_, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index]} />
-            ))}
-          </Pie>
-        </PieChart>
-      </Card>
-
-      <Card className='bg-white p-4 rounded-lg shadow' title='Trending Orders'>
-        <Table dataSource={product} pagination={{ pageSize: 5 }}>
-          <Column title='Product' dataIndex='product' key='product' />
-          <Column title='Category' dataIndex='category' key='category' />
-          <Column title='Price' dataIndex='price' key='price' />
-        </Table>
-      </Card>
+ return (
+  <>
+  <div className='grid grid-cols-2 md:grid-cols-2  '>
+    <Card className='bg-white p-4 w-auto rounded-lg shadow' title='Customer Volume'>
+      <PieChart width={530} height={250}>
+        <Pie data={data01} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={50} fill='#8884d8' />
+        <Pie
+          data={data02}
+          dataKey='value'
+          nameKey='name'
+          cx='50%'
+          cy='50%'
+          innerRadius={60}
+          outerRadius={80}
+          fill='#82ca9d'
+          label
+        />
+      </PieChart>
+    </Card>
+    <div className='bg-white p-4 w-auto rounded-lg shadow'>
+      <span className='text-xl ml-6'>Customer Volume</span>
+      <BarChart style={{ marginTop: 50 }} width={550} height={250} data={data}>
+        <CartesianGrid strokeDasharray='3 3' />
+        <XAxis dataKey='name' />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey='pv' fill='#8884d8' />
+        <Bar dataKey='uv' fill='#82ca9d' />
+      </BarChart>
     </div>
-  )
+
+    <Card className='bg-white p-4 w-auto rounded-lg shadow' title='Customer Behavior'>
+      <PieChart width={530} height={250}>
+        <Pie data={data3} cx='50%' cy='50%' outerRadius={80} label dataKey='value'>
+          {data.map((_, index) => (
+            <Cell key={`cell-${index}`} fill={colors[index]} />
+          ))}
+        </Pie>
+      </PieChart>
+    </Card>
+
+    <Card className='bg-white p-4 rounded-lg shadow' title='Trending Orders'>
+      <Table dataSource={product} pagination={{ pageSize: 5 }}>
+        <Column title='Product' dataIndex='product' key='product' />
+        <Column title='Category' dataIndex='category' key='category' />
+        <Column title='Price' dataIndex='price' key='price' />
+      </Table>
+    </Card>
+  </div>
+  </>
+ )
+    
+  
+   
+  
 }
 
 export default DashboardPage

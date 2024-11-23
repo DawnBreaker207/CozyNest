@@ -1,44 +1,21 @@
+import IArticle from '@/types/article'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { Card, Carousel, Button } from 'antd'
 import Meta from 'antd/es/card/Meta'
-import { useRef } from 'react'
+import axios from 'axios'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const News = () => {
-  const newsItems = [
-    {
-      title: 'Thiết kế nội thất chung cư đẹp cho đôi vợ chồng trẻ',
-      description: 'Sử dụng nội thất thông minh và tận dụng không gian để lưu trữ đồ đạc...',
-      date: '13 Tháng 07, 2023',
-      image:
-        'https://file.hstatic.net/200000748041/article/screen_shot_2023-07-13_at_10.22.42_899b3463f971438b93e951e8475f69ea_grande.png',
-      link: '/link'
-    },
-    {
-      title: 'Những điều cần biết để lựa chọn bộ bàn ăn phù hợp với ngôi nhà bạn',
-      description: 'Lựa chọn bàn ăn phù hợp với không gian nhà bạn',
-      date: '13 Tháng 07, 2023',
-      image:
-        'https://file.hstatic.net/200000748041/article/screen_shot_2023-07-13_at_10.21.03_744e96d8ac574728a4b81008f1f4131a_grande.png',
-      link: '/link'
-    },
-    {
-      title: 'Mua sofa giường mang cả thiên đường đến những căn hộ nhỏ',
-      description: 'Sử dụng sofa giường để tiết kiệm không gian trong căn hộ nhỏ...',
-      date: '13 Tháng 07, 2023',
-      image:
-        'https://file.hstatic.net/200000748041/article/screen_shot_2023-07-13_at_10.18.57_c2c5c9603d97452e8661433e95e159b3_grande.png',
-      link: '/link'
-    },
-    {
-      title: 'Những điều cần biết để lựa chọn bộ bàn ăn phù hợp với ngôi nhà bạn',
-      description: 'Lựa chọn bàn ăn phù hợp với không gian nhà bạn',
-      date: '13 Tháng 07, 2023',
-      image:
-        'https://file.hstatic.net/200000748041/article/screen_shot_2023-07-13_at_10.21.03_744e96d8ac574728a4b81008f1f4131a_grande.png',
-      link: '/link'
+  const [articles, setArticles] = useState<IArticle[]>([])
+  const getAllArticles = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:8888/api/v1/articles')
+      setArticles(data.res)
+    } catch (error) {
+      console.error('Failed to fetch articles:', error)
     }
-  ]
+  }
 
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
@@ -49,6 +26,10 @@ const News = () => {
   const scrollRight = () => {
     scrollContainerRef.current?.scrollBy({ left: 300, behavior: 'smooth' })
   }
+
+  useEffect(() => {
+    getAllArticles()
+  }, [])
 
   return (
     <div className='container'>
@@ -62,19 +43,26 @@ const News = () => {
         </Button>
         <h1 className='text-center text-[25px] sm:text-[45px] mb-2 mx-auto text-[#FCA120]'>Tin tức nổi bật</h1>
         <div ref={scrollContainerRef} className='overflow-hidden scrollbar-hide flex flex-nowrap p-4'>
-          {newsItems.map((article, index) => (
+          {articles.map((article, index) => (
             <Card
-              key={index}
               hoverable
               className='flex-shrink-0 w-1/3 m-4 rounded-lg shadow-lg overflow-hidden relative bg-white'
-              cover={<img alt={article.title} src={article.image} className='rounded-t-lg' />}
+              cover={
+                <img
+                  alt={article.title}
+                  src={article.thumbnail}
+                  className='rounded-t-lg w-full h-[270px] object-cover'
+                />
+              }
             >
-              <div className='absolute top-0 left-0 bg-white text-gray-500 px-2 py-1 rounded-br-lg'>{article.date}</div>
+              <div className='absolute top-0 left-0 bg-white text-gray-500 px-2 py-1 rounded-br-lg'>
+                {article.created_at}
+              </div>
               <Meta
                 title={<span className='text-[#FCA120]'>{article.title}</span>}
-                description={article.description.substring(0, 20)}
+                description={article.title.substring(0, 20)}
               />
-              <Link to={article.link} className='text-black hover:text-orange-600 flex items-center mt-4'>
+              <Link to={`/articles/${article._id}`} className='text-black hover:text-orange-600 flex items-center mt-4'>
                 Xem thêm
                 <svg className='w-4 h-4 ml-1 mt-0.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 5l7 7-7 7' />
@@ -115,22 +103,25 @@ const News = () => {
             }
           ]}
         >
-          {newsItems.map((newsItem, index) => (
+          {articles.map((newsItem, index) => (
             <div key={index} className='px-2'>
               <Card
                 hoverable
-                cover={<img alt={newsItem.title} src={newsItem.image} className='rounded-t-lg' />}
-                className='rounded-lg shadow-lg overflow-hidden relative'
+                cover={<img alt={newsItem.title} src={newsItem.thumbnail} className='rounded-t-lg' />}
+                className='rounded-lg shadow-lg overflow-hidden relative h-[300px]'
               >
                 <div className='absolute top-2 left-2 bg-white text-[#FCA120] px-2 py-1 rounded-br-lg'>
-                  {newsItem.date}
+                  {newsItem.created_at}
                 </div>
                 <Meta
                   title={<span className='text-[#FCA120]'>{newsItem.title}</span>}
                   description={
                     <div>
-                      <p className='text-gray-600 mb-2'>{newsItem.description.substring(0, 20)}... </p>
-                      <Link to={newsItem.link} className='text-black hover:text-orange-600 flex items-center mt-4'>
+                      <p className='text-gray-600 mb-2'>{newsItem.title.substring(0, 20)}... </p>
+                      <Link
+                        to={`/articles/${newsItem._id}`}
+                        className='text-black hover:text-orange-600 flex items-center mt-4'
+                      >
                         Xem thêm
                         <svg className='w-4 h-4 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                           <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 5l7 7-7 7' />
