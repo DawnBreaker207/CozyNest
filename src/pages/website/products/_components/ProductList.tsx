@@ -2,7 +2,7 @@
 import { Cart } from '@/components/icons/index'
 import { useCartStoreHeader } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
-import { useLocalStorage } from '@/hooks/useStorage'
+import { useCookie, useLocalStorage } from '@/hooks/useStorage'
 import { IProduct } from '@/types/product'
 import { CloseOutlined } from '@ant-design/icons'
 import { message } from 'antd'
@@ -44,8 +44,8 @@ const ProductList = ({ products }: ProductListProps) => {
   } = useCartStoreHeader()
 
   const [messageApi, contextHolder] = message.useMessage()
-  const [user] = useLocalStorage('user', {})
-  const userId = user?.data?.res?._id
+  const [user] = useCookie('user', {})
+  const userId = user?._id
   const { addToCart } = useCart() // Zustand store để thêm vào giỏ hàng
 
   const increase = () => {
@@ -90,8 +90,8 @@ const ProductList = ({ products }: ProductListProps) => {
           value: variant?.option_value_id?.value
         })) || []
 
-      setColors(productColors.filter((color: Color) => color.value)) // Lọc các màu sắc
-      if (foundProduct.variants.length === 1) {
+      setColors(productColors?.filter((color: Color) => color.value)) // Lọc các màu sắc
+      if (foundProduct?.variants.length === 1) {
         const singleVariant = foundProduct.variants[0]
         const singleSkuId = singleVariant.sku_id._id
         addToCart(singleSkuId, 1)
@@ -121,9 +121,8 @@ const ProductList = ({ products }: ProductListProps) => {
       {/* Data cart */}
       {selectedProduct && ( // Đảm bảo chỉ render nếu selectedProduct tồn tại
         <div
-          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${
-            isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-          }`}
+          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+            }`}
         >
           <div className='bg-white p-5 rounded-lg'>
             <div className='float-right'>

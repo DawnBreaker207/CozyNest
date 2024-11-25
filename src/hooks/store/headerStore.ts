@@ -32,17 +32,13 @@ const useHeaderStore = create<HeaderStore>((set) => ({
   increaseQuantity: (index) =>
     set((state) => {
       const newQuantities = [...state.quantities]
-      if (newQuantities[index] < 10) {
-        newQuantities[index] + 1
-      }
+      if (newQuantities[index] < 10) newQuantities[index]++
       return { quantities: newQuantities }
     }),
   decreaseQuantity: (index) =>
     set((state) => {
       const newQuantities = [...state.quantities]
-      if (newQuantities[index] > 1) {
-        newQuantities[index] - 1
-      }
+      if (newQuantities[index] > 1) newQuantities[index]--
       return { quantities: newQuantities }
     }),
   resetVisibility: () => {

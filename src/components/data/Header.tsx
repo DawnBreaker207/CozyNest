@@ -72,6 +72,5 @@ export const menus: MenuProps['items'] = [
       { key: '5', label: 'Trang trí phòng ngủ' },
       { key: '6', label: 'Sân vườn thoải mái' }
     ]
-  },
-
+  }
 ]
