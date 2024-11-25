@@ -26,26 +26,26 @@ const AdminVariantPage = () => {
   const { mutate } = useMutation({
     mutationFn: async (id: number | string) => {
       try {
-        return await instance.delete(`/variants/${id}/`);
+        return await instance.delete(`/variants/${id}/`)
       } catch (error) {
-        throw new Error((error as any).message);
+        throw new Error((error as any).message)
       }
     },
     onSuccess: () => {
       messageApi.open({
-        type: "success",
-        content: "Xóa sản phẩm thành công",
-      });
+        type: 'success',
+        content: 'Xóa sản phẩm thành công'
+      })
       queryClient.invalidateQueries({
-        queryKey: ["products"],
-      });
+        queryKey: ['products']
+      })
     },
     onError: (error) => {
       messageApi.open({
-        type: "error",
-        content: error.message,
-      });
-    },
+        type: 'error',
+        content: error.message
+      })
+    }
   })
 
   const dataSource = data?.data?.res.map((variant: VariantType) => ({

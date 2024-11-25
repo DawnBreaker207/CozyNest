@@ -58,7 +58,11 @@ const AdminCustomerPage = () => {
   // console.log(users)
 
   if (isLoading) {
-    return <div><CustomLoadingPage/></div>
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   }
 
   if (error) {
