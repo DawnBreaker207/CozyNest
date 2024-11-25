@@ -38,6 +38,12 @@ import CouponPage from '@/pages/admin/coupon/CouponPage'
 import CouponAdd from '@/pages/admin/coupon/add/CouponAdd'
 import CouponEdit from '@/pages/admin/coupon/edit/CouponEdit'
 import OrderDetail from '@/pages/website/order/_components/OrderDetail'
+import ProductsPage from '@/pages/website/products/_components/ProductPage'
+import AdminArticlePage from '@/pages/admin/article/ArticlePage'
+import ArticleAddPage from '@/pages/admin/article/add/ArticleAdd'
+import ArticleEditPage from '@/pages/admin/article/edit/ArticleEdit'
+import ProductsPageDetail from '@/pages/website/products/_components/ProductPageDetail'
+import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
 function App() {
   const routes = useRoutes([
     {
@@ -46,8 +52,10 @@ function App() {
       children: [
         { index: true, Component: HomePage },
         { path: 'contact', Component: ContactPage },
-        { path: 'news', Component: NewsPage },
+        { path: 'articles', Component: NewsPage },
         { path: 'detail/:id', Component: ProductDetail },
+        { path: 'products_page', Component: ProductsPage },
+        { path: 'products_page/:id', Component: ProductsPageDetail },
         { path: 'cart', Component: CartPage },
         { path: 'cart/check_out_form', Component: CheckoutPage },
         { path: 'paymentresult', Component: PaymentResultPage },
@@ -59,7 +67,7 @@ function App() {
         { path: 'profile', Component: ProfilePage },
         { path: 'reset-password', Component: ResetPassword },
         { path: 'check_out_order', Component: CheckOutOder },
-        { path: 'link', Component: LinkPage },
+        { path: 'articles/:id', Component: LinkPage },
         { path: 'policy/chinh-sach-ban-hang', Component: SalesPolicy },
         { path: 'policy/giao-hang-va-lap-dat', Component: DeliveryPolicy },
         { path: 'policy/chinh-sach-doi-tra', Component: ReturnPolicy },
@@ -79,6 +87,13 @@ function App() {
         { path: 'products', Component: AdminProductPage },
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
+        {
+          path: 'products/:id/variants',
+          Component: AdminVariantPage
+        },
+        { path: 'articles', Component: AdminArticlePage },
+        { path: 'articles/add', Component: ArticleAddPage },
+        { path: 'articles/:id', Component: ArticleEditPage },
         { path: 'order', Component: AdminOrderPage },
         { path: 'coupons', Component: CouponPage },
         { path: 'coupons/add', Component: CouponAdd },

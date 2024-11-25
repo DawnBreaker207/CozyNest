@@ -1,4 +1,3 @@
-import React from 'react'
 import Linkone from './Navlink/LinkOne'
 
 const LinkPage = () => {

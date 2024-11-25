@@ -1,16 +1,20 @@
-import { Form, Input, Button, Checkbox, message } from 'antd'
-import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined } from '@ant-design/icons'
+import { Form, Input, Button, Checkbox, message, Upload } from 'antd'
+import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined, UploadOutlined } from '@ant-design/icons'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ICategory } from '@/types/category'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
-import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Sử dụng hook bạn đã cung cấp
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'
+import { useEffect, useState } from 'react'
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import { RcFile } from 'antd/es/upload'
 
 const EditCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
+  const [thumbnail, setThumbnail] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { id } = useParams() // Lấy ID của danh mục từ URL
+  const { id } = useParams()
 
-  const { data, isLoading, isError, error } = useCategoryQuery({ id }) // Lấy danh mục theo ID
+  const { data, isLoading, isError, error } = useCategoryQuery({ id })
   const { mutate } = useCategoryMutation({
     action: 'UPDATE',
     onSuccess: () => {
@@ -19,10 +23,58 @@ const EditCategoryPage = () => {
         navigate(`/admin/categories`)
       }, 600)
     }
-  })
+  });
+  useEffect(() => {
+    if (data?.res?.thumbnail) {
+      setThumbnail(data.res.thumbnail);
+    }
+  }, [data]);
 
+ 
+
+  const handleUpload = async (file: RcFile) => {
+    try {
+      const response = await uploadFileCloudinary(file);
+      if (response) {
+        setThumbnail(response);
+        messageApi.success('Upload thumbnail thành công');
+      } else {
+        messageApi.error('Không thể upload thumbnail');
+      }
+    } catch (err) {
+      messageApi.error('Lỗi upload ảnh');
+    }
+    return false;
+  };
+  
   const onFinish = (values: ICategory) => {
-    mutate({ ...data, ...values }) // Kết hợp dữ liệu cũ và mới để cập nhật
+    if (!thumbnail) {
+      messageApi.error('Vui lòng upload thumbnail');
+      return;
+    }
+
+    const updatedValues = {
+      ...values,
+      thumbnail,
+    };
+
+    mutate({ ...data?.res, ...updatedValues, _id: id });
+  };
+    if (!id) {
+      messageApi.error('ID danh mục không hợp lệ')
+      return
+    }
+
+    // Đảm bảo rằng _id từ dữ liệu ban đầu (data) được giữ lại trong category khi gửi đi
+    const updatedCategory = {
+      ...data?.res, // Dữ liệu danh mục hiện tại
+      ...values, // Giá trị form mới
+      _id: data?.res?._id // Đảm bảo rằng _id không bị mất
+    }
+
+    console.log(updatedCategory)
+
+    mutate(updatedCategory) // Gửi dữ liệu danh mục đã được cập nhật
   }
 
   if (isLoading) return <div>Loading...</div>
@@ -61,7 +113,19 @@ const EditCategoryPage = () => {
               >
                 <Input placeholder='Type category name here...' className='w-full bg-[#F9F9FC]' />
               </Form.Item>
+
+              <Form.Item label='Thumbnail' name='thumbnail'>
+                <Upload {...{ beforeUpload: handleUpload }}>
+                  <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>
+                </Upload>
+                {thumbnail ? (
+                 <img src={thumbnail} alt="Thumbnail" className="w-40 h-40 object-cover rounded" />
+                ) : (
+                  <span className='mt-2'>Hiện tại: {data?.res?.thumbnail}</span>
+                )}
+              </Form.Item>
             </div>
+
             <div className='w-[20%]'>
               <div>
                 <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>

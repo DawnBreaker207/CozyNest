@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons'
 
 import { Button, Divider, Drawer, Dropdown, GetProps, Input, MenuProps, message, Space, theme } from 'antd'
+import Cookies from 'js-cookie'
 
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
@@ -23,13 +24,26 @@ const { useToken } = theme
 
 const Header = () => {
   const [user, setUser] = useState(null)
+  // console.log(user)
   const [messageApi, contextHolder] = message.useMessage()
   const { data, calculateTotal, mutate } = useCart()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { products, quantities, setQuantity } = useCartStore()
 
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsVisible(false) // Ẩn menu khi scroll
+    }
 
+    // Gắn sự kiện scroll
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      // Gỡ sự kiện khi component bị unmount
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false)
@@ -60,15 +74,17 @@ const Header = () => {
   }, [quantities, calculateTotal])
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
+    const storedUser = Cookies.get('user')
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser)
-      setUser(parsedUser?.data?.res?.username || null)
+      setUser(parsedUser?.username || null)
     }
   }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
+    Cookies.remove('user')
+    Cookies.remove('accessToken')
+    Cookies.remove('refreshToken')
     messageApi.success('Đăng xuất thành công!')
     setUser(null)
   }
@@ -80,10 +96,6 @@ const Header = () => {
     {
       key: '2',
       label: <span className='text-muted-foreground'>Sản phẩm nổi bật</span>
-    },
-    {
-      key: '3',
-      label: <span className='text-muted-foreground'>Chương trình khuyến mãi</span>
     }
   ]
   const menu1: MenuProps['items'] = [
@@ -166,33 +178,12 @@ const Header = () => {
         { key: '5', label: 'Trang trí phòng ngủ' },
         { key: '6', label: 'Sân vườn thoải mái' }
       ]
-    },
-    {
-      key: 'sub3',
-      label: 'Chương trình khuyến mãi',
-      children: [
-        { key: '7', label: 'Giảm giá mùa hè' },
-        { key: '8', label: 'Sale lớn lên tới 49%' }
-      ]
-    },
-    {
-      key: '9',
-      label: (
-        <div className='bg-accent text-accent-foreground p-4 rounded-lg'>
-          <h3 className='text-xl font-bold'>SPRING SALE</h3>
-          <p className='text-lg'>HÀNG HIỆU NGẬP TRÀN GIÁ NGÀN YÊU THƯƠNG</p>
-          <p className='text-2xl font-bold'>
-            Chỉ từ <span className='text-red-500'>99.000đ</span>
-          </p>
-          <p className='text-sm'>1-31.03 | Áp dụng hàng ngàn sản phẩm</p>
-        </div>
-      )
     }
   ]
   const users: MenuProps['items'] = user
     ? [
         {
-          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+          label: <a href='/profile'>Thông tin tài khoản</a>,
           key: '0'
         },
         {
@@ -210,11 +201,24 @@ const Header = () => {
         }
       ]
     : window.innerWidth < 800
-      ? []
-      : [
+      ? [
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
           {
             label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
+      : [
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
             key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
           }
         ]
 
@@ -231,36 +235,45 @@ const Header = () => {
 
   const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
 
-  // Lấy dữ liệu từ localStorage khi component render
+  // Lấy dữ liệu từ Cookies khi component render
   useEffect(() => {
-    const userDataString = localStorage.getItem('user')
+    const userDataString = Cookies.get('user')
+    // console.log(userDataString)
 
     if (userDataString) {
-      const userData = JSON.parse(userDataString)
+      try {
+        const userData = JSON.parse(userDataString)
+        // console.log(userData)
 
-      // Kiểm tra xem dữ liệu có hợp lệ không
-      if (userData && Object.keys(userData).length > 0) {
-        // Lấy ra ID người dùng từ thuộc tính `res`
-        const retrievedUserId = userData?.data?.res?._id
-        // Gán userId vào state
-        setUserId(retrievedUserId)
+        // Kiểm tra tính hợp lệ của dữ liệu
+        if (userData && userData?._id) {
+          const retrievedUserId = userData?._id
+          // console.log(retrievedUserId)
+          setUserId(retrievedUserId)
+        }
+      } catch (error) {
+        console.error('Error parsing user data from cookie:', error)
       }
     }
   }, []) // useEffect chỉ chạy 1 lần sau khi component mount
 
   // Sử dụng id từ state
   const id = userId || null
+  // console.log(id);
+
   const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
+  // console.log(data)
 
   if (isLoading) {
     return <div>Loading...</div>
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>
+    handleLogout()
+    return window.location.reload()
   }
   const userDetail = userData?.res
-  // console.log(userDetail.username)
+  // console.log(userDetail.avatar)
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -280,8 +293,8 @@ const Header = () => {
               Trang chủ
             </NavLink>
             <Dropdown menu={{ items: menus }}>
-              <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
+              <NavLink to={'/products_page'} className='bg-white md:items-center md:flex md:justify-between '>
+                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
@@ -295,11 +308,11 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menu1 }}>
               <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
+                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
               </NavLink>
             </Dropdown>
-            <NavLink to={'/news'} className='text-muted hover:text-muted-foreground'>
-              Thông báo
+            <NavLink to={'/articles'} className='text-muted hover:text-muted-foreground'>
+              Tin tức
             </NavLink>
           </div>
           <div className='flex items-center space-x-4'>
@@ -330,7 +343,12 @@ const Header = () => {
               </span>
             </Dropdown>
 
-            <Dropdown menu={{ items: users }} trigger={['click']}>
+            <Dropdown
+              menu={{ items: users }}
+              trigger={['click']}
+              visible={isVisible}
+              onVisibleChange={(visible) => setIsVisible(visible)}
+            >
               <span onClick={(e) => e.preventDefault()}>
                 <Space>
                   {user ? (
@@ -338,26 +356,33 @@ const Header = () => {
                       <Button shape='circle' className='mt-1.5'>
                         <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
                       </Button>
-                      {isVisible && window.innerWidth >= 1025 && (
-                        <h1 className='mt-3 text-center notification-section'>Xin chào {userDetail.username}</h1>
-                      )}
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
                   window.innerWidth < 800 ? (
-                    <Link to={`login`}>
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    </Link>
+                    // <Link to={`login`}>
+                    <Button shape='circle' icon={<UserOutlined />} />
                   ) : (
                     <Button shape='circle' icon={<UserOutlined />} />
                   )}
                 </Space>
               </span>
             </Dropdown>
-            <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={show}>
-              <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
-                {data?.res?.products?.length || 0}
-              </span>
-            </Button>
+            {userId ? (
+              <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={show}>
+                <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
+                  {data?.res?.products?.length || 0}
+                </span>
+              </Button>
+            ) : (
+              <Link to={`/login`}>
+                <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={show}>
+                  {/* <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
+                    {data?.res?.products?.length || 0}
+                  </span> */}
+                </Button>
+              </Link>
+            )}
+
             <Button className='md:hidden' shape='circle' icon={<MenuOutlined />} onClick={showDrawer} />
           </div>
           <Drawer title='DANH MỤC' placement='right' onClose={onClose} open={visible} width={320}>
@@ -404,6 +429,7 @@ const Header = () => {
               </span>
             </Link>
           </Drawer>
+
           {/* giỏ hàng  */}
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
             {products.length > 0 ? (
@@ -435,6 +461,10 @@ const Header = () => {
                           </button>
                         </div>
                       </div>
+                      <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
+                      <button onClick={() => mutate({ action: 'REMOVE', productId: product.productId._id })}>
+                        <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                      </button>
                     </div>
 
                     {/* Giá sản phẩm */}

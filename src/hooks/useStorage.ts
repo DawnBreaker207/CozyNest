@@ -9,7 +9,7 @@ export function useSessionStorage(key: any, defaultValue: any) {
   return useStorage(key, defaultValue, window.sessionStorage)
 }
 
-function useStorage(key: unknown, defaultValue: unknown, storageObject: any) {
+function useStorage(key: any, defaultValue: any, storageObject: any) {
   const [value, setValue] = useState(() => {
     const jsonValue = storageObject.getItem(key)
     if (jsonValue != null) return JSON.parse(jsonValue)

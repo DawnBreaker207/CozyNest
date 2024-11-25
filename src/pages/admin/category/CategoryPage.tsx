@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
+import CustomLoadingPage from '@/components/Loading'
 
 const CategoryPage = () => {
   const queryClient = useQueryClient()
@@ -28,10 +29,11 @@ const CategoryPage = () => {
   })
 
   // Chuẩn bị dữ liệu cho bảng
-  const dataSource = data?.res.map((item: ICategory) => ({
-    key: item._id,
-    ...item
-  }))
+  const dataSource =
+    data?.res?.map((item: ICategory) => ({
+      key: item._id,
+      ...item
+    })) || []
 
   // Cấu trúc các cột của bảng
   const columns = [
@@ -46,6 +48,18 @@ const CategoryPage = () => {
             <div style={{ color: 'gray' }}>{record.products.length} Products</div>
           </div>
         </Space>
+      )
+    },
+    {
+      key: 'thumbnail',
+      title: 'Ảnh danh mục',
+      dataIndex: 'thumbnail',
+      render: (thumbnail: string) => (
+        <img
+          src={thumbnail}
+          alt='Category Thumbnail'
+          style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '5px' }}
+        />
       )
     },
     {
@@ -68,7 +82,6 @@ const CategoryPage = () => {
           <Link to={`/admin/categories/${category._id}/edit`}>
             <Button icon={<EditOutlined />} />
           </Link>
-          <Button icon={<EyeOutlined />} />
           <Popconfirm
             title='Xóa danh mục'
             description='Bạn có chắc chắn muốn xóa danh mục này không?'
@@ -84,7 +97,12 @@ const CategoryPage = () => {
   ]
 
   // Xử lý trạng thái khi loading hoặc error
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error?.message}</div>
 
   return (

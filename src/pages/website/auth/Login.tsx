@@ -2,27 +2,43 @@ import instance from '@/configs/axios'
 import { useMutation } from '@tanstack/react-query'
 import { Form, Input, Button, Checkbox, message } from 'antd'
 import { NavLink, useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+
 type FieldType = {
   email?: string
-  password?: number
+  password?: string // Cập nhật loại dữ liệu cho mật khẩu
 }
+
 const Login = () => {
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate()
+
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
       try {
         return await instance.post(`/auth/login`, formData)
       } catch (error) {
-        throw new Error('Dang nhap that bai')
+        throw new Error('Tài khoản mật khẩu không chính xác')
       }
     },
-    onSuccess: (user) => {
+    onSuccess: (data) => {
+      const { accessToken, refreshToken, res } = data // Giả sử response trả về chứa accessToken, refreshToken, và res
+      console.log('Access Token:', accessToken)
+      console.log('Refresh Token:', refreshToken) // Kiểm tra giá trị refresh token
+
       messageApi.open({
         type: 'success',
-        content: 'Dang nhap thanh cong'
+        content: 'Đăng nhập thành công'
       }),
         localStorage.setItem('user', JSON.stringify(user))
+      })
+
+      // Lưu trữ token vào cookie
+      Cookies.set('accessToken', accessToken, { expires: 1 })
+      Cookies.set('refreshToken', refreshToken, { expires: 1 })
+      Cookies.set('user', JSON.stringify(res), { expires: 1 }) // Lưu thông tin người dùng
+
+      // Điều hướng và làm mới trang
       setTimeout(() => {
         navigate(`/`)
         window.location.reload()
@@ -35,6 +51,7 @@ const Login = () => {
       })
     }
   })
+
   const onFinish = (values: FieldType) => {
     console.log('Form Values: ', values)
     mutate(values)
@@ -90,9 +107,13 @@ const Login = () => {
               <NavLink to={'/reset-password'} className='text-blue-500'>
                 Quên mật khẩu?
               </NavLink>
-              <a href='/register' className='text-blue-500'>
-                Đăng ký
-              </a>
+              <p>
+                Bạn chưa có tài khoản?
+                <a href='/register' className='text-blue-500'>
+                  {' '}
+                  Đăng ký
+                </a>
+              </p>
             </div>
           </Form.Item>
         </Form>
