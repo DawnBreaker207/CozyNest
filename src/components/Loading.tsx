@@ -1,5 +1,4 @@
-import { Spin } from 'antd';
-
+import { Spin } from 'antd'
 
 const CustomLoadingPage = () => {
   return (
@@ -9,12 +8,12 @@ const CustomLoadingPage = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f0f2f5',
+        backgroundColor: '#f0f2f5'
       }}
     >
-      <Spin size='large' tip="Preparing your experience..." />
+      <Spin size='large' tip='Preparing your experience...' />
     </div>
-  );
-};
+  )
+}
 
-export default CustomLoadingPage;
+export default CustomLoadingPage
