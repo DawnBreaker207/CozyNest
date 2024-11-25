@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProfileModal from './ProfileUpdate'
 import UpdatePasswordModal from './UpdatePasswod'
+import CustomLoadingPage from '@/components/Loading'
 import Cookies from 'js-cookie'
 
 const ProfilePage = () => {
@@ -61,7 +62,7 @@ const ProfilePage = () => {
   const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
 
   if (isLoading) {
-    return <div></div>
+    return <div><CustomLoadingPage/></div>
   }
 
   if (error) {

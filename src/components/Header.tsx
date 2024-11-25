@@ -30,8 +30,20 @@ const Header = () => {
   const products = data?.res?.products || []
   const [quantities, setQuantities] = useState<number[]>([])
 
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsVisible(false) // Ẩn menu khi scroll
+    }
 
+    // Gắn sự kiện scroll
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      // Gỡ sự kiện khi component bị unmount
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false)
@@ -99,10 +111,6 @@ const Header = () => {
     {
       key: '2',
       label: <span className='text-muted-foreground'>Sản phẩm nổi bật</span>
-    },
-    {
-      key: '3',
-      label: <span className='text-muted-foreground'>Chương trình khuyến mãi</span>
     }
   ]
   const menu1: MenuProps['items'] = [
@@ -181,70 +189,49 @@ const Header = () => {
         { key: '5', label: 'Trang trí phòng ngủ' },
         { key: '6', label: 'Sân vườn thoải mái' }
       ]
-    },
-    {
-      key: 'sub3',
-      label: 'Chương trình khuyến mãi',
-      children: [
-        { key: '7', label: 'Giảm giá mùa hè' },
-        { key: '8', label: 'Sale lớn lên tới 49%' }
-      ]
-    },
-    {
-      key: '9',
-      label: (
-        <div className='bg-accent text-accent-foreground p-4 rounded-lg'>
-          <h3 className='text-xl font-bold'>SPRING SALE</h3>
-          <p className='text-lg'>HÀNG HIỆU NGẬP TRÀN GIÁ NGÀN YÊU THƯƠNG</p>
-          <p className='text-2xl font-bold'>
-            Chỉ từ <span className='text-red-500'>99.000đ</span>
-          </p>
-          <p className='text-sm'>1-31.03 | Áp dụng hàng ngàn sản phẩm</p>
-        </div>
-      )
     }
   ]
   const users: MenuProps['items'] = user
     ? [
-        {
-          label: <a href='/profile'>Thông tin tài khoản</a>,
-          key: '0'
-        },
-        {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={handleLogout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
+      {
+        label: <a href='/profile'>Thông tin tài khoản</a>,
+        key: '0'
+      },
+      {
+        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+        key: '1'
+      },
+      { type: 'divider' }, // Đường kẻ phân cách
+      {
+        label: (
+          <a href='/' onClick={handleLogout}>
+            Đăng xuất
+          </a>
+        ),
+        key: '3'
+      }
+    ]
     : window.innerWidth < 800
       ? [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
       : [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
 
   const { token } = useToken()
 
@@ -318,7 +305,7 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menus }}>
               <NavLink to={'/products_page'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
+                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
@@ -332,11 +319,11 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menu1 }}>
               <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
+                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/articles'} className='text-muted hover:text-muted-foreground'>
-              Thông báo
+              Tin tức
             </NavLink>
           </div>
           <div className='flex items-center space-x-4'>
@@ -367,7 +354,12 @@ const Header = () => {
               </span>
             </Dropdown>
 
-            <Dropdown menu={{ items: users }} trigger={['click']}>
+            <Dropdown
+              menu={{ items: users }}
+              trigger={['click']}
+              visible={isVisible}
+              onVisibleChange={(visible) => setIsVisible(visible)}
+            >
               <span onClick={(e) => e.preventDefault()}>
                 <Space>
                   {user ? (
@@ -375,17 +367,15 @@ const Header = () => {
                       <Button shape='circle' className='mt-1.5'>
                         <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
                       </Button>
-                      {isVisible && window.innerWidth >= 1025 && (
-                        <h1 className='mt-3 text-center notification-section'>Xin chào {userDetail.username}</h1>
-                      )}
+
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-                  window.innerWidth < 800 ? (
-                    // <Link to={`login`}>
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  ) : (
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  )}
+                    window.innerWidth < 800 ? (
+                      // <Link to={`login`}>
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    ) : (
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    )}
                 </Space>
               </span>
             </Dropdown>

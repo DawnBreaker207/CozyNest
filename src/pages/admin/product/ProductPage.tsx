@@ -1,4 +1,5 @@
-import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Import hook để lấy danh mục
+import CustomLoadingPage from '@/components/Loading';
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'; // Import hook để lấy danh mục
 import useProductMutation from '@/hooks/useProductMutation'
 import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
 import { ICategory } from '@/types/category'
@@ -121,7 +122,7 @@ const AdminProductPage = () => {
           <Link to={`/admin/products/${product._id}/edit`}>
             <Button icon={<EditOutlined />} />
           </Link>
-          <Button icon={<EyeOutlined />} />
+          <Link to={`/admin/products/${product._id}/variants`}><Button icon={<EyeOutlined />} /></Link>
           <Popconfirm
             title='Xóa sản phẩm'
             description='Bạn có chắc chắn muốn xóa sản phẩm này?'
@@ -140,7 +141,7 @@ const AdminProductPage = () => {
   if (isLoadingProducts || isLoadingCategories)
     return (
       <div>
-        <Skeleton active paragraph={{ rows: 10 }} />
+        <CustomLoadingPage/>
       </div>
     )
   if (isErrorProducts) return <div>{errorProducts.message}</div>

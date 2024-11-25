@@ -11,7 +11,7 @@ import {
   PlusOutlined
 } from '@ant-design/icons'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 const CustomFooter = () => {
   const [activeSection, setActiveSection] = useState<string | undefined>(undefined)
@@ -151,30 +151,10 @@ const CustomFooter = () => {
               {activeSection === 'support' && (
                 <>
                   <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                    <li>Sản phẩm khuyến mãi</li>
-                    <li>Sản phẩm nổi bật</li>
-                    <li>Tất cả sản phẩm</li>
+                    <Link to={`/`}><li className='text-sm text-white'>Sản phẩm nổi bật</li></Link>
+                    <NavLink to={`/products_page`}><li className='text-sm text-white'>Tất cả sản phẩm</li></NavLink>
                   </ul>
-                  <>
-                    <h4 className='text-lg font-semibold mt-6'>Phương thức vận chuyển</h4>
-                    <div className='flex space-x-4 mt-4 '>
-                      <img
-                        src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_1_img.png?v=31'
-                        alt='GHN Express'
-                        className='h-8'
-                      />
-                      <img
-                        src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_3_img.png?v=31'
-                        alt='Ahamove'
-                        className='h-8'
-                      />
-                      <img
-                        src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_4_img.png?v=31'
-                        alt='J&T Express'
-                        className='h-8'
-                      />
-                    </div>
-                  </>
+                 
                 </>
               )}
               <hr className='my-4 border-t border-gray-600 ' />
@@ -183,29 +163,9 @@ const CustomFooter = () => {
             <div className='hidden md:block'>
               <h4 className='text-lg font-semibold mb-4'>Hỗ trợ khách hàng</h4>
               <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                <li>Sản phẩm khuyến mãi</li>
-                <li>Sản phẩm nổi bật</li>
-                <li>Tất cả sản phẩm</li>
+              <Link to={`/`}><li className='text-sm text-white'>Sản phẩm nổi bật</li></Link>
+              <Link to={`/products_page`}><li className='text-sm text-white'>Tất cả sản phẩm</li></Link>
               </ul>
-              {/* Phương thức  vận chuyển */}
-              <h4 className='text-lg font-semibold mt-6'>Phương thức vận chuyển</h4>
-              <div className='flex space-x-6 mt-4 w-[23%] '>
-                <img
-                  src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_1_img.png?v=31'
-                  alt='GHN Express'
-                  className='h-8'
-                />
-                <img
-                  src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_3_img.png?v=31'
-                  alt='Ahamove'
-                  className='h-8'
-                />
-                <img
-                  src='https://theme.hstatic.net/200000748041/1001116292/14/shipment_4_img.png?v=31'
-                  alt='J&T Express'
-                  className='h-8 '
-                />
-              </div>
             </div>
           </Col>
 
@@ -216,14 +176,12 @@ const CustomFooter = () => {
               </h4>
               {activeSection === 'lienket' && (
                 <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                  <li> Trang chủ</li>
-                  <li> Sản phẩm</li>
-                  <li>Trang sản phẩm</li>
-                  <li>Giới thiệu</li>
-                  <li>Cẩm nang trang trí</li>
-                  <li>Hệ thống cửa hàng</li>
-                  <li>FAQs</li>
-                  <li>Landing page</li>
+                 <Link to={`/`}><li> Trang chủ</li></Link> 
+                 <Link to={`/products_page`} className='text-sm text-white'><li> Sản phẩm</li></Link> 
+                 <Link to={`/products_page`} className='text-sm text-white'><li>Trang sản phẩm</li></Link> 
+                 <Link to={`/intro`} className='text-sm text-white'><li>Giới thiệu</li></Link> 
+                 <Link to={`/`} className='text-sm text-white'><li>FAQs</li></Link> 
+                 <Link to={`/`} className='text-sm text-white'><li>Landing page</li></Link> 
                 </ul>
               )}
               <hr className='my-2 border-t border-gray-600 ' />
@@ -233,14 +191,12 @@ const CustomFooter = () => {
             <div className='hidden md:block'>
               <h4 className='text-lg font-semibold mb-4'>Liên Kết </h4>
               <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                <li> Trang chủ</li>
-                <li> Sản phẩm</li>
-                <li>Trang sản phẩm</li>
-                <li>Giới thiệu</li>
-                <li>Cẩm nang trang trí</li>
-                <li>Hệ thống cửa hàng</li>
-                <li>FAQs</li>
-                <li>Landing page</li>
+              <Link to={`/`} className='text-sm text-white'><li> Trang chủ</li></Link> 
+                 <Link to={`/products_page`} className='text-sm text-white'><li> Sản phẩm</li></Link> 
+                 <Link to={`/products_page`} className='text-sm text-white'><li>Trang sản phẩm</li></Link> 
+                 <Link to={`/intro`} className='text-sm text-white'><li>Giới thiệu</li></Link> 
+                 <Link to={`/`} className='text-sm text-white'><li>FAQs</li></Link> 
+                 <Link to={`/`} className='text-sm text-white'><li>Landing page</li></Link>
               </ul>
             </div>
           </Col>
@@ -252,12 +208,11 @@ const CustomFooter = () => {
               </h4>
               {activeSection === 'chinhsach' && (
                 <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                  <li>Tìm kiếm</li>
-                  <li>Giới thiệu</li>
-                  <li>Chính sách đổi trả</li>
-                  <li>Chính sách bảo mật</li>
-                  <li>Điều khoản dịch vụ</li>
-                  <li>Liên hệ</li>
+                 <Link to={`intro`} className='text-sm text-white'><li>Giới thiệu</li></Link>  
+                 <Link to={`policy/chinh-sach-doi-tra`} className='text-sm text-white'> <li>Chính sách đổi trả</li></Link>
+                 <Link to={`policy/bao-hanh-va-bao-tri`} className='text-sm text-white'><li>Chính sách bảo mật</li></Link> 
+                 <Link to={`policy/chinh-sach-ban-hang`} className='text-sm text-white'><li>Điều khoản dịch vụ</li></Link> 
+                 <Link to={`contact`} className='text-sm text-white'><li>Liên hệ</li></Link> 
                 </ul>
               )}
             </div>
@@ -266,12 +221,11 @@ const CustomFooter = () => {
             <div className='hidden md:block'>
               <h4 className='text-lg font-semibold mb-4'>Chính sách </h4>
               <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                <li>Tìm kiếm</li>
-                <li>Giới thiệu</li>
-                <li>Chính sách đổi trả</li>
-                <li>Chính sách bảo mật</li>
-                <li>Điều khoản dịch vụ</li>
-                <li>Liên hệ</li>
+              <Link to={`intro`} className='text-sm text-white'><li>Giới thiệu</li></Link>  
+                 <Link to={`policy/chinh-sach-doi-tra`} className='text-sm text-white'> <li>Chính sách đổi trả</li></Link>
+                 <Link to={`policy/bao-hanh-va-bao-tri`} className='text-sm text-white'><li>Chính sách bảo mật</li></Link> 
+                 <Link to={`policy/chinh-sach-ban-hang`} className='text-sm text-white'><li>Điều khoản dịch vụ</li></Link> 
+                 <Link to={`contact`} className='text-sm text-white'><li>Liên hệ</li></Link> 
               </ul>
             </div>
           </Col>

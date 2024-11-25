@@ -5,9 +5,8 @@ import IArticle from '@/types/article'
 // Lấy tất cả bài viết với các tham số lọc, phân trang nếu có
 export const getAllArticles = async () => {
   try {
-    const { data } = await instance.get('http://localhost:8888/api/v1/articles')
-    console.log(data)
-    return data
+    const {data} = await instance.get('http://localhost:8888/api/v1/articles');
+    return data;
   } catch (error) {
     console.error('Failed to fetch articles:', error)
     return []
