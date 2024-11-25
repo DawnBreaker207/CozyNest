@@ -3,11 +3,11 @@ import { useMutation } from '@tanstack/react-query'
 import { Modal, Form, Input, Button, message } from 'antd'
 
 interface CustomerModalProps {
-  isModalVisible: boolean
+  isModalVisible?: boolean
   handleCancel: () => void
   handleToggle: (checked: boolean) => void
-  formVisible: boolean
-  userDetail: {
+  formVisible?: boolean
+  userDetail?: {
     email: string
   }
 }
@@ -19,7 +19,7 @@ type FieldType = {
   confirmPassword?: string
 }
 
-const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, handleCancel, userDetail }) => {
+const UpdatePasswordModal = ({ isModalVisible, handleCancel, userDetail }: CustomerModalProps) => {
   const [messageApi, contextHolder] = message.useMessage()
 
   const [form] = Form.useForm()

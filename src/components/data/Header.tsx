@@ -62,12 +62,7 @@ export const menu1: MenuProps['items'] = [
 export const menus: MenuProps['items'] = [
   {
     key: 'sub1',
-    label: 'Sản phẩm mới',
-    children: [
-      { key: '1', label: 'Nội thất theo yêu cầu' },
-      { key: '2', label: 'Sản phẩm đặc biệt 2023' },
-      { key: '3', label: 'Trang trí bếp' }
-    ]
+    label: 'Sản phẩm mới'
   },
   {
     key: 'sub2',
@@ -78,25 +73,5 @@ export const menus: MenuProps['items'] = [
       { key: '6', label: 'Sân vườn thoải mái' }
     ]
   },
-  {
-    key: 'sub3',
-    label: 'Chương trình khuyến mãi',
-    children: [
-      { key: '7', label: 'Giảm giá mùa hè' },
-      { key: '8', label: 'Sale lớn lên tới 49%' }
-    ]
-  },
-  {
-    key: '9',
-    label: (
-      <div className='bg-accent text-accent-foreground p-4 rounded-lg'>
-        <h3 className='text-xl font-bold'>SPRING SALE</h3>
-        <p className='text-lg'>HÀNG HIỆU NGẬP TRÀN GIÁ NGÀN YÊU THƯƠNG</p>
-        <p className='text-2xl font-bold'>
-          Chỉ từ <span className='text-red-500'>99.000đ</span>
-        </p>
-        <p className='text-sm'>1-31.03 | Áp dụng hàng ngàn sản phẩm</p>
-      </div>
-    )
-  }
+
 ]

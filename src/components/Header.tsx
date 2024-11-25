@@ -30,26 +30,26 @@ const Header = () => {
   const products = useMemo(() => data?.res?.products || [], [data])
   const quantities = useCartStore((state) => state.quantities)
   const setQuantities = useCartStore((state) => state.setQuantities)
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
+  const toggleDrawer = (isOpen: boolean) => {
+    setVisible(isOpen);
+    setOpen(isOpen);
+  };
   const showDrawer = () => {
-    setVisible(true)
-    // setOpen(true)
+    toggleDrawer(true)
   }
-  const show = () => {
-    // setVisible(true)
-    setOpen(true)
-  }
+
   const onClose = () => {
-    setVisible(false)
-    setOpen(false)
+    toggleDrawer(false)
   }
 
   useEffect(() => {
+    const duration = 6000
     const timer = setTimeout(() => {
       setIsVisible(false)
-    }, 6000)
+    }, duration)
 
     // Dọn dẹp để xóa timer khi component unmount
     return () => clearTimeout(timer)
@@ -61,12 +61,12 @@ const Header = () => {
       const initialQuantities = products.map((product: CartProduct) => product.quantity)
       setQuantities(initialQuantities)
     }
-  }, [products, quantities.length, setQuantities])
+  }, [products, setQuantities])
 
   const { data: userData, isLoading, error } = useAdminUser(userId ?? '')
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return
   }
 
   if (error) {
@@ -89,45 +89,45 @@ const Header = () => {
   }
   const users: MenuProps['items'] = user
     ? [
-        {
-          label: <a href='/profile'>Thông tin tài khoản</a>,
-          key: '0'
-        },
-        {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={handleLogout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
+      {
+        label: <a href='/profile'>Thông tin tài khoản</a>,
+        key: '0'
+      },
+      {
+        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+        key: '1'
+      },
+      { type: 'divider' }, // Đường kẻ phân cách
+      {
+        label: (
+          <a href='/' onClick={handleLogout}>
+            Đăng xuất
+          </a>
+        ),
+        key: '3'
+      }
+    ]
     : window.innerWidth < 800
       ? [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
       : [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -213,24 +213,24 @@ const Header = () => {
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
 
-                  window.innerWidth < 800 ? (
-                    // <Link to={`login`}>
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  ) : (
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  )}
+                    window.innerWidth < 800 ? (
+                      // <Link to={`login`}>
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    ) : (
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    )}
                 </Space>
               </span>
             </Dropdown>
             {userId ? (
-              <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={show}>
+              <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={showDrawer}>
                 <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
                   {data?.res?.products?.length || 0}
                 </span>
               </Button>
             ) : (
               <Link to={`/login`}>
-                <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={show}>
+                <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={showDrawer}>
                   {/* <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
                     {data?.res?.products?.length || 0}
                   </span> */}
