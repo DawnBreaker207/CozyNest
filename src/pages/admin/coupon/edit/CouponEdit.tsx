@@ -102,8 +102,6 @@ const CouponEdit = () => {
             <InputNumber min={0} className='w-full' />
           </Form.Item>
 
-
-
           <Form.Item label='Trạng thái' name='status' valuePropName='checked'>
             <Switch checkedChildren='Hoạt động' unCheckedChildren='Không hoạt động' />
           </Form.Item>

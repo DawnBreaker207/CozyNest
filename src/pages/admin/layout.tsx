@@ -350,13 +350,11 @@ const LayoutAdmin: React.FC = () => {
             <Outlet />
           </div>
         </Content>
-        {
-          !isAddProductPage && (
-            <Footer style={{ textAlign: 'center' }}>{new Date().getFullYear()} Created by CozyNest</Footer>
-          )
-        }
-      </Layout >
-    </Layout >
+        {!isAddProductPage && (
+          <Footer style={{ textAlign: 'center' }}>{new Date().getFullYear()} Created by CozyNest</Footer>
+        )}
+      </Layout>
+    </Layout>
   )
 }
 
