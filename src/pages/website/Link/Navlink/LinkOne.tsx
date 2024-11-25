@@ -17,12 +17,12 @@ const Linkone: React.FC = () => {
   // const toggleContents = () => {
   //   setContentVisible(!isContentVisible)
   // }
+
   useEffect(() => {
     const fetchArticle = async () => {
       try {
         const { data } = await axios.get(`http://localhost:8888/api/v1/articles/${id}`)
         setArticle(data.res)
-        console.log(data)
       } catch (error) {
         console.error('Error fetching article:', error)
       }

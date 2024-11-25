@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Button, Collapse, Empty, Image, message, Popconfirm, Space, Table, Tooltip, Typography } from 'antd'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import CustomLoadingPage from '@/components/Loading'
 
 const { Paragraph } = Typography
 const { Panel } = Collapse
@@ -108,7 +109,12 @@ const AdminArticlePage = () => {
     }
   ]
 
-  if (isLoading) return <p>Loading articles...</p>
+  if (isLoading)
+    return (
+      <>
+        <CustomLoadingPage />
+      </>
+    )
   if (isError) return <p>Error loading articles. Please try again later.</p>
 
   return (

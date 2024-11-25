@@ -89,45 +89,45 @@ const Header = () => {
   }
   const users: MenuProps['items'] = user
     ? [
-      {
-        label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
-        key: '0'
-      },
-      {
-        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-        key: '1'
-      },
-      { type: 'divider' }, // Đường kẻ phân cách
-      {
-        label: (
-          <a href='/' onClick={handleLogout}>
-            Đăng xuất
-          </a>
-        ),
-        key: '3'
-      }
-    ]
+        {
+          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+          key: '0'
+        },
+        {
+          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          key: '1'
+        },
+        { type: 'divider' }, // Đường kẻ phân cách
+        {
+          label: (
+            <a href='/' onClick={handleLogout}>
+              Đăng xuất
+            </a>
+          ),
+          key: '3'
+        }
+      ]
     : window.innerWidth < 800
       ? [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
       : [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -148,7 +148,7 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menus }}>
               <NavLink to={'/products_page'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
+                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
@@ -162,11 +162,11 @@ const Header = () => {
             </NavLink>
             <Dropdown menu={{ items: menu1 }}>
               <NavLink to={'#'} className='bg-white md:items-center md:flex md:justify-between '>
-                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
+                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
               </NavLink>
             </Dropdown>
             <NavLink to={'/articles'} className='text-muted hover:text-muted-foreground'>
-              Thông báo
+              Tin tức
             </NavLink>
           </div>
           <div className='flex items-center space-x-4'>
@@ -197,7 +197,12 @@ const Header = () => {
               </span>
             </Dropdown>
 
-            <Dropdown menu={{ items: users }} trigger={['click']}>
+            <Dropdown
+              menu={{ items: users }}
+              trigger={['click']}
+              visible={isVisible}
+              onVisibleChange={(visible) => setIsVisible(visible)}
+            >
               <span onClick={(e) => e.preventDefault()}>
                 <Space>
                   {user ? (
@@ -211,12 +216,12 @@ const Header = () => {
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
 
-                    window.innerWidth < 800 ? (
-                      // <Link to={`login`}>
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    ) : (
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    )}
+                  window.innerWidth < 800 ? (
+                    // <Link to={`login`}>
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  ) : (
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  )}
                 </Space>
               </span>
             </Dropdown>

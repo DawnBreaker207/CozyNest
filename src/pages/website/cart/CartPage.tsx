@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+//\ /* eslint-disable @typescript-eslint/no-explicit-any */  
 import { useEffect, useState } from 'react'
 import CouponCard from './_components/CouponCard'
 import useCart from '@/hooks/useCart'
@@ -91,6 +91,7 @@ const CartPage = () => {
                       <span className='text-red-500 font-semibold text-end'>{product.price * quantities[index]}₫</span>
                       <div className='flex items-center justify-center'>
                         <button
+                          title='Giam so luong'
                           onClick={() => decrease(index)} // Truyền index để giảm số lượng
                           className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
                         >
@@ -99,6 +100,7 @@ const CartPage = () => {
                         <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
                         {/* Sử dụng số lượng từ state */}
                         <button
+                          title='Tang so luong'
                           onClick={() => increase(index)} // Truyền index để tăng số lượng
                           className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
                         >
@@ -107,6 +109,7 @@ const CartPage = () => {
                       </div>
                     </div>
                     <button
+                      title='Xoa hàng'
                       onClick={() => {
                         console.log(product.productId._id) // Kiểm tra lại giá trị _id
                         mutate({
@@ -125,6 +128,7 @@ const CartPage = () => {
             <div className='mt-5'>
               <h3 className='font-semibold text-sm mb-3'>Ghi chú đơn hàng</h3>
               <textarea
+                placeholder='Ghi chú đơn hàng'
                 className='w-full border border-gray-300 focus:border-gray-500 rounded-xl focus:outline-none p-3'
                 rows={5}
               ></textarea>

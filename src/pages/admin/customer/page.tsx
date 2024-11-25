@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { download, filters, search } from '@/components/icons'
+import CustomLoadingPage from '@/components/Loading'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { IUsers } from '@/types/user'
 // import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
@@ -51,7 +52,7 @@ const AdminCustomerPage = () => {
   const users = Array.isArray(data?.res) ? data.res : []
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div><CustomLoadingPage/></div>
   }
 
   if (error) {

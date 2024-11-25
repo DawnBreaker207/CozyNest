@@ -1,10 +1,11 @@
-import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import CustomLoadingPage from '@/components/Loading'
+import { useAdminUser } from '@/hooks/useAdminUsersQuery'
+import { validatePhoneNumber } from '@/utils/validatorPhoneNumber'
+import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ProfileModal from './ProfileUpdate'
 import UpdatePasswordModal from './UpdatePasswod'
-import { validatePhoneNumber } from '@/utils/validatorPhoneNumber'
-import Cookies from 'js-cookie'
 
 const ProfilePage = () => {
   const navigate = useNavigate()
@@ -60,10 +61,10 @@ const ProfilePage = () => {
 
   // Sử dụng id từ state
   const id = userId || undefined
-  const { data: userData, isLoading, error } = useAdminUsersQuery({ _id: id })
+  const { data: userData, isLoading, error } = useAdminUser(id)
 
   if (isLoading) {
-    return <div></div>
+    return <div><CustomLoadingPage /></div>
   }
 
   if (error) {

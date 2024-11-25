@@ -2,9 +2,6 @@ import instance from '@/configs/axios' // instance của axios
 import { ICategory } from '@/types/category'
 import { IQuery } from '@/types/responseApi'
 
-// Cấu hình axios để gửi cookie trong mỗi request
-instance.defaults.withCredentials = true // Đảm bảo gửi cookie đi cùng với yêu cầu
-
 // Lấy tất cả danh mục (categories)
 export const getAllCategories = async (params?: Partial<IQuery>) => {
   try {

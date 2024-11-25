@@ -9,7 +9,7 @@ import News from './_components/News'
 import Service from './_components/Service'
 
 const HomePage = () => {
-  const { data } = useProductQuery({ _limit: 10 })
+  const { data } = useProductQuery({ _limit: 5 })
   const products = data?.res
 
   return (
@@ -19,7 +19,6 @@ const HomePage = () => {
       <Category />
       <ProductList products={products} />
       <BannerSection />
-      <ProductList products={products} />
       <News />
       <AboutUs />
       <Service />

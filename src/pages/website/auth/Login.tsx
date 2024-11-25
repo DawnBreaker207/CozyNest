@@ -18,7 +18,6 @@ const Login = () => {
       const { accessToken, refreshToken, res } = data // Giả sử response trả về chứa accessToken, refreshToken, và res
       console.log('Access Token:', accessToken)
       console.log('Refresh Token:', refreshToken) // Kiểm tra giá trị refresh token
-
       openNotify('Success', 'Đăng nhập thành công!')
       // Lưu trữ token vào cookie
       Cookies.set('accessToken', accessToken, { expires: 1 })

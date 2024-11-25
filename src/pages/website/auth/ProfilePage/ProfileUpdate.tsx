@@ -3,8 +3,9 @@ import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
 import { Button, Form, Input, Modal, Switch, message } from 'antd'
 import { Rule } from 'antd/es/form'
-import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
+import CustomLoadingPage from '@/components/Loading'
+import Cookies from 'js-cookie'
 import PhoneInput from 'react-phone-input-2'
 
 interface CustomerModalProps {
@@ -62,7 +63,12 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
     mutate({ ...data, ...values, _id: userId })
   }
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error.message}</div>
 
   return (
