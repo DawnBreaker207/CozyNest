@@ -86,7 +86,9 @@ const LayoutAdmin: React.FC = () => {
   const isOrderPage = location.pathname === `/admin/order`
   const isCustomer = location.pathname === `/admin/customer`
   const isArticles = location.pathname === `/admin/articles`
+  const isVariantPage = location.pathname === `/admin/products/${id}/variants`
 
+  console.log('🚀 ~ isVariantPage:', isVariantPage)
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -108,16 +110,11 @@ const LayoutAdmin: React.FC = () => {
             },
             {
               key: '3',
-              icon: <ApartmentOutlined />,
-              label: <NavLink to={`/admin/colors`}>Color Manager</NavLink>
-            },
-            {
-              key: '4',
               icon: <OrderedListOutlined />,
               label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
             },
             {
-              key: '5',
+              key: '4',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
             },
@@ -154,6 +151,7 @@ const LayoutAdmin: React.FC = () => {
         {isAddColorPage && renderHeader('Add Color')}
         {isEditColorPage && renderHeader('Edit Color')}
         {isDetailColorPage && renderHeader('Detail Color')}
+        {isVariantPage && renderHeader('Variant')}
         <Content>
           {isCategoryPage && (
             <>
