@@ -13,7 +13,8 @@ type useCategoryMutationProps = {
 
 const useCategoryMutation = ({ action, onSuccess }: useCategoryMutationProps) => {
   const queryClient = useQueryClient()
-  const [messageApi, contextHolder] = message.useMessage() // Antd useMessage hook
+  // Antd useMessage hook
+  const [messageApi, contextHolder] = message.useMessage()
 
   const form = useForm({
     resolver: zodResolver(CategoryZodSchema),

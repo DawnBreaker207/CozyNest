@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import CustomLoadingPage from '@/components/Loading'
+import { useAdminUser } from '@/hooks/useAdminUsersQuery'
+import { validatePhoneNumber } from '@/utils/validatorPhoneNumber'
+import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProfileModal from './ProfileUpdate'
-import UpdatePasswordModal from './UpdatePasswod'
-import CustomLoadingPage from '@/components/Loading'
-import Cookies from 'js-cookie'
+import UpdatePasswordModal from './UpdatePassword'
 
 const ProfilePage = () => {
-  const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
+  const [userId, setUserId] = useState<string | undefined>(undefined) // Khai báo state cho userId
 
   useEffect(() => {
     const userDataString = Cookies.get('user')
@@ -51,15 +51,9 @@ const ProfilePage = () => {
     setFormVisible(checked)
   }
 
-  const validatePhoneNumber = (_rule: any, value: any) => {
-    if (!value || value.replace(/\D/g, '').length === 10) {
-      return Promise.resolve()
-    }
-    return Promise.reject('Số điện thoại không hợp lệ!')
-  }
-
-  const id = userId || null
-  const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
+  // Sử dụng id từ state
+  const id = userId || undefined
+  const { data: userData, isLoading, error } = useAdminUser(id)
 
   if (isLoading) {
     return (
@@ -72,7 +66,7 @@ const ProfilePage = () => {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-  const userDetail = userData?.res
+  const userDetail = userData
   return (
     <>
       <div

@@ -1,31 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
+import { CartData } from '@/types/cart'
+import { ResAPI } from '@/types/responseApi'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { debounce, reduce } from 'lodash'
 import { ChangeEvent, useEffect } from 'react'
-import { useLocalStorage } from './useStorage'
 import { useCartStore } from './store/cartStore'
+import { useCookie } from './useStorage'
 
 // Định nghĩa kiểu dữ liệu cho sản phẩm trong giỏ hàng
-interface CartProduct {
-  sku_id: string
-  id: string
-  name: string
-  quantity: number
-}
-
-// Định nghĩa kiểu dữ liệu trả về từ API cho giỏ hàng
-interface CartData {
-  res: {
-    products: CartProduct[]
-    cartId: string
-  }
-}
 
 const useCart = () => {
   const queryClient = useQueryClient()
-  const [user] = useLocalStorage('user', {})
+  const [user] = useCookie('user', {})
   const token = user?.data?.accessToken
   const userId = user?.data?.res?._id
 
@@ -34,8 +22,7 @@ const useCart = () => {
   const { products, quantities } = useCartStore((state) => state)
 
   // Thực hiện query để lấy dữ liệu giỏ hàng
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, refetch, ...restQuery } = useQuery<CartData>({
+  const { data, refetch, ...restQuery } = useQuery<ResAPI<CartData>>({
     queryKey: ['cart', userId],
     queryFn: async () => {
       if (!userId) {
@@ -43,9 +30,7 @@ const useCart = () => {
       }
 
       try {
-        const { data: cartData } = await instance.get(`/cart/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        const { data: cartData } = await instance.get(`/cart/${userId}`, {})
         console.log(cartData)
 
         return cartData
@@ -56,12 +41,12 @@ const useCart = () => {
           setQuantities([])
           return { res: { products: [], cartId: '' } }
         }
-        console.log(123)
         throw error // Ném lỗi nếu có lỗi khác
       }
     },
     refetchOnWindowFocus: false,
-    enabled: !!userId // Chỉ gọi API nếu userId tồn tại
+    // Chỉ gọi API nếu userId tồn tại
+    enabled: !!userId
   })
 
   // Sử dụng useEffect để cập nhật state khi dữ liệu query thành công
@@ -75,11 +60,7 @@ const useCart = () => {
   // Hàm debounce để cập nhật số lượng sản phẩm trong giỏ hàng
   const updateQuantityDebounce = debounce(async (sku_id: string, quantity: number) => {
     try {
-      await axios.post(
-        `/cart/update-product-quantity`,
-        { userId, sku_id, quantity },
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
+      await axios.post(`/cart/update-product-quantity`, { userId, sku_id, quantity })
     } catch (error) {
       console.error('Failed to update quantity:', error)
     }
@@ -108,31 +89,24 @@ const useCart = () => {
 
       switch (action) {
         case 'INCREMENT':
-          await instance.post(`/cart/increase`, { userId, sku_id }, { headers: { Authorization: `Bearer ${token}` } })
+          await instance.post(`/cart/increase`, { userId, sku_id })
           break
         case 'DECREMENT':
-          await instance.post(`/cart/decrease`, { userId, sku_id }, { headers: { Authorization: `Bearer ${token}` } })
+          await instance.post(`/cart/decrease`, { userId, sku_id })
           break
         case 'REMOVE':
-          await instance.post(
-            `/cart/remove-from-cart`,
-            { userId, sku_id },
-            { headers: { Authorization: `Bearer ${token}` } }
-          )
+          await instance.post(`/cart/remove-from-cart`, { userId, sku_id })
           break
         case 'ADD':
           if (quantity !== undefined) {
             await instance.post(
               `/cart/add-to-cart`,
-              { userId, sku_id, quantity }, // Gửi quantity từ payload
-              { headers: { Authorization: `Bearer ${token}` } }
+              { userId, sku_id, quantity } // Gửi quantity từ payload
             )
           }
           break
         case 'DELETE':
-          await instance.delete(`/cart/remove-cart/${cartId}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
+          await instance.delete(`/cart/remove-cart/${cartId}`, {})
           break
         default:
           break

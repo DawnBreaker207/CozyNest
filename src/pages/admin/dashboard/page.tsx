@@ -1,6 +1,4 @@
-import CustomLoadingPage from '@/components/Loading'
 import { Card, Table } from 'antd'
-import { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, Tooltip, XAxis, YAxis } from 'recharts'
 const { Column } = Table
 

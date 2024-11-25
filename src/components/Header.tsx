@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import { useCartStore } from '@/hooks/store/cartStore'
-import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
+import { useUser } from '@/hooks/useUser'
 import {
   DownOutlined,
   MailOutlined,
@@ -13,41 +12,43 @@ import {
   ShoppingCartOutlined,
   UserOutlined
 } from '@ant-design/icons'
-
 import { Button, Divider, Drawer, Dropdown, GetProps, Input, MenuProps, message, Space, theme } from 'antd'
-import Cookies from 'js-cookie'
-
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { menu, menu1, menus } from './data/Header'
 
 const { useToken } = theme
 
 const Header = () => {
-  const [user, setUser] = useState(null)
-  // console.log(user)
-  const [messageApi, contextHolder] = message.useMessage()
+  const [, contextHolder] = message.useMessage()
+  const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const { Logout, user, userId } = useUser()
   const { products, quantities, setQuantity } = useCartStore()
-
   const [isVisible, setIsVisible] = useState(false)
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsVisible(false) // Ẩn menu khi scroll
-    }
+  const [visible, setVisible] = useState(false)
+  const [open, setOpen] = useState(false)
+  const { data: userData, error } = useAdminUser(userId ?? '')
+  const toggleDrawer = (isVisible: boolean, isOpen: boolean) => {
+    setVisible(isVisible)
+    setOpen(isOpen)
+  }
 
-    // Gắn sự kiện scroll
-    window.addEventListener('scroll', handleScroll)
+  const showDrawer = () => {
+    toggleDrawer(true, true)
+  }
+  const onOpen = () => {
+    toggleDrawer(false, true)
+  }
+  const onClose = () => {
+    toggleDrawer(false, false)
+  }
 
-    return () => {
-      // Gỡ sự kiện khi component bị unmount
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
   useEffect(() => {
+    const duration = 6000
     const timer = setTimeout(() => {
       setIsVisible(false)
-    }, 6000)
+    }, duration)
 
     // Dọn dẹp để xóa timer khi component unmount
     return () => clearTimeout(timer)
@@ -73,156 +74,14 @@ const Header = () => {
     calculateTotal()
   }, [quantities, calculateTotal])
 
-  useEffect(() => {
-    const storedUser = Cookies.get('user')
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser)
-      setUser(parsedUser?.username || null)
-    }
-  }, [])
-
-  const handleLogout = () => {
-    Cookies.remove('user')
-    Cookies.remove('accessToken')
-    Cookies.remove('refreshToken')
-    messageApi.success('Đăng xuất thành công!')
-    setUser(null)
-  }
-  const menu: MenuProps['items'] = [
-    {
-      key: '1',
-      label: <span className='text-muted-foreground'>Sản phẩm mới</span>
-    },
-    {
-      key: '2',
-      label: <span className='text-muted-foreground'>Sản phẩm nổi bật</span>
-    }
-  ]
-  const menu1: MenuProps['items'] = [
-    {
-      key: '1',
-      label: (
-        <Link to={`/policy/chinh-sach-ban-hang`} className='text-muted-foreground'>
-          Chính sách bán hàng
-        </Link>
-      )
-    },
-    {
-      key: '2',
-      label: (
-        <Link to={`/policy/giao-hang-va-lap-dat`} className='text-muted-foreground'>
-          Chính sách giao hàng & Lắp đặt
-        </Link>
-      )
-    },
-    {
-      key: '3',
-      label: (
-        <Link to={`/policy/chinh-sach-doi-tra`} className='text-muted-foreground'>
-          Chính sách đổi trả
-        </Link>
-      )
-    },
-    {
-      key: '4',
-      label: (
-        <Link to={`/policy/bao-hanh-va-bao-tri`} className='text-muted-foreground'>
-          Chính sách bảo hành và bảo trì
-        </Link>
-      )
-    },
-    {
-      key: '5',
-      label: (
-        <Link to={`/policy/khach-hang-than-thiet`} className='text-muted-foreground'>
-          Khách hàng thân thiết
-        </Link>
-      )
-    }
-  ]
-
-  const [visible, setVisible] = useState(false)
-  const [open, setOpen] = useState(false)
-  const showDrawer = () => {
-    setVisible(true)
-    // setOpen(true)
-  }
-  const show = () => {
-    if (!userId) {
-      // Nếu không có userId, chuyển hướng đến trang đăng nhập
-      window.location.href = '/login'
-    } else {
-      setOpen(true) // Mở Drawer nếu đã đăng nhập
-    }
-  }
-  const onClose = () => {
-    setVisible(false)
-    setOpen(false)
-  }
-
-  const menus: MenuProps['items'] = [
-    {
-      key: 'sub1',
-      label: 'Sản phẩm mới',
-      children: [
-        { key: '1', label: 'Nội thất theo yêu cầu' },
-        { key: '2', label: 'Sản phẩm đặc biệt 2023' },
-        { key: '3', label: 'Trang trí bếp' }
-      ]
-    },
-    {
-      key: 'sub2',
-      label: 'Sản phẩm nổi bật',
-      children: [
-        { key: '4', label: 'Trang trí phòng khách' },
-        { key: '5', label: 'Trang trí phòng ngủ' },
-        { key: '6', label: 'Sân vườn thoải mái' }
-      ]
-    }
-  ]
-  const users: MenuProps['items'] = user
-    ? [
-      {
-        label: <a href='/profile'>Thông tin tài khoản</a>,
-        key: '0'
-      },
-      {
-        label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-        key: '1'
-      },
-      { type: 'divider' }, // Đường kẻ phân cách
-      {
-        label: (
-          <a href='/' onClick={handleLogout}>
-            Đăng xuất
-          </a>
-        ),
-        key: '3'
-      }
-    ]
-    : window.innerWidth < 800
-      ? [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
-      : [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
-
-  const { token } = useToken()
+  // const show = () => {
+  //   if (!userId) {
+  //     // Nếu không có userId, chuyển hướng đến trang đăng nhập
+  //     window.location.href = '/login'
+  //   } else {
+  //     setOpen(true) // Mở Drawer nếu đã đăng nhập
+  //   }
+  // }
 
   const contentStyle: React.CSSProperties = {
     backgroundColor: token.colorBgElevated,
@@ -233,47 +92,51 @@ const Header = () => {
   const { Search } = Input
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
-  const [userId, setUserId] = useState<number | string | null>(null) // Khai báo state cho userId
-
-  // Lấy dữ liệu từ Cookies khi component render
-  useEffect(() => {
-    const userDataString = Cookies.get('user')
-    // console.log(userDataString)
-
-    if (userDataString) {
-      try {
-        const userData = JSON.parse(userDataString)
-        // console.log(userData)
-
-        // Kiểm tra tính hợp lệ của dữ liệu
-        if (userData && userData?._id) {
-          const retrievedUserId = userData?._id
-          // console.log(retrievedUserId)
-          setUserId(retrievedUserId)
-        }
-      } catch (error) {
-        console.error('Error parsing user data from cookie:', error)
-      }
-    }
-  }, []) // useEffect chỉ chạy 1 lần sau khi component mount
-
-  // Sử dụng id từ state
-  const id = userId || null
-  // console.log(id);
-
-  const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
-  // console.log(data)
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
   if (error) {
-    handleLogout()
+    Logout()
     return window.location.reload()
   }
-  const userDetail = userData?.res
-  // console.log(userDetail.avatar)
+  const users: MenuProps['items'] = user
+    ? [
+        {
+          label: <a href='/profile'>Thông tin tài khoản</a>,
+          key: '0'
+        },
+        {
+          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          key: '1'
+        },
+        { type: 'divider' }, // Đường kẻ phân cách
+        {
+          label: (
+            <a href='/' onClick={Logout}>
+              Đăng xuất
+            </a>
+          ),
+          key: '3'
+        }
+      ]
+    : window.innerWidth < 800
+      ? [
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
+      : [
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -346,36 +209,36 @@ const Header = () => {
             <Dropdown
               menu={{ items: users }}
               trigger={['click']}
-              visible={isVisible}
-              onVisibleChange={(visible) => setIsVisible(visible)}
+              open={isVisible}
+              onOpenChange={(visible) => setIsVisible(visible)}
             >
               <span onClick={(e) => e.preventDefault()}>
                 <Space>
                   {user ? (
                     <div className='flex'>
                       <Button shape='circle' className='mt-1.5'>
-                        <img src={userDetail.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
+                        <img src={userData?.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
                       </Button>
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-                    window.innerWidth < 800 ? (
-                      // <Link to={`login`}>
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    ) : (
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    )}
+                  window.innerWidth < 800 ? (
+                    // <Link to={`login`}>
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  ) : (
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  )}
                 </Space>
               </span>
             </Dropdown>
             {userId ? (
-              <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={show}>
+              <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={onOpen}>
                 <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
                   {data?.res?.products?.length || 0}
                 </span>
               </Button>
             ) : (
               <Link to={`/login`}>
-                <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={show}>
+                <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={onOpen}>
                   {/* <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
                     {data?.res?.products?.length || 0}
                   </span> */}

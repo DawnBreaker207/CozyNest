@@ -1,9 +1,9 @@
+import { useCategory } from '@/hooks/useCategoryQuery' // Sử dụng hook bạn đã cung cấp
 import { Form, Input, Button, Checkbox, message, Upload } from 'antd'
 import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined, UploadOutlined } from '@ant-design/icons'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ICategory } from '@/types/category'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
-import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { useEffect, useState } from 'react'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { RcFile } from 'antd/es/upload'
@@ -14,7 +14,8 @@ const EditCategoryPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
 
-  const { data, isLoading, isError, error } = useCategoryQuery({ id })
+  const { data, isLoading, isError, error } = useCategory(id) // Lấy danh mục theo ID
+
   const { mutate } = useCategoryMutation({
     action: 'UPDATE',
     onSuccess: () => {
@@ -65,14 +66,16 @@ const EditCategoryPage = () => {
 
     // Đảm bảo rằng _id từ dữ liệu ban đầu (data) được giữ lại trong category khi gửi đi
     const updatedCategory = {
-      ...data?.res, // Dữ liệu danh mục hiện tại
-      ...values, // Giá trị form mới
-      _id: data?.res?._id // Đảm bảo rằng _id không bị mất
+      // Dữ liệu danh mục hiện tại
+      ...data,
+      // Giá trị form mới
+      ...values,
+      // Đảm bảo rằng _id không bị mất
+      _id: data?._id
     }
 
-    console.log(updatedCategory)
-
-    mutate(updatedCategory) // Gửi dữ liệu danh mục đã được cập nhật
+    // Gửi dữ liệu danh mục đã được cập nhật
+    mutate(updatedCategory)
   }
 
   if (isLoading) return <div>Loading...</div>
@@ -82,7 +85,7 @@ const EditCategoryPage = () => {
     <>
       {contextHolder}
       <div className='bg-white rounded-lg'>
-        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data?.res }}>
+        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data }}>
           <div className='flex justify-between'>
             <div>
               <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Edit Category</span>

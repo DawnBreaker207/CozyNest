@@ -1,3 +1,5 @@
+import { useCookie } from '@/hooks/useStorage'
+import { useUser } from '@/hooks/useUser'
 import {
   ApartmentOutlined,
   AppstoreOutlined,
@@ -15,20 +17,23 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Badge, Button, Input, Layout, Menu, Modal, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { MdOutlineColorLens } from 'react-icons/md'
-
+import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 const { Header, Content, Footer, Sider } = Layout
 
 const LayoutAdmin: React.FC = () => {
-  const nav = useNavigate()
-  const userJson = localStorage.getItem('user')
-  const role = userJson ? JSON.parse(userJson)?.data?.res?.role : null
+  const navigate = useNavigate()
+  const { Logout } = useUser()
+  const userJson = useCookie('user', {})
+
+  const role = userJson ? userJson?.[0].role : null
   useEffect(() => {
     if (role !== 'admin') {
-      nav('/')
+      navigate('/')
+    } else {
+      navigate('/login')
     }
-  }, [nav, role])
+  }, [navigate, role])
   const handleLogout = () => {
     Modal.confirm({
       title: 'Bạn có chắc chắn muốn đăng xuất không?',
@@ -38,9 +43,8 @@ const LayoutAdmin: React.FC = () => {
       onOk: () => {
         // Thực hiện đăng xuất
         console.log('Đăng xuất thành công!')
-        // Ví dụ: xóa token hoặc dữ liệu user
-        localStorage.removeItem('user') // Xóa token trong localStorage
-        window.location.href = '/login' // Điều hướng về trang login
+        Logout()
+        navigate('/login') // Điều hướng về trang login
       },
       onCancel: () => {
         console.log('Hủy thao tác đăng xuất')
@@ -72,6 +76,8 @@ const LayoutAdmin: React.FC = () => {
       </div>
     </Header>
   )
+
+  //TODO: ???????
   const isAddProductPage = location.pathname === '/admin/products/add'
   const isEditProductPage = location.pathname === `/admin/products/${id}/edit`
   const isAddCategoryPage = location.pathname === '/admin/categories/add'

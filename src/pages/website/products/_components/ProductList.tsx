@@ -2,7 +2,7 @@
 import { Cart } from '@/components/icons/index'
 import { useCartStoreHeader } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
-import { useLocalStorage } from '@/hooks/useStorage'
+import { useCookie } from '@/hooks/useStorage'
 import { IProduct } from '@/types/product'
 import { CloseOutlined } from '@ant-design/icons'
 import { message } from 'antd'
@@ -13,9 +13,9 @@ import { Link } from 'react-router-dom'
 type ProductListProps = {
   products?: IProduct[]
   pagination?: {
-    currentPage: number
-    totalPages: number
-    totalItems: number
+    currentPage?: number
+    totalPages?: number
+    totalItems?: number
   }
 }
 
@@ -44,8 +44,8 @@ const ProductList = ({ products }: ProductListProps) => {
   } = useCartStoreHeader()
 
   const [messageApi, contextHolder] = message.useMessage()
-  const [user] = useLocalStorage('user', {})
-  const userId = user?.data?.res?._id
+  const [user] = useCookie('user', {})
+  const userId = user?._id
   const { addToCart } = useCart() // Zustand store để thêm vào giỏ hàng
 
   const increase = () => {
@@ -90,8 +90,8 @@ const ProductList = ({ products }: ProductListProps) => {
           value: variant?.option_value_id?.value
         })) || []
 
-      setColors(productColors.filter((color: Color) => color.value)) // Lọc các màu sắc
-      if (foundProduct.variants.length === 1) {
+      setColors(productColors?.filter((color: Color) => color.value)) // Lọc các màu sắc
+      if (foundProduct?.variants.length === 1) {
         const singleVariant = foundProduct.variants[0]
         const singleSkuId = singleVariant.sku_id._id
         addToCart(singleSkuId, 1)
@@ -351,7 +351,7 @@ const ProductList = ({ products }: ProductListProps) => {
           Sản phẩm mới ra mắt
         </h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px]  mt-4 mb-8'>
-          {products?.map((product: IProduct, index: number) => (
+          {products?.map((product, index: number) => (
             <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
               <Link to={`/detail/${product._id}`}>
                 <div className='relative'>

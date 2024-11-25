@@ -12,6 +12,12 @@ const Linkone: React.FC = () => {
     setIsOpen(!isOpen) // Chuyển đổi trạng thái
   }
 
+  // const [isContentVisible, setContentVisible] = useState(false)
+
+  // const toggleContents = () => {
+  //   setContentVisible(!isContentVisible)
+  // }
+
   useEffect(() => {
     const fetchArticle = async () => {
       try {

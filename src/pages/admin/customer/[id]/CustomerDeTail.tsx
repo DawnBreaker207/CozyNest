@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { filters } from '@/components/icons'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 // import { PlusOutlined } from '@ant-design/icons'
+import { validatePhoneNumber } from '@/utils/validatorPhoneNumber'
 import { Select, Table } from 'antd'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import CustomerModal from './CostomerUpdate'
+import CustomerModal from './CustomerUpdate'
 
 const AdminCustomerDetailPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -22,15 +22,9 @@ const AdminCustomerDetailPage = () => {
   const handleToggle = (checked: boolean) => {
     setFormVisible(checked)
   }
-  const validatePhoneNumber = (_rule: any, value: any) => {
-    if (!value || value.replace(/\D/g, '').length === 10) {
-      return Promise.resolve()
-    }
-    return Promise.reject('Số điện thoại không hợp lệ!')
-  }
 
   const { id } = useParams() // Lấy productId từ URL
-  const { data, isLoading, error } = useAdminUsersQuery({ id })
+  const { data, isLoading, error } = useAdminUsersQuery({ _id: id })
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -40,11 +34,10 @@ const AdminCustomerDetailPage = () => {
     return <div>Error: {error.message}</div>
   }
 
-  if (!data || !data.res) return <p>Product not found</p>
-  const user = data.res
+  if (!data || !data) return <p>Product not found</p>
+  const user = data
 
   // console.log(users.password)
-
   const dataSource = [
     {
       key: '1',
@@ -173,7 +166,7 @@ const AdminCustomerDetailPage = () => {
       date: '12 Dec 2023'
     }
   ]
-
+  // TODO : Move to another file
   const columns = [
     {
       title: 'Order ID',
@@ -446,6 +439,7 @@ const AdminCustomerDetailPage = () => {
             <div className='px-4 py-3 rounded-xl shadow-md'>
               <div className='flex item-center justify-between'>
                 <div className='p-2 bg-customYellow rounded-lg flex items-center justify-center'>
+                  {/* TODO: Move to another file */}
                   <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'>
                     <g clipPath='url(#clip0_5240_1043)'>
                       <path
@@ -488,6 +482,7 @@ const AdminCustomerDetailPage = () => {
             <div className='px-4 py-3 rounded-xl shadow-md'>
               <div className='flex item-center justify-between '>
                 <div className='p-2 bg-customYellow rounded-lg flex items-center justify-center'>
+                  {/* TODO: Move to another file */}
                   <svg xmlns='http://www.w3.org/2000/svg' width='17' height='18' viewBox='0 0 17 18' fill='none'>
                     <path
                       fillRule='evenodd'
@@ -549,6 +544,7 @@ const AdminCustomerDetailPage = () => {
             <div className='px-4 py-3 rounded-xl shadow-md'>
               <div className='flex item-center justify-between '>
                 <div className='p-2 bg-customYellow rounded-lg flex items-center justify-center'>
+                  {/* TODO: Move to another file */}
                   <svg xmlns='http://www.w3.org/2000/svg' width='17' height='18' viewBox='0 0 17 18' fill='none'>
                     <path
                       fillRule='evenodd'
@@ -613,6 +609,7 @@ const AdminCustomerDetailPage = () => {
             <div className='flex items-center gap-3'>
               <div className='py-[10px] px-[14px] flex item-center gap-2 border border-[#E0E2E7] rounded-lg'>
                 <div className='flex items-center justify-center'>
+                  {/* TODO: Move to another file */}
                   <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'>
                     <g clipPath='url(#clip0_31_6786)'>
                       <path

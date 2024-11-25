@@ -1,18 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import { Button, Carousel } from 'antd'
+import { CarouselRef } from 'antd/es/carousel'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 const Banner = () => {
-  const carouselRef = useRef<any>(null)
+  const carouselRef = useRef<CarouselRef | null>(null)
 
   const prev = () => {
-    carouselRef.current.prev()
+    if (carouselRef.current) {
+      carouselRef.current.prev()
+    }
   }
 
   const next = () => {
-    carouselRef.current.next()
+    if (carouselRef.current) {
+      carouselRef.current.next()
+    }
   }
 
   return (
