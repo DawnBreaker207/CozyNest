@@ -33,16 +33,19 @@ const Header = () => {
   const [isVisible, setIsVisible] = useState(false)
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
-  const toggleDrawer = (isOpen: boolean) => {
-    setVisible(isOpen);
+  const toggleDrawer = (isVisible: boolean, isOpen: boolean,) => {
+    setVisible(isVisible);
     setOpen(isOpen);
   };
   const showDrawer = () => {
-    toggleDrawer(true)
+    toggleDrawer(true, true)
   }
+  const onOpen = () => {
+    toggleDrawer(false, true)
 
+  }
   const onClose = () => {
-    toggleDrawer(false)
+    toggleDrawer(false, false)
   }
 
   useEffect(() => {
@@ -200,8 +203,8 @@ const Header = () => {
             <Dropdown
               menu={{ items: users }}
               trigger={['click']}
-              visible={isVisible}
-              onVisibleChange={(visible) => setIsVisible(visible)}
+              open={isVisible}
+              onOpenChange={(visible) => setIsVisible(visible)}
             >
               <span onClick={(e) => e.preventDefault()}>
                 <Space>
@@ -223,14 +226,14 @@ const Header = () => {
               </span>
             </Dropdown>
             {userId ? (
-              <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={showDrawer}>
+              <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={onOpen}>
                 <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
                   {data?.res?.products?.length || 0}
                 </span>
               </Button>
             ) : (
               <Link to={`/login`}>
-                <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={showDrawer}>
+                <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={onOpen}>
                   {/* <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
                     {data?.res?.products?.length || 0}
                   </span> */}
