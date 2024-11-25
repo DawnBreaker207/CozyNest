@@ -1,9 +1,7 @@
+import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
-import { useProductCart } from '@/hooks/useProductQuery'
 import { useUser } from '@/hooks/useUser'
-import { useCartStore } from '@/stores/cart'
-import { CartProduct } from '@/types/cart'
 import {
   DownOutlined,
   MailOutlined,
@@ -15,7 +13,7 @@ import {
   UserOutlined
 } from '@ant-design/icons'
 import { Button, Divider, Drawer, Dropdown, GetProps, Input, MenuProps, message, Space, theme } from 'antd'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
 
@@ -26,23 +24,21 @@ const Header = () => {
   const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
   const { handleLogout, user, userId } = useUser()
-  const { increase, decrease } = useProductCart(data?.products || [], mutate)
-  const products = useMemo(() => data?.res?.products || [], [data])
-  const quantities = useCartStore((state) => state.quantities)
-  const setQuantities = useCartStore((state) => state.setQuantities)
+  const { products, quantities, setQuantity } = useCartStore()
   const [isVisible, setIsVisible] = useState(false)
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
-  const toggleDrawer = (isVisible: boolean, isOpen: boolean,) => {
-    setVisible(isVisible);
-    setOpen(isOpen);
-  };
+  const { data: userData, error } = useAdminUser(userId ?? '')
+  const toggleDrawer = (isVisible: boolean, isOpen: boolean) => {
+    setVisible(isVisible)
+    setOpen(isOpen)
+  }
+
   const showDrawer = () => {
     toggleDrawer(true, true)
   }
   const onOpen = () => {
     toggleDrawer(false, true)
-
   }
   const onClose = () => {
     toggleDrawer(false, false)
@@ -58,24 +54,34 @@ const Header = () => {
     return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
-    // Chỉ thiết lập quantities khi sản phẩm có thay đổi
-    if (products.length) {
-      const initialQuantities = products.map((product: CartProduct) => product.quantity)
-      setQuantities(initialQuantities)
+  // Tăng số lượng sản phẩm
+  const increase = (index: number) => {
+    if (quantities[index] < 10) {
+      setQuantity(index, quantities[index] + 1)
+      mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
     }
-  }, [products, setQuantities])
-
-  const { data: userData, isLoading, error } = useAdminUser(userId ?? '')
-
-  if (isLoading) {
-    return
   }
 
-  if (error) {
-    handleLogout()
-    return window.location.reload()
+  // Giảm số lượng sản phẩm
+  const decrease = (index: number) => {
+    if (quantities[index] > 1) {
+      setQuantity(index, quantities[index] - 1)
+      mutate({ action: 'DECREMENT', sku_id: products[index].sku_id._id })
+    }
   }
+  useEffect(() => {
+    // Cập nhật lại tổng tiền khi quantities thay đổi
+    calculateTotal()
+  }, [quantities, calculateTotal])
+
+  // const show = () => {
+  //   if (!userId) {
+  //     // Nếu không có userId, chuyển hướng đến trang đăng nhập
+  //     window.location.href = '/login'
+  //   } else {
+  //     setOpen(true) // Mở Drawer nếu đã đăng nhập
+  //   }
+  // }
 
   const contentStyle: React.CSSProperties = {
     backgroundColor: token.colorBgElevated,
@@ -215,7 +221,6 @@ const Header = () => {
                       </Button>
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-
                     window.innerWidth < 800 ? (
                       // <Link to={`login`}>
                       <Button shape='circle' icon={<UserOutlined />} />
@@ -289,38 +294,34 @@ const Header = () => {
           </Drawer>
 
           {/* giỏ hàng  */}
-
-          {userId && (
-            <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
-              {products.length > 0 ? (
-                <div>
-                  {/* TODO: Fix type */}
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  {products.map((product: any, index: number) => (
-                    <div key={product.productId._id} className='flex justify-between items-center mb-4 border-b pb-4'>
-                      <div className='flex items-center'>
-                        <img
-                          src={product.productId.thumbnail}
-                          alt={product.productId.name}
-                          className='w-16 h-16 object-cover'
-                        />
-                        <div className='ml-2'>
-                          <p className='font-semibold'>{product.productId.name}</p>
-                          <div className='flex items-center'>
-                            <button className='border px-2 py-1' onClick={() => decrease(index)}>
-                              -
-                            </button>
-                            <input
-                              title='Quantity'
-                              type='number'
-                              value={quantities[index]}
-                              className='w-12 text-center border'
-                              readOnly
-                            />
-                            <button className='border px-2 py-1' onClick={() => increase(index)}>
-                              +
-                            </button>
-                          </div>
+          <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
+            {products.length > 0 ? (
+              <div>
+                {products.map((product: any, index: number) => (
+                  <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                    {/* Hình ảnh và thông tin sản phẩm */}
+                    <div className='flex items-center'>
+                      <img
+                        src={product.sku_id.product_id.thumbnail}
+                        alt={product.sku_id.name}
+                        className='w-16 h-16 object-cover'
+                      />
+                      <div className='ml-2 flex flex-col justify-between'>
+                        <p className='font-semibold'>{product.sku_id.name}</p>
+                        <div className='flex items-center justify-center mt-2'>
+                          <button
+                            onClick={() => decrease(index)} // Truyền index để giảm số lượng
+                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                          >
+                            -
+                          </button>
+                          <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
+                          <button
+                            onClick={() => increase(index)} // Truyền index để tăng số lượng
+                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                          >
+                            +
+                          </button>
                         </div>
                       </div>
                       <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
@@ -328,34 +329,44 @@ const Header = () => {
                         <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
                       </button>
                     </div>
-                  ))}
-                  <Divider />
-                  <div className='flex justify-between items-center font-bold'>
+
+                    {/* Giá sản phẩm */}
+                    <div className='flex flex-col items-end'>
+                      <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.sku_id._id })}>
+                        <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                      </button>
+                      <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
+                    </div>
+                  </div>
+                ))}
+                {/* Tổng tiền */}
+                <div className='mt-4'>
+                  <div className='flex justify-between font-semibold'>
                     <span>Tổng tiền:</span>
-                    <span>{calculateTotal().toLocaleString()}₫</span>
+                    <span className='text-red-500'>{calculateTotal().toLocaleString()}₫</span>
                   </div>
                   <Link to={`/cart`}>
-                    {' '}
-                    <Button type='primary' className='mt-4 w-full' onClick={() => onClose()}>
+                    <button
+                      className='mt-4 bg-red-500 hover:bg-red-600 text-white w-full py-2 rounded'
+                      onClick={() => onClose()}
+                    >
                       XEM GIỎ HÀNG
-                    </Button>
+                    </button>
                   </Link>
                 </div>
-              ) : (
-                <div className='text-center'>
-                  <span>
-                    <MehOutlined />
-                  </span>
-                  <br />
-                  <span>Không có sản phẩm trong giỏ hàng</span>
-                  <br />
-                  <NavLink to={'#'} className='text-sm'>
-                    trở về trang sản phẩm
-                  </NavLink>
-                </div>
-              )}
-            </Drawer>
-          )}
+              </div>
+            ) : (
+              <div className='text-center'>
+                <span className='text-gray-400 text-2xl'>
+                  <MehOutlined />
+                </span>
+                <p className='mt-2'>Không có sản phẩm trong giỏ hàng</p>
+                <NavLink to='/products' className='text-blue-500 hover:underline text-sm mt-2 block'>
+                  Trở về trang sản phẩm
+                </NavLink>
+              </div>
+            )}
+          </Drawer>
         </nav>
       </div>
       <hr className='border border-[#E0E2E7]' />

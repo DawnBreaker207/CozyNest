@@ -1,8 +1,10 @@
 import {
   ApartmentOutlined,
   AppstoreOutlined,
+  BellOutlined,
   CalendarOutlined,
   DownloadOutlined,
+  DownOutlined,
   FilterOutlined,
   LogoutOutlined,
   OrderedListOutlined,
@@ -11,7 +13,7 @@ import {
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Avatar, Button, Input, Layout, Menu, Modal, theme } from 'antd'
+import { Avatar, Badge, Button, Input, Layout, Menu, Modal, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { MdOutlineColorLens } from 'react-icons/md'
@@ -84,6 +86,9 @@ const LayoutAdmin: React.FC = () => {
   const isDetailColorPage = location.pathname === `/admin/colors/${id}/detail_color`
   const isOrderPage = location.pathname === `/admin/order`
   const isCustomer = location.pathname === `/admin/customer`
+  const isCoupon = location.pathname === `/admin/coupons`
+  const isCouponAdd = location.pathname === `/admin/coupons/add`
+  const isCouponEdit = location.pathname === `/admin/coupons/${id}/edit`
   const isArticles = location.pathname === `/admin/articles`
   const isVariantPage = location.pathname === `/admin/products/${id}/variants`
 
@@ -111,6 +116,11 @@ const LayoutAdmin: React.FC = () => {
               key: '3',
               icon: <OrderedListOutlined />,
               label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
+            },
+            {
+              key: '9',
+              icon: <OrderedListOutlined />,
+              label: <NavLink to={`/admin/coupons`}>Coupon Manager</NavLink>
             },
             {
               key: '4',
@@ -151,6 +161,9 @@ const LayoutAdmin: React.FC = () => {
         {isAddCategoryPage && renderHeader('Add Category')}
         {isEditProductPage && renderHeader('Edit Product')}
         {isEditCategoryPage && renderHeader('Edit Category')}
+        {isCoupon && renderHeader('Coupon')}
+        {isCouponAdd && renderHeader('Coupon Add')}
+        {isCouponEdit && renderHeader('Coupon Edit')}
         {isAddColorPage && renderHeader('Add Color')}
         {isEditColorPage && renderHeader('Edit Color')}
         {isDetailColorPage && renderHeader('Detail Color')}

@@ -5,6 +5,7 @@ export interface Variants {
   sku_id: { _id: string; SKU: string; name: string; price: number; stock: number }
 }
 export interface IProduct {
+  sku_id: string
   _id: string | number
   originId?: string | null
   name: string

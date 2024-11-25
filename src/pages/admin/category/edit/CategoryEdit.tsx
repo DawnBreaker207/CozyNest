@@ -58,6 +58,7 @@ const EditCategoryPage = () => {
     }
 
     mutate({ ...data?.res, ...updatedValues, _id: id })
+
     if (!id) {
       messageApi.error('ID danh mục không hợp lệ')
       return
