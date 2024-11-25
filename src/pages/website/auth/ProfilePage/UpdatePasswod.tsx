@@ -7,17 +7,28 @@ interface CustomerModalProps {
   handleCancel: () => void
   handleToggle: (checked: boolean) => void
   formVisible: boolean
+  userDetail: {
+    email: string
+  }
 }
 
 type FieldType = {
   email?: string
   currentPassword?: string
   password?: string
+  confirmPassword?: string
 }
 
-const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, handleCancel }) => {
+const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, handleCancel, userDetail }) => {
   const [messageApi, contextHolder] = message.useMessage()
+
+  const [form] = Form.useForm()
+
   const onFinish = (values: FieldType) => {
+    if (values.password !== values.confirmPassword) {
+      messageApi.error('Mật khẩu mới và mật khẩu xác nhận không khớp!')
+      return
+    }
     mutate(values)
   }
 
@@ -33,6 +44,7 @@ const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, han
     onSuccess: () => {
       handleCancel()
       messageApi.success('Đổi mật khẩu thành công!')
+      form.resetFields()
     },
     onError: (error) => {
       messageApi.error('Email hoặc mật khẩu không chính xác!')
@@ -40,6 +52,10 @@ const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, han
     }
   })
 
+  const handleCancelAndReset = () => {
+    handleCancel()
+    form.resetFields() // Reset lại dữ liệu khi đóng form
+  }
   return (
     <>
       {contextHolder}
@@ -52,8 +68,16 @@ const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, han
         width={900}
         footer={null}
       >
-        <Form layout='vertical' autoComplete='off' onFinish={onFinish} onFinishFailed={onFinishFailed}>
-          {/* Thêm prop form vào đây */}
+        <Form
+          layout='vertical'
+          autoComplete='off'
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          initialValues={{
+            email: userDetail?.email
+          }}
+          form={form}
+        >
           <h2 className='text-[#8B8D97] font-medium mb-5'>Thông tin cần thiết</h2>
           <Form.Item
             name='email'
@@ -62,7 +86,7 @@ const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, han
               { type: 'email', message: 'Email không đúng định dạng' }
             ]}
           >
-            <Input placeholder='Email' />
+            <Input placeholder='Email' disabled />
           </Form.Item>
           <Form.Item name='currentPassword' rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}>
             <Input.Password placeholder='Mật khẩu cũ' className='p-2' />
@@ -70,15 +94,31 @@ const UpdatePasswordModal: React.FC<CustomerModalProps> = ({ isModalVisible, han
           <Form.Item name='password' rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}>
             <Input.Password placeholder='Mật khẩu mới' className='p-2' />
           </Form.Item>
+          <Form.Item
+            name='confirmPassword'
+            rules={[
+              { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve()
+                  }
+                  return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'))
+                }
+              })
+            ]}
+            hasFeedback
+          >
+            <Input.Password placeholder='Xác nhận mật khẩu mới' className='p-2' />
+          </Form.Item>
+
           <div className='flex text-left gap-2'>
-            <Button key='cancel' onClick={handleCancel} className='py-4 px-10'>
+            <Button key='cancel' onClick={handleCancelAndReset} className='py-4 px-10'>
               Cancel
             </Button>
-            <Form.Item>
-              <Button type='primary' htmlType='submit' className='py-4 px-10'>
-                Update
-              </Button>
-            </Form.Item>
+            <Button type='primary' htmlType='submit' className='py-4 px-10'>
+              Update
+            </Button>
           </div>
         </Form>
       </Modal>

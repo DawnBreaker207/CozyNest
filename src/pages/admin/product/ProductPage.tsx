@@ -123,7 +123,9 @@ const AdminProductPage = () => {
           <Link to={`/admin/products/${product._id}/edit`}>
             <Button icon={<EditOutlined />} />
           </Link>
-          <Button icon={<EyeOutlined />} />
+          <Link to={`/admin/products/${product._id}/variants`}>
+            <Button icon={<EyeOutlined />} />
+          </Link>
           <Popconfirm
             title='Xóa sản phẩm'
             description='Bạn có chắc chắn muốn xóa sản phẩm này?'

@@ -90,7 +90,7 @@ const Header = () => {
   const users: MenuProps['items'] = user
     ? [
         {
-          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+          label: <a href='/profile'>Thông tin tài khoản</a>,
           key: '0'
         },
         {
@@ -210,9 +210,6 @@ const Header = () => {
                       <Button shape='circle' className='mt-1.5'>
                         <img src={userData?.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
                       </Button>
-                      {isVisible && window.innerWidth >= 1025 && (
-                        <h1 className='mt-3 text-center notification-section'>Xin chào {userData?.username}</h1>
-                      )}
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
 

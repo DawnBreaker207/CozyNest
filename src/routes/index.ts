@@ -37,6 +37,7 @@ import AdminArticlePage from '@/pages/admin/article/ArticlePage'
 import ArticleAddPage from '@/pages/admin/article/add/ArticleAdd'
 import ArticleEditPage from '@/pages/admin/article/edit/ArticleEdit'
 import ProductsPageDetail from '@/pages/website/products/_components/ProductPageDetail'
+import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
 
 function App() {
   const routes = useRoutes([
@@ -94,7 +95,10 @@ function App() {
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
         // Order
-
+        {
+          path: 'products/:id/variants',
+          Component: AdminVariantPage
+        },
         { path: 'articles', Component: AdminArticlePage },
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },
