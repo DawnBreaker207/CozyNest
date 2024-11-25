@@ -120,7 +120,10 @@ const ProductsPage = () => {
         <div className='wrapper-collection-header banner-header '>
           <div className='flex my-auto d-flex flex-wrap'>
             <div className='w-[50%] collection-banner  col-lg-6 col-12 pl-0 pr-0'>
-              <img src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg' alt='Products' />
+              <img
+                src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg'
+                alt='Products'
+              />
             </div>
             <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
               <h1 className='text-[#FFCC00] w-[80%] ml-12 text-5xl font-medium'>Tất cả sản phẩm</h1>
@@ -131,7 +134,10 @@ const ProductsPage = () => {
         <div className='wrapper-collection-header banner-header mt-8'>
           <div className='my-auto d-flex flex-wrap'>
             <div className='w-[100%] collection-banner col-lg-6 col-12 pl-0 pr-0'>
-              <img src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg' alt='Products' />
+              <img
+                src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg'
+                alt='Products'
+              />
             </div>
             <div className='w-[100%] h-[80px] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
               <h1 className='text-[#FFCC00] ml-5 text-3xl font-medium'>Tất cả sản phẩm</h1>

@@ -1,8 +1,9 @@
-//\ /* eslint-disable @typescript-eslint/no-explicit-any */  
+//\ /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
 import CouponCard from './_components/CouponCard'
 import useCart from '@/hooks/useCart'
 import { Link } from 'react-router-dom'
+import { CartProduct } from '@/types/cart'
 
 const CartPage = () => {
   const { data, calculateTotal, mutate } = useCart()
@@ -13,7 +14,7 @@ const CartPage = () => {
 
   useEffect(() => {
     // Cập nhật số lượng ban đầu từ products
-    const initialQuantities = products.map((product: any) => product.quantity)
+    const initialQuantities = products.map((product: CartProduct) => product.quantity)
     setQuantities(initialQuantities)
   }, [products])
 

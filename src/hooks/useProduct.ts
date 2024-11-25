@@ -2,8 +2,6 @@ import { IProduct } from '@/types/product'
 import { useState } from 'react'
 
 export const useFilterProducts = (products: IProduct[]) => {
-  console.log(products)
-
   const filterProductsByPrice = (priceRanges: string[]) => {
     if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
 
@@ -65,8 +63,6 @@ export const useSortProducts = (products: IProduct[]) => {
   return { sortProducts }
 }
 export const usePaginate = (items: IProduct[], itemPerPage: number) => {
-  console.log(items)
-
   const [currentPage, setCurrentPage] = useState(1)
 
   const startIndex = (currentPage - 1) * itemPerPage

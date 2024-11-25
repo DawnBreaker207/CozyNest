@@ -6,13 +6,15 @@ const Contacttwo = () => {
         <div>
           <h3 className='font-bold text-xl mb-2'>Đổi trả dễ dàng</h3>
           <p>
-          Chính sách đổi trả minh bạch, hỗ trợ tối đa cho khách hàng. Đảm bảo bạn hài lòng với mọi sản phẩm nội thất mà bạn chọn.
+            Chính sách đổi trả minh bạch, hỗ trợ tối đa cho khách hàng. Đảm bảo bạn hài lòng với mọi sản phẩm nội thất
+            mà bạn chọn.
           </p>
         </div>
         <div>
           <h3 className='font-bold text-xl mb-2'>Thương hiệu chất lượng</h3>
           <p>
-          Cam kết mang đến những sản phẩm nội thất từ các thương hiệu uy tín, sử dụng vật liệu cao cấp, bền đẹp theo thời gian.
+            Cam kết mang đến những sản phẩm nội thất từ các thương hiệu uy tín, sử dụng vật liệu cao cấp, bền đẹp theo
+            thời gian.
           </p>
         </div>
       </div>
@@ -29,13 +31,15 @@ const Contacttwo = () => {
         <div>
           <h3 className='font-bold text-xl mb-2'>Thiết kế đa dạng</h3>
           <p>
-          Khám phá bộ sưu tập nội thất phong phú, từ phong cách hiện đại, tối giản đến cổ điển sang trọng, phù hợp với mọi không gian sống.
+            Khám phá bộ sưu tập nội thất phong phú, từ phong cách hiện đại, tối giản đến cổ điển sang trọng, phù hợp với
+            mọi không gian sống.
           </p>
         </div>
         <div>
           <h3 className='font-bold text-xl mb-2'>Tiêu chuẩn nghiêm ngặt</h3>
           <p>
-          Mỗi sản phẩm đều trải qua quy trình kiểm định chất lượng khắt khe, đảm bảo an toàn và độ bền lâu dài cho gia đình bạn.
+            Mỗi sản phẩm đều trải qua quy trình kiểm định chất lượng khắt khe, đảm bảo an toàn và độ bền lâu dài cho gia
+            đình bạn.
           </p>
         </div>
       </div>

@@ -52,7 +52,11 @@ const AdminCustomerPage = () => {
   const users = Array.isArray(data?.res) ? data.res : []
 
   if (isLoading) {
-    return <div><CustomLoadingPage/></div>
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   }
 
   if (error) {
