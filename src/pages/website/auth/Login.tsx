@@ -11,19 +11,15 @@ type FieldType = {
 }
 
 const Login = () => {
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate()
 
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
       try {
-        const response = await instance.post(`/auth/login`, formData)
-        // console.log('API Response:', response.data) // In ra phản hồi để kiểm tra
-        return response.data // Trả về dữ liệu từ phản hồi
-      } catch (error: any) {
-        // Lấy thông báo từ server nếu có
-        const errorMessage = error.response?.data?.message || 'Tài khoản hoặc mật khẩu không chính xác'
-        throw new Error(errorMessage)
+        return await instance.post(`/auth/login`, formData)
+      } catch (error) {
+        throw new Error('Tài khoản mật khẩu không chính xác')
       }
     },
     onSuccess: (data) => {
@@ -34,6 +30,8 @@ const Login = () => {
       messageApi.open({
         type: 'success',
         content: 'Đăng nhập thành công'
+      }),
+        localStorage.setItem('user', JSON.stringify(user))
       })
 
       // Lưu trữ token vào cookie

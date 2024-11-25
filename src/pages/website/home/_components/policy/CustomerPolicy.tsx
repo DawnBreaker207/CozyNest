@@ -14,7 +14,7 @@ const CustomerPolicy = () => {
                 <div className='content-page '>
                   <p className='max-w-[1024px] w-[100%] h-auto mt-[0.6em] mb-[0.6em] block mx-auto'>
                     <img
-                      src='//file.hstatic.net/200000065946/file/3297_132516859fb5697dc5235265d648591a_9b76952c4e454d8d9e7afce4e244fa7c_1024x1024.jpg'
+                      src='https://nhaxinh.com/wp-content/uploads/2023/05/nha-xinh-thiet-ke-noi-that-ecopark-16523-1200x800.jpg'
                       alt='CozyNest'
                     />
                   </p>
@@ -39,7 +39,7 @@ const CustomerPolicy = () => {
                   <p className='max-w-[1024px] w-[100%] h-auto mt-[0.6em] mb-[0.6em] block mx-auto'>
                     <img
                       alt='tich diem doi qua'
-                      src='//file.hstatic.net/200000065946/file/z5436671211137_0572c110a25ce2803e8577ecc1f976f6_70c52b6ecfc044dc8dad4bdeec23e4a8_grande.jpg'
+                      src='https://nhaxinh.com/wp-content/uploads/2024/10/noi-that-can-ho-bason-1139x800.jpg'
                     />
                   </p>
                   <p>&nbsp;</p>
@@ -61,7 +61,7 @@ const CustomerPolicy = () => {
                   <p className='max-w-[1024px] w-[100%] h-auto mt-[0.6em] mb-[0.6em] block mx-auto'>
                     <img
                       alt='tich diem doi qua'
-                      src='//file.hstatic.net/200000065946/file/z5436671223334_01e43f8faf287217efe205538144e3a8_d36d2d3d8cc34cd38da230ab21e9e96b_grande.jpg'
+                      src='https://nhaxinh.com/wp-content/uploads/2024/10/noi-that-can-ho-cao-cap-1200x800.jpg'
                     />
                   </p>
                   <p>&nbsp;</p>
@@ -83,7 +83,7 @@ const CustomerPolicy = () => {
                   <p className='max-w-[1024px] w-[100%] h-auto mt-[0.6em] mb-[0.6em] block mx-auto'>
                     <img
                       alt='tich diem doi qua'
-                      src='//file.hstatic.net/200000065946/file/z5436671222209_2db01b69521a60441c233defe17bab04_ac5412bba943470e93b3ab4e299a6d8c_grande.jpg'
+                      src='https://nhaxinh.com/wp-content/uploads/2024/01/nha-xinh-banner-phong-khach-31-1-24.jpg'
                     />
                   </p>
                   <p>&nbsp;</p>

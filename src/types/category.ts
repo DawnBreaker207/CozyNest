@@ -6,6 +6,7 @@ export interface ICategory {
   _id: string // MongoDB `_id` thường là kiểu `string`
   name: string
   isHidden: boolean
+  thumbnail: string
   products: IProduct[]
   createdAt: string
   updatedAt: string

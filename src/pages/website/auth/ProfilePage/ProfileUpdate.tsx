@@ -5,6 +5,7 @@ import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
 import { useEffect, useState } from 'react'
+import CustomLoadingPage from '@/components/Loading'
 import Cookies from 'js-cookie'
 
 interface CustomerModalProps {
@@ -64,7 +65,7 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
     mutate({ ...data, ...values, _id: userId })
   }
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <div><CustomLoadingPage/></div>
   if (isError) return <div>{error.message}</div>
 
   return (

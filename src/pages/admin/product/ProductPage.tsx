@@ -1,4 +1,5 @@
-import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Import hook để lấy danh mục
+import CustomLoadingPage from '@/components/Loading';
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'; // Import hook để lấy danh mục
 import useProductMutation from '@/hooks/useProductMutation'
 import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
 import { ICategory } from '@/types/category'
@@ -140,7 +141,7 @@ const AdminProductPage = () => {
   if (isLoadingProducts || isLoadingCategories)
     return (
       <div>
-        <Skeleton active paragraph={{ rows: 10 }} />
+        <CustomLoadingPage/>
       </div>
     )
   if (isErrorProducts) return <div>{errorProducts.message}</div>

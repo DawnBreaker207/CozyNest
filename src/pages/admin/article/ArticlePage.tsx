@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import useArticleMutation from '@/hooks/useArticleMutation'
-import { Button, Table, Space, message, Tooltip, Typography, Collapse, Image, Popconfirm, Empty } from 'antd'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
-import { useArticleQuery } from '@/hooks/useArticleQuery'
-import IArticle from '@/types/article'
-import { useQueryClient } from '@tanstack/react-query'
+import React, { useState } from 'react';
+import useArticleMutation from '@/hooks/useArticleMutation';
+import { Button, Table, Space, message, Tooltip, Typography, Collapse, Image, Popconfirm, Empty, Spin } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { useArticleQuery } from '@/hooks/useArticleQuery';
+import IArticle from '@/types/article';
+import { useQueryClient } from '@tanstack/react-query';
+import CustomLoadingPage from '@/components/Loading';
 
 const { Paragraph } = Typography
 const { Panel } = Collapse
@@ -108,8 +109,9 @@ const AdminArticlePage = () => {
     }
   ]
 
-  if (isLoading) return <p>Loading articles...</p>
-  if (isError) return <p>Error loading articles. Please try again later.</p>
+  if (isLoading) return <><CustomLoadingPage/></>;
+  if (isError) return <p>Error loading articles. Please try again later.</p>;
+
 
   return (
     <>
