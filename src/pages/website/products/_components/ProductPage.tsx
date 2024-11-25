@@ -1,12 +1,11 @@
 import { Cart } from '@/components/icons'
 import useCart from '@/hooks/useCart'
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { useFilterProducts, usePaginate, useSortProducts } from '@/hooks/useProduct'
 import { useProductQuery } from '@/hooks/useProductQuery'
-import { getAllCategories } from '@/services/category'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { CheckOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Drawer, Dropdown, MenuProps, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
@@ -16,10 +15,7 @@ import { Link } from 'react-router-dom'
 
 const ProductsPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => await getAllCategories()
-  })
+  const { data: categories } = useCategoryQuery()
   const { data } = useProductQuery()
   const [products, setProducts] = useState<IProduct[]>(data?.res || [])
   const [selectedKey, setSelectedKey] = useState('')
@@ -204,7 +200,7 @@ const ProductsPage = () => {
               </Link>
               <br />
 
-              {categories?.map((category: ICategory) => (
+              {categories?.res?.map((category: ICategory) => (
                 <div key={category._id}>
                   {' '}
                   {/* Thêm key để tránh lỗi React */}

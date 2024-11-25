@@ -1,4 +1,4 @@
-import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
 import { useProductCart } from '@/hooks/useProductQuery'
 import { useUser } from '@/hooks/useUser'
@@ -63,7 +63,7 @@ const Header = () => {
     }
   }, [products, quantities.length, setQuantities])
 
-  const { data: userData, isLoading, error } = useAdminUsersQuery({ _id: userId ?? '' })
+  const { data: userData, isLoading, error } = useAdminUser(userId ?? '')
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -89,45 +89,45 @@ const Header = () => {
   }
   const users: MenuProps['items'] = user
     ? [
-        {
-          label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
-          key: '0'
-        },
-        {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={handleLogout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
+      {
+        label: <a href='/profile'>{user}</a>, // Hiển thị tên người dùng nếu đăng nhập
+        key: '0'
+      },
+      {
+        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+        key: '1'
+      },
+      { type: 'divider' }, // Đường kẻ phân cách
+      {
+        label: (
+          <a href='/' onClick={handleLogout}>
+            Đăng xuất
+          </a>
+        ),
+        key: '3'
+      }
+    ]
     : window.innerWidth < 800
       ? [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
       : [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -211,12 +211,12 @@ const Header = () => {
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
 
-                  window.innerWidth < 800 ? (
-                    // <Link to={`login`}>
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  ) : (
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  )}
+                    window.innerWidth < 800 ? (
+                      // <Link to={`login`}>
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    ) : (
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    )}
                 </Space>
               </span>
             </Dropdown>
