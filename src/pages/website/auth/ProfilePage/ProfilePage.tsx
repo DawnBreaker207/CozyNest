@@ -62,7 +62,11 @@ const ProfilePage = () => {
   const { data: userData, isLoading, error } = useAdminUsersQuery({ id })
 
   if (isLoading) {
-    return <div><CustomLoadingPage/></div>
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   }
 
   if (error) {

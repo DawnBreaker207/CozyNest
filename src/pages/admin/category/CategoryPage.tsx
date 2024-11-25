@@ -29,10 +29,11 @@ const CategoryPage = () => {
   })
 
   // Chuẩn bị dữ liệu cho bảng
-  const dataSource = data?.res?.map((item: ICategory) => ({
-    key: item._id,
-    ...item
-  })) || [];
+  const dataSource =
+    data?.res?.map((item: ICategory) => ({
+      key: item._id,
+      ...item
+    })) || []
 
   // Cấu trúc các cột của bảng
   const columns = [
@@ -94,10 +95,14 @@ const CategoryPage = () => {
       )
     }
   ]
-  
 
   // Xử lý trạng thái khi loading hoặc error
-  if (isLoading) return <div><CustomLoadingPage/></div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error?.message}</div>
 
   return (

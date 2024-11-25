@@ -65,7 +65,12 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
     mutate({ ...data, ...values, _id: userId })
   }
 
-  if (isLoading) return <div><CustomLoadingPage/></div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error.message}</div>
 
   return (

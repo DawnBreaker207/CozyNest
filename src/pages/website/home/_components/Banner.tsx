@@ -27,10 +27,11 @@ const Banner = () => {
               className='w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover'
             />
             <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
-              <h1 className='text-white text-2xl sm:text-4xl md:text-6xl font-bold text-center'>Chào mừng đến với Cozynest</h1>
+              <h1 className='text-white text-2xl sm:text-4xl md:text-6xl font-bold text-center'>
+                Chào mừng đến với Cozynest
+              </h1>
             </div>
           </div>
-         
 
           {/* Slide 2 */}
           <div className='relative'>
@@ -48,8 +49,8 @@ const Banner = () => {
                 </h1>
                 <h2 className='text-white text-2xl lg:text-3xl font-semibold mb-6'>AN TOÀN CHO CẢ GIA ĐÌNH</h2>
                 <button className='px-6 py-3 lg:px-8 lg:py-4 bg-yellow-700 text-white font-semibold rounded-md'>
-              XEM CHI TIẾT
-            </button>
+                  XEM CHI TIẾT
+                </button>
               </div>
             </div>
           </div>
@@ -59,10 +60,12 @@ const Banner = () => {
             <img
               src='https://theme.hstatic.net/200000748041/1001116292/14/slide_2_img.jpg?v=31,3'
               alt='Slide 3'
-               className='w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover'
+              className='w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover'
             />
             <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
-              <h1 className='text-white text-2xl sm:text-4xl md:text-6xl font-bold text-center'>Thiết kế nội thất với phong cách hiện đại</h1>
+              <h1 className='text-white text-2xl sm:text-4xl md:text-6xl font-bold text-center'>
+                Thiết kế nội thất với phong cách hiện đại
+              </h1>
             </div>
           </div>
         </Carousel>
