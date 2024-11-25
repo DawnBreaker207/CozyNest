@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useState, useEffect } from 'react'
 
-export function useLocalStorage(key: any, defaultValue: any) {
+export function useLocalStorage(key: string, defaultValue: unknown) {
   return useStorage(key, defaultValue, window.localStorage)
 }
 

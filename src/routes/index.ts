@@ -23,7 +23,6 @@ import AdminCustomerPage from '@/pages/admin/customer/page'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
 import ReportsPage from '@/pages/admin/report/ReportPage'
-import pageCheckOut from '@/pages/website/order/page'
 import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
 import DeliveryPolicy from '@/pages/website/home/_components/policy/DeliveryPolicy'
@@ -32,13 +31,19 @@ import WarrantyPolicy from '@/pages/website/home/_components/policy/WarrantyPoli
 import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPolicy'
 import SalesPolicy from '@/pages/website/home/_components/policy/SalesPolicy'
 import NotFound from '@/pages/website/home/_components/NotFound'
+import OrderPage from '@/pages/website/order/_components/OrderPage'
+import CheckoutPage from '@/pages/website/order/page'
+import PaymentResultPage from '@/pages/website/order/_components/PaymentResultPage '
+import CouponPage from '@/pages/admin/coupon/CouponPage'
+import CouponAdd from '@/pages/admin/coupon/add/CouponAdd'
+import CouponEdit from '@/pages/admin/coupon/edit/CouponEdit'
+import OrderDetail from '@/pages/website/order/_components/OrderDetail'
 import ProductsPage from '@/pages/website/products/_components/ProductPage'
 import AdminArticlePage from '@/pages/admin/article/ArticlePage'
 import ArticleAddPage from '@/pages/admin/article/add/ArticleAdd'
 import ArticleEditPage from '@/pages/admin/article/edit/ArticleEdit'
 import ProductsPageDetail from '@/pages/website/products/_components/ProductPageDetail'
 import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
-
 function App() {
   const routes = useRoutes([
     {
@@ -52,8 +57,11 @@ function App() {
         { path: 'products_page', Component: ProductsPage },
         { path: 'products_page/:id', Component: ProductsPageDetail },
         { path: 'cart', Component: CartPage },
-        { path: 'cart/check_out_form', Component: pageCheckOut },
+        { path: 'cart/check_out_form', Component: CheckoutPage },
+        { path: 'paymentresult', Component: PaymentResultPage },
+        { path: 'orders/orderdetail', Component: OrderDetail },
         { path: 'intro', Component: Introduction },
+        { path: 'orders', Component: OrderPage },
         { path: 'login', Component: Login },
         { path: 'register', Component: Register },
         { path: 'profile', Component: ProfilePage },
@@ -87,6 +95,9 @@ function App() {
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },
         { path: 'order', Component: AdminOrderPage },
+        { path: 'coupons', Component: CouponPage },
+        { path: 'coupons/add', Component: CouponAdd },
+        { path: 'coupons/:id/edit', Component: CouponEdit },
         { path: 'customer', Component: AdminCustomerPage },
         { path: 'customer/:id', Component: AdminCustomerDetailPage },
         { path: 'report', Component: ReportsPage }

@@ -1,14 +1,9 @@
-import {
-  ClockCircleOutlined,
-  DeleteOutlined,
-  DownloadOutlined,
-  DownOutlined,
-  EditOutlined,
-  EyeOutlined,
-  PlusOutlined
-} from '@ant-design/icons'
-import { Button, DatePicker, Dropdown, Form, Input, Menu, Modal, Select, Space, Switch, Table } from 'antd'
-import TextArea from 'antd/es/input/TextArea'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import instance from '@/configs/axios'
+import { useLocalStorage } from '@/hooks/useStorage'
+import { DeleteOutlined, DownloadOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
+import { Button, DatePicker, Form, Input, Modal, Space, Table } from 'antd'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 interface Values {
@@ -18,113 +13,6 @@ interface Values {
 }
 const { Search } = Input
 
-const dataSource = [
-  {
-    key: '1',
-    orderId: '302012',
-    product: 'Handmade Pouch',
-    variants: '3 variants',
-    date: '29 Dec 2022',
-    customer: 'John Bushmill',
-    total: '$121.00',
-    payment: 'Mastercard',
-    status: (
-      <Button type='dashed' danger>
-        Cancelled
-      </Button>
-    )
-  },
-  {
-    key: '2',
-    orderId: '302011',
-    product: 'Smartwatch E2',
-    variants: '2 variants',
-    date: '24 Dec 2022',
-    customer: 'Linda Blair',
-    total: '$590.00',
-    payment: 'Visa',
-    status: (
-      <Button type='default' style={{ borderColor: 'yellow', color: 'yellow' }}>
-        Processing
-      </Button>
-    )
-  },
-  {
-    key: '3',
-    orderId: '302002',
-    product: 'Smartwatch E1',
-    variants: '3 variants',
-    date: '12 Dec 2022',
-    customer: 'M Karim',
-    total: '$125.00',
-    payment: 'Mastercard',
-    status: (
-      <Button type='primary' ghost>
-        Delivered
-      </Button>
-    )
-  },
-  {
-    key: '4',
-    orderId: '302002',
-    product: 'Smartwatch E1',
-    variants: '3 variants',
-    date: '12 Dec 2022',
-    customer: 'M Karim',
-    total: '$125.00',
-    payment: 'Mastercard',
-    status: (
-      <Button type='dashed' danger>
-        Cancelled
-      </Button>
-    )
-  },
-  {
-    key: '5',
-    orderId: '302002',
-    product: 'Smartwatch E1',
-    variants: '3 variants',
-    date: '12 Dec 2022',
-    customer: 'M Karim',
-    total: '$125.00',
-    payment: 'Mastercard',
-    status: (
-      <Button type='dashed' danger>
-        Cancelled
-      </Button>
-    )
-  },
-  {
-    key: '6',
-    orderId: '302002',
-    product: 'Smartwatch E1',
-    variants: '3 variants',
-    date: '12 Dec 2022',
-    customer: 'M Karim',
-    total: '$125.00',
-    payment: 'Mastercard',
-    status: (
-      <Button type='default' style={{ borderColor: 'yellow', color: 'yellow' }}>
-        Processing
-      </Button>
-    )
-  },
-  {
-    key: '7',
-    orderId: '302002',
-    product: 'Smartwatch E1',
-    variants: '3 variants',
-    date: '12 Dec 2022',
-    customer: 'M Karim',
-    total: '$125.00',
-    payment: 'Mastercard',
-    status: (
-      <Button type='primary' ghost>
-        Processing
-      </Button>
-    )
-  }
-]
 const columns = [
   {
     title: 'Order ID',
@@ -183,26 +71,93 @@ const columns = [
   }
 ]
 
-const menu = {
-  children: (
-    <>
-      <Menu.Item key='1'>Option 1</Menu.Item>
-      <Menu.Item key='2'>Option 2</Menu.Item>
-      <Menu.Item key='3'>Option 3</Menu.Item>
-    </>
-  )
-}
+// const menu = {
+//   children: (
+//     <>
+//       <Menu.Item key='1'>Option 1</Menu.Item>
+//       <Menu.Item key='2'>Option 2</Menu.Item>
+//       <Menu.Item key='3'>Option 3</Menu.Item>
+//     </>
+//   )
+// }
 
 const AdminOrderPage = () => {
   const [form] = Form.useForm()
   const [, setFormValues] = useState<Values>()
   const [open, setOpen] = useState(false)
+  const [user] = useLocalStorage('user', {})
+  const token = user?.data?.accessToken
 
   const onCreate = (values: Values) => {
     console.log('Received values of form: ', values)
     setFormValues(values)
     setOpen(false)
   }
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      try {
+        return await instance.get(`/orders`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+      } catch (error) {
+        throw new Error('Call api that bai')
+      }
+    }
+  })
+
+  // Chuyển đổi dữ liệu từ API thành định dạng mà dataSource cần
+  const dataSource =
+    data?.data?.res?.data.map((order: any, index: number) => ({
+      key: index + 1,
+      orderId: order.invoiceId,
+      product: `${order.products.length} Product` || 'N/A',
+      variants: `${order.products.length} variants`, // Số lượng biến thể
+      date: new Date(order.createdAt).toLocaleDateString(), // Định dạng ngày
+      customer: order.customerName,
+      total: `${order.billTotals} VNĐ`,
+      payment: order.paymentMethod,
+      status: (
+        <Button
+          type={order.status === 'Pending' ? 'default' : order.status === 'Completed' ? 'primary' : 'dashed'}
+          style={{
+            borderColor:
+              order.status === 'Pending'
+                ? 'orange' // Màu viền cho Pending
+                : order.status === 'Completed'
+                  ? 'green' // Màu viền cho Completed
+                  : order.status === 'Delivered'
+                    ? 'red' // Màu viền cho Delivered
+                    : 'inherit', // Mặc định
+            color:
+              order.status === 'Pending'
+                ? 'black' // Màu chữ cho Pending
+                : order.status === 'Completed'
+                  ? 'green' // Màu chữ cho Completed
+                  : order.status === 'Delivered'
+                    ? 'white' // Màu chữ cho Delivered
+                    : 'inherit', // Mặc định
+            backgroundColor:
+              order.status === 'Pending'
+                ? 'yellow' // Màu nền cho Pending
+                : order.status === 'Completed'
+                  ? 'lightgreen' // Màu nền cho Completed
+                  : order.status === 'Delivered'
+                    ? 'lightcoral' // Màu nền cho Delivered
+                    : 'inherit' // Mặc định
+          }}
+        >
+          {order.status}
+        </Button>
+      )
+    })) || []
+
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>{error.message}</div>
+
   return (
     <div className='mt-10'>
       <div className='flex items-center ml-6'>
@@ -220,12 +175,6 @@ const AdminOrderPage = () => {
             <Button type='dashed'>All Orders</Button>
           </div>
           <DatePicker placeholder='Select Date' className='mr-2' />
-
-          <Dropdown menu={menu}>
-            <Button>
-              Filters <DownOutlined />
-            </Button>
-          </Dropdown>
         </div>
         <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 5 }} />
       </div>
@@ -248,54 +197,7 @@ const AdminOrderPage = () => {
           clearOnDestroy
           onFinish={(values) => onCreate(values)}
         >
-          <Form.Item>
-            <label className='text-sm mr-64'>Order Detail</label>
-            New customer <Switch />
-          </Form.Item>
-          <Form.Item>
-            <Select className='text-sm mr-64' placeholder='Select customer'>
-              <Select.Option value='jack'>Jack</Select.Option>
-              <Select.Option value='mtp'>mtp</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item style={{ marginBottom: 0 }}>
-            <Form.Item rules={[{ required: true }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-              <Select className='text-sm mr-64' placeholder='Payment Type'>
-                <Select.Option value='jack'>Jack</Select.Option>
-                <Select.Option value='mtp'>mtp</Select.Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name='month'
-              rules={[{ required: true }]}
-              style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
-            >
-              <Select className='text-sm mr-64' placeholder='Order Type'>
-                <Select.Option value='jack'>Jack</Select.Option>
-                <Select.Option value='mtp'>mtp</Select.Option>
-              </Select>
-            </Form.Item>
-          </Form.Item>
-          <Form.Item label='Order time & date' style={{ marginBottom: 0 }}>
-            <Form.Item rules={[{ required: true }]} style={{ display: 'inline-block', width: 'calc(30% - 8px)' }}>
-              <DatePicker placeholder='Select Date' />
-            </Form.Item>
-            <Form.Item
-              rules={[{ required: true }]}
-              style={{ display: 'inline-block', width: 'calc(70% - 8px)', margin: '0 8px' }}
-            >
-              <ClockCircleOutlined /> 12:00 PM
-            </Form.Item>
-          </Form.Item>
-          <Form.Item label='Order Status'>
-            <Select className='text-sm mr-64' placeholder='Pending'>
-              <Select.Option value='jack'>Jack</Select.Option>
-              <Select.Option value='mtp'>mtp</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <TextArea rows={4} placeholder='Order Note' />
-          </Form.Item>
+          {/* Thêm các trường trong form ở đây */}
         </Form>
       </Modal>
     </div>

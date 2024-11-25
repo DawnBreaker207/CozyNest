@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
 import { useMutation } from '@tanstack/react-query'
 import { Form, Input, Button, Checkbox, message } from 'antd'
@@ -11,7 +10,7 @@ type FieldType = {
 }
 
 const Login = () => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
 
   const { mutate } = useMutation({
@@ -24,16 +23,14 @@ const Login = () => {
     },
     onSuccess: (data) => {
       const { accessToken, refreshToken, res } = data // Giả sử response trả về chứa accessToken, refreshToken, và res
-      console.log('Access Token:', accessToken)
-      console.log('Refresh Token:', refreshToken) // Kiểm tra giá trị refresh token
+      // console.log('Access Token:', accessToken)
+      // console.log('Refresh Token:', refreshToken) // Kiểm tra giá trị refresh token
 
       messageApi.open({
         type: 'success',
         content: 'Đăng nhập thành công'
-      }),
-        localStorage.setItem('user', JSON.stringify(user))
       })
-
+      // localStorage.setItem('user', JSON.stringify(user))
       // Lưu trữ token vào cookie
       Cookies.set('accessToken', accessToken, { expires: 1 })
       Cookies.set('refreshToken', refreshToken, { expires: 1 })

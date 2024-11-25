@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
 import {
@@ -27,8 +28,7 @@ const Header = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const { data, calculateTotal, mutate } = useCart()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const products = data?.res?.products || []
-  const [quantities, setQuantities] = useState<number[]>([])
+  const { products, quantities, setQuantity } = useCartStore()
 
   const [isVisible, setIsVisible] = useState(false)
   useEffect(() => {
@@ -53,36 +53,21 @@ const Header = () => {
     return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
-    // Chỉ thiết lập quantities khi sản phẩm có thay đổi
-    if (products.length) {
-      const initialQuantities = products.map((product: any) => product.quantity)
-      setQuantities(initialQuantities)
-    }
-  }, [products])
-
+  // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    setQuantities((prevQuantities) => {
-      const newQuantities = [...prevQuantities]
-      if (newQuantities[index] < 10) {
-        newQuantities[index]++
-        mutate({ action: 'INCREMENT', productId: products[index].productId._id })
-      }
-      return newQuantities
-    })
+    if (quantities[index] < 10) {
+      setQuantity(index, quantities[index] + 1)
+      mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
+    }
   }
 
+  // Giảm số lượng sản phẩm
   const decrease = (index: number) => {
-    setQuantities((prevQuantities) => {
-      const newQuantities = [...prevQuantities]
-      if (newQuantities[index] > 1) {
-        newQuantities[index]--
-        mutate({ action: 'DECREMENT', productId: products[index].productId._id })
-      }
-      return newQuantities
-    })
+    if (quantities[index] > 1) {
+      setQuantity(index, quantities[index] - 1)
+      mutate({ action: 'DECREMENT', sku_id: products[index].sku_id._id })
+    }
   }
-
   useEffect(() => {
     // Cập nhật lại tổng tiền khi quantities thay đổi
     calculateTotal()
@@ -163,8 +148,12 @@ const Header = () => {
     // setOpen(true)
   }
   const show = () => {
-    // setVisible(true)
-    setOpen(true)
+    if (!userId) {
+      // Nếu không có userId, chuyển hướng đến trang đăng nhập
+      window.location.href = '/login'
+    } else {
+      setOpen(true) // Mở Drawer nếu đã đăng nhập
+    }
   }
   const onClose = () => {
     setVisible(false)
@@ -193,45 +182,45 @@ const Header = () => {
   ]
   const users: MenuProps['items'] = user
     ? [
-        {
-          label: <a href='/profile'>Thông tin tài khoản</a>,
-          key: '0'
-        },
-        {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={handleLogout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
+      {
+        label: <a href='/profile'>Thông tin tài khoản</a>,
+        key: '0'
+      },
+      {
+        label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+        key: '1'
+      },
+      { type: 'divider' }, // Đường kẻ phân cách
+      {
+        label: (
+          <a href='/' onClick={handleLogout}>
+            Đăng xuất
+          </a>
+        ),
+        key: '3'
+      }
+    ]
     : window.innerWidth < 800
       ? [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
       : [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
 
   const { token } = useToken()
 
@@ -369,12 +358,12 @@ const Header = () => {
                       </Button>
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-                  window.innerWidth < 800 ? (
-                    // <Link to={`login`}>
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  ) : (
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  )}
+                    window.innerWidth < 800 ? (
+                      // <Link to={`login`}>
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    ) : (
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    )}
                 </Space>
               </span>
             </Dropdown>
@@ -442,36 +431,34 @@ const Header = () => {
           </Drawer>
 
           {/* giỏ hàng  */}
-
-          {userId && (
-            <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
-              {products.length > 0 ? (
-                <div>
-                  {products.map((product: any, index: number) => (
-                    <div key={product.productId._id} className='flex justify-between items-center mb-4 border-b pb-4'>
-                      <div className='flex items-center'>
-                        <img
-                          src={product.productId.thumbnail}
-                          alt={product.productId.name}
-                          className='w-16 h-16 object-cover'
-                        />
-                        <div className='ml-2'>
-                          <p className='font-semibold'>{product.productId.name}</p>
-                          <div className='flex items-center'>
-                            <button className='border px-2 py-1' onClick={() => decrease(index)}>
-                              -
-                            </button>
-                            <input
-                              title='Quantity'
-                              type='number'
-                              value={quantities[index]}
-                              className='w-12 text-center border'
-                              readOnly
-                            />
-                            <button className='border px-2 py-1' onClick={() => increase(index)}>
-                              +
-                            </button>
-                          </div>
+          <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
+            {products.length > 0 ? (
+              <div>
+                {products.map((product: any, index: number) => (
+                  <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                    {/* Hình ảnh và thông tin sản phẩm */}
+                    <div className='flex items-center'>
+                      <img
+                        src={product.sku_id.product_id.thumbnail}
+                        alt={product.sku_id.name}
+                        className='w-16 h-16 object-cover'
+                      />
+                      <div className='ml-2 flex flex-col justify-between'>
+                        <p className='font-semibold'>{product.sku_id.name}</p>
+                        <div className='flex items-center justify-center mt-2'>
+                          <button
+                            onClick={() => decrease(index)} // Truyền index để giảm số lượng
+                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                          >
+                            -
+                          </button>
+                          <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
+                          <button
+                            onClick={() => increase(index)} // Truyền index để tăng số lượng
+                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                          >
+                            +
+                          </button>
                         </div>
                       </div>
                       <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
@@ -479,34 +466,44 @@ const Header = () => {
                         <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
                       </button>
                     </div>
-                  ))}
-                  <Divider />
-                  <div className='flex justify-between items-center font-bold'>
+
+                    {/* Giá sản phẩm */}
+                    <div className='flex flex-col items-end'>
+                      <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.sku_id._id })}>
+                        <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                      </button>
+                      <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
+                    </div>
+                  </div>
+                ))}
+                {/* Tổng tiền */}
+                <div className='mt-4'>
+                  <div className='flex justify-between font-semibold'>
                     <span>Tổng tiền:</span>
-                    <span>{calculateTotal().toLocaleString()}₫</span>
+                    <span className='text-red-500'>{calculateTotal().toLocaleString()}₫</span>
                   </div>
                   <Link to={`/cart`}>
-                    {' '}
-                    <Button type='primary' className='mt-4 w-full' onClick={() => onClose()}>
+                    <button
+                      className='mt-4 bg-red-500 hover:bg-red-600 text-white w-full py-2 rounded'
+                      onClick={() => onClose()}
+                    >
                       XEM GIỎ HÀNG
-                    </Button>
+                    </button>
                   </Link>
                 </div>
-              ) : (
-                <div className='text-center'>
-                  <span>
-                    <MehOutlined />
-                  </span>
-                  <br />
-                  <span>Không có sản phẩm trong giỏ hàng</span>
-                  <br />
-                  <NavLink to={'#'} className='text-sm'>
-                    trở về trang sản phẩm
-                  </NavLink>
-                </div>
-              )}
-            </Drawer>
-          )}
+              </div>
+            ) : (
+              <div className='text-center'>
+                <span className='text-gray-400 text-2xl'>
+                  <MehOutlined />
+                </span>
+                <p className='mt-2'>Không có sản phẩm trong giỏ hàng</p>
+                <NavLink to='/products' className='text-blue-500 hover:underline text-sm mt-2 block'>
+                  Trở về trang sản phẩm
+                </NavLink>
+              </div>
+            )}
+          </Drawer>
         </nav>
       </div>
       <hr className='border border-[#E0E2E7]' />

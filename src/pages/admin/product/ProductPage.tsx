@@ -6,7 +6,7 @@ import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Skeleton, Space, Table } from 'antd'
+import { Button, message, Popconfirm, Space, Table } from 'antd'
 import { Link } from 'react-router-dom'
 
 const AdminProductPage = () => {
