@@ -29,7 +29,7 @@ export const useUser = () => {
     setUserId(id)
   }, [getUserFromCookie])
 
-  const handleLogout = () => {
+  const Logout = () => {
     // Xóa các thông tin từ cookie
     Cookies.remove('user')
     Cookies.remove('accessToken')
@@ -40,5 +40,5 @@ export const useUser = () => {
     setUserId(null)
   }
 
-  return { user, userId, handleLogout }
+  return { user, userId, Logout }
 }

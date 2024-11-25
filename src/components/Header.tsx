@@ -23,7 +23,7 @@ const Header = () => {
   const [, contextHolder] = message.useMessage()
   const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
-  const { handleLogout, user, userId } = useUser()
+  const { Logout, user, userId } = useUser()
   const { products, quantities, setQuantity } = useCartStore()
   const [isVisible, setIsVisible] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -93,50 +93,50 @@ const Header = () => {
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
   if (error) {
-    handleLogout()
+    Logout()
     return window.location.reload()
   }
   const users: MenuProps['items'] = user
     ? [
-      {
-        label: <a href='/profile'>Thông tin tài khoản</a>,
-        key: '0'
-      },
-      {
-        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-        key: '1'
-      },
-      { type: 'divider' }, // Đường kẻ phân cách
-      {
-        label: (
-          <a href='/' onClick={handleLogout}>
-            Đăng xuất
-          </a>
-        ),
-        key: '3'
-      }
-    ]
+        {
+          label: <a href='/profile'>Thông tin tài khoản</a>,
+          key: '0'
+        },
+        {
+          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          key: '1'
+        },
+        { type: 'divider' }, // Đường kẻ phân cách
+        {
+          label: (
+            <a href='/' onClick={Logout}>
+              Đăng xuất
+            </a>
+          ),
+          key: '3'
+        }
+      ]
     : window.innerWidth < 800
       ? [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
       : [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -221,12 +221,12 @@ const Header = () => {
                       </Button>
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-                    window.innerWidth < 800 ? (
-                      // <Link to={`login`}>
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    ) : (
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    )}
+                  window.innerWidth < 800 ? (
+                    // <Link to={`login`}>
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  ) : (
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  )}
                 </Space>
               </span>
             </Dropdown>
