@@ -1,12 +1,16 @@
 import { Form, Input, Button, Checkbox, message, Select } from 'antd'
-import { CaretRightOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
+import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { ICategory } from '@/types/category'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
+import { useState } from 'react'
+import Upload, { RcFile } from 'antd/es/upload'
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 
 const AddCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
+  const [thumbnail, setThumbnail] = useState<{ file: File; name: string } | null>(null)
   const { mutate } = useCategoryMutation({
     action: 'CREATE',
     onSuccess: () => {
@@ -17,15 +21,21 @@ const AddCategoryPage = () => {
     }
   })
   const { Option } = Select
-  const onFinish = (values: ICategory) => {
-    // Đảm bảo isHidden có giá trị hợp lệ
-    const categoryData = {
-      ...values,
-      isHidden: values.isHidden !== undefined ? values.isHidden : false // Mặc định isHidden là false
-    }
-    console.log(categoryData)
+  const onFinish = async (values: ICategory) => {
+    try {
+      const thumbnailUrl = thumbnail ? await uploadFileCloudinary(thumbnail.file) : 'default-thumbnail-url.jpg'
 
-    mutate(categoryData)
+      const categoryData = {
+        ...values,
+        thumbnail: thumbnailUrl || 'default-thumbnail-url.jpg',
+        isHidden: values.isHidden !== undefined ? values.isHidden : false
+      }
+
+      mutate(categoryData)
+    } catch (error) {
+      messageApi.error('Failed to upload the image. Please try again!')
+      console.error(error)
+    }
   }
 
   return (
@@ -61,6 +71,43 @@ const AddCategoryPage = () => {
               >
                 <Input placeholder='Type category name here...' className='w-full bg-[#F9F9FC]' />
               </Form.Item>
+              <Form.Item label='Thumbnail'>
+                <Upload
+                  beforeUpload={(file) => {
+                    const isImage = file.type.startsWith('image/')
+                    const isLt2M = file.size / 1024 / 1024 < 2
+
+                    if (!isImage) {
+                      message.error('You can only upload image files!')
+                      return false
+                    }
+                    if (!isLt2M) {
+                      message.error('Image must smaller than 2MB!')
+                      return false
+                    }
+
+                    setThumbnail({ file, name: file.name })
+                    return false // Ngăn upload tự động
+                  }}
+                  showUploadList={false}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Thumbnail</Button>
+                </Upload>
+                <div className='mt-2'>
+                  {thumbnail && (
+                    <>
+                      <span>{thumbnail.name}</span>
+                      <br />
+                      <img
+                        src={URL.createObjectURL(thumbnail.file)}
+                        alt='Thumbnail'
+                        style={{ width: '100%', maxWidth: '300px', marginTop: '10px' }}
+                      />
+                    </>
+                  )}
+                </div>
+              </Form.Item>
+
               <Form.Item
                 label='Category Type'
                 name='type'

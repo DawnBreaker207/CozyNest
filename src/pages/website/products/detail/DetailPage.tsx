@@ -108,7 +108,7 @@ const ProductDetail = () => {
 
               {/* Back Button */}
               <button
-               title='Back'
+                title='Back'
                 className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
                 onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
               >
@@ -117,7 +117,7 @@ const ProductDetail = () => {
 
               {/* Next Button */}
               <button
-               title='Next'
+                title='Next'
                 className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
                 onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
               >
@@ -369,8 +369,7 @@ const ProductDetail = () => {
       </div>
 
       <div className='mb-20 container'>
-<!--         <RelatedProduct id={category} /> -->
-
+        <RelatedProduct id={category} />
         <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>
           <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>

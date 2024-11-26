@@ -58,7 +58,7 @@ export const removeCategory = async (category: ICategory) => {
 // Cập nhật một danh mục
 export const editCategory = async (category: ICategory) => {
   try {
-    const response = await instance.put(`http://localhost:8888/api/v1/categories/${category?._id}`, category, {
+    const response = await instance.put(`/categories/${category?._id}`, category, {
       headers: {
         'Content-Type': 'application/json'
       },

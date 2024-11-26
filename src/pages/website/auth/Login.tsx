@@ -12,51 +12,46 @@ type FieldType = {
 
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
-      try {
-        return await instance.post(`/auth/login`, formData)
-      } catch (error) {
-        throw new Error('Tài khoản mật khẩu không chính xác')
-      }
+      const response = await instance.post(`/auth/login`, formData);
+      return response.data; // Chỉ trả về dữ liệu thực
     },
     onSuccess: (data) => {
-      const { accessToken, refreshToken, res } = data // Giả sử response trả về chứa accessToken, refreshToken, và res
-      console.log('Access Token:', accessToken)
-      console.log('Refresh Token:', refreshToken) // Kiểm tra giá trị refresh token
+      const { accessToken, refreshToken, res } = data;
 
       messageApi.open({
         type: 'success',
-        content: 'Đăng nhập thành công'
-      }),
-        localStorage.setItem('user', JSON.stringify(user))
-      })
+        content: 'Đăng nhập thành công',
+      });
 
-      // Lưu trữ token vào cookie
-      Cookies.set('accessToken', accessToken, { expires: 1 })
-      Cookies.set('refreshToken', refreshToken, { expires: 1 })
-      Cookies.set('user', JSON.stringify(res), { expires: 1 }) // Lưu thông tin người dùng
+      localStorage.setItem('user', JSON.stringify(res));
+
+      // Lưu thông tin vào cookie
+      Cookies.set('accessToken', accessToken, { expires: 1 });
+      Cookies.set('refreshToken', refreshToken, { expires: 1 });
+      Cookies.set('user', JSON.stringify(res), { expires: 1 });
 
       // Điều hướng và làm mới trang
       setTimeout(() => {
-        navigate(`/`)
-        window.location.reload()
-      }, 600)
+        navigate('/');
+        window.location.reload();
+      }, 600);
     },
     onError: (error) => {
       messageApi.open({
         type: 'error',
-        content: error.message
-      })
-    }
-  })
+        content: error.message || 'Đã xảy ra lỗi, vui lòng thử lại',
+      });
+    },
+  });
 
   const onFinish = (values: FieldType) => {
-    console.log('Form Values: ', values)
-    mutate(values)
-  }
+    console.log('Form Values: ', values);
+    mutate(values);
+  };
 
   return (
     <div

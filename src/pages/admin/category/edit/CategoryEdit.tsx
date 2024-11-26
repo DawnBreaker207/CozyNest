@@ -12,8 +12,10 @@ const EditCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const [thumbnail, setThumbnail] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { id } = useParams()
-
+  const { id } = useParams<{ id: string }>()
+  if (!id) {
+    return <div>Error: Invalid category ID</div>
+  }
   const { data, isLoading, isError, error } = useCategoryQuery({ id })
   const { mutate } = useCategoryMutation({
     action: 'UPDATE',
@@ -64,18 +66,7 @@ const EditCategoryPage = () => {
       messageApi.error('ID danh mục không hợp lệ')
       return
     }
-
-    // Đảm bảo rằng _id từ dữ liệu ban đầu (data) được giữ lại trong category khi gửi đi
-    const updatedCategory = {
-      ...data?.res, // Dữ liệu danh mục hiện tại
-      ...values, // Giá trị form mới
-      _id: data?.res?._id // Đảm bảo rằng _id không bị mất
-    }
-
-    console.log(updatedCategory)
-
-    mutate(updatedCategory) // Gửi dữ liệu danh mục đã được cập nhật
-  }
+  
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>{error.message}</div>
