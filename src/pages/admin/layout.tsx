@@ -27,12 +27,9 @@ const LayoutAdmin: React.FC = () => {
   const userJson = useCookie('user', {})
 
   const role = userJson ? userJson?.[0].role : null
+  console.log(role)
   useEffect(() => {
-    if (role !== 'admin') {
-      navigate('/')
-    } else {
-      navigate('/login')
-    }
+    navigate(role === 'admin' || role === 'manager' ? '/admin' : '/login')
   }, [navigate, role])
   const handleLogout = () => {
     Modal.confirm({
