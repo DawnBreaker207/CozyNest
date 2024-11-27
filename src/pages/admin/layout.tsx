@@ -1,8 +1,12 @@
+import { useCookie } from '@/hooks/useStorage'
+import { useUser } from '@/hooks/useUser'
 import {
   ApartmentOutlined,
   AppstoreOutlined,
+  BellOutlined,
   CalendarOutlined,
   DownloadOutlined,
+  DownOutlined,
   FilterOutlined,
   LogoutOutlined,
   OrderedListOutlined,
@@ -11,23 +15,25 @@ import {
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Avatar, Button, Input, Layout, Menu, Modal, theme } from 'antd'
+import { Avatar, Badge, Button, Input, Layout, Menu, Modal, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { MdOutlineColorLens } from 'react-icons/md'
-
+import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 const { Header, Content, Footer, Sider } = Layout
 
 const LayoutAdmin: React.FC = () => {
-  const nav = useNavigate();
-  const userJson = localStorage.getItem("user");
-  const role = userJson ? JSON.parse(userJson)?.data?.res?.role : null;
+  const navigate = useNavigate()
+  const { Logout } = useUser()
+  const userJson = useCookie('user', {})
+
+  const role = userJson ? userJson?.[0].role : null
   useEffect(() => {
-    if (role !== "admin") {
-        nav("/");
+    if (role !== 'admin') {
+      navigate('/')
+    } else {
+      navigate('/login')
     }
-    
-}, [nav, role]);
+  }, [navigate, role])
   const handleLogout = () => {
     Modal.confirm({
       title: 'Bạn có chắc chắn muốn đăng xuất không?',
@@ -36,16 +42,15 @@ const LayoutAdmin: React.FC = () => {
       cancelText: 'Hủy',
       onOk: () => {
         // Thực hiện đăng xuất
-        console.log('Đăng xuất thành công!');
-        // Ví dụ: xóa token hoặc dữ liệu user
-        localStorage.removeItem('user'); // Xóa token trong localStorage
-        window.location.href = '/login'; // Điều hướng về trang login
+        console.log('Đăng xuất thành công!')
+        Logout()
+        navigate('/login') // Điều hướng về trang login
       },
       onCancel: () => {
-        console.log('Hủy thao tác đăng xuất');
-      },
-    });
-  };
+        console.log('Hủy thao tác đăng xuất')
+      }
+    })
+  }
   const [collapsed, setCollapsed] = useState(false)
   const {
     token: { colorBgContainer, borderRadiusLG }
@@ -60,19 +65,19 @@ const LayoutAdmin: React.FC = () => {
   // )
   const { id } = useParams()
   const renderHeader = (title: string) => (
-    
     <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
       <div className='flex justify-between h-[60px] items-center'>
         <div>
           <span className='text-xl text-[#353535] ml-[25px]'>{title}</span>
         </div>
         <div className='flex items-center space-x-4 mr-[14px]'>
-         
           <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
         </div>
       </div>
     </Header>
   )
+
+  //TODO: ???????
   const isAddProductPage = location.pathname === '/admin/products/add'
   const isEditProductPage = location.pathname === `/admin/products/${id}/edit`
   const isAddCategoryPage = location.pathname === '/admin/categories/add'
@@ -85,8 +90,13 @@ const LayoutAdmin: React.FC = () => {
   const isDetailColorPage = location.pathname === `/admin/colors/${id}/detail_color`
   const isOrderPage = location.pathname === `/admin/order`
   const isCustomer = location.pathname === `/admin/customer`
+  const isCoupon = location.pathname === `/admin/coupons`
+  const isCouponAdd = location.pathname === `/admin/coupons/add`
+  const isCouponEdit = location.pathname === `/admin/coupons/${id}/edit`
   const isArticles = location.pathname === `/admin/articles`
+  const isVariantPage = location.pathname === `/admin/products/${id}/variants`
 
+  console.log('🚀 ~ isVariantPage:', isVariantPage)
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -108,16 +118,16 @@ const LayoutAdmin: React.FC = () => {
             },
             {
               key: '3',
-              icon: <ApartmentOutlined />,
-              label: <NavLink to={`/admin/colors`}>Color Manager</NavLink>
-            },
-            {
-              key: '4',
               icon: <OrderedListOutlined />,
               label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
             },
             {
-              key: '5',
+              key: '9',
+              icon: <OrderedListOutlined />,
+              label: <NavLink to={`/admin/coupons`}>Coupon Manager</NavLink>
+            },
+            {
+              key: '4',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
             },
@@ -139,7 +149,11 @@ const LayoutAdmin: React.FC = () => {
             {
               key: '8',
               icon: <LogoutOutlined />,
-              label: <NavLink to="#" onClick={handleLogout}>Logout</NavLink>,
+              label: (
+                <NavLink to='#' onClick={handleLogout}>
+                  Logout
+                </NavLink>
+              )
             }
           ]}
         />
@@ -151,9 +165,13 @@ const LayoutAdmin: React.FC = () => {
         {isAddCategoryPage && renderHeader('Add Category')}
         {isEditProductPage && renderHeader('Edit Product')}
         {isEditCategoryPage && renderHeader('Edit Category')}
+        {isCoupon && renderHeader('Coupon')}
+        {isCouponAdd && renderHeader('Coupon Add')}
+        {isCouponEdit && renderHeader('Coupon Edit')}
         {isAddColorPage && renderHeader('Add Color')}
         {isEditColorPage && renderHeader('Edit Color')}
         {isDetailColorPage && renderHeader('Detail Color')}
+        {isVariantPage && renderHeader('Variant')}
         <Content>
           {isCategoryPage && (
             <>
@@ -163,7 +181,6 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Category</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                   
                     <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
                   </div>
                 </div>

@@ -4,10 +4,11 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductList from './_components/ProductList'
 import { Skeleton } from 'antd'
+import { parseInt } from 'lodash'
 
 const ShopPage = () => {
   const [params] = useSearchParams()
-  const page = params.get('page')
+  const page = parseInt(params.get('page') as string)
 
   const [limit, setLimit] = useState(10)
   const [currentPage, setCurrentPage] = useState(page || 1)
@@ -25,7 +26,10 @@ const ShopPage = () => {
     refetch() // Gọi lại API với limit mới và trang đầu tiên
   }
 
-  const { res: products = [], pagination } = data || { res: [], pagination: {} } // Lấy sản phẩm từ `res`
+  const { res: products = [], pagination } = data || {
+    res: [],
+    pagination: { currentPage: 1, totalPages: 1, totalItems: 0 }
+  } // Lấy sản phẩm từ `res`
 
   if (isLoading)
     return (

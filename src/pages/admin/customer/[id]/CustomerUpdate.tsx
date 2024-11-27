@@ -1,17 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Modal, Form, Input, Button, Switch, Select, message } from 'antd'
-import PhoneInput from 'react-phone-input-2'
-import { useParams } from 'react-router-dom'
-import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
+import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
+import { Button, Form, Input, Modal, Select, Switch, message } from 'antd'
+import { Rule } from 'antd/es/form'
+import PhoneInput from 'react-phone-input-2'
+import { useParams } from 'react-router-dom'
 
 interface CustomerModalProps {
   isModalVisible: boolean
   handleCancel: () => void
   handleToggle: (checked: boolean) => void
   formVisible: boolean
-  validatePhoneNumber: (rule: any, value: string) => Promise<any>
+  validatePhoneNumber: (rule: Rule, value: string) => Promise<void>
 }
 
 const CustomerModal: React.FC<CustomerModalProps> = ({
@@ -24,7 +24,7 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
   const [messageApi, contextHolder] = message.useMessage()
   const { id } = useParams() // Lấy ID của danh mục từ URL
 
-  const { data, isLoading, isError, error } = useAdminUsersQuery({ id })
+  const { data, isLoading, isError, error } = useAdminUser(id)
 
   const { mutate } = useAdminUsersMutations({
     action: 'UPDATE',
@@ -56,7 +56,7 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
         width={900}
         footer={null}
       >
-        <Form layout='vertical' autoComplete='off' onFinish={onFinish} initialValues={{ ...data?.res }}>
+        <Form layout='vertical' autoComplete='off' onFinish={onFinish} initialValues={{ ...data }}>
           {/* Thêm prop form vào đây */}
           <h2 className='text-[#8B8D97] font-medium mb-5'>Customer Information</h2>
           <Form.Item name='username' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>

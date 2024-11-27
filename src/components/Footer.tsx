@@ -151,10 +151,13 @@ const CustomFooter = () => {
               {activeSection === 'support' && (
                 <>
                   <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                    <Link to={`/`}><li className='text-sm text-white'>Sản phẩm nổi bật</li></Link>
-                    <NavLink to={`/products_page`}><li className='text-sm text-white'>Tất cả sản phẩm</li></NavLink>
+                    <Link to={`/`}>
+                      <li className='text-sm text-white'>Sản phẩm nổi bật</li>
+                    </Link>
+                    <NavLink to={`/products_page`}>
+                      <li className='text-sm text-white'>Tất cả sản phẩm</li>
+                    </NavLink>
                   </ul>
-                 
                 </>
               )}
               <hr className='my-4 border-t border-gray-600 ' />
@@ -163,8 +166,12 @@ const CustomFooter = () => {
             <div className='hidden md:block'>
               <h4 className='text-lg font-semibold mb-4'>Hỗ trợ khách hàng</h4>
               <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-              <Link to={`/`}><li className='text-sm text-white'>Sản phẩm nổi bật</li></Link>
-              <Link to={`/products_page`}><li className='text-sm text-white'>Tất cả sản phẩm</li></Link>
+                <Link to={`/`}>
+                  <li className='text-sm text-white'>Sản phẩm nổi bật</li>
+                </Link>
+                <Link to={`/products_page`}>
+                  <li className='text-sm text-white'>Tất cả sản phẩm</li>
+                </Link>
               </ul>
             </div>
           </Col>
@@ -176,12 +183,24 @@ const CustomFooter = () => {
               </h4>
               {activeSection === 'lienket' && (
                 <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                 <Link to={`/`}><li> Trang chủ</li></Link> 
-                 <Link to={`/products_page`} className='text-sm text-white'><li> Sản phẩm</li></Link> 
-                 <Link to={`/products_page`} className='text-sm text-white'><li>Trang sản phẩm</li></Link> 
-                 <Link to={`/intro`} className='text-sm text-white'><li>Giới thiệu</li></Link> 
-                 <Link to={`/`} className='text-sm text-white'><li>FAQs</li></Link> 
-                 <Link to={`/`} className='text-sm text-white'><li>Landing page</li></Link> 
+                  <Link to={`/`}>
+                    <li> Trang chủ</li>
+                  </Link>
+                  <Link to={`/products_page`} className='text-sm text-white'>
+                    <li> Sản phẩm</li>
+                  </Link>
+                  <Link to={`/products_page`} className='text-sm text-white'>
+                    <li>Trang sản phẩm</li>
+                  </Link>
+                  <Link to={`/intro`} className='text-sm text-white'>
+                    <li>Giới thiệu</li>
+                  </Link>
+                  <Link to={`/`} className='text-sm text-white'>
+                    <li>FAQs</li>
+                  </Link>
+                  <Link to={`/`} className='text-sm text-white'>
+                    <li>Landing page</li>
+                  </Link>
                 </ul>
               )}
               <hr className='my-2 border-t border-gray-600 ' />
@@ -191,12 +210,24 @@ const CustomFooter = () => {
             <div className='hidden md:block'>
               <h4 className='text-lg font-semibold mb-4'>Liên Kết </h4>
               <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-              <Link to={`/`} className='text-sm text-white'><li> Trang chủ</li></Link> 
-                 <Link to={`/products_page`} className='text-sm text-white'><li> Sản phẩm</li></Link> 
-                 <Link to={`/products_page`} className='text-sm text-white'><li>Trang sản phẩm</li></Link> 
-                 <Link to={`/intro`} className='text-sm text-white'><li>Giới thiệu</li></Link> 
-                 <Link to={`/`} className='text-sm text-white'><li>FAQs</li></Link> 
-                 <Link to={`/`} className='text-sm text-white'><li>Landing page</li></Link>
+                <Link to={`/`} className='text-sm text-white'>
+                  <li> Trang chủ</li>
+                </Link>
+                <Link to={`/products_page`} className='text-sm text-white'>
+                  <li> Sản phẩm</li>
+                </Link>
+                <Link to={`/products_page`} className='text-sm text-white'>
+                  <li>Trang sản phẩm</li>
+                </Link>
+                <Link to={`/intro`} className='text-sm text-white'>
+                  <li>Giới thiệu</li>
+                </Link>
+                <Link to={`/`} className='text-sm text-white'>
+                  <li>FAQs</li>
+                </Link>
+                <Link to={`/`} className='text-sm text-white'>
+                  <li>Landing page</li>
+                </Link>
               </ul>
             </div>
           </Col>
@@ -208,11 +239,22 @@ const CustomFooter = () => {
               </h4>
               {activeSection === 'chinhsach' && (
                 <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                 <Link to={`intro`} className='text-sm text-white'><li>Giới thiệu</li></Link>  
-                 <Link to={`policy/chinh-sach-doi-tra`} className='text-sm text-white'> <li>Chính sách đổi trả</li></Link>
-                 <Link to={`policy/bao-hanh-va-bao-tri`} className='text-sm text-white'><li>Chính sách bảo mật</li></Link> 
-                 <Link to={`policy/chinh-sach-ban-hang`} className='text-sm text-white'><li>Điều khoản dịch vụ</li></Link> 
-                 <Link to={`contact`} className='text-sm text-white'><li>Liên hệ</li></Link> 
+                  <Link to={`intro`} className='text-sm text-white'>
+                    <li>Giới thiệu</li>
+                  </Link>
+                  <Link to={`policy/chinh-sach-doi-tra`} className='text-sm text-white'>
+                    {' '}
+                    <li>Chính sách đổi trả</li>
+                  </Link>
+                  <Link to={`policy/bao-hanh-va-bao-tri`} className='text-sm text-white'>
+                    <li>Chính sách bảo mật</li>
+                  </Link>
+                  <Link to={`policy/chinh-sach-ban-hang`} className='text-sm text-white'>
+                    <li>Điều khoản dịch vụ</li>
+                  </Link>
+                  <Link to={`contact`} className='text-sm text-white'>
+                    <li>Liên hệ</li>
+                  </Link>
                 </ul>
               )}
             </div>
@@ -221,11 +263,22 @@ const CustomFooter = () => {
             <div className='hidden md:block'>
               <h4 className='text-lg font-semibold mb-4'>Chính sách </h4>
               <ul className='space-y-2' style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-              <Link to={`intro`} className='text-sm text-white'><li>Giới thiệu</li></Link>  
-                 <Link to={`policy/chinh-sach-doi-tra`} className='text-sm text-white'> <li>Chính sách đổi trả</li></Link>
-                 <Link to={`policy/bao-hanh-va-bao-tri`} className='text-sm text-white'><li>Chính sách bảo mật</li></Link> 
-                 <Link to={`policy/chinh-sach-ban-hang`} className='text-sm text-white'><li>Điều khoản dịch vụ</li></Link> 
-                 <Link to={`contact`} className='text-sm text-white'><li>Liên hệ</li></Link> 
+                <Link to={`intro`} className='text-sm text-white'>
+                  <li>Giới thiệu</li>
+                </Link>
+                <Link to={`policy/chinh-sach-doi-tra`} className='text-sm text-white'>
+                  {' '}
+                  <li>Chính sách đổi trả</li>
+                </Link>
+                <Link to={`policy/bao-hanh-va-bao-tri`} className='text-sm text-white'>
+                  <li>Chính sách bảo mật</li>
+                </Link>
+                <Link to={`policy/chinh-sach-ban-hang`} className='text-sm text-white'>
+                  <li>Điều khoản dịch vụ</li>
+                </Link>
+                <Link to={`contact`} className='text-sm text-white'>
+                  <li>Liên hệ</li>
+                </Link>
               </ul>
             </div>
           </Col>

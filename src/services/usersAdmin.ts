@@ -82,44 +82,34 @@
 import instance from '@/configs/axios'
 import { IUsers } from '@/types/user'
 
-// Cấu hình axios để gửi cookie trong mỗi request
-instance.defaults.withCredentials = true
-
 // Lấy tất cả người dùng
-export const getAllUser = async (): Promise<IUsers[]> => {
+
+export const getAllUser = async (params?: Partial<IUsers>) => {
   try {
-    const response = await instance.get('/users', {
-      withCredentials: true // Bảo đảm `refreshToken` cookie được gửi tự động
-    })
-    return response.data
+    const { data } = await instance.get('/users', { params })
+    return data
   } catch (error) {
     console.error('Lỗi khi lấy dữ liệu người dùng:', error)
-    return []
+    throw error
   }
 }
 
 // Lấy thông tin người dùng theo ID
-export const getUserById = async (id: number | string) => {
+export const getUserById = async (id: string | undefined) => {
   try {
-    const response = await instance.get(`/users/${id}`, {
-      withCredentials: true
-    })
-    return response.data
+    const { data } = await instance.get(`/users/${id}`)
+    return data.res
   } catch (error) {
     console.log(error)
+    throw error
   }
 }
 
 // Cập nhật thông tin người dùng
-export const editUser = async (users: IUsers) => {
+export const editUser = async (users: Partial<IUsers>) => {
   try {
-    const response = await instance.patch(`/users/${users._id}`, users, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true // Gửi cookie `refreshToken`
-    })
-    return response.data
+    const { data } = await instance.patch(`/users/${users._id}`, users)
+    return data.res
   } catch (error) {
     console.log(error)
     throw new Error('Failed to update user')

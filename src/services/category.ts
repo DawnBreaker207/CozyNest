@@ -1,62 +1,53 @@
 import instance from '@/configs/axios' // instance của axios
 import { ICategory } from '@/types/category'
-
-// Cấu hình axios để gửi cookie trong mỗi request
-instance.defaults.withCredentials = true // Đảm bảo gửi cookie đi cùng với yêu cầu
+import { IQuery } from '@/types/responseApi'
 
 // Lấy tất cả danh mục (categories)
-export const getAllCategories = async (): Promise<ICategory[]> => {
+export const getAllCategories = async (params?: Partial<IQuery>) => {
   try {
-    const response = await instance.get('/categories', {})
-    return response.data
+    const { data } = await instance.get('/categories', { params })
+    return data
   } catch (error) {
     console.error('Lỗi khi lấy danh mục:', error)
-    return [] // Trả về mảng rỗng nếu có lỗi
+    throw error
   }
 }
 
 // Lấy thông tin danh mục theo ID
-export const getCategoryById = async (id: number | string) => {
+export const getCategoryById = async (id: number | string | undefined) => {
   try {
-    const response = await instance.get(`/categories/${id}`, {})
-    return response.data
+    const { data } = await instance.get(`/categories/${id}`, {})
+    return data.res
   } catch (error) {
     console.log(error)
+    throw error
   }
 }
 
 // Thêm một danh mục
-export const addCategory = async (category: ICategory) => {
+export const addCategory = async (category: Partial<ICategory>) => {
   try {
-    const response = await instance.post('/categories', category, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true
-    })
-    return response.data
+    const { data } = await instance.post('/categories', category)
+    return data.res
   } catch (error) {
     console.log(error)
+    throw error
   }
 }
 
 // Xóa một danh mục
-export const removeCategory = async (category: ICategory) => {
+export const removeCategory = async (category: Partial<ICategory>): Promise<void> => {
   try {
-    const response = await instance.delete(`/categories/${category._id}`, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true
-    })
-    return response.data
+    await instance.delete(`/categories/${category._id}`)
+    return
   } catch (error) {
     console.log(error)
+    throw error
   }
 }
 
 // Cập nhật một danh mục
-export const editCategory = async (category: ICategory) => {
+export const editCategory = async (category: Partial<ICategory>) => {
   try {
     const response = await instance.put(`/categories/${category?._id}`, category, {
       headers: {
@@ -65,7 +56,9 @@ export const editCategory = async (category: ICategory) => {
       withCredentials: true
     })
     return response.data
+
   } catch (error) {
     console.log(error)
+    throw error
   }
 }

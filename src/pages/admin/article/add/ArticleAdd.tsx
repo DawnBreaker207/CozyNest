@@ -29,7 +29,8 @@ const ArticleAddPage = () => {
   const handleAddContent = () => {
     setContent([...content, { heading: '', paragraph: '', images: [] }])
   }
-
+  // TODO: Fix type
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = async (values: any) => {
     // Upload ảnh tiêu đề lên Cloudinary
     const thumbnailUrl = thumbnail ? await uploadFileCloudinary(thumbnail) : null

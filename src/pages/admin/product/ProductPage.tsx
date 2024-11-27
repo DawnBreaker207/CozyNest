@@ -1,12 +1,12 @@
-import CustomLoadingPage from '@/components/Loading';
-import { useCategoryQuery } from '@/hooks/useCategoryQuery'; // Import hook để lấy danh mục
+import CustomLoadingPage from '@/components/Loading'
+import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Import hook để lấy danh mục
 import useProductMutation from '@/hooks/useProductMutation'
 import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Skeleton, Space, Table } from 'antd'
+import { Button, message, Popconfirm, Space, Table } from 'antd'
 import { Link } from 'react-router-dom'
 
 const AdminProductPage = () => {
@@ -81,7 +81,8 @@ const AdminProductPage = () => {
             .join(', ') // Ghép các tên danh mục thành chuỗi
           return categoryNames || 'Không xác định'
         } else {
-          return 'Không xác định' // Nếu không có categoryId
+          // Nếu không có categoryId
+          return 'Không xác định'
         }
       }
     },
@@ -122,7 +123,9 @@ const AdminProductPage = () => {
           <Link to={`/admin/products/${product._id}/edit`}>
             <Button icon={<EditOutlined />} />
           </Link>
-          <Button icon={<EyeOutlined />} />
+          <Link to={`/admin/products/${product._id}/variants`}>
+            <Button icon={<EyeOutlined />} />
+          </Link>
           <Popconfirm
             title='Xóa sản phẩm'
             description='Bạn có chắc chắn muốn xóa sản phẩm này?'
@@ -141,7 +144,7 @@ const AdminProductPage = () => {
   if (isLoadingProducts || isLoadingCategories)
     return (
       <div>
-        <CustomLoadingPage/>
+        <CustomLoadingPage />
       </div>
     )
   if (isErrorProducts) return <div>{errorProducts.message}</div>

@@ -1,14 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import instance from '@/configs/axios'
+import { login } from '@/services/auth'
+import { IUsers } from '@/types/user'
+import { openNotify } from '@/utils/notification'
 import { useMutation } from '@tanstack/react-query'
-import { Form, Input, Button, Checkbox, message } from 'antd'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Button, Checkbox, Form, Input, message } from 'antd'
 import Cookies from 'js-cookie'
-
-type FieldType = {
-  email?: string
-  password?: string // Cập nhật loại dữ liệu cho mật khẩu
-}
+import { NavLink, useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -35,6 +31,7 @@ const Login = () => {
       Cookies.set('user', JSON.stringify(res), { expires: 1 });
 
       // Điều hướng và làm mới trang
+
       setTimeout(() => {
         navigate('/');
         window.location.reload();

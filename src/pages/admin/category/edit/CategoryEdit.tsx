@@ -1,9 +1,9 @@
+import { useCategory } from '@/hooks/useCategoryQuery' // Sử dụng hook bạn đã cung cấp
 import { Form, Input, Button, Checkbox, message, Upload } from 'antd'
 import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined, UploadOutlined } from '@ant-design/icons'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ICategory } from '@/types/category'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
-import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { useEffect, useState } from 'react'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { RcFile } from 'antd/es/upload'
@@ -25,48 +25,45 @@ const EditCategoryPage = () => {
         navigate(`/admin/categories`)
       }, 600)
     }
-  });
+  })
   useEffect(() => {
     if (data?.res?.thumbnail) {
-      setThumbnail(data.res.thumbnail);
+      setThumbnail(data.res.thumbnail)
     }
-  }, [data]);
-
- 
+  }, [data])
 
   const handleUpload = async (file: RcFile) => {
     try {
-      const response = await uploadFileCloudinary(file);
+      const response = await uploadFileCloudinary(file)
       if (response) {
-        setThumbnail(response);
-        messageApi.success('Upload thumbnail thành công');
+        setThumbnail(response)
+        messageApi.success('Upload thumbnail thành công')
       } else {
-        messageApi.error('Không thể upload thumbnail');
+        messageApi.error('Không thể upload thumbnail')
       }
     } catch (err) {
-      messageApi.error('Lỗi upload ảnh');
+      messageApi.error('Lỗi upload ảnh')
     }
-    return false;
-  };
-  
+    return false
+  }
+
   const onFinish = (values: ICategory) => {
     if (!thumbnail) {
-      messageApi.error('Vui lòng upload thumbnail');
-      return;
+      messageApi.error('Vui lòng upload thumbnail')
+      return
     }
 
     const updatedValues = {
       ...values,
-      thumbnail,
-    };
+      thumbnail
+    }
 
-    mutate({ ...data?.res, ...updatedValues, _id: id });
-  };
+    mutate({ ...data?.res, ...updatedValues, _id: id })
+
     if (!id) {
       messageApi.error('ID danh mục không hợp lệ')
       return
     }
-  
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>{error.message}</div>
@@ -75,7 +72,7 @@ const EditCategoryPage = () => {
     <>
       {contextHolder}
       <div className='bg-white rounded-lg'>
-        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data?.res }}>
+        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data }}>
           <div className='flex justify-between'>
             <div>
               <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Edit Category</span>
@@ -110,7 +107,7 @@ const EditCategoryPage = () => {
                   <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>
                 </Upload>
                 {thumbnail ? (
-                 <img src={thumbnail} alt="Thumbnail" className="w-40 h-40 object-cover rounded" />
+                  <img src={thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
                   <span className='mt-2'>Hiện tại: {data?.res?.thumbnail}</span>
                 )}

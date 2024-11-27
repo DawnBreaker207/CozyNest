@@ -1,11 +1,11 @@
+import CustomLoadingPage from '@/components/Loading'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
-import { useCategoryQuery } from '@/hooks/useCategoryQuery'
-import CustomLoadingPage from '@/components/Loading'
 
 const CategoryPage = () => {
   const queryClient = useQueryClient()
@@ -29,10 +29,11 @@ const CategoryPage = () => {
   })
 
   // Chuẩn bị dữ liệu cho bảng
-  const dataSource = data?.res?.map((item: ICategory) => ({
-    key: item._id,
-    ...item
-  })) || [];
+  const dataSource =
+    data?.res?.map((item: ICategory) => ({
+      key: item._id,
+      ...item
+    })) || []
 
   // Cấu trúc các cột của bảng
   const columns = [
@@ -94,10 +95,14 @@ const CategoryPage = () => {
       )
     }
   ]
-  
 
   // Xử lý trạng thái khi loading hoặc error
-  if (isLoading) return <div><CustomLoadingPage/></div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error?.message}</div>
 
   return (

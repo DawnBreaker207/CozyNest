@@ -1,15 +1,20 @@
-// hooks/useArticleQuery.ts
-
 import { getAllArticles, getArticleById } from '@/services/article'
+import IArticle from '@/types/article'
+import { IQuery, ResAPI } from '@/types/responseApi'
 import { useQuery } from '@tanstack/react-query'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useArticleQuery = (options?: any) => {
-  const { data, ...rest } = useQuery({
+export const useArticleQuery = (options?: Partial<IQuery>) => {
+  const { data, ...rest } = useQuery<ResAPI<IArticle[]>>({
     queryKey: ['ARTICLE_KEY', options],
-    queryFn: async () => {
-      return options?.id ? await getArticleById(options.id) : await getAllArticles()
-    }
+    queryFn: async () => await getAllArticles(options)
+  })
+
+  return { data, ...rest }
+}
+export const useArticle = (id?: string) => {
+  const { data, ...rest } = useQuery({
+    queryKey: ['ARTICLE_KEY', id],
+    queryFn: async () => await getArticleById(id)
   })
 
   return { data, ...rest }

@@ -6,12 +6,13 @@ import { IUsers } from '@/types/user'
 // import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 // import { IUsers } from '@/types/user'
 // import { PlusOutlined } from '@ant-design/icons'
+import { validatePhoneNumber } from '@/utils/validatorPhoneNumber'
 import { Button, Checkbox, Form, FormProps, Input, Modal, Pagination, Select, Switch } from 'antd'
 import { useState } from 'react'
+import { FaUsersCog } from 'react-icons/fa'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { Link } from 'react-router-dom'
-import { FaUsersCog } from 'react-icons/fa'
 
 const AdminCustomerPage = () => {
   const [checkedId, setCheckedId] = useState<number[]>([])
@@ -36,13 +37,7 @@ const AdminCustomerPage = () => {
   const handleCancel = () => {
     setIsModalVisible(false)
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const validatePhoneNumber = (_rule: any, value: any) => {
-    if (!value || value.replace(/\D/g, '').length === 10) {
-      return Promise.resolve()
-    }
-    return Promise.reject('Số điện thoại không hợp lệ!')
-  }
+
   const [formVisible, setFormVisible] = useState(false)
 
   const handleToggle = (checked: boolean) => {
@@ -54,11 +49,14 @@ const AdminCustomerPage = () => {
     )
   }
   const { data, isLoading, error } = useAdminUsersQuery()
-  const users = data?.data || []
-  // console.log(users)
+  const users = Array.isArray(data?.res) ? data.res : []
 
   if (isLoading) {
-    return <div><CustomLoadingPage/></div>
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   }
 
   if (error) {

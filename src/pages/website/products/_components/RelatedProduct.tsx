@@ -4,20 +4,22 @@ import { FaRegEye } from 'react-icons/fa'
 import { Cart } from '@/components/icons'
 import { IProduct } from '@/types/product'
 import { Link } from 'react-router-dom'
-
-const RelatedProduct = ({ id }: { id: string | number }) => {
+type Props = {
+  id: string | undefined
+}
+const RelatedProduct = ({ id }: Props) => {
   const { data, isLoading } = useQuery({
     queryKey: ['RELATED_PRODUCT', id],
     queryFn: async () => {
       const { data } = await instance.get(`/categories/${id}`)
-      return data
+      return data.res
     }
   })
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return
 
   // Ensure we access the correct array from the response
-  const products = data?.res?.products || []
+  const products = data?.products || []
 
   return (
     <div className=''>

@@ -1,22 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { FaRegEye } from 'react-icons/fa'
-import CouponCard from '../../cart/_components/CouponCard'
 import { Cart } from '@/components/icons/index'
+import { useProduct } from '@/hooks/useProductQuery'
+import { Variants } from '@/types/product'
 import { useState } from 'react'
-import { GrFormNext } from 'react-icons/gr'
-import { GrFormPrevious } from 'react-icons/gr'
-import { useProductQuery } from '@/hooks/useProductQuery'
+import { FaRegEye } from 'react-icons/fa'
+import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
 import { Link, useParams } from 'react-router-dom'
+import CouponCard from '../../cart/_components/CouponCard'
 import RelatedProduct from '../_components/RelatedProduct'
+import ReviewComponent from './_components/Review'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
-  const [selectedColorId, setSelectedColorId] = useState(null) // State để lưu id màu sắc được chọn
+  const [selectedColorId, setSelectedColorId] = useState<string | null>(null) // State để lưu id màu sắc được chọn
   // console.log(selectedColorId)
 
   const { id } = useParams() // Lấy productId từ URL
-  const { data, isLoading, error } = useProductQuery({ id })
+  const { data, isLoading, error } = useProduct(id)
   // console.log(data)
 
   if (isLoading) {
@@ -28,22 +28,23 @@ const ProductDetail = () => {
   }
 
   // Lấy tất cả các màu sắc từ variants
-  const variants = data?.res?.variants || [] // Đảm bảo variants không undefined
+  const variants = data?.variants || [] // Đảm bảo variants không undefined
   const colors = variants
-    .map((variant: any) => ({
+    .map((variant: Variants) => ({
       id: variant?.sku_id?._id, // Lưu id của màu sắc
       value: variant?.option_value_id?.value // Lưu giá trị của màu sắc
     }))
-    .filter((color: any) => color.value) // Lọc các màu sắc hợp lệ
+    .filter((color) => color.value) // Lọc các màu sắc hợp lệ
 
-  const handleColorSelect = (id: any) => {
+  const handleColorSelect = (id: string) => {
     setSelectedColorId(id) // Cập nhật id màu sắc được chọn
   }
 
   //Kiểm tra dữ liệu product
-  if (!data || !data.res) return <p>Product not found</p>
-  const product = data.res
-  const category = product.categoryId?.[0]
+  if (!data || !data) return <p>Product not found</p>
+  const product = data
+  const category = product?.categoryId?._id
+
   const increase = () => {
     if (count < 10) setCount(count + 1)
   }
@@ -74,37 +75,38 @@ const ProductDetail = () => {
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
         <div className='flex flex-col'>
-          <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
-            {/* List of Thumbnails */}
-            <div className='lg:flex flex-wrap flex-col hidden'>
-              {thumbnails.map((thumbnail, index) => (
-                <img
-                  key={index}
-                  src={thumbnail}
-                  alt={`Product Thumbnail ${index + 1}`}
-                  className='w-16 h-16 mb-3 cursor-pointer'
-                  onClick={() => setActiveImageIndex(index)}
-                />
-              ))}
-            </div>
-            <div className='relative lg:mx-0 md:w-[520px] md:h-[520px] h-auto w-full overflow-hidden'>
-              <div
-                className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
-                style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
-              >
+          <div className='flex flex-col'>
+            <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
+              {/* List of Thumbnails */}
+              <div className='lg:flex flex-wrap flex-col hidden'>
                 {thumbnails.map((thumbnail, index) => (
                   <img
                     key={index}
                     src={thumbnail}
-                    alt={`Product Image ${index + 1}`}
-                    className='max-w-full h-auto' // Keep image aspect ratio and fit within container
+                    alt={`Product Thumbnail ${index + 1}`}
+                    className='w-16 h-16 mb-3 cursor-pointer'
+                    onClick={() => setActiveImageIndex(index)}
                   />
                 ))}
               </div>
+              <div className='relative lg:mx-0 md:w-[520px] md:h-[520px] h-auto w-full overflow-hidden'>
+                <div
+                  className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
+                  style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+                >
+                  {thumbnails.map((thumbnail, index) => (
+                    <img
+                      key={index}
+                      src={thumbnail}
+                      alt={`Product Image ${index + 1}`}
+                      className='max-w-full h-auto' // Keep image aspect ratio and fit within container
+                    />
+                  ))}
+                </div>
 
-              <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
-                {product.discount}%
-              </span>
+                <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
+                  {product.discount}%
+                </span>
 
               {/* Back Button */}
               <button
@@ -124,27 +126,18 @@ const ProductDetail = () => {
                 <GrFormNext className='w-[35px] h-[35px]' />
               </button>
             </div>
-            {/* List of Thumbnails */}
-            <div className='flex flex-wrap gap-2 flex-row mx-auto lg:hidden'>
-              {thumbnails.map((thumbnail, index) => (
-                <img
-                  key={index}
-                  src={thumbnail}
-                  alt={`Product Thumbnail ${index + 1}`}
-                  className='sm:w-16 sm:h-16 w-12 h-12 mb-[10px] cursor-pointer'
-                  onClick={() => setActiveImageIndex(index)}
-                />
-              ))}
+            {/* Share Section */}
+            <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
+              <span className='font-light'>Chia sẻ:</span>
+              <img src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
+              <img src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
+              <img src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
+              <img src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
+              <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
             </div>
           </div>
-          {/* Share Section */}
-          <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
-            <span className='font-light'>Chia sẻ:</span>
-            <img title='img' src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
-            <img title='img' src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
-            <img title='img' src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
-            <img title='img' src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
-            <img title='img' src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
+          <div>
+            <ReviewComponent />
           </div>
         </div>
         <div className='col-span-1 lg:mt-0 mt-6'>

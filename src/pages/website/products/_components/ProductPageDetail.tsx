@@ -14,7 +14,6 @@ import { ICategory } from '@/types/category'
 
 const ProductsPageDetail = () => {
   const { id } = useParams()
-
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => await instance.get(`/categories`)
