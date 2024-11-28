@@ -21,9 +21,9 @@ import instance from '@/configs/axios'
 const { useToken } = theme
 
 const Header = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState([]);
+  const [searchValue, setSearchValue] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState([])
   const [, contextHolder] = message.useMessage()
   const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
@@ -36,34 +36,33 @@ const Header = () => {
 
   const handleSearch = async (value: string) => {
     if (!value.trim()) {
-      message.warning("Vui lòng nhập từ khóa tìm kiếm!");
-      return;
+      message.warning('Vui lòng nhập từ khóa tìm kiếm!')
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
 
     try {
       // Gọi API với query từ người dùng
-      const response = await instance.get("http://localhost:8888/api/v1/search", {
-        params: { query: value },
-      });
+      const response = await instance.get('http://localhost:8888/api/v1/search', {
+        params: { query: value }
+      })
 
-      setResults(response.data); // Lưu kết quả vào state
+      setResults(response.data) // Lưu kết quả vào state
     } catch (error: any) {
       if (error.response?.status === 404) {
-        message.info("Không tìm thấy sản phẩm nào.");
+        message.info('Không tìm thấy sản phẩm nào.')
       } else {
-        message.error("Đã có lỗi xảy ra khi tìm kiếm!");
+        message.error('Đã có lỗi xảy ra khi tìm kiếm!')
       }
-      console.error(error);
+      console.error(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   const clearResults = () => {
-    setResults([]); // Xóa kết quả tìm kiếm
-  };
-  
+    setResults([]) // Xóa kết quả tìm kiếm
+  }
 
   const toggleDrawer = (isVisible: boolean, isOpen: boolean) => {
     setVisible(isVisible)
@@ -215,64 +214,58 @@ const Header = () => {
             </NavLink>
           </div>
           <div className='flex items-center space-x-4'>
-          <Dropdown
-      trigger={["click"]}
-      onVisibleChange={(visible) => {
-        if (!visible) clearResults(); // Xóa lịch sử khi dropdown đóng
-      }}
-      dropdownRender={() => (
-        <div style={contentStyle}>
-          <Space direction="vertical" style={{ padding: 8 }}>
-            {/* Thanh tìm kiếm */}
-            <Search
-              placeholder="Tìm kiếm sản phẩm..."
-              onSearch={handleSearch}
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              loading={loading}
-              className="w-full"
-            />
-          </Space>
+            <Dropdown
+              trigger={['click']}
+              onVisibleChange={(visible) => {
+                if (!visible) clearResults() // Xóa lịch sử khi dropdown đóng
+              }}
+              dropdownRender={() => (
+                <div style={contentStyle}>
+                  <Space direction='vertical' style={{ padding: 8 }}>
+                    {/* Thanh tìm kiếm */}
+                    <Search
+                      placeholder='Tìm kiếm sản phẩm...'
+                      onSearch={handleSearch}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      loading={loading}
+                      className='w-full'
+                    />
+                  </Space>
 
-          {/* Hiển thị kết quả */}
-          <Divider style={{ margin: "8px 0" }} />
-          {results.length > 0 ? (
-            <List
-              size="small"
-              bordered
-              dataSource={results}
-              renderItem={(item:any) => (
-                <List.Item>
-                <img
-                  src={item.thumbnail}
-                  alt={item.name}
-                  style={{ width: 50, height: 50, marginRight: 8 }}
-                />
-                <div>
-                  <strong>{item.name}</strong>
-                  <p className="text-sm text-gray-500">{item.description}</p>
-                   {/* Link tới trang chi tiết sản phẩm */}
-                   <Link to={`/detail/${item._id}`}className="text-blue-500 hover:underline">
-                          Xem chi tiết
-                        </Link>
+                  {/* Hiển thị kết quả */}
+                  <Divider style={{ margin: '8px 0' }} />
+                  {results.length > 0 ? (
+                    <List
+                      size='small'
+                      bordered
+                      dataSource={results}
+                      renderItem={(item: any) => (
+                        <List.Item>
+                          <img src={item.thumbnail} alt={item.name} style={{ width: 50, height: 50, marginRight: 8 }} />
+                          <div>
+                            <strong>{item.name}</strong>
+                            <p className='text-sm text-gray-500'>{item.description}</p>
+                            {/* Link tới trang chi tiết sản phẩm */}
+                            <Link to={`/detail/${item._id}`} className='text-blue-500 hover:underline'>
+                              Xem chi tiết
+                            </Link>
+                          </div>
+                        </List.Item>
+                      )}
+                    />
+                  ) : (
+                    <p className='text-center text-gray-500 p-2'>{loading ? 'Đang tải...' : 'Không có kết quả'}</p>
+                  )}
                 </div>
-              </List.Item>
               )}
-            />
-          ) : (
-            <p className="text-center text-gray-500 p-2">
-              {loading ? "Đang tải..." : "Không có kết quả"}
-            </p>
-          )}
-        </div>
-      )}
-    >
-      <span onClick={(e) => e.preventDefault()}>
-        <Space>
-          <Button shape="circle" icon={<SearchOutlined />} />
-        </Space>
-      </span>
-    </Dropdown>
+            >
+              <span onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <Button shape='circle' icon={<SearchOutlined />} />
+                </Space>
+              </span>
+            </Dropdown>
             <Dropdown
               menu={{ items: users }}
               trigger={['click']}

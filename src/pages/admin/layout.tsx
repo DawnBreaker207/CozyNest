@@ -20,7 +20,22 @@ import {
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Avatar, Badge, Button, Dropdown, Input, Layout, List, Menu, message, Modal, Popconfirm, Space, Spin, theme } from 'antd'
+import {
+  Avatar,
+  Badge,
+  Button,
+  Dropdown,
+  Input,
+  Layout,
+  List,
+  Menu,
+  message,
+  Modal,
+  Popconfirm,
+  Space,
+  Spin,
+  theme
+} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MdOutlineColorLens } from 'react-icons/md'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -75,16 +90,16 @@ const LayoutAdmin: React.FC = () => {
           dataSource={results}
           renderItem={(item: any) => (
             <List.Item>
-            <div className='flex items-center justify-between p-2 w-full'>
-             
+              <div className='flex items-center justify-between p-2 w-full'>
                 <img src={item.thumbnail} alt='' className='w-[70px] h-[70px] object-cover' />
                 <span className='ml-2 text-base'>{item.name}</span>
                 <span className='ml-2 text-base'>{item.brand}</span>
                 <p className='text-base'>Gia: {item.price}</p>
-                <Link to={`/detail/${item.id}`} className='text-base'>xem nhanh</Link>
-            </div>
-          </List.Item>
-          
+                <Link to={`/detail/${item.id}`} className='text-base'>
+                  xem nhanh
+                </Link>
+              </div>
+            </List.Item>
           )}
         />
       ) : (
