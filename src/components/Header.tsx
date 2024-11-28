@@ -325,7 +325,7 @@ const Header = () => {
                         </div>
                       </div>
                       <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
-                      <button onClick={() => mutate({ action: 'REMOVE', productId: product.productId._id })}>
+                      <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.productId._id })}>
                         <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
                       </button>
                     </div>
