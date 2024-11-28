@@ -1,22 +1,19 @@
-import { useCategory } from '@/hooks/useCategoryQuery' // Sử dụng hook bạn đã cung cấp
-import { Form, Input, Button, Checkbox, message, Upload } from 'antd'
-import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined, UploadOutlined } from '@ant-design/icons'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ICategory } from '@/types/category'
-import useCategoryMutation from '@/hooks/useCategoryMutations'
-import { useEffect, useState } from 'react'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import useCategoryMutation from '@/hooks/useCategoryMutations'
+import { useCategory } from '@/hooks/useCategoryQuery'
+import { ICategory } from '@/types/category'
+import { CaretRightOutlined, CheckSquareOutlined, CloseOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const EditCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const [thumbnail, setThumbnail] = useState<string | null>(null)
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
-  if (!id) {
-    return <div>Error: Invalid category ID</div>
-  }
-  const { data, isLoading, isError, error } = useCategoryQuery({ id })
+  const { data, isLoading, isError, error } = useCategory(id)
   const { mutate } = useCategoryMutation({
     action: 'UPDATE',
     onSuccess: () => {
@@ -32,6 +29,9 @@ const EditCategoryPage = () => {
     }
   }, [data])
 
+  if (!id) {
+    return <div>Error: Invalid category ID</div>
+  }
   const handleUpload = async (file: RcFile) => {
     try {
       const response = await uploadFileCloudinary(file)
@@ -59,11 +59,11 @@ const EditCategoryPage = () => {
     }
 
     mutate({ ...data?.res, ...updatedValues, _id: id })
-
-    if (!id) {
-      messageApi.error('ID danh mục không hợp lệ')
-      return
-    }
+  }
+  if (!id) {
+    messageApi.error('ID danh mục không hợp lệ')
+    return
+  }
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>{error.message}</div>
