@@ -12,14 +12,21 @@ import {
   ShoppingCartOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Button, Divider, Drawer, Dropdown, GetProps, Input, MenuProps, message, Space, theme } from 'antd'
+import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Space, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
+import instance from '@/configs/axios'
+import { IProductCart } from '@/types/producrCart'
+import { ProductItem } from '@/types/productItem'
+import { isAxiosError } from 'axios'
 
 const { useToken } = theme
 
 const Header = () => {
+  const [searchValue, setSearchValue] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState([])
   const [, contextHolder] = message.useMessage()
   const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
@@ -29,6 +36,37 @@ const Header = () => {
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
   const { data: userData, error } = useAdminUser(userId ?? '')
+
+  const handleSearch = async (value: string) => {
+    if (!value.trim()) {
+      message.warning('Vui lòng nhập từ khóa tìm kiếm!')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      // Gọi API với query từ người dùng
+      const response = await instance.get('http://localhost:8888/api/v1/search', {
+        params: { query: value }
+      })
+
+      setResults(response.data) // Lưu kết quả vào state
+    } catch (error: unknown) {
+      if (isAxiosError(error) && error.response?.status === 404) {
+        message.info('Không tìm thấy sản phẩm nào.')
+      } else {
+        message.error('Đã có lỗi xảy ra khi tìm kiếm!')
+      }
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  const clearResults = () => {
+    setResults([]) // Xóa kết quả tìm kiếm
+  }
+
   const toggleDrawer = (isVisible: boolean, isOpen: boolean) => {
     setVisible(isVisible)
     setOpen(isOpen)
@@ -181,21 +219,47 @@ const Header = () => {
           <div className='flex items-center space-x-4'>
             <Dropdown
               trigger={['click']}
+              onVisibleChange={(visible) => {
+                if (!visible) clearResults() // Xóa lịch sử khi dropdown đóng
+              }}
               dropdownRender={() => (
                 <div style={contentStyle}>
-                  <Divider style={{ margin: 0 }} />
-                  <Space style={{ padding: 8 }}>
+                  <Space direction='vertical' style={{ padding: 8 }}>
+                    {/* Thanh tìm kiếm */}
                     <Search
-                      className=' w-full'
-                      placeholder='tìm kiếm sản phẩm... '
-                      onSearch={onSearch}
-                      style={{ width: 200 }}
+                      placeholder='Tìm kiếm sản phẩm...'
+                      onSearch={handleSearch}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      loading={loading}
+                      className='w-full'
                     />
                   </Space>
-                  <br />
-                  <Space className=' px-16 py-2 rounded'>
-                    <Button className='bg-yellow-500'>Tìm kiếm</Button>
-                  </Space>
+
+                  {/* Hiển thị kết quả */}
+                  <Divider style={{ margin: '8px 0' }} />
+                  {results.length > 0 ? (
+                    <List
+                      size='small'
+                      bordered
+                      dataSource={results}
+                      renderItem={(item: ProductItem) => (
+                        <List.Item>
+                          <img src={item.thumbnail} alt={item.name} style={{ width: 50, height: 50, marginRight: 8 }} />
+                          <div>
+                            <strong>{item.name}</strong>
+                            <p className='text-sm text-gray-500'>{item.description}</p>
+                            {/* Link tới trang chi tiết sản phẩm */}
+                            <Link to={`/detail/${item._id}`} className='text-blue-500 hover:underline'>
+                              Xem chi tiết
+                            </Link>
+                          </div>
+                        </List.Item>
+                      )}
+                    />
+                  ) : (
+                    <p className='text-center text-gray-500 p-2'>{loading ? 'Đang tải...' : 'Không có kết quả'}</p>
+                  )}
                 </div>
               )}
             >
@@ -205,7 +269,6 @@ const Header = () => {
                 </Space>
               </span>
             </Dropdown>
-
             <Dropdown
               menu={{ items: users }}
               trigger={['click']}
@@ -297,7 +360,7 @@ const Header = () => {
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
             {products.length > 0 ? (
               <div>
-                {products.map((product: any, index: number) => (
+                {products.map((product: IProductCart, index: number) => (
                   <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
                     {/* Hình ảnh và thông tin sản phẩm */}
                     <div className='flex items-center'>
@@ -324,10 +387,6 @@ const Header = () => {
                           </button>
                         </div>
                       </div>
-                      <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
-                      <button onClick={() => mutate({ action: 'REMOVE', productId: product.productId._id })}>
-                        <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
-                      </button>
                     </div>
 
                     {/* Giá sản phẩm */}

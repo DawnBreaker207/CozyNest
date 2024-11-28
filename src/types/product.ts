@@ -10,7 +10,7 @@ export interface IProduct {
   originId?: string | null
   name: string
   thumbnail: string
-  categoryId: ICategory
+  category_id: ICategory
   brand: string
   description: string
   price: number
