@@ -17,6 +17,9 @@ import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
 import instance from '@/configs/axios'
+import { IProductCart } from '@/types/producrCart'
+import { ProductItem } from '@/types/productItem'
+import { isAxiosError } from 'axios'
 
 const { useToken } = theme
 
@@ -49,8 +52,8 @@ const Header = () => {
       })
 
       setResults(response.data) // Lưu kết quả vào state
-    } catch (error: any) {
-      if (error.response?.status === 404) {
+    } catch (error: unknown) {
+      if (isAxiosError(error) && error.response?.status === 404) {
         message.info('Không tìm thấy sản phẩm nào.')
       } else {
         message.error('Đã có lỗi xảy ra khi tìm kiếm!')
@@ -240,7 +243,7 @@ const Header = () => {
                       size='small'
                       bordered
                       dataSource={results}
-                      renderItem={(item: any) => (
+                      renderItem={(item: ProductItem) => (
                         <List.Item>
                           <img src={item.thumbnail} alt={item.name} style={{ width: 50, height: 50, marginRight: 8 }} />
                           <div>
@@ -357,7 +360,7 @@ const Header = () => {
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
             {products.length > 0 ? (
               <div>
-                {products.map((product: any, index: number) => (
+                {products.map((product: IProductCart, index: number) => (
                   <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
                     {/* Hình ảnh và thông tin sản phẩm */}
                     <div className='flex items-center'>
@@ -384,10 +387,6 @@ const Header = () => {
                           </button>
                         </div>
                       </div>
-                      <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
-                      <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.productId._id })}>
-                        <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
-                      </button>
                     </div>
 
                     {/* Giá sản phẩm */}

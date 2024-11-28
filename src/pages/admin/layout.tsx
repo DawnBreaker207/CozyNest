@@ -51,9 +51,18 @@ const LayoutAdmin: React.FC = () => {
   console.log(userJson)
   const role = userJson ? userJson?.[0].role : null
   console.log(role)
+  // Trạng thái kiểm tra quyền
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
+
   useEffect(() => {
-    navigate(role === 'admin' || role === 'manager' ? '/admin' : '/login')
-  }, [role])
+    if (role === 'admin' || role === 'manager') {
+      setIsAuthorized(true)
+      navigate('/admin') // Điều hướng vào trang admin
+    } else {
+      setIsAuthorized(false)
+      navigate('/login') // Điều hướng về trang login
+    }
+  }, [role, navigate]) // Chỉ chạy lại khi role thay đổi
   const handleSearch = async (value: string) => {
     if (!value.trim()) {
       message.warning('Vui lòng nhập từ khóa tìm kiếm!')
@@ -107,6 +116,7 @@ const LayoutAdmin: React.FC = () => {
       )}
     </div>
   )
+
   const handleLogout = () => {
     Modal.confirm({
       title: 'Bạn có chắc chắn muốn đăng xuất không?',
@@ -149,7 +159,9 @@ const LayoutAdmin: React.FC = () => {
       </div>
     </Header>
   )
-
+  if (isAuthorized === null) {
+    return null // Hoặc một spinner loading nếu cần
+  }
   //TODO: ???????
   const isAddProductPage = location.pathname === '/admin/products/add'
   const isEditProductPage = location.pathname === `/admin/products/${id}/edit`
