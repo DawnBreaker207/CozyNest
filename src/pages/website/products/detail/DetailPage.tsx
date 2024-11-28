@@ -108,34 +108,23 @@ const ProductDetail = () => {
                   {product.discount}%
                 </span>
 
-                {/* Back Button */}
-                <button
-                  className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
-                  onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
-                >
-                  <GrFormPrevious className='w-[35px] h-[35px]' />
-                </button>
+              {/* Back Button */}
+              <button
+                title='Back'
+                className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
+                onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
+              >
+                <GrFormPrevious className='w-[35px] h-[35px]' />
+              </button>
 
-                {/* Next Button */}
-                <button
-                  className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
-                  onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
-                >
-                  <GrFormNext className='w-[35px] h-[35px]' />
-                </button>
-              </div>
-              {/* List of Thumbnails */}
-              <div className='flex flex-wrap gap-2 flex-row mx-auto lg:hidden'>
-                {thumbnails.map((thumbnail, index) => (
-                  <img
-                    key={index}
-                    src={thumbnail}
-                    alt={`Product Thumbnail ${index + 1}`}
-                    className='sm:w-16 sm:h-16 w-12 h-12 mb-[10px] cursor-pointer'
-                    onClick={() => setActiveImageIndex(index)}
-                  />
-                ))}
-              </div>
+              {/* Next Button */}
+              <button
+                title='Next'
+                className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
+                onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
+              >
+                <GrFormNext className='w-[35px] h-[35px]' />
+              </button>
             </div>
             {/* Share Section */}
             <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
@@ -374,7 +363,6 @@ const ProductDetail = () => {
 
       <div className='mb-20 container'>
         <RelatedProduct id={category} />
-
         <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>
           <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
