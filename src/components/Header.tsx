@@ -361,16 +361,16 @@ const Header = () => {
             {products.length > 0 ? (
               <div>
                 {products.map((product: IProductCart, index: number) => (
-                  <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                  <div key={product?.sku_id?._id} className='flex justify-between items-center mb-4 border-b pb-4'>
                     {/* Hình ảnh và thông tin sản phẩm */}
                     <div className='flex items-center'>
                       <img
-                        src={product.sku_id.product_id.thumbnail}
-                        alt={product.sku_id.name}
+                        src={product.sku_id?.product_id.thumbnail}
+                        alt={product.sku_id?.name}
                         className='w-16 h-16 object-cover'
                       />
                       <div className='ml-2 flex flex-col justify-between'>
-                        <p className='font-semibold'>{product.sku_id.name}</p>
+                        <p className='font-semibold'>{product.sku_id?.name}</p>
                         <div className='flex items-center justify-center mt-2'>
                           <button
                             onClick={() => decrease(index)} // Truyền index để giảm số lượng
