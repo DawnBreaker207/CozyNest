@@ -82,83 +82,100 @@ const CartPage = () => {
             {/* item cart */}
             <div className='border border-gray-300 rounded-xl p-4'>
               <ul className='space-y-6'>
-                {products.map((product, index) => (
-                  <li key={product.sku_id._id} className='flex items-center justify-between cursor-pointer'>
-                    <div className='flex items-center gap-4'>
-                      <div className=''>
-                        <img
-                          src={product.sku_id.product_id.thumbnail} // Sử dụng thumbnail từ dữ liệu
-                          alt={product.sku_id.product_id.name} // Sử dụng tên sản phẩm cho alt
-                          className='md:size-20 size-14 min-w-14 min-h-14'
-                        />
-                      </div>
-                      <div className='flex flex-col gap-2'>
-                        <h3 className='text-base truncate sm:w-full w-40'>
-                          {product.sku_id.product_id.name} {/* Sử dụng tên sản phẩm */}
-                        </h3>
-                        <h3 className='text-base truncate sm:w-full w-40'>
-                          {product.sku_id.slug} {/* Sử dụng tên sản phẩm */}
-                        </h3>
-                        <div className='flex items-center gap-[10px]'>
-                          <span className='text-red-500 font-semibold'>
-                            {product.price}₫ {/* Giá thay đổi theo số lượng */}
-                          </span>
-                          <span className='font-light line-through text-xs'>{product.price}₫</span> {/* Giá gốc */}
+                {products.map((product, index) => {
+                  // Lấy thông tin variant tương ứng từ variants của sản phẩm
+                  const currentVariant = product.sku_id.product_id.variants.find(
+                    (variant: any) => variant.sku_id === product.sku_id._id
+                  )
+
+                  // Lấy option_value_id từ variant
+                  const optionValue = currentVariant?.option_value_id
+
+                  return (
+                    <li key={product.sku_id._id} className='flex items-center justify-between cursor-pointer'>
+                      <div className='flex items-center gap-4'>
+                        <div>
+                          <img
+                            src={product.sku_id.product_id.images[0]?.url || product.sku_id.product_id.thumbnail} // Hiển thị hình ảnh
+                            alt={product.sku_id.product_id.name} // Sử dụng tên sản phẩm cho alt
+                            className='md:size-20 size-14 min-w-14 min-h-14'
+                          />
+                        </div>
+                        <div className='flex flex-col gap-2'>
+                          <h3 className='text-base truncate sm:w-full w-40'>
+                            {product.sku_id.product_id.name} {/* Tên sản phẩm */}
+                          </h3>
+                          {/* Hiển thị option_value_id (ví dụ: màu sắc, kích thước) */}
+                          {optionValue && (
+                            <p className='text-sm text-gray-600'>
+                              {optionValue.value} {/* Tên của biến thể (ví dụ: màu sắc) */}
+                            </p>
+                          )}
+                          <div className='flex items-center gap-[10px]'>
+                            <span className='text-red-500 font-semibold'>
+                              {product.price.toLocaleString()}₫ {/* Giá thay đổi theo số lượng */}
+                            </span>
+                            <span className='font-light line-through text-xs'>
+                              {product.price.toLocaleString()}₫ {/* Giá gốc */}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className='flex flex-col gap-2 items-center'>
-                      <span className='text-red-500 font-semibold text-end'>{product.price * quantities[index]}₫</span>
-                      <div className='flex items-center justify-center'>
-                        <button
-                          title='Giam so luong'
-                          onClick={() => decrease(index)} // Truyền index để giảm số lượng
-                          className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
-                        >
-                          -
-                        </button>
-                        <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
-                        {/* Sử dụng số lượng từ store */}
-                        <button
-                          title='Tang so luong'
-                          onClick={() => increase(index)} // Truyền index để tăng số lượng
-                          className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
-                        >
-                          +
-                        </button>
+                      <div className='flex flex-col gap-2 items-center'>
+                        <span className='text-red-500 font-semibold text-end'>
+                          {product.price * product.quantity}₫ {/* Tổng giá cho sản phẩm với số lượng */}
+                        </span>
+                        <div className='flex items-center justify-center'>
+                          <button
+                            title='Giảm số lượng'
+                            onClick={() => decrease(index)} // Truyền index để giảm số lượng
+                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                          >
+                            -
+                          </button>
+                          <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>
+                          {/* Sử dụng số lượng từ store */}
+                          <button
+                            title='Tăng số lượng'
+                            onClick={() => increase(index)} // Truyền index để tăng số lượng
+                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <button
-                      title='Xoa hàng'
-                      onClick={() => {
-                        Modal.confirm({
-                          title: 'Xác nhận xóa',
-                          content: `Bạn có chắc chắn muốn xóa sản phẩm ${product.sku_id.product_id.name} khỏi giỏ hàng?`,
-                          okText: 'Có',
-                          cancelText: 'Không',
-                          onOk: () => {
-                            mutate(
-                              {
-                                action: 'REMOVE',
-                                sku_id: product.sku_id._id
-                              },
-                              {
-                                onSuccess: () => {
-                                  message.success('Sản phẩm đã được xóa khỏi giỏ hàng')
+                      <button
+                        title='Xóa sản phẩm'
+                        onClick={() => {
+                          Modal.confirm({
+                            title: 'Xác nhận xóa',
+                            content: `Bạn có chắc chắn muốn xóa sản phẩm ${product.sku_id.product_id.name} khỏi giỏ hàng?`,
+                            okText: 'Có',
+                            cancelText: 'Không',
+                            onOk: () => {
+                              mutate(
+                                {
+                                  action: 'REMOVE',
+                                  sku_id: product.sku_id._id
                                 },
-                                onError: (error) => {
-                                  message.error(`Xóa sản phẩm thất bại: ${error.message}`)
+                                {
+                                  onSuccess: () => {
+                                    message.success('Sản phẩm đã được xóa khỏi giỏ hàng')
+                                  },
+                                  onError: (error) => {
+                                    message.error(`Xóa sản phẩm thất bại: ${error.message}`)
+                                  }
                                 }
-                              }
-                            )
-                          }
-                        })
-                      }}
-                    >
-                      <img src='./src/assets/icon/delete.svg' alt='' className='size-5 min-h-5 min-w-5' />
-                    </button>
-                  </li>
-                ))}
+                              )
+                            }
+                          })
+                        }}
+                      >
+                        <img src='./src/assets/icon/delete.svg' alt='' className='size-5 min-h-5 min-w-5' />
+                      </button>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
             {/* End item cart */}

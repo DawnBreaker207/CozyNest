@@ -8,6 +8,7 @@ import { RightOutlined } from '@ant-design/icons'
 import { Button, Form, notification, Radio } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
+import { useCookie } from '@/hooks/useStorage'
 interface PaymentMethodPageProps {
   orderData: any
   onSubmit: (paymentMethod: string) => Promise<void>
@@ -20,12 +21,14 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   totalAfterDiscount,
   onInstallationCostChange
 }) => {
-  const userId = JSON.parse(localStorage.getItem('user') || '{}').data?.res?._id || null
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('COD')
+  const [user] = useCookie('user', {})
+  // const token = user?.data?.accessToken
+  const userId = user?._id
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('cash')
   const [installationFee, setInstallationFee] = useState(0)
   const navigate = useNavigate()
   const { data } = useCart()
-
+  const cartId = data?.res?.cartId
   const handleChange = (e: any) => {
     setSelectedPaymentMethod(e.target.value)
   }
@@ -47,10 +50,12 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   const handlePayment = async () => {
     const finalOrderData = {
       ...orderData,
+      cart_id: cartId,
       userId,
-      billTotals: totalAfterDiscount,
-      paymentMethod: selectedPaymentMethod,
+      total_amount: totalAfterDiscount,
+      payment_method: selectedPaymentMethod,
       receivedDate: null,
+      transportation_fee: 50000,
       paid: false,
       status: 'Pending',
       payment_status: 'unpaid',
@@ -67,18 +72,20 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
 
     try {
       // Tạo đơn hàng trước
+      console.log(finalOrderData)
+
       const orderResponse = await instance.post('/orders', finalOrderData)
       const orderId = orderResponse.data?.res?._id
       // console.log(orderId)
       Cookies.set('orderId', orderId, { expires: 1 / 24 })
       // Kiểm tra phương thức thanh toán và thực hiện chuyển hướng
-      if (selectedPaymentMethod === 'MoMo') {
+      if (selectedPaymentMethod === 'momo') {
         const response = await instance.post('/payment/create-momo', { amount: finalOrderData.billTotals })
         window.location.href = response.data.res.payUrl
-      } else if (selectedPaymentMethod === 'ZaloPay') {
+      } else if (selectedPaymentMethod === 'zalopay') {
         const response = await instance.post('/payment/create-zalopay', { amount: finalOrderData.billTotals })
         window.location.href = response.data.res.order_url
-      } else if (selectedPaymentMethod === 'VnPay') {
+      } else if (selectedPaymentMethod === 'vnpay') {
         const response = await instance.post('/payment/create-vnpay', { amount: finalOrderData.billTotals })
         window.location.href = response.data.res
       } else {
@@ -102,7 +109,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
         <div className='p-6 bg-white rounded-lg shadow-md'>
           <Form.Item name='payment' rules={[{ required: true, message: 'Vui lòng chọn phương thức thanh toán!' }]}>
             <Radio.Group onChange={handleChange} value={selectedPaymentMethod} className='flex flex-col space-y-4'>
-              <Radio className='flex items-center border border-2px p-4' value='COD'>
+              <Radio className='flex items-center border border-2px p-4' value='cash'>
                 <div className='flex items-center w-10 space-x-1'>
                   <img
                     src='https://res.cloudinary.com/didbnrsmz/image/upload/v1730454239/CozyNest/cod_chqf7y.svg'
@@ -113,7 +120,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
                   <p className='whitespace-nowrap'>Thanh toán khi giao hàng (COD)</p>
                 </div>
               </Radio>
-              <Radio className='flex items-center border border-2px p-4' value='MoMo'>
+              <Radio className='flex items-center border border-2px p-4' value='momo'>
                 <div className='flex items-center w-10 space-x-1'>
                   <img
                     src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/momo_iroppc.svg'
@@ -124,7 +131,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
                   <p className='whitespace-nowrap'>Thanh toán qua ví MoMo</p>
                 </div>
               </Radio>
-              <Radio className='flex items-center border border-2px p-4' value='VnPay'>
+              <Radio className='flex items-center border border-2px p-4' value='vnpay'>
                 <div className='flex items-center w-10 space-x-1'>
                   <img
                     src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/vnpay_new_lzopgz.svg'
@@ -135,7 +142,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
                   <p className='whitespace-nowrap'>Thanh toán qua ví VnPay</p>
                 </div>
               </Radio>
-              <Radio className='flex items-center border border-2px p-4' value='ZaloPay'>
+              <Radio className='flex items-center border border-2px p-4' value='zalopay'>
                 <div className='flex items-center w-10 space-x-1'>
                   <img
                     src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/zalopay_qazloz.svg'
