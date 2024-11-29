@@ -56,9 +56,8 @@ const ProductDetail = () => {
   //Kiểm tra dữ liệu product
   if (!data || !data) return <p>Product not found</p>
   const product = data
-  console.log(product)
 
-  const category = product?.categoryId?._id
+  const category = product?.category_id?._id
 
   const increase = () => {
     if (count < 10) setCount(count + 1)

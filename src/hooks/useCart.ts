@@ -80,7 +80,7 @@ const useCart = () => {
     }: {
       action: string
       quantity?: number
-      sku_id?: string
+      sku_id?: string | number
       cartId?: string
     }) => {
       if (!userId) return
