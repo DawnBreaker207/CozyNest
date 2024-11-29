@@ -53,25 +53,25 @@ const AdminProductPage = () => {
       title: 'Tên sản phẩm',
       dataIndex: 'name'
     },
-    {
-      key: 'thumbnail',
-      title: 'Ảnh sản phẩm',
-      dataIndex: 'thumbnail',
-      render: (text: string) => <img src={text} alt='Product' style={{ width: 100, height: 100 }} />
-    },
-    {
-      key: 'brand',
-      title: 'Thương hiệu',
-      dataIndex: 'brand'
-    },
+    // {
+    //   key: 'thumbnail',
+    //   title: 'Ảnh sản phẩm',
+    //   dataIndex: 'thumbnail',
+    //   render: (text: string) => <img src={text} alt='Product' style={{ width: 100, height: 100 }} />
+    // },
+    // {
+    //   key: 'brand',
+    //   title: 'Thương hiệu',
+    //   dataIndex: 'brand'
+    // },
     {
       key: 'categoryName', // Sử dụng key là 'categoryName'
       title: 'Tên danh mục',
       render: (_text: string, product: IProduct) => {
         // Kiểm tra xem categoryId có phải là một mảng và có ít nhất một phần tử
-        if (Array.isArray(product.categoryId) && product.categoryId.length) {
+        if (Array.isArray(product.category_id) && product.category_id.length) {
           // Lấy các categoryId từ product.categoryId
-          const categoryIds = product.categoryId.map((category: { _id: string }) => category._id)
+          const categoryIds = product.category_id.map((category: { _id: string }) => category._id)
 
           const categoryNames = categoryIds
             .map((categoryId) => {
@@ -90,7 +90,7 @@ const AdminProductPage = () => {
       key: 'price',
       title: 'Giá sản phẩm',
       dataIndex: 'price',
-      render: (price: number) => `$${price.toFixed(2)}`
+      render: (price: number) => `$${price?.toFixed(2)}`
     },
     {
       key: 'discount',
@@ -123,9 +123,6 @@ const AdminProductPage = () => {
           <Link to={`/admin/products/${product._id}/edit`}>
             <Button icon={<EditOutlined />} />
           </Link>
-          <Link to={`/admin/products/${product._id}/variants`}>
-            <Button icon={<EyeOutlined />} />
-          </Link>
           <Popconfirm
             title='Xóa sản phẩm'
             description='Bạn có chắc chắn muốn xóa sản phẩm này?'
@@ -135,6 +132,12 @@ const AdminProductPage = () => {
           >
             <Button icon={<DeleteOutlined />} />
           </Popconfirm>
+          <Link to={`/admin/products/${product._id}/options`}>
+            <Button>Thuộc tính</Button>
+          </Link>
+          <Link to={`/admin/products/${product._id}/variants`}>
+            <Button>Biến thể</Button>
+          </Link>
         </Space>
       )
     }

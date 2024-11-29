@@ -5,26 +5,29 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 
-const AdminVariantPage = () => {
+type Props = {}
+
+const AdminOption = (props: Props) => {
   const [messageApi, contextHolder] = message.useMessage()
   const { id } = useParams()
   const queryClient = useQueryClient()
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['variants'],
+    queryKey: ['options'],
     queryFn: async () => {
       try {
-        return await instance.get(`/variants/${id}`)
+        return await instance.get(`/options/${id}`)
       } catch (error) {
         throw new Error((error as any).message)
       }
     }
   })
+  // const dataVariants = data?.data?.res
   console.log('data', data?.data?.res)
 
   const { mutate } = useMutation({
     mutationFn: async (id: number | string) => {
       try {
-        return await instance.delete(`/variants/${id}/`)
+        return await instance.delete(`/options/${id}/`)
       } catch (error) {
         throw new Error((error as any).message)
       }
@@ -35,7 +38,7 @@ const AdminVariantPage = () => {
         content: 'Xóa thành công'
       })
       queryClient.invalidateQueries({
-        queryKey: ['variants']
+        queryKey: ['options']
       })
     },
     onError: (error) => {
@@ -46,79 +49,49 @@ const AdminVariantPage = () => {
     }
   })
 
-  const { mutate: mutateVariantAdd } = useMutation({
-    mutationFn: async () => {
-      try {
-        return instance.post(`/variants/${id}`)
-      } catch (error) {
-        throw new Error('Cập nhật các biến thể thất bại ')
-      }
-    },
-    onSuccess: () => {
-      messageApi.open({
-        type: 'success',
-        content: 'Cập nhật các biến thể thành công'
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['variants']
-      })
-    },
-    onError: (error) => {
-      messageApi.open({
-        type: 'error',
-        content: error.message
-      })
+  const dataSource = data?.data?.res.map((option: any) => {
+    const optionValues = option.option_values?.map((value: any) => value.value).join(', ')
+
+    return {
+      key: option._id,
+      name: option.name,
+      optionValues,
+      ...option
     }
   })
-  const handleUpdate = () => {
-    mutateVariantAdd()
-  }
-
-  const dataSource = data?.data?.res.map((variant: VariantType) => ({
-    key: variant._id,
-    ...variant
-  }))
 
   const columns = [
     {
-      title: 'Tên biến thể',
+      title: 'Tên thuộc tính',
       dataIndex: 'name',
       key: 'name'
     },
     {
-      title: 'Giá sản phẩm',
-      dataIndex: 'price',
-      key: 'price'
-    },
-    {
-      title: 'Giá cũ sản phẩm',
-      dataIndex: 'price_before_discount',
-      key: 'price_before_discount'
-    },
-    {
-      title: 'Số lượng',
-      dataIndex: 'stock',
-      key: 'stock'
+      title: 'Giá trị thuộc tính',
+      dataIndex: 'optionValues',
+      key: 'optionValues'
     },
     {
       title: 'Action',
       key: 'action',
-      render: (_: any, variant: any) => {
-        const sku_id = variant.option_value[0].sku_id
+      render: (_: any, option: any) => {
         return (
           <Space size='middle'>
-            <Link to={`/admin/products/${id}/variants/${sku_id}/update`}>
+            <Link to={``}>
               <Button icon={<EditOutlined />} />
             </Link>
             <Popconfirm
-              title='Xóa biến thể'
-              description='Bạn có chắc chắn muốn xóa biến thể này?'
-              onConfirm={() => mutate(variant._id!)}
+              title='Xóa thuộc tính'
+              description='Bạn có chắc chắn muốn xóa thuộc tính này?'
+              onConfirm={() => mutate(option.option_id!)}
               okText='Có'
               cancelText='Không'
             >
               <Button icon={<DeleteOutlined />} />
             </Popconfirm>
+            <Link to={`/admin/products/${id}/options_value/${option.option_id}`}>
+              <Button>Chi tiết</Button>
+            </Link>
           </Space>
         )
       }
@@ -130,17 +103,19 @@ const AdminVariantPage = () => {
     <>
       {contextHolder}
       <div className='flex items-center justify-between mb-3'>
-        <h1 className='text-2xl font-bold'>Quản lý biến thể sản phẩm</h1>
+        <h1 className='text-2xl font-bold'>Quản lý thuộc tính sản phẩm</h1>
+        <div>
+          <Link to={`/admin/products/${id}/options/add`}>
+            <Button type='primary'>
+              <PlusOutlined className='mr-1' />
+              Thêm thuộc tính
+            </Button>
+          </Link>
+        </div>
       </div>
       <Table dataSource={dataSource} columns={columns} />
-      <div>
-        <Button type='primary' onClick={handleUpdate}>
-          <PlusOutlined className='mr-1' />
-          Cập nhật biến thể
-        </Button>
-      </div>
     </>
   )
 }
 
-export default AdminVariantPage
+export default AdminOption

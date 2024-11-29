@@ -30,7 +30,7 @@ const LayoutAdmin: React.FC = () => {
   console.log(role)
   useEffect(() => {
     navigate(role === 'admin' || role === 'manager' ? '/admin' : '/login')
-  }, [navigate, role])
+  }, [role])
   const handleLogout = () => {
     Modal.confirm({
       title: 'Bạn có chắc chắn muốn đăng xuất không?',
@@ -92,8 +92,7 @@ const LayoutAdmin: React.FC = () => {
   const isCouponEdit = location.pathname === `/admin/coupons/${id}/edit`
   const isArticles = location.pathname === `/admin/articles`
   const isVariantPage = location.pathname === `/admin/products/${id}/variants`
-
-  console.log('🚀 ~ isVariantPage:', isVariantPage)
+  const isOptionPage = location.pathname === `/admin/products/${id}/options`
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -168,7 +167,8 @@ const LayoutAdmin: React.FC = () => {
         {isAddColorPage && renderHeader('Add Color')}
         {isEditColorPage && renderHeader('Edit Color')}
         {isDetailColorPage && renderHeader('Detail Color')}
-        {isVariantPage && renderHeader('Variant')}
+        {isVariantPage && renderHeader('Variants')}
+        {isOptionPage && renderHeader('Options')}
         <Content>
           {isCategoryPage && (
             <>
