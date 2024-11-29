@@ -54,13 +54,8 @@ const Header = () => {
       })
 
       setResults(response.data) // Lưu kết quả vào state
-<<<<<<< HEAD
     } catch (error: any) {
       if (error.response?.status === 404) {
-=======
-    } catch (error: unknown) {
-      if (isAxiosError(error) && error.response?.status === 404) {
->>>>>>> be54a18a31902ecb580fd96ed8a5734f4b206d23
         message.info('Không tìm thấy sản phẩm nào.')
       } else {
         message.error('Đã có lỗi xảy ra khi tìm kiếm!')
@@ -250,11 +245,7 @@ const Header = () => {
                       size='small'
                       bordered
                       dataSource={results}
-<<<<<<< HEAD
                       renderItem={(item: any) => (
-=======
-                      renderItem={(item: ProductItem) => (
->>>>>>> be54a18a31902ecb580fd96ed8a5734f4b206d23
                         <List.Item>
                           <img src={item.thumbnail} alt={item.name} style={{ width: 50, height: 50, marginRight: 8 }} />
                           <div>
@@ -370,7 +361,6 @@ const Header = () => {
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
             {products.length > 0 ? (
               <div>
-<<<<<<< HEAD
                 {products.map((product: any, index: number) => {
                   // Tìm variant phù hợp với sku_id
                   const currentVariant = product.sku_id.product_id.variants.find(
@@ -416,35 +406,6 @@ const Header = () => {
                         </button>
                         <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
                       </div>
-=======
-                {products.map((product: IProductCart, index: number) => (
-                  <div key={product?.sku_id?._id} className='flex justify-between items-center mb-4 border-b pb-4'>
-                    {/* Hình ảnh và thông tin sản phẩm */}
-                    <div className='flex items-center'>
-                      <img
-                        src={product.sku_id?.product_id.thumbnail}
-                        alt={product.sku_id?.name}
-                        className='w-16 h-16 object-cover'
-                      />
-                      <div className='ml-2 flex flex-col justify-between'>
-                        <p className='font-semibold'>{product.sku_id?.name}</p>
-                        <div className='flex items-center justify-center mt-2'>
-                          <button
-                            onClick={() => decrease(index)} // Truyền index để giảm số lượng
-                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
-                          >
-                            -
-                          </button>
-                          <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
-                          <button
-                            onClick={() => increase(index)} // Truyền index để tăng số lượng
-                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
->>>>>>> be54a18a31902ecb580fd96ed8a5734f4b206d23
                     </div>
                   )
                 })}
