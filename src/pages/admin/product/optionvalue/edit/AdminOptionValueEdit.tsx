@@ -1,33 +1,45 @@
 import instance from '@/configs/axios'
 import { BackwardOutlined } from '@ant-design/icons'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Button, Form, FormProps, Input, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 type Props = {}
 type FieldType = {
-  name: string
-  position?: number
+  label: string
+  value?: string
 }
-const AdminOptionAdd = (props: Props) => {
-  const { product_id } = useParams()
+const AdminOptionValueEdit = (props: Props) => {
+  const { product_id, option_id, value_id } = useParams()
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
   const [form] = Form.useForm()
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['options_value', value_id],
+    queryFn: async () => {
+      try {
+        return await instance.get(`/optionValue/${product_id}/options/${option_id}/${value_id}/values`)
+      } catch (error) {
+        throw new Error('Lấy dữ liệu giá thuộc tính thất bại')
+      }
+    }
+  })
+  console.log('🚀 ~ AdminOptionEdit ~ data:', data)
+
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
       try {
-        return instance.post(`/options/${product_id}`, formData)
+        return instance.put(`/optionValue/${product_id}/options/${option_id}/values/${value_id}`, formData)
       } catch (error) {
-        throw new Error('Thêm thuộc tính thất bại')
+        throw new Error('Cập nhật trị thuộc tính thất bại')
       }
     },
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Bạn đã thêm thuộc tính thành công'
+        content: 'Bạn đã cập nhật giá trị thuộc tính thành công'
       })
       queryClient.invalidateQueries({
-        queryKey: ['options']
+        queryKey: ['options_value']
       })
     },
     onError: (error) => {
@@ -40,14 +52,15 @@ const AdminOptionAdd = (props: Props) => {
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
     console.log('Success:', values)
     mutate(values)
-    form.resetFields()
   }
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>{error.message}</div>
   return (
     <div>
       {contextHolder}
       <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
-        <h1 className='text-2xl font-bold'>Thêm thuộc tính</h1>
-        <Link to={`/admin/products/${product_id}/options`}>
+        <h1 className='text-2xl font-bold'>Cập nhật giá trị thuộc tính</h1>
+        <Link to={`/admin/products/${product_id}/options_value/${option_id}`}>
           <Button>
             <BackwardOutlined />
             Quay lại
@@ -60,25 +73,28 @@ const AdminOptionAdd = (props: Props) => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        // initialValues={{ remember: true }}
+        initialValues={{ ...data?.data?.res }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item<FieldType> label='Name' name='name' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+        <Form.Item<FieldType>
+          label='Tiêu đề'
+          name='label'
+          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
-          label='Vị trí'
-          name='position'
+          label='Giá trị'
+          name='value'
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
-          <InputNumber />
+          <Input />
         </Form.Item>
-
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>
-            Thêm
+            Cập nhật
           </Button>
         </Form.Item>
       </Form>
@@ -86,4 +102,4 @@ const AdminOptionAdd = (props: Props) => {
   )
 }
 
-export default AdminOptionAdd
+export default AdminOptionValueEdit

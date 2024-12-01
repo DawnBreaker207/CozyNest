@@ -1,6 +1,5 @@
 import instance from '@/configs/axios'
-import { VariantType } from '@/types/variant'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table } from 'antd'
 import { Link, useParams } from 'react-router-dom'
@@ -9,25 +8,23 @@ type Props = {}
 
 const AdminOption = (props: Props) => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { id } = useParams()
+  const { product_id } = useParams()
   const queryClient = useQueryClient()
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['options'],
     queryFn: async () => {
       try {
-        return await instance.get(`/options/${id}`)
+        return await instance.get(`/options/${product_id}`)
       } catch (error) {
         throw new Error((error as any).message)
       }
     }
   })
-  // const dataVariants = data?.data?.res
-  console.log('data', data?.data?.res)
 
   const { mutate } = useMutation({
-    mutationFn: async (id: number | string) => {
+    mutationFn: async (option_id: any) => {
       try {
-        return await instance.delete(`/options/${id}/`)
+        return await instance.delete(`/options/${product_id}/${option_id}`)
       } catch (error) {
         throw new Error((error as any).message)
       }
@@ -35,7 +32,7 @@ const AdminOption = (props: Props) => {
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Xóa thành công'
+        content: 'Xóa thuộc tính thành công'
       })
       queryClient.invalidateQueries({
         queryKey: ['options']
@@ -50,12 +47,9 @@ const AdminOption = (props: Props) => {
   })
 
   const dataSource = data?.data?.res.map((option: any) => {
-    const optionValues = option.option_values?.map((value: any) => value.value).join(', ')
-
     return {
-      key: option._id,
+      key: option.option_id,
       name: option.name,
-      optionValues,
       ...option
     }
   })
@@ -67,18 +61,16 @@ const AdminOption = (props: Props) => {
       key: 'name'
     },
     {
-      title: 'Giá trị thuộc tính',
-      dataIndex: 'optionValues',
-      key: 'optionValues'
-    },
-    {
-      title: 'Action',
+      title: 'Hành động',
       key: 'action',
       render: (_: any, option: any) => {
         return (
           <Space size='middle'>
-            <Link to={``}>
+            <Link to={`/admin/products/${product_id}/options/${option.option_id}/edit`}>
               <Button icon={<EditOutlined />} />
+            </Link>
+            <Link to={`/admin/products/${product_id}/options_value/${option.option_id}`}>
+              <Button icon={<EyeOutlined />} />
             </Link>
             <Popconfirm
               title='Xóa thuộc tính'
@@ -89,9 +81,6 @@ const AdminOption = (props: Props) => {
             >
               <Button icon={<DeleteOutlined />} />
             </Popconfirm>
-            <Link to={`/admin/products/${id}/options_value/${option.option_id}`}>
-              <Button>Chi tiết</Button>
-            </Link>
           </Space>
         )
       }
@@ -102,16 +91,22 @@ const AdminOption = (props: Props) => {
   return (
     <>
       {contextHolder}
-      <div className='flex items-center justify-between mb-3'>
+      <div className='flex items-center justify-between'>
         <h1 className='text-2xl font-bold'>Quản lý thuộc tính sản phẩm</h1>
-        <div>
-          <Link to={`/admin/products/${id}/options/add`}>
-            <Button type='primary'>
-              <PlusOutlined className='mr-1' />
-              Thêm thuộc tính
-            </Button>
-          </Link>
-        </div>
+        <Link to={`/admin/products`}>
+          <Button>
+            <BackwardOutlined />
+            Quay lại
+          </Button>
+        </Link>
+      </div>
+      <div className='my-4'>
+        <Link to={`/admin/products/${product_id}/options/add`}>
+          <Button type='primary'>
+            <PlusOutlined className='mr-1' />
+            Thêm thuộc tính
+          </Button>
+        </Link>
       </div>
       <Table dataSource={dataSource} columns={columns} />
     </>

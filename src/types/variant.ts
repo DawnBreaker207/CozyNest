@@ -4,4 +4,6 @@ export interface VariantType {
   option_id: string
   option_value_id: string
   product_id: string
+  image: string;
 }
+

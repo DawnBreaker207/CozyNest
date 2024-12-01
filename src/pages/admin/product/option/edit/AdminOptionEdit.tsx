@@ -1,6 +1,6 @@
 import instance from '@/configs/axios'
 import { BackwardOutlined } from '@ant-design/icons'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 type Props = {}
@@ -8,23 +8,35 @@ type FieldType = {
   name: string
   position?: number
 }
-const AdminOptionAdd = (props: Props) => {
-  const { product_id } = useParams()
+const AdminOptionEdit = (props: Props) => {
+  const { product_id, option_id } = useParams()
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
   const [form] = Form.useForm()
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['options', option_id],
+    queryFn: async () => {
+      try {
+        return await instance.get(`/options/${product_id}/get/${option_id}`)
+      } catch (error) {
+        throw new Error('Lấy dữ liệu thuộc tính thất bại')
+      }
+    }
+  })
+  console.log('🚀 ~ AdminOptionEdit ~ data:', data)
+
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
       try {
-        return instance.post(`/options/${product_id}`, formData)
+        return instance.put(`/options/${product_id}/${option_id}`, formData)
       } catch (error) {
-        throw new Error('Thêm thuộc tính thất bại')
+        throw new Error('Cập nhật thuộc tính thất bại')
       }
     },
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Bạn đã thêm thuộc tính thành công'
+        content: 'Bạn đã cập nhật thuộc tính thành công'
       })
       queryClient.invalidateQueries({
         queryKey: ['options']
@@ -40,13 +52,14 @@ const AdminOptionAdd = (props: Props) => {
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
     console.log('Success:', values)
     mutate(values)
-    form.resetFields()
   }
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>{error.message}</div>
   return (
     <div>
       {contextHolder}
       <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
-        <h1 className='text-2xl font-bold'>Thêm thuộc tính</h1>
+        <h1 className='text-2xl font-bold'>Cập nhật thuộc tính</h1>
         <Link to={`/admin/products/${product_id}/options`}>
           <Button>
             <BackwardOutlined />
@@ -60,7 +73,7 @@ const AdminOptionAdd = (props: Props) => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        // initialValues={{ remember: true }}
+        initialValues={{ ...data?.data?.res }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
         autoComplete='off'
@@ -78,7 +91,7 @@ const AdminOptionAdd = (props: Props) => {
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>
-            Thêm
+            Cập nhật
           </Button>
         </Form.Item>
       </Form>
@@ -86,4 +99,4 @@ const AdminOptionAdd = (props: Props) => {
   )
 }
 
-export default AdminOptionAdd
+export default AdminOptionEdit

@@ -86,16 +86,16 @@ const AdminProductPage = () => {
         }
       }
     },
+    // {
+    //   key: 'price',
+    //   title: 'Giá sản phẩm',
+    //   dataIndex: 'price',
+    //   render: (price: number) => `$${price?.toFixed(2)}`
+    // },
     {
-      key: 'price',
-      title: 'Giá sản phẩm',
-      dataIndex: 'price',
-      render: (price: number) => `$${price?.toFixed(2)}`
-    },
-    {
-      key: 'discount',
-      title: 'Giá khuyến mãi',
-      dataIndex: 'discount'
+      key: 'SKU',
+      title: 'SKU',
+      dataIndex: 'SKU'
     },
     {
       key: 'isSale',

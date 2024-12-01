@@ -15,7 +15,7 @@ const ProductEditPage = () => {
 
   // Lấy dữ liệu sản phẩm
   const { data, isLoading, isError, error } = useProduct(id as string)
-  const categoryId = data?.categoryId?._id
+  const categoryId = data?.category_id?._id
   // Mutation để cập nhật sản phẩm
   const { mutate } = useProductMutation({
     action: 'UPDATE',

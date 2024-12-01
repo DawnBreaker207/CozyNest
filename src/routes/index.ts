@@ -17,8 +17,10 @@ import ProductAddPage from '@/pages/admin/product/add/ProductAdd'
 import ProductEditPage from '@/pages/admin/product/edit/ProductEdit'
 import AdminOption from '@/pages/admin/product/option/AdminOption'
 import AdminOptionAdd from '@/pages/admin/product/option/add/AdminOptionAdd'
+import AdminOptionEdit from '@/pages/admin/product/option/edit/AdminOptionEdit'
 import AdminOptionValue from '@/pages/admin/product/optionvalue/AdminOptionValue'
 import AdminOptionValueAdd from '@/pages/admin/product/optionvalue/add/AdminOptionValueAdd'
+import AdminOptionValueEdit from '@/pages/admin/product/optionvalue/edit/AdminOptionValueEdit'
 import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
 import UpdateVariant from '@/pages/admin/product/variant/_components/UpdateVariant'
 import ReportsPage from '@/pages/admin/report/ReportPage'
@@ -111,7 +113,7 @@ function App() {
 
         // Variant
         {
-          path: 'products/:id/variants',
+          path: 'products/:product_id/variants',
           Component: AdminVariantPage
         },
         {
@@ -121,12 +123,16 @@ function App() {
         
         // Option
         {
-          path: 'products/:id/options',
+          path: 'products/:product_id/options',
           Component: AdminOption
         },
         {
-          path: 'products/:id/options/add',
+          path: 'products/:product_id/options/add',
           Component: AdminOptionAdd
+        },
+        {
+          path: 'products/:product_id/options/:option_id/edit',
+          Component: AdminOptionEdit
         },
 
         // Option Value
@@ -138,6 +144,12 @@ function App() {
           path: 'products/:product_id/options_value/:option_id/add',
           Component: AdminOptionValueAdd
         },
+        {
+          path: 'products/:product_id/options_value/:option_id/:value_id/edit',
+          Component: AdminOptionValueEdit
+        },
+
+        // Articles
         { path: 'articles', Component: AdminArticlePage },
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },

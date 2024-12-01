@@ -8,6 +8,7 @@ export interface IProduct {
   sku_id: string
   _id: string | number
   originId?: string | null
+  SKU: string
   name: string
   thumbnail: string
   category_id: ICategory

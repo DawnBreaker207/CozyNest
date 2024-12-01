@@ -1,4 +1,5 @@
 import instance from '@/configs/axios'
+import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
@@ -47,7 +48,10 @@ const AdminOptionValueAdd = (props: Props) => {
       <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
         <h1 className='text-2xl font-bold'>Thêm giá trị thuộc tính</h1>
         <Link to={`/admin/products/${product_id}/options_value/${option_id}`}>
-          <Button>Quay lại</Button>
+          <Button>
+            <BackwardOutlined />
+            Quay lại
+          </Button>
         </Link>
       </div>
       <Form
@@ -62,7 +66,7 @@ const AdminOptionValueAdd = (props: Props) => {
         autoComplete='off'
       >
         <Form.Item<FieldType>
-          label='Tiêu để'
+          label='Tiêu đề'
           name='label'
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >

@@ -1,6 +1,6 @@
 import instance from '@/configs/axios'
 import { VariantType } from '@/types/variant'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { BackwardOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table } from 'antd'
 import { Link, useParams } from 'react-router-dom'
@@ -9,7 +9,7 @@ type Props = {}
 
 const AdminOptionValue = (props: Props) => {
   const [messageApi, contextHolder] = message.useMessage()
-  const {product_id, option_id} = useParams();
+  const { product_id, option_id } = useParams()
   const queryClient = useQueryClient()
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['options_value'],
@@ -21,12 +21,11 @@ const AdminOptionValue = (props: Props) => {
       }
     }
   })
-  console.log('data', data?.data?.res)
 
   const { mutate } = useMutation({
-    mutationFn: async (id: number | string) => {
+    mutationFn: async (value_id: any) => {
       try {
-        return await instance.delete(`/options/${id}/`)
+        return await instance.delete(`/optionValue/${product_id}/options/${option_id}/${value_id}/values`)
       } catch (error) {
         throw new Error((error as any).message)
       }
@@ -34,7 +33,7 @@ const AdminOptionValue = (props: Props) => {
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Xóa thành công'
+        content: 'Xóa thành công giá trị thuộc tính'
       })
       queryClient.invalidateQueries({
         queryKey: ['options_value']
@@ -62,18 +61,18 @@ const AdminOptionValue = (props: Props) => {
       key: 'value'
     },
     {
-      title: 'Action',
+      title: 'Hành động',
       key: 'action',
-      render: (_: any, variant: any) => {
+      render: (_: any, option_value: any) => {
         return (
           <Space size='middle'>
-            <Link to={``}>
+            <Link to={`/admin/products/${product_id}/options_value/${option_id}/${option_value._id!}/edit`}>
               <Button icon={<EditOutlined />} />
             </Link>
             <Popconfirm
               title='Xóa giá trị thuộc tính'
               description='Bạn có chắc chắn muốn xóa thuộc giá trị tính này?'
-              onConfirm={() => mutate(variant._id!)}
+              onConfirm={() => mutate(option_value._id!)}
               okText='Có'
               cancelText='Không'
             >
@@ -89,17 +88,26 @@ const AdminOptionValue = (props: Props) => {
   return (
     <>
       {contextHolder}
-      <div className='flex items-center justify-between mb-3'>
+      <div className='flex items-center justify-between'>
         <h1 className='text-2xl font-bold'>Quản lý giá trị thuộc tính</h1>
         <div>
-          <Link to={`/admin/products/${product_id}/options_value/${option_id}/add`}>
-            <Button type='primary'>
-              <PlusOutlined className='mr-1' />
-              Thêm giá trị
+          <Link to={`/admin/products/${product_id}/options`}>
+            <Button>
+              <BackwardOutlined />
+              Quay lại
             </Button>
           </Link>
         </div>
       </div>
+      <div className='my-4'>
+        <Link to={`/admin/products/${product_id}/options_value/${option_id}/add`}>
+          <Button type='primary'>
+            <PlusOutlined className='mr-1' />
+            Thêm giá trị
+          </Button>
+        </Link>
+      </div>
+
       <Table dataSource={dataSource} columns={columns} />
     </>
   )

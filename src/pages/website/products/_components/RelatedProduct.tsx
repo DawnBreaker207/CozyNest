@@ -22,7 +22,7 @@ const RelatedProduct = ({ id }: Props) => {
   const products = data?.products || []
 
   return (
-    <div className=''>
+    <div className='mt-10'>
       <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Xem thêm sản phẩm cùng loại</h1>
       <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
         {products.map((product: IProduct, index: number) => (

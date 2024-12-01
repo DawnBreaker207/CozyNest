@@ -1,8 +1,6 @@
 import instance from '@/configs/axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
-import TextArea from 'antd/es/input/TextArea'
-import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 type Props = {}
@@ -19,15 +17,17 @@ const UpdateVariant = (props: Props) => {
   const { product_id, sku_id } = useParams()
   const [form] = Form.useForm()
   const { data, isLoading } = useQuery({
-    queryKey: ['product', product_id],
-    queryFn: () => instance.get(`/variants/${product_id}`)
+    queryKey: ['variant', product_id, sku_id],
+    queryFn: () => instance.get(`/variants/${product_id}/get/${sku_id}`)
   })
+  console.log('🚀 ~ UpdateVariant ~ data:', data)
+
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
       try {
         return instance.put(`/variants/${product_id}/${sku_id}`, formData)
       } catch (error) {
-        throw new Error('Cập nhật sản phẩm biến thể')
+        throw new Error('Cập nhật biến thể thất bại')
       }
     },
     onSuccess: () => {
@@ -54,8 +54,8 @@ const UpdateVariant = (props: Props) => {
   return (
     <div>
       {contextHolder}
-      <div className='flex item-center justify-between'>
-        <h1>Cập nhật sản phẩm</h1>
+      <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
+        <h1 className='text-2xl font-bold'>Cập nhật biến thể</h1>
         <Link to={`/admin/variants/products/${product_id}/variants`}>
           <Button>Quay lại</Button>
         </Link>
