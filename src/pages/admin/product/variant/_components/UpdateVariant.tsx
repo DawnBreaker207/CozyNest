@@ -1,11 +1,14 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
+import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 
 type Props = {}
 type FieldType = {
+  SKU: string
+  name: string
   price?: number
   stock?: string
   price_before_discount?: number
@@ -18,10 +21,9 @@ const UpdateVariant = (props: Props) => {
   const { product_id, sku_id } = useParams()
   const [form] = Form.useForm()
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['variant', product_id, sku_id],
+    queryKey: ['variants', product_id, sku_id],
     queryFn: () => instance.get(`/variants/${product_id}/get/${sku_id}`)
   })
-  console.log('🚀 ~ UpdateVariant ~ data:', data)
 
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
@@ -34,10 +36,10 @@ const UpdateVariant = (props: Props) => {
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Cập nhật sản phẩm thành công'
+        content: 'Cập nhật biến thể thành công'
       })
       queryClient.invalidateQueries({
-        queryKey: ['product']
+        queryKey: ['variants']
       })
     },
     onError: (error) => {
@@ -63,8 +65,11 @@ const UpdateVariant = (props: Props) => {
       {contextHolder}
       <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
         <h1 className='text-2xl font-bold'>Cập nhật biến thể</h1>
-        <Link to={`/admin/variants/products/${product_id}/variants`}>
-          <Button>Quay lại</Button>
+        <Link to={`/admin/products/${product_id}/variants`}>
+          <Button>
+            <BackwardOutlined />
+            Quay lại
+          </Button>
         </Link>
       </div>
       <Form
@@ -73,17 +78,27 @@ const UpdateVariant = (props: Props) => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        initialValues={{ ...data?.data }}
+        initialValues={{ ...data?.data?.res }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
+        <Form.Item<FieldType> label='SKU' name='SKU' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+          <Input disabled />
+        </Form.Item>
+        <Form.Item<FieldType>
+          label='Tên biến thể'
+          name='name'
+          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+        >
+          <Input disabled />
+        </Form.Item>
         <Form.Item<FieldType>
           label='Số lượng'
           name='stock'
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
-          <Input />
+          <InputNumber />
         </Form.Item>
         <Form.Item<FieldType>
           label='Giá'

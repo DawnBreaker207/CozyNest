@@ -78,6 +78,7 @@ const AdminVariantPage = () => {
     key: variant._id,
     ...variant
   }))
+  console.log('🚀 ~ dataSource ~ dataSource:', dataSource)
 
   const columns = [
     {
@@ -109,13 +110,12 @@ const AdminVariantPage = () => {
       title: 'Action',
       key: 'action',
       render: (_: any, variant: any) => {
-        console.log("🚀 ~ AdminVariantPage ~ variant:", variant)
-        // const sku_id = variant.option_value[0].sku_id
+        const sku_id = variant.option_value[0].sku_id
         return (
           <Space size='middle'>
-            {/* <Link to={`/admin/products/${product_id}/variants/${sku_id}/update`}>
+            <Link to={`/admin/products/${product_id}/variants/${sku_id}/update`}>
               <Button icon={<EditOutlined />} />
-            </Link> */}
+            </Link>
             <Popconfirm
               title='Xóa biến thể'
               description='Bạn có chắc chắn muốn xóa biến thể này?'
