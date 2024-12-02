@@ -1,3 +1,4 @@
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -53,7 +54,12 @@ const AdminOptionValueEdit = (props: Props) => {
     console.log('Success:', values)
     mutate(values)
   }
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error.message}</div>
   return (
     <div>

@@ -1,5 +1,6 @@
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { VariantType } from '@/types/variant'
+import { IVariant } from '@/types/variant'
 import { BackwardOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table } from 'antd'
@@ -73,13 +74,18 @@ const AdminVariantPage = () => {
     })
   }
 
-  const dataSource = data?.data?.res.map((variant: VariantType) => ({
+  const dataSource = data?.data?.res.map((variant: IVariant) => ({
     key: variant._id,
     ...variant
   }))
   console.log('🚀 ~ dataSource ~ dataSource:', dataSource)
 
   const columns = [
+    {
+      title: 'SKU',
+      dataIndex: 'SKU',
+      key: 'SKU'
+    },
     {
       title: 'Tên biến thể',
       dataIndex: 'name',
@@ -117,14 +123,19 @@ const AdminVariantPage = () => {
               okText='Có'
               cancelText='Không'
             >
-              <Button icon={<DeleteOutlined />} />
+              <Button icon={<DeleteOutlined />} danger />
             </Popconfirm>
           </Space>
         )
       }
     }
   ]
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error.message}</div>
   return (
     <>

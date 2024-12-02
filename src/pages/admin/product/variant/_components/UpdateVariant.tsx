@@ -1,3 +1,4 @@
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
@@ -16,7 +17,7 @@ const UpdateVariant = (props: Props) => {
   const queryClient = useQueryClient()
   const { product_id, sku_id } = useParams()
   const [form] = Form.useForm()
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['variant', product_id, sku_id],
     queryFn: () => instance.get(`/variants/${product_id}/get/${sku_id}`)
   })
@@ -50,7 +51,13 @@ const UpdateVariant = (props: Props) => {
     console.log('Success:', values)
     mutate(values)
   }
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>{error.message}</div>
   return (
     <div>
       {contextHolder}

@@ -1,3 +1,4 @@
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -79,14 +80,19 @@ const AdminOption = (props: Props) => {
               okText='Có'
               cancelText='Không'
             >
-              <Button icon={<DeleteOutlined />} />
+              <Button icon={<DeleteOutlined />} danger />
             </Popconfirm>
           </Space>
         )
       }
     }
   ]
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error.message}</div>
   return (
     <>
