@@ -1,3 +1,4 @@
+import instance from '@/configs/axios'
 import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
@@ -16,10 +17,6 @@ import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, me
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
-import instance from '@/configs/axios'
-import { IProductCart } from '@/types/producrCart'
-import { ProductItem } from '@/types/productItem'
-import { isAxiosError } from 'axios'
 
 const { useToken } = theme
 
@@ -30,7 +27,6 @@ const Header = () => {
   const [, contextHolder] = message.useMessage()
   const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
-  console.log(data)
 
   const { Logout, user, userId } = useUser()
   const { products, quantities, setQuantity } = useCartStore()
@@ -138,45 +134,45 @@ const Header = () => {
   }
   const users: MenuProps['items'] = user
     ? [
-        {
-          label: <a href='/profile'>Thông tin tài khoản</a>,
-          key: '0'
-        },
-        {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={Logout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
+      {
+        label: <a href='/profile'>Thông tin tài khoản</a>,
+        key: '0'
+      },
+      {
+        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+        key: '1'
+      },
+      { type: 'divider' }, // Đường kẻ phân cách
+      {
+        label: (
+          <a href='/' onClick={Logout}>
+            Đăng xuất
+          </a>
+        ),
+        key: '3'
+      }
+    ]
     : window.innerWidth < 800
       ? [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
       : [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+        {
+          label: <NavLink to='/register'>Đăng ký</NavLink>,
+          key: '1'
+        },
+        {
+          label: <NavLink to='/login'>Đăng nhập</NavLink>,
+          key: '2'
+        }
+      ]
 
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
@@ -286,12 +282,12 @@ const Header = () => {
                       </Button>
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-                  window.innerWidth < 800 ? (
-                    // <Link to={`login`}>
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  ) : (
-                    <Button shape='circle' icon={<UserOutlined />} />
-                  )}
+                    window.innerWidth < 800 ? (
+                      // <Link to={`login`}>
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    ) : (
+                      <Button shape='circle' icon={<UserOutlined />} />
+                    )}
                 </Space>
               </span>
             </Dropdown>
@@ -363,8 +359,8 @@ const Header = () => {
               <div>
                 {products.map((product: any, index: number) => {
                   // Tìm variant phù hợp với sku_id
-                  const currentVariant = product.sku_id.product_id.variants.find(
-                    (variant: any) => variant.sku_id === product.sku_id._id
+                  const currentVariant = product?.sku_id?.product_id?.variants.find(
+                    (variant: any) => variant?.sku_id === product?.sku_id?._id
                   )
 
                   return (

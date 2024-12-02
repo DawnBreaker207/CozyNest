@@ -111,7 +111,7 @@ const AdminOrderPage = () => {
 
   // Chuyển đổi dữ liệu từ API thành định dạng mà dataSource cần
   const dataSource =
-    data?.data?.res?.data.map((order: any, index: number) => ({
+    data?.data?.res?.items.map((order: any, index: number) => ({
       key: index + 1,
       orderId: order.invoiceId,
       product: `${order.products.length} Product` || 'N/A',

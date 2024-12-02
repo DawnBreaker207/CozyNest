@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Cart } from '@/components/icons/index'
 import { useCartStoreHeader } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
 import { useCookie } from '@/hooks/useStorage'
