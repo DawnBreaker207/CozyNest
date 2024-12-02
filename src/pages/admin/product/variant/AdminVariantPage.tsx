@@ -59,6 +59,9 @@ const AdminVariantPage = () => {
         type: 'success',
         content: 'Cập nhật các biến thể thành công'
       })
+      queryClient.invalidateQueries({
+        queryKey: ['variants']
+      })
     },
     onError: (error) => {
       messageApi.open({
@@ -69,16 +72,12 @@ const AdminVariantPage = () => {
   })
   const handleUpdate = () => {
     mutateVariantAdd()
-    queryClient.invalidateQueries({
-      queryKey: ['variants']
-    })
   }
 
   const dataSource = data?.data?.res.map((variant: IVariant) => ({
     key: variant._id,
     ...variant
   }))
-  console.log('🚀 ~ dataSource ~ dataSource:', dataSource)
 
   const columns = [
     {
@@ -110,6 +109,7 @@ const AdminVariantPage = () => {
       title: 'Action',
       key: 'action',
       render: (_: any, variant: any) => {
+        console.log("🚀 ~ AdminVariantPage ~ variant:", variant)
         // const sku_id = variant.option_value[0].sku_id
         return (
           <Space size='middle'>
