@@ -95,7 +95,7 @@ const ProductDetail = () => {
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
-        <div className='flex flex-col'>
+        <div className='flex flex-col  h-min'>
           <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-10 mx-auto'>
             {/* List of Thumbnails */}
             <div className='lg:flex flex-wrap flex-col hidden'>
@@ -352,79 +352,78 @@ const ProductDetail = () => {
           <div>
             <ReviewComponent />
           </div>
-
-          {/* Product Description */}
-          <div
-            className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden mt-[10px]`}
-          >
-            <div className='productDetail--navs mg-top mt-[15px]'>
-              <div className='nav tab-title'>
-                <b className='nav-item active text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
+        </div>
+        {/* Product Description */}
+        <div
+          className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'} overflow-hidden lg:-mt-[345px]`}
+        >
+          <div className='productDetail--navs mg-top mt-[15px]'>
+            <div className='nav tab-title'>
+              <b className='nav-item active text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
+            </div>
+            <hr className='mb-[20px]' />
+            <div className={`tab-pane fade show active ${isCollapsed ? 'h-[250px]' : 'h-auto'} transition-all`}>
+              <div
+                className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
+              >
+                <p>{product.description}</p>
+                <p>--------------</p>
+                {/* More product description details */}
+                <table className='table-auto w-full border-collapse mt-[10px]'>
+                  <tbody>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Sản phẩm
+                      </th>
+                      <td className=''>{product.name}</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Bộ sưu tập
+                      </th>
+                      <td className=''>{product.brand}</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Kích cỡ
+                      </th>
+                      <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Màu sắc
+                      </th>
+                      <td className=''>Màu trắng/ màu đen</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Chất liệu
+                      </th>
+                      <td className=''>Sứ</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Xuất xứ
+                      </th>
+                      <td className=''>Trung Quốc</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Đơn vị
+                      </th>
+                      <td className=''>SET</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <hr className='mb-[20px]' />
-              <div className={`tab-pane fade show active ${isCollapsed ? 'h-[250px]' : 'h-auto'} transition-all`}>
-                <div
-                  className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
-                >
-                  <p>{product.description}</p>
-                  <p>--------------</p>
-                  {/* More product description details */}
-                  <table className='table-auto w-full border-collapse mt-[10px]'>
-                    <tbody>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Sản phẩm
-                        </th>
-                        <td className=''>{product.name}</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Bộ sưu tập
-                        </th>
-                        <td className=''>{product.brand}</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Kích cỡ
-                        </th>
-                        <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Màu sắc
-                        </th>
-                        <td className=''>Màu trắng/ màu đen</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Chất liệu
-                        </th>
-                        <td className=''>Sứ</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Xuất xứ
-                        </th>
-                        <td className=''>Trung Quốc</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Đơn vị
-                        </th>
-                        <td className=''>SET</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className='description-btn flex justify-center mt-[10px]'>
-                <button
-                  className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-[#fca120]' : 'text-[#fca120]'} p-2 rounded-md`}
-                  onClick={handleToggleCollapse}
-                >
-                  {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
-                </button>
-              </div>
+            </div>
+            <div className='description-btn flex justify-center mt-[10px]'>
+              <button
+                className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-[#fca120]' : 'text-[#fca120]'} p-2 rounded-md`}
+                onClick={handleToggleCollapse}
+              >
+                {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
+              </button>
             </div>
           </div>
         </div>
