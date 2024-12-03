@@ -25,7 +25,7 @@ const ReviewComponent = ({ product }: any) => {
     queryKey: ['reviews'],
     queryFn: async () => {
       try {
-        return await instance.get(`/review/${id}`)
+        return await instance.get(`/reviews/${id}`)
       } catch (error) {
         throw new Error((error as any).message)
       }
@@ -36,7 +36,7 @@ const ReviewComponent = ({ product }: any) => {
   const { mutate } = useMutation({
     mutationFn: async (formData: IReview) => {
       try {
-        return instance.post(`/review`, formData)
+        return instance.post(`/reviews`, formData)
       } catch (error) {
         throw new Error('Thêm đánh giá thất bại')
       }

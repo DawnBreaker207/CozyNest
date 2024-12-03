@@ -24,6 +24,7 @@ import AdminOptionValueEdit from '@/pages/admin/product/optionvalue/edit/AdminOp
 import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
 import UpdateVariant from '@/pages/admin/product/variant/_components/UpdateVariant'
 import ReportsPage from '@/pages/admin/report/ReportPage'
+import AdminReview from '@/pages/admin/review/AdminReview'
 import LinkPage from '@/pages/website/Link/page'
 import Login from '@/pages/website/auth/Login'
 import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
@@ -109,6 +110,9 @@ function App() {
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
 
+        // Review
+        { path: 'reviews', Component: AdminReview },
+
         // Order
 
         // Variant
@@ -120,7 +124,7 @@ function App() {
           path: 'products/:product_id/variants/:sku_id/update',
           Component: UpdateVariant
         },
-        
+
         // Option
         {
           path: 'products/:product_id/options',

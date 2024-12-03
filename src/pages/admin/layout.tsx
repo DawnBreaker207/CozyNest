@@ -5,6 +5,7 @@ import {
   AppstoreOutlined,
   BellOutlined,
   CalendarOutlined,
+  CommentOutlined,
   DownloadOutlined,
   DownOutlined,
   FilterOutlined,
@@ -93,6 +94,7 @@ const LayoutAdmin: React.FC = () => {
   const isArticles = location.pathname === `/admin/articles`
   const isVariantPage = location.pathname === `/admin/products/${id}/variants`
   const isOptionPage = location.pathname === `/admin/products/${id}/options`
+  const isReviewPage = location.pathname === `/admin/reviews`
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -118,11 +120,6 @@ const LayoutAdmin: React.FC = () => {
               label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
             },
             {
-              key: '9',
-              icon: <OrderedListOutlined />,
-              label: <NavLink to={`/admin/coupons`}>Coupon Manager</NavLink>
-            },
-            {
               key: '4',
               icon: <UploadOutlined />,
               label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
@@ -134,16 +131,21 @@ const LayoutAdmin: React.FC = () => {
             },
             {
               key: '6',
+              icon: <CommentOutlined />,
+              label: <NavLink to={`/admin/reviews`}>Review</NavLink>
+            },
+            {
+              key: '7',
               icon: <UserOutlined />,
               label: <NavLink to={`/admin/customer`}>Customer Manager</NavLink>
             },
             {
-              key: '7',
-              icon: <UploadOutlined />,
-              label: <NavLink to={`/admin/report`}>Reports</NavLink>
+              key: '8',
+              icon: <OrderedListOutlined />,
+              label: <NavLink to={`/admin/coupons`}>Coupon Manager</NavLink>
             },
             {
-              key: '8',
+              key: '9',
               icon: <LogoutOutlined />,
               label: (
                 <NavLink to='#' onClick={handleLogout}>
