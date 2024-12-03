@@ -48,6 +48,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   }, [installationFee, onInstallationCostChange])
 
   const handlePayment = async () => {
+    // TODO: Update this
     const finalOrderData = {
       ...orderData,
       cart_id: cartId,
@@ -61,8 +62,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       payment_status: 'unpaid',
       products:
         data?.res?.products.map((product: any) => ({
-          productId: product.sku_id.product_id._id,
-          originName: product.sku_id.product_id.name,
+          product_id: product.sku_id.product_id._id,
           productName: product.sku_id.product_id.name,
           thumbnail: product.sku_id.product_id.thumbnail,
           quantity: product.quantity,
@@ -80,14 +80,15 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       Cookies.set('orderId', orderId, { expires: 1 / 24 })
       // Kiểm tra phương thức thanh toán và thực hiện chuyển hướng
       if (selectedPaymentMethod === 'momo') {
-        const response = await instance.post('/payment/create-momo', { amount: finalOrderData.billTotals })
-        window.location.href = response.data.res.payUrl
+        window.location.href = orderResponse.data.res.payment_url
       } else if (selectedPaymentMethod === 'zalopay') {
-        const response = await instance.post('/payment/create-zalopay', { amount: finalOrderData.billTotals })
-        window.location.href = response.data.res.order_url
+        // const response = await instance.post('/payment/create-zalopay', { amount: finalOrderData.billTotals })
+        window.location.href = orderResponse.data.res.payment_url
+        // response.data.res.order_url
       } else if (selectedPaymentMethod === 'vnpay') {
-        const response = await instance.post('/payment/create-vnpay', { amount: finalOrderData.billTotals })
-        window.location.href = response.data.res
+        // const response = await instance.post('/payment/create-vnpay', { amount: finalOrderData.billTotals })
+        window.location.href = orderResponse.data.res.payment_url
+        // response.data.res
       } else {
         // Với COD, không cần chuyển hướng
         navigate(`/check_out_order?orderId=${orderId}`)
