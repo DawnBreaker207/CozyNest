@@ -429,7 +429,7 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <div className='mb-20 container'>
+      <div className='mb-20 container b'>
         <RelatedProduct id={category} />
         <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>
