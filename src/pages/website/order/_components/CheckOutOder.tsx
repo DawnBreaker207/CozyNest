@@ -8,7 +8,8 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const fetchOrder = async (orderId: string) => {
-  const { data } = await instance.get(`/orders/orderByOrderId/${orderId}`)
+  const { data } = await instance.get(`/orders/${orderId}`)
+  console.log(data);
   return data
 }
 
