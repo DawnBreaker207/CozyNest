@@ -217,7 +217,7 @@ const Header = () => {
           <div className='flex items-center space-x-4'>
             <Dropdown
               trigger={['click']}
-              onVisibleChange={(visible) => {
+              onOpenChange={(visible) => {
                 if (!visible) clearResults() // Xóa lịch sử khi dropdown đóng
               }}
               dropdownRender={() => (

@@ -36,7 +36,7 @@ const CheckOutOrder = () => {
   const orderData = order?.res
 
   useEffect(() => {
-    if (orderData && cartData?.res?.cartId && !hasDeletedCart) {
+    if (orderData && cartData?.res?.cart_id && !hasDeletedCart) {
       removeAllProductsFromCart()
       setHasDeletedCart(true) // Đánh dấu đã xóa giỏ hàng
       window.scrollTo({ top: 0, behavior: 'smooth' })

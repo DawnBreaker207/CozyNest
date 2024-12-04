@@ -26,7 +26,7 @@ const useCart = () => {
     queryKey: ['cart', userId],
     queryFn: async () => {
       if (!userId) {
-        return { res: { products: [], cartId: '' } }
+        return { res: { products: [], cart_id: '' } }
       }
 
       try {
@@ -37,7 +37,7 @@ const useCart = () => {
           // Giỏ hàng không tồn tại, reset lại sản phẩm và số lượng
           setProducts([])
           setQuantities([])
-          return { res: { products: [], cartId: '' } }
+          return { res: { products: [], cart_id: '' } }
         }
         throw error // Ném lỗi nếu có lỗi khác
       }
@@ -76,12 +76,12 @@ const useCart = () => {
       action,
       sku_id,
       quantity,
-      cartId
+      cart_id
     }: {
       action: string
       quantity?: number
       sku_id?: string | number
-      cartId?: string
+      cart_id?: string
     }) => {
       if (!userId) return
 
@@ -104,7 +104,7 @@ const useCart = () => {
           }
           break
         case 'DELETE':
-          await instance.delete(`/cart/remove-cart/${cartId}`, {})
+          await instance.delete(`/cart/remove-cart/${cart_id}`, {})
           break
         default:
           break
@@ -140,7 +140,7 @@ const useCart = () => {
   // Hàm xóa giỏ hàng
   const deleteCart = (cartId: string) => {
     if (userId) {
-      mutate({ action: 'DELETE', cartId })
+      mutate({ action: 'DELETE', cart_id: cartId })
     }
   }
   // Hàm xóa tất cả sản phẩm trong giỏ hàng
