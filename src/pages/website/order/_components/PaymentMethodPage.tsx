@@ -28,7 +28,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   const [installationFee, setInstallationFee] = useState(0)
   const navigate = useNavigate()
   const { data } = useCart()
-  const cartId = data?.res?.cartId
+  const cartId = data?.res?.cart_id
   const handleChange = (e: any) => {
     setSelectedPaymentMethod(e.target.value)
   }
@@ -52,7 +52,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
     const finalOrderData = {
       ...orderData,
       cart_id: cartId,
-      userId,
+      user_id: userId,
       total_amount: totalAfterDiscount,
       payment_method: selectedPaymentMethod,
       receivedDate: null,

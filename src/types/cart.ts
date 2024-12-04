@@ -3,10 +3,11 @@ export interface CartProduct {
   id: string
   name: string
   quantity: number
+  price: number
 }
 
 // Định nghĩa kiểu dữ liệu trả về từ API cho giỏ hàng
 export interface CartData {
   products: CartProduct[]
-  cartId: string
+  cart_id: string
 }
