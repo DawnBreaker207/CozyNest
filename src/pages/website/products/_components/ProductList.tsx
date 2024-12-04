@@ -217,6 +217,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                     </span>
 
                     <button
+                    title='Prev'
                       className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
                       onClick={() =>
                         setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)
@@ -226,6 +227,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                     </button>
 
                     <button
+                    title='Next'
                       className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
                       onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
                     >

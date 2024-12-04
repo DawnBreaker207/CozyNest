@@ -17,6 +17,7 @@ import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, me
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
+import { ICategory } from '@/types/category'
 
 const { useToken } = theme
 
@@ -34,7 +35,27 @@ const Header = () => {
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
   const { data: userData, error } = useAdminUser(userId ?? '')
+  const [isOpen, setIsOpen] = useState(false) // Quản lý trạng thái mở/đóng menu
 
+  // Toggle trạng thái menu
+  const toggleMenu = () => {
+    setIsOpen(!isOpen)
+  }
+
+  // Đóng menu khi nhấp ra ngoài
+  const handleClickOutside = (e: any) => {
+    if (!e.target.closest('.menu-container')) {
+      setIsOpen(false)
+    }
+  }
+
+  // Thêm sự kiện lắng nghe nhấp ra ngoài
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
   const handleSearch = async (value: string) => {
     if (!value.trim()) {
       message.warning('Vui lòng nhập từ khóa tìm kiếm!')
@@ -134,46 +155,57 @@ const Header = () => {
   }
   const users: MenuProps['items'] = user
     ? [
-      {
-        label: <a href='/profile'>Thông tin tài khoản</a>,
-        key: '0'
-      },
-      {
-        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-        key: '1'
-      },
-      { type: 'divider' }, // Đường kẻ phân cách
-      {
-        label: (
-          <a href='/' onClick={Logout}>
-            Đăng xuất
-          </a>
-        ),
-        key: '3'
-      }
-    ]
+        {
+          label: <a href='/profile'>Thông tin tài khoản</a>,
+          key: '0'
+        },
+        {
+          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          key: '1'
+        },
+        { type: 'divider' }, // Đường kẻ phân cách
+        {
+          label: (
+            <a href='/' onClick={Logout}>
+              Đăng xuất
+            </a>
+          ),
+          key: '3'
+        }
+      ]
     : window.innerWidth < 800
       ? [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
       : [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
-
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
+  const [categories, setCategories] = useState<ICategory[]>([])
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await instance.get('/categories')
+        setCategories(data.res) // Giả sử `data` là mảng danh mục
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+    fetchCategories()
+  }, [])
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -191,11 +223,46 @@ const Header = () => {
             <NavLink to={'/'} className='text-muted hover:text-muted-foreground'>
               Trang chủ
             </NavLink>
-            <Dropdown menu={{ items: menus }}>
-              <NavLink to={'/products_page'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
-              </NavLink>
-            </Dropdown>
+            <div className='relative menu-container'>
+              {/* Menu Button */}
+              <div
+                className='cursor-pointer flex items-center'
+                onClick={toggleMenu} // Toggle trạng thái menu
+              >
+                <span className='text-muted hover:text-muted-foreground'>Sản phẩm</span>
+                <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
+              </div>
+
+              {/* Dropdown Menu */}
+              {isOpen && ( // Hiển thị menu nếu `isOpen` là `true`
+                <div className='absolute top-full left-0 mt-2 bg-white shadow-md rounded-lg w-[200px] z-10'>
+                  <ul className='py-2'>
+                    {/* Mục "Sản phẩm mới" */}
+                    <hr />
+                    <li className='hover:bg-gray-100'>
+                      <Link to='/products_page' className='block px-4 py-2 text-gray-700'>
+                        Sản phẩm mới
+                      </Link>
+                      <hr />
+                    </li>
+                    {/* Danh sách các danh mục */}
+                    {categories.map((category) => (
+                      <>
+                        <li key={category._id} className='hover:bg-gray-100'>
+                          <Link
+                            to={`/category/${category._id}`}
+                            className='block px-4 py-2 text-gray-700'
+                          >
+                            {category.name}
+                          </Link>
+                        </li>
+                        <hr />
+                      </>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
               Giới thiệu
             </NavLink>
@@ -282,12 +349,12 @@ const Header = () => {
                       </Button>
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-                    window.innerWidth < 800 ? (
-                      // <Link to={`login`}>
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    ) : (
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    )}
+                  window.innerWidth < 800 ? (
+                    // <Link to={`login`}>
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  ) : (
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  )}
                 </Space>
               </span>
             </Dropdown>

@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import './slider.css'
+import { ICategory } from '@/types/category'
+import instance from '@/configs/axios'
+import { Link } from 'react-router-dom'
 
 interface ArrowProps {
   className?: string
@@ -75,6 +78,18 @@ const CustomNextArrow: React.FC<ArrowProps> = (props) => {
 }
 
 const Category = () => {
+  const [categories, setCategories] = useState<ICategory[]>([])
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await instance.get('/categories')
+        setCategories(data.res) // Giả sử `data` là mảng danh mục
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+    fetchCategories()
+  }, [])
   const settings = {
     dots: true,
     infinite: true,
@@ -119,121 +134,29 @@ const Category = () => {
         <div className='sectionContent'>
           <Slider {...settings}>
             {/* Item 1 */}
-            <div className='item-category p-3'>
-              {' '}
-              <div className='media-category effect-image'>
-                <a href='#' aria-label='Nội thất cơ bản'>
-                  <img
-                    className='w-full'
-                    src='./src/assets/images/category/img_item_category_1.webp'
-                    alt='Nội thất cơ bản'
-                  />
-                </a>
-              </div>
-              <div className='title-category text-center mt-4'>
-                <h4 className='text-xl font-medium'>
-                  <a href='#' className='text-[#FCA120] font-normal' aria-label='Nội thất cơ bản'>
-                    Nội thất cơ bản
-                  </a>
-                </h4>
-              </div>
-            </div>
-            {/* Item 2 */}
-            <div className='item-category p-3'>
-              {' '}
-              <div className='media-category effect-image'>
-                <a href='#' aria-label='Nội thất cơ bản'>
-                  <img
-                    className='w-full'
-                    src='./src/assets/images/category/img_item_category_2.webp'
-                    alt='Nội thất cơ bản'
-                  />
-                </a>
-              </div>
-              <div className='title-category text-center mt-4'>
-                <h4 className='text-xl font-medium'>
-                  <a href='#' className='text-[#FCA120] font-normal' aria-label='Không gian phòng khách'>
-                    Không gian phòng khách
-                  </a>
-                </h4>
-              </div>
-            </div>
-            {/* Item 3 */}
-            <div className='item-category p-3'>
-              {' '}
-              <div className='media-category effect-image'>
-                <a href='#' aria-label='Trang trí nhà bếp'>
-                  <img
-                    className='w-full'
-                    src='./src/assets/images/category/img_item_category_3.webp'
-                    alt='Trang trí nhà bếp'
-                  />
-                </a>
-              </div>
-              <div className='title-category text-center mt-4'>
-                <h4 className='text-xl font-medium'>
-                  <a href='#' className='text-[#FCA120] font-normal' aria-label='Trang trí nhà bếp'>
-                    Trang trí nhà bếp
-                  </a>
-                </h4>
-              </div>
-            </div>
-            {/* Item 4 */}
-            <div className='item-category p-3'>
-              {' '}
-              <div className='media-category effect-image'>
-                <a href='#' aria-label='Nội thất phòng ngủ'>
-                  <img
-                    className='w-full'
-                    src='./src/assets/images/category/img_item_category_4.webp'
-                    alt='Nội thất phòng ngủ'
-                  />
-                </a>
-              </div>
-              <div className='title-category text-center mt-4'>
-                <h4 className='text-xl font-medium'>
-                  <a href='#' className='text-[#FCA120] font-normal' aria-label='Nội thất phòng ngủ'>
-                    Nội thất phòng ngủ
-                  </a>
-                </h4>
-              </div>
-            </div>
-            {/* Item 5 */}
-            <div className='item-category p-3'>
-              {' '}
-              <div className='media-category effect-image'>
-                <a href='#' aria-label='Dụng cụ nhà tắm'>
-                  <img
-                    className='w-full'
-                    src='./src/assets/images/category/img_item_category_5.webp'
-                    alt='Dụng cụ nhà tắm'
-                  />
-                </a>
-              </div>
-              <div className='title-category text-center mt-4'>
-                <h4 className='text-xl font-medium'>
-                  <a href='#' className='text-[#FCA120] font-normal' aria-label='Dụng cụ nhà tắm'>
-                    Dụng cụ nhà tắm
-                  </a>
-                </h4>
-              </div>
-            </div>
-            {/* Item 6 */}
-            <div className='item-category p-3'>
-              {' '}
-              <div className='media-category effect-image'>
-                <a href='#' aria-label='Phụ kiện'>
-                  <img className='w-full' src='./src/assets/images/category/img_item_category_6.webp' alt='Phụ kiện' />
-                </a>
-              </div>
-              <div className='title-category text-center mt-4'>
-                <h4 className='text-xl font-medium'>
-                  <a href='#' className='text-[#FCA120] font-normal' aria-label='Không gian phòng khách'>
-                    Phụ kiện
-                  </a>
-                </h4>
-              </div>
-            </div>
+            {categories.map((category) => (
+              <Link to={`/category/${category._id}`} className='block  py-2 text-gray-700'>
+                <div className='item-category p-3'>
+                  {' '}
+                  <div className='media-category effect-image'>
+                    <a href='#' aria-label='Nội thất cơ bản'>
+                      <img
+                        className='rounded-t-lg w-full h-[270px] object-cover'
+                        src={category.thumbnail}
+                        alt={category.name}
+                      />
+                    </a>
+                  </div>
+                  <div className='title-category text-center mt-4'>
+                    <h4 className='text-xl font-medium'>
+                      <a href='#' className='text-[#FCA120] font-normal' aria-label='Nội thất cơ bản'>
+                        {category.name}
+                      </a>
+                    </h4>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </Slider>
         </div>
       </div>

@@ -23,6 +23,7 @@ import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
 import Register from '@/pages/website/auth/Register'
 import ResetPassword from '@/pages/website/auth/ResetPassword'
 import CartPage from '@/pages/website/cart/CartPage'
+import CategoryProductsPage from '@/pages/website/category/ProductPage'
 import ContactPage from '@/pages/website/contact/contact'
 import NotFound from '@/pages/website/home/_components/NotFound'
 import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPolicy'
@@ -58,6 +59,8 @@ function App() {
         // Cart
 
         { path: 'products_page/:id', Component: ProductsPageDetail },
+         
+      { path: 'category/:id', Component:CategoryProductsPage   }, // Route path="/products_page?category=:categoryId" element={<ProductsPage />} /> {/* Trang sản phẩm của danh mục */}
 
         { path: 'cart', Component: CartPage },
         { path: 'cart/check_out_form', Component: CheckoutPage },
