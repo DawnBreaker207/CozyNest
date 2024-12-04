@@ -67,13 +67,6 @@ const ProductAddPage = () => {
               >
                 <Input placeholder='Tên sản phẩm' className='w-full' />
               </Form.Item>
-              <Form.Item
-                label='Giá sản phẩm'
-                name='price'
-                rules={[{ required: true, message: 'Giá sản phẩm là bắt buộc' }]}
-              >
-                <InputNumber placeholder='Giá sản phẩm' className='w-full' />
-              </Form.Item>
               <Form.Item label='Mô tả sản phẩm' name='description'>
                 <Input.TextArea rows={4} placeholder='Mô tả' className='w-full' />
               </Form.Item>

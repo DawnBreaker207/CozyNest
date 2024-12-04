@@ -92,6 +92,11 @@ const AdminVariantPage = () => {
       key: 'name'
     },
     {
+      title: 'Số lượng',
+      dataIndex: 'stock',
+      key: 'stock'
+    },
+    {
       title: 'Giá sản phẩm',
       dataIndex: 'price',
       key: 'price'
@@ -102,9 +107,14 @@ const AdminVariantPage = () => {
       key: 'price_before_discount'
     },
     {
-      title: 'Số lượng',
-      dataIndex: 'stock',
-      key: 'stock'
+      title: 'Giảm giá',
+      dataIndex: 'price_discount_percent',
+      key: 'price_discount_percent',
+      render: (price_discount_percent: any) => (
+        <div className='text-base'>
+          {price_discount_percent} <span className='text-[13px]'>%</span>
+        </div>
+      )
     },
     {
       title: 'Action',
