@@ -1,49 +1,63 @@
 import { Cart } from '@/components/icons/index'
 import { useProduct } from '@/hooks/useProductQuery'
 import { Variants } from '@/types/product'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
 import { Link, useParams } from 'react-router-dom'
 import CouponCard from '../../cart/_components/CouponCard'
 import RelatedProduct from '../_components/RelatedProduct'
 import ReviewComponent from './_components/Review'
+import useCart from '@/hooks/useCart'
+import { message } from 'antd'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null) // State để lưu id màu sắc được chọn
-  // console.log(selectedColorId)
+  const [priceVar, setPriceVar] = useState<number | 0>(0) // State để lưu id màu sắc được chọn
+  const [hoveredColorId, setHoveredColorId] = useState<string | null>(null)
+  console.log(selectedColorId)
 
   const { id } = useParams() // Lấy productId từ URL
   const { data, isLoading, error } = useProduct(id)
   // console.log(data)
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>
-  }
-
+  const { addToCart } = useCart() // Lấy hàm addToCart từ hook
   // Lấy tất cả các màu sắc từ variants
   const variants = data?.variants || [] // Đảm bảo variants không undefined
+  console.log(variants)
+
   const colors = variants
     .map((variant: Variants) => ({
       id: variant?.sku_id?._id, // Lưu id của màu sắc
-      value: variant?.option_value_id?.value // Lưu giá trị của màu sắc
+      price: variant?.sku_id?.price,
+      value: variant?.sku_id?.name // Lưu giá trị của màu sắc
     }))
     .filter((color) => color.value) // Lọc các màu sắc hợp lệ
-
-  const handleColorSelect = (id: string) => {
-    setSelectedColorId(id) // Cập nhật id màu sắc được chọn
+  console.log(colors)
+  // Đảm bảo khi `colors` có dữ liệu, chọn màu đầu tiên mặc định
+  useEffect(() => {
+    // Nếu không có màu nào được chọn, chọn màu đầu tiên trong danh sách màu sắc
+    if (colors.length > 0 && !selectedColorId) {
+      setSelectedColorId(colors[0].id) // Chọn màu đầu tiên mặc định
+      setPriceVar(colors[0].price) // Cập nhật giá của màu sắc đầu tiên
+    }
+  }, [colors, selectedColorId]) // Chạy lại khi colors thay đổi
+  const handleAddToCart = () => {
+    if (selectedColorId && count > 0) {
+      message.success('Thêm vào giỏ hàng thành công')
+      addToCart(selectedColorId, count) // Sử dụng addToCart từ hook để thêm vào giỏ hàng
+    }
   }
-
+  const handleColorSelect = (id: string, price: number) => {
+    setSelectedColorId(id) // Cập nhật id màu sắc được chọn
+    setPriceVar(price)
+  }
   //Kiểm tra dữ liệu product
   if (!data || !data) return <p>Product not found</p>
   const product = data
-  const category = product?.categoryId?._id
+
+  const category = product?.category_id?._id
 
   const increase = () => {
     if (count < 10) setCount(count + 1)
@@ -71,78 +85,85 @@ const ProductDetail = () => {
     '/src/assets/images/product/img-slide-6.webp'
   ]
 
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
-        <div className='flex flex-col'>
-          <div className='flex flex-col'>
-            <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-0 mx-auto'>
-              {/* List of Thumbnails */}
-              <div className='lg:flex flex-wrap flex-col hidden'>
-                {thumbnails.map((thumbnail, index) => (
+        <div className='flex flex-col  h-min'>
+          <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-10 mx-auto'>
+            {/* List of Thumbnails */}
+            <div className='lg:flex flex-wrap flex-col hidden'>
+              {product.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image.url} // Sử dụng URL ảnh từ dữ liệu sản phẩm
+                  alt={`Ảnh thu nhỏ sản phẩm ${index + 1}`}
+                  className='w-16 h-16 mb-3 cursor-pointer'
+                  onClick={() => setActiveImageIndex(index)}
+                />
+              ))}
+            </div>
+
+            <div className='relative lg:mx-0 md:w-[520px] md:h-[520px] h-auto w-full overflow-hidden'>
+              <div
+                className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
+                style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+              >
+                {product.images.map((image, index) => (
                   <img
                     key={index}
-                    src={thumbnail}
-                    alt={`Product Thumbnail ${index + 1}`}
-                    className='w-16 h-16 mb-3 cursor-pointer'
-                    onClick={() => setActiveImageIndex(index)}
+                    src={image.url} // Sử dụng URL ảnh từ dữ liệu sản phẩm
+                    alt={`Ảnh sản phẩm ${index + 1}`}
+                    className='max-w-full h-auto' // Giữ tỷ lệ ảnh và phù hợp với container
                   />
                 ))}
               </div>
-              <div className='relative lg:mx-0 md:w-[520px] md:h-[520px] h-auto w-full overflow-hidden'>
-                <div
-                  className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
-                  style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
-                >
-                  {thumbnails.map((thumbnail, index) => (
-                    <img
-                      key={index}
-                      src={thumbnail}
-                      alt={`Product Image ${index + 1}`}
-                      className='max-w-full h-auto' // Keep image aspect ratio and fit within container
-                    />
-                  ))}
-                </div>
 
-                <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
-                  {product.discount}%
-                </span>
+              <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
+                {product.discount}%
+              </span>
 
-              {/* Back Button */}
+              {/* Nút quay lại */}
               <button
-                title='Back'
+                title='Quay lại'
                 className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
-                onClick={() => setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)}
+                onClick={() =>
+                  setActiveImageIndex((activeImageIndex - 1 + product.images.length) % product.images.length)
+                }
               >
                 <GrFormPrevious className='w-[35px] h-[35px]' />
               </button>
 
-              {/* Next Button */}
+              {/* Nút tiếp theo */}
               <button
-                title='Next'
+                title='Tiếp theo'
                 className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
-                onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
+                onClick={() => setActiveImageIndex((activeImageIndex + 1) % product.images.length)}
               >
                 <GrFormNext className='w-[35px] h-[35px]' />
               </button>
             </div>
             {/* Share Section */}
-            <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
+            {/* <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
               <span className='font-light'>Chia sẻ:</span>
               <img src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
               <img src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
               <img src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
               <img src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
               <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
-            </div>
-          </div>
-          <div>
-            <ReviewComponent />
+            </div> */}
           </div>
         </div>
+
         <div className='col-span-1 lg:mt-0 mt-6'>
           <div className='product-heading'>
-            <h1 className='text-[#fca120] font-semibold text-2xl'>{product.name}</h1>
+            <h1 className=' font-bold text-2xl'>{product.name}</h1>
             <div className='flex gap-[30px] mt-3'>
               <span id='pro_sku' className='text-sm font-light'>
                 Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'>2001256</span>
@@ -160,28 +181,73 @@ const ProductDetail = () => {
           {/* Price Section */}
           <div className='price flex justify-start items-center gap-3 mt-[30px]'>
             <span className='name-price text-[19px] font-semibold'>Giá:</span>
-            <div className='pricedetail flex flex-row items-center gap-2 '>
-              <span className='text-[#FF0000] font-semibold text-[24px]'>
-                {product?.price - product?.price * (product?.discount / 100)}₫
-              </span>
-              <span className='text-[#878c8f] font-light line-through text-[16px]'>{product.price}</span>
+            <div className='pricedetail flex flex-row items-center gap-2'>
+              {/* Hiển thị giá sau khi giảm */}
+              <span className='text-[#FF0000] font-semibold text-[24px]'>{priceVar.toLocaleString()}₫</span>
 
-              {/* Phần Giảm Giá */}
-              <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>{product.discount}%</span>
+              {/* Kiểm tra nếu có giảm giá và hiển thị giá cũ bị gạch ngang */}
+              {product.variants[0]?.sku_id?.price_discount_percent > 0 && (
+                <>
+                  {/* <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
+                    {product.variants[0]?.sku_id?.price_discount_percent}%
+                  </span> */}
+                  {/* Giá trước khi giảm */}
+                  <span className='text-gray-500 line-through text-[18px]'>
+                    {product.variants[0]?.sku_id?.price.toLocaleString()}₫
+                  </span>
+                </>
+              )}
             </div>
           </div>
-          <div className='flex flex-wrap items-center gap-3'>
+
+          {/* Màu sắc Section */}
+          <div className='flex flex-wrap items-center mt-6 gap-3'>
             <h2 className='font-semibold'>Màu sắc:</h2>
-            {colors.map((color: any) => (
-              <button
-                key={color.id}
-                onClick={() => handleColorSelect(color.id)}
-                className={`p-2 border rounded ${selectedColorId === color.id ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-              >
-                {color.value}
-              </button>
-            ))}
+            {product.variants.map((variant: any) => {
+              const color = variant.option_value_id
+              const isSelected = selectedColorId === variant.sku_id._id
+              const isHovered = hoveredColorId === variant._id
+              const bgColor =
+                color.value === 'Nâu' ? 'bg-[#A0522D]' : color.value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
+
+              // Tên màu hiển thị khi hover hoặc select
+              const displayName = isSelected || isHovered ? color.label || color.value : colors[0]?.value
+
+              return (
+                <button
+                  key={variant.sku_id._id}
+                  onClick={() => {
+                    handleColorSelect(variant.sku_id._id, variant.sku_id.price)
+                    setActiveImageIndex((activeImageIndex + 1) % product.images.length)
+                  }}
+                  onMouseEnter={() => setHoveredColorId(variant._id)}
+                  onMouseLeave={() => setHoveredColorId(null)}
+                  className={`relative p-3 border-2 rounded-full ${bgColor}`}
+                  style={{
+                    outline: isSelected ? '1px solid black' : 'none',
+                    outlineOffset: '3px'
+                  }}
+                >
+                  {/* Hiển thị tên màu khi hover hoặc select */}
+                  {(isSelected || isHovered) && (
+                    <span
+                      className='absolute top-[-30px] right-7 transform translate-x-[10px] text-sm font-semibold'
+                      style={{
+                        padding: '2px 10px',
+                        borderRadius: '5px',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '80%'
+                      }}
+                    >
+                      {displayName}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
           </div>
+
           {/* Quantity Section */}
           <div className='btn_1'>
             <div className='flex items-center gap-4 mt-4'>
@@ -202,7 +268,7 @@ const ProductDetail = () => {
                   to=''
                   className='bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
                 >
-                  <button className='w-full'>
+                  <button onClick={handleAddToCart} className='w-full'>
                     <span className='relative z-10 text-[16px]'>Thêm Vào Giỏ</span>
                   </button>
                 </Link>
@@ -283,85 +349,87 @@ const ProductDetail = () => {
             </div>
           </div>
           <hr className='h-[1px] bg-black border-none my-5' />
-
-          {/* Product Description */}
-          <div
-            className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden mt-[10px]`}
-          >
-            <div className='productDetail--navs mg-top mt-[15px]'>
-              <div className='nav tab-title'>
-                <b className='nav-item active text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
+          <div>
+            <ReviewComponent />
+          </div>
+        </div>
+        {/* Product Description */}
+        <div
+          className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'} overflow-hidden lg:-mt-[345px]`}
+        >
+          <div className='productDetail--navs mg-top mt-[15px]'>
+            <div className='nav tab-title'>
+              <b className='nav-item active text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
+            </div>
+            <hr className='mb-[20px]' />
+            <div className={`tab-pane fade show active ${isCollapsed ? 'h-[250px]' : 'h-auto'} transition-all`}>
+              <div
+                className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
+              >
+                <p>{product.description}</p>
+                <p>--------------</p>
+                {/* More product description details */}
+                <table className='table-auto w-full border-collapse mt-[10px]'>
+                  <tbody>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Sản phẩm
+                      </th>
+                      <td className=''>{product.name}</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Bộ sưu tập
+                      </th>
+                      <td className=''>{product.brand}</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Kích cỡ
+                      </th>
+                      <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Màu sắc
+                      </th>
+                      <td className=''>Màu trắng/ màu đen</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Chất liệu
+                      </th>
+                      <td className=''>Sứ</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Xuất xứ
+                      </th>
+                      <td className=''>Trung Quốc</td>
+                    </tr>
+                    <tr>
+                      <th scope='row' className='btn-th text-left align-top pr-12'>
+                        Đơn vị
+                      </th>
+                      <td className=''>SET</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <hr className='mb-[20px]' />
-              <div className={`tab-pane fade show active ${isCollapsed ? 'h-[250px]' : 'h-auto'} transition-all`}>
-                <div
-                  className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
-                >
-                  <p>{product.description}</p>
-                  <p>--------------</p>
-                  {/* More product description details */}
-                  <table className='table-auto w-full border-collapse mt-[10px]'>
-                    <tbody>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Sản phẩm
-                        </th>
-                        <td className=''>{product.name}</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Bộ sưu tập
-                        </th>
-                        <td className=''>{product.brand}</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Kích cỡ
-                        </th>
-                        <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Màu sắc
-                        </th>
-                        <td className=''>Màu trắng/ màu đen</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Chất liệu
-                        </th>
-                        <td className=''>Sứ</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Xuất xứ
-                        </th>
-                        <td className=''>Trung Quốc</td>
-                      </tr>
-                      <tr>
-                        <th scope='row' className='btn-th text-left align-top pr-12'>
-                          Đơn vị
-                        </th>
-                        <td className=''>SET</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className='description-btn flex justify-center mt-[10px]'>
-                <button
-                  className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-[#fca120]' : 'text-[#fca120]'} p-2 rounded-md`}
-                  onClick={handleToggleCollapse}
-                >
-                  {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
-                </button>
-              </div>
+            </div>
+            <div className='description-btn flex justify-center mt-[10px]'>
+              <button
+                className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-[#fca120]' : 'text-[#fca120]'} p-2 rounded-md`}
+                onClick={handleToggleCollapse}
+              >
+                {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className='mb-20 container'>
+      <div className='mb-20 container b'>
         <RelatedProduct id={category} />
         <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>
@@ -397,7 +465,6 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      {/* </div> */}
     </div>
   )
 }

@@ -14,8 +14,8 @@ import { useCookie } from './useStorage'
 const useCart = () => {
   const queryClient = useQueryClient()
   const [user] = useCookie('user', {})
-  const token = user?.data?.accessToken
-  const userId = user?.data?.res?._id
+  // const token = user?.data?.accessToken
+  const userId = user?._id
 
   const setProducts = useCartStore((state) => state.setProducts)
   const setQuantities = useCartStore((state) => state.setQuantities)
@@ -26,20 +26,18 @@ const useCart = () => {
     queryKey: ['cart', userId],
     queryFn: async () => {
       if (!userId) {
-        return { res: { products: [], cartId: '' } }
+        return { res: { products: [], cart_id: '' } }
       }
 
       try {
         const { data: cartData } = await instance.get(`/cart/${userId}`, {})
-        console.log(cartData)
-
         return cartData
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
           // Giỏ hàng không tồn tại, reset lại sản phẩm và số lượng
           setProducts([])
           setQuantities([])
-          return { res: { products: [], cartId: '' } }
+          return { res: { products: [], cart_id: '' } }
         }
         throw error // Ném lỗi nếu có lỗi khác
       }
@@ -78,12 +76,12 @@ const useCart = () => {
       action,
       sku_id,
       quantity,
-      cartId
+      cart_id
     }: {
       action: string
       quantity?: number
-      sku_id?: string
-      cartId?: string
+      sku_id?: string | number
+      cart_id?: string
     }) => {
       if (!userId) return
 
@@ -106,7 +104,7 @@ const useCart = () => {
           }
           break
         case 'DELETE':
-          await instance.delete(`/cart/remove-cart/${cartId}`, {})
+          await instance.delete(`/cart/remove-cart/${cart_id}`, {})
           break
         default:
           break
@@ -142,17 +140,13 @@ const useCart = () => {
   // Hàm xóa giỏ hàng
   const deleteCart = (cartId: string) => {
     if (userId) {
-      mutate({ action: 'DELETE', cartId })
+      mutate({ action: 'DELETE', cart_id: cartId })
     }
   }
   // Hàm xóa tất cả sản phẩm trong giỏ hàng
   const removeAllProductsFromCart = async () => {
     try {
-      await instance.delete(`cart/remove-all/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      await instance.delete(`cart/remove-all/${userId}`, {})
       // Sau khi xóa, có thể thực hiện các thao tác cập nhật lại giỏ hàng, chẳng hạn như gọi lại API để lấy dữ liệu giỏ hàng
       queryClient.invalidateQueries({ queryKey: ['cart', userId] })
       setTimeout(() => refetch(), 250)

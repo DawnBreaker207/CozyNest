@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react'
 import instance from '@/configs/axios'
-import { useNavigate } from 'react-router-dom'
 import useCart from '@/hooks/useCart'
-import ShippingAddressPage from './_components/ShippingAddressPage'
-import PaymentMethodPage from './_components/PaymentMethodPage'
-import { Button } from 'antd'
-import { useLocalStorage } from '@/hooks/useStorage'
+import { useCookie } from '@/hooks/useStorage'
 import { CloseOutlined } from '@ant-design/icons'
+import { Button } from 'antd'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import PaymentMethodPage from './_components/PaymentMethodPage'
+import ShippingAddressPage from './_components/ShippingAddressPage'
 
 const CheckoutPage = () => {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
-  const [user] = useLocalStorage('user', {})
+  const [user] = useCookie('user', {})
   const accessToken = user?.data?.accessToken
   const [orderData, setOrderData] = useState<any>(null)
   const [couponCode, setCouponCode] = useState<string>('')

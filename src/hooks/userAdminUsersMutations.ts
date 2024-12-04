@@ -17,7 +17,7 @@ const useAdminUsersMutations = ({ action, onSuccess }: useAdminUsersMutationProp
     defaultValues: {
       username: '',
       email: '',
-      phoneNumber: '',
+      phone_number: '',
       avatar: '',
       password: '',
       role: '',

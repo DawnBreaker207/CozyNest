@@ -1,54 +1,50 @@
 import { login } from '@/services/auth'
-import { IUsers } from '@/types/user'
 import { openNotify } from '@/utils/notification'
 import { useMutation } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, message } from 'antd'
 import Cookies from 'js-cookie'
 import { NavLink, useNavigate } from 'react-router-dom'
-
+type FieldType = {
+  email?: string
+  password?: string
+}
 const Login = () => {
-  const [messageApi, contextHolder] = message.useMessage();
-  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage()
+  const navigate = useNavigate()
 
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
-      const response = await instance.post(`/auth/login`, formData);
-      return response.data; // Chỉ trả về dữ liệu thực
+      return await login(formData)
     },
     onSuccess: (data) => {
-      const { accessToken, refreshToken, res } = data;
+      console.log(data)
 
-      messageApi.open({
-        type: 'success',
-        content: 'Đăng nhập thành công',
-      });
-
-      localStorage.setItem('user', JSON.stringify(res));
+      openNotify('Success', 'Đăng nhập thành công')
 
       // Lưu thông tin vào cookie
-      Cookies.set('accessToken', accessToken, { expires: 1 });
-      Cookies.set('refreshToken', refreshToken, { expires: 1 });
-      Cookies.set('user', JSON.stringify(res), { expires: 1 });
+      // Cookies.set('accessToken', accessToken, { expires: 1 });
+      // Cookies.set('refreshToken', refreshToken, { expires: 1 });
+      Cookies.set('user', JSON.stringify(data), { expires: 1 })
 
       // Điều hướng và làm mới trang
 
       setTimeout(() => {
-        navigate('/');
-        window.location.reload();
-      }, 600);
+        navigate('/')
+        window.location.reload()
+      }, 600)
     },
     onError: (error) => {
       messageApi.open({
         type: 'error',
-        content: error.message || 'Đã xảy ra lỗi, vui lòng thử lại',
-      });
-    },
-  });
+        content: error.message || 'Đã xảy ra lỗi, vui lòng thử lại'
+      })
+    }
+  })
 
   const onFinish = (values: FieldType) => {
-    console.log('Form Values: ', values);
-    mutate(values);
-  };
+    console.log('Form Values: ', values)
+    mutate(values)
+  }
 
   return (
     <div

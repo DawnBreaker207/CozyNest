@@ -56,7 +56,6 @@ export const editCategory = async (category: Partial<ICategory>) => {
       withCredentials: true
     })
     return response.data
-
   } catch (error) {
     console.log(error)
     throw error

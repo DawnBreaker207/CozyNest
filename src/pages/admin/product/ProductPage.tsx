@@ -90,7 +90,7 @@ const AdminProductPage = () => {
       key: 'price',
       title: 'Giá sản phẩm',
       dataIndex: 'price',
-      render: (price: number) => `$${price.toFixed(2)}`
+      render: (price: number) => `$${price?.toFixed(2)}`
     },
     {
       key: 'discount',
