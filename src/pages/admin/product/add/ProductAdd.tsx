@@ -70,40 +70,6 @@ const ProductAddPage = () => {
               <Form.Item label='Mô tả sản phẩm' name='description'>
                 <Input.TextArea rows={4} placeholder='Mô tả' className='w-full' />
               </Form.Item>
-              <div>
-                <div className='grid grid-cols-1 gap-4'>
-                  {/* <Form.Item label='Ảnh sản phẩm' name='images'>
-                    <Upload
-                      multiple
-                      beforeUpload={(file) => {
-                        setImages((prev) => [...prev, { file, name: file.name }]);
-                        return false; // Prevent automatic upload
-                      }}
-                      showUploadList={false}
-                    >
-                      <Button icon={<UploadOutlined />}>Tải lên ảnh sản phẩm</Button>
-                    </Upload>
-                    <div className="mt-2">
-                      {images.map(({ name }) => (
-                        <span key={name} className="mr-2">{name}</span>
-                      ))}
-                    </div>
-                  </Form.Item> */}
-
-                  <Form.Item label='Ảnh sản phẩm' name='images' className='flex items-center'>
-                    <Upload
-                      beforeUpload={(file) => {
-                        setThumbnail({ file, name: file.name })
-                        return false // Prevent automatic upload
-                      }}
-                      showUploadList={false}
-                    >
-                      <Button icon={<UploadOutlined />}>Tải lên ảnh</Button>
-                    </Upload>
-                    {thumbnail && <span className='ml-3'>{thumbnail.name}</span>}
-                  </Form.Item>
-                </div>
-              </div>
             </div>
             <div className='w-[20%]'>
               <Form.Item
@@ -129,7 +95,7 @@ const ProductAddPage = () => {
                 <Input placeholder='Mã sản phẩm' className='w-full' />
               </Form.Item>
               <div>
-                <Form.Item label='Trạng thái hiển thị' name='isHidden' valuePropName='checked'>
+                <Form.Item label='Trạng thái hiển thị' name='is_hidden' valuePropName='checked'>
                   <Checkbox>Hiển thị</Checkbox>
                 </Form.Item>
               </div>
