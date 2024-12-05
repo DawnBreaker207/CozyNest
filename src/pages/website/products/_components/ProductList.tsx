@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Cart } from '@/components/icons/index'
 import { useCartStoreHeader } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
 import { useCookie } from '@/hooks/useStorage'
 import { IProduct } from '@/types/product'
 import { CloseOutlined } from '@ant-design/icons'
 import { message } from 'antd'
+import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
@@ -24,7 +24,9 @@ interface Color {
   value: string
 }
 
-const ProductList = ({ products }: ProductListProps) => {
+const ProductList = ({ products = [] }: ProductListProps) => {
+  console.log(products)
+
   // Sử dụng Zustand store thay vì useState
   const {
     quantity,
@@ -42,12 +44,23 @@ const ProductList = ({ products }: ProductListProps) => {
     selectedSkuId,
     setSelectedSkuId
   } = useCartStoreHeader()
+  // State để theo dõi variant được chọn
 
   const [messageApi, contextHolder] = message.useMessage()
   const [user] = useCookie('user', {})
   const userId = user?._id
   const { addToCart } = useCart() // Zustand store để thêm vào giỏ hàng
+  const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: number }>({})
 
+  useEffect(() => {
+    // Mặc định chọn màu đầu tiên cho mỗi sản phẩm khi render
+    const defaultVariants = products.reduce((acc, product) => {
+
+      acc[product._id] = 0 // Chọn màu đầu tiên
+      return acc
+    }, {})
+    setSelectedVariants(defaultVariants)
+  }, [products])
   const increase = () => {
     if (quantity < 10) setQuantity(quantity + 1)
   }
@@ -122,9 +135,8 @@ const ProductList = ({ products }: ProductListProps) => {
       {/* Data cart */}
       {selectedProduct && ( // Đảm bảo chỉ render nếu selectedProduct tồn tại
         <div
-          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${
-            isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-          }`}
+          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+            }`}
         >
           <div className='bg-white p-5 rounded-lg'>
             <div className='float-right'>
@@ -350,46 +362,83 @@ const ProductList = ({ products }: ProductListProps) => {
       <div className='mx-auto container mt-20'>
         <h2 className='text-center text-[25px] sm:text-[45px] mb-8 mt-10 md:mt-20 text-[#FCA120]'>
           Sản phẩm mới ra mắt
+          {/* <button
+                    className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
+                    onClick={() => handleAddToCart(String(product._id))}
+                  >
+                    <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
+                    <div className='p-[6px] bg-[#FCA120] rounded-full'>
+                      <Cart />
+                    </div>
+                  </button> */}
         </h2>
-        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px]  mt-4 mb-8'>
-          {products?.map((product, index: number) => (
-            <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
-              <Link to={`/detail/${product._id}`}>
-                <div className='relative'>
-                  <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                    <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
-                    <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
-                  </div>
+        <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
+          {products.map((product) => {
+            // Kiểm tra các variant và lấy giá trị từ sku_id
+            const firstVariant = product?.variants?.[0]
+            console.log(firstVariant)
 
-                  <FaRegEye
-                    className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                    title='Xem nhanh'
-                  />
-                  <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                    -{product?.discount}%
-                  </span>
-                </div>
-              </Link>
-              <div className='mx-2 text-center space-y-2 mt-3'>
-                <h3>{product?.name}</h3>
-                <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                  <span className='text-[#FF0000] font-semibold'>
-                    {product?.price - product?.price * (product?.discount / 100)}₫
-                  </span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px]'>{product?.price}₫</span>
-                </div>
-                <button
-                  className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
-                  onClick={() => handleAddToCart(String(product._id))}
-                >
-                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Cart />
+            const price = firstVariant?.sku_id?.price || 0 // Sử dụng giá mặc định là 0 nếu không có giá
+            // const priceDiscountPercent = firstVariant?.sku_id?.price_discount_percent || 0
+            // const discountedPrice = price - price * (priceDiscountPercent / 100)
+
+            return (
+              <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
+                <Link to={`/detail/${product._id}`}>
+                  <div className='relative'>
+                    <div className='flex transition-transform ease-in-out duration-500'>
+                      <img src={product?.images[0]?.url} alt={product?.name} className='object-cover' />
+                    </div>
+
+                    <FaRegEye
+                      className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
+                      title='Xem nhanh'
+                    />
+                    {/* {priceDiscountPercent > 0 && (
+                      <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
+                        -{priceDiscountPercent}%
+                      </span>
+                    )} */}
                   </div>
-                </button>
+                </Link>
+                <div className='mx-2 text-center space-y-2 mt-3'>
+                  <h3>{product?.name}</h3>
+                  <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+                    <span className='text-[#FF0000] font-semibold'>{price.toLocaleString()}₫</span>
+                    {
+                      <span className='text-[#878c8f] font-light line-through text-[13px]'>
+                        {price.toLocaleString()}₫
+                      </span>
+                    }
+                  </div>
+                  <div className='flex space-x-4'>
+                    {product.variants.map((variant, idx) => {
+                      const value = variant.option_value_id.value
+                      const bgColor =
+                        value === 'Nâu' ? 'bg-[#A0522D]' : value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
+                      const isSelected = selectedVariants[product._id] === idx
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`w-6 h-6 rounded-full ${bgColor} cursor-pointer`}
+                          title={value}
+                          style={{
+                            outline: isSelected ? '1px solid black' : 'none',
+                            outlineOffset: '3px'
+                          }}
+                          // Khi hover vào thì chọn màu đó
+                          onMouseEnter={() => setSelectedVariants((prev) => ({ ...prev, [product._id]: idx }))}
+                          // Khi click vào thì cũng lưu lại màu đã chọn
+                          onClick={() => setSelectedVariants((prev) => ({ ...prev, [product._id]: idx }))}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </>

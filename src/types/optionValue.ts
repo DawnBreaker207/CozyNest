@@ -1,7 +1,5 @@
-export interface IOptionValue {
-  _id: string | undefined;
-  option_id: string;
-  product_id: string;
-  label: string;
-  value: string;
+export interface OptionValueType {
+  _id: string
+  label: string
+  value: string
 }

@@ -1,4 +1,5 @@
 import instance from '@/configs/axios'
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { IReview } from '@/types/review'
 import { StarFilled, UploadOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -10,7 +11,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
-const ReviewComponent = ({ product }: any) => {
+const ReviewComponent = ({product}: any) => {
+  const [image, setImage] = useState<{ file: File; name: string } | null>(null)
   const navigate = useNavigate()
   const [showAll, setShowAll] = useState(false)
   const [selectedRating, setSelectedRating] = useState(null)
@@ -87,9 +89,11 @@ const ReviewComponent = ({ product }: any) => {
     setIsLoginModalOpen(false)
     navigate('/login')
   }
-  const onFinish: FormProps<IReview>['onFinish'] = async (values) => {
+  const onFinish: FormProps<IReview>['onFinish'] = async (values: IReview) => {
+    const imageUrl = image ? await uploadFileCloudinary(image.file) : ''
     const reviewData = {
       ...values,
+      image: imageUrl,
       product_id: id,
       user_id: userId
     }
@@ -198,12 +202,18 @@ const ReviewComponent = ({ product }: any) => {
                     </div>
                   </div>
                   <p className='text-sm text-gray-600 mt-2'>{review.comment}</p>
-                  {/* Hiển thị hình ảnh sản phẩm */}
-                  {review?.image && (
-                    <div className='mt-4'>
-                      <img src={review?.image} alt='Product' className='w-32 h-32 object-cover rounded-md' />
+                  {/* Hiển thị nhiều hình ảnh sản phẩm */}
+                
+                    <div className='mt-4 grid grid-cols-3 gap-2'>
+                   
+                        <img
+                         title='ảnh sản phẩm'
+                          src={review.image}
+                          className='w-32 h-32 object-cover rounded-md'
+                        />
+                   
                     </div>
-                  )}
+                
                 </div>
               </div>
             ))}
@@ -269,9 +279,28 @@ const ReviewComponent = ({ product }: any) => {
             <Form.Item name='comment' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
               <TextArea rows={5} placeholder='Nhập nhận xét của bạn...' />
             </Form.Item>
-            <Upload>
+            <Upload
+              beforeUpload={(file) => {
+                setImage({ file, name: file.name })
+                return false // Prevent automatic upload
+              }}
+              showUploadList={false}
+            >
               <Button icon={<UploadOutlined />}>Thêm ảnh</Button>
             </Upload>
+            <div className='mt-2'>
+              {image && (
+                <>
+                  <span>{image.name}</span>
+                  <br />
+                  <img
+                    src={URL.createObjectURL(image.file)}
+                    alt='image'
+                    style={{ width: '100%', maxWidth: '300px', marginTop: '10px' }}
+                  />
+                </>
+              )}
+            </div>
           </Form>
         </div>
       </Modal>

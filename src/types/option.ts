@@ -1,6 +1,5 @@
-export interface IOption {
-  _id: string;
-  product_id: string;
-  name: string;
-  position: number;
+export interface OptionType {
+  _id: string
+  name: string
+  position: number
 }

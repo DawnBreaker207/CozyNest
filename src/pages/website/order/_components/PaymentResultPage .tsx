@@ -14,7 +14,7 @@ const PaymentResultPage = () => {
     const resultCode = searchParams.get('resultCode')
 
     // Lấy orderId từ cookie nếu không có trong URL
-    const orderId = Cookies.get('orderId')
+    const orderId = Cookies.get('orderd')
 
     const updateOrder = async () => {
       try {
