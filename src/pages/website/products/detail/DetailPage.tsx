@@ -113,7 +113,7 @@ const ProductDetail = () => {
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
-        <div className='flex flex-col'>
+        <div className='flex flex-col h-min'>
           <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-10 mx-auto'>
             {/* List of Thumbnails */}
             <div className='lg:flex flex-wrap flex-col hidden'>
@@ -371,9 +371,11 @@ const ProductDetail = () => {
             <ReviewComponent />
           </div>
 
-          {/* Product Description */}
-          <div
-            className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden mt-[10px]`}
+         
+        </div>
+         {/* Product Description */}
+         <div
+            className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[96px] `}
           >
             <div className='productDetail--navs mg-top mt-[15px]'>
               <div className='nav tab-title'>
@@ -445,7 +447,7 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-        </div>
+        
       </div>
 
       <div className='mb-20 container'>

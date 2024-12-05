@@ -203,7 +203,7 @@ const LayoutAdmin: React.FC = () => {
           <span className='text-xl text-[#353535] ml-[25px]'>{title}</span>
         </div>
         <div className='flex items-center space-x-4 mr-[14px]'>
-          <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+          {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
         </div>
       </div>
     </Header>
@@ -277,11 +277,6 @@ const LayoutAdmin: React.FC = () => {
             },
             {
               key: '7',
-              icon: <UploadOutlined />,
-              label: <NavLink to={`/admin/report`}>Reports</NavLink>
-            },
-            {
-              key: '8',
               icon: <LogoutOutlined />,
               label: (
                 <NavLink to='#' onClick={handleLogout}>
@@ -315,20 +310,14 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Category</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
-                <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' />
+                {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
                 <div className='flex items-center space-x-2'>
-                  <Button
-                    icon={<DownloadOutlined />}
-                    size='large'
-                    className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
-                  >
-                    Export
-                  </Button>
+                  
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`categories/add`}>Add Category</Link>
                   </Button>
@@ -344,7 +333,7 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Articles</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
@@ -366,7 +355,7 @@ const LayoutAdmin: React.FC = () => {
                   />
                 </Dropdown>
                 <Button
-                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 ml-2 mr-2 px-4'
+                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 -ml-[100px] '
                   type='primary'
                   icon={<SearchOutlined />}
                   onClick={() => handleSearchArticle(searchValue)}
@@ -374,13 +363,13 @@ const LayoutAdmin: React.FC = () => {
                   Search
                 </Button>
                 <div className='flex items-center space-x-2'>
-                  <Button
+                  {/* <Button
                     icon={<DownloadOutlined />}
                     size='large'
                     className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
                   >
                     Export
-                  </Button>
+                  </Button> */}
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`articles/add`}>Add Articles</Link>
                   </Button>
@@ -396,7 +385,7 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Product</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
@@ -418,7 +407,7 @@ const LayoutAdmin: React.FC = () => {
                   />
                 </Dropdown>
                 <Button
-                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 ml-2 mr-2 px-4'
+                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 -ml-24'
                   type='primary'
                   icon={<SearchOutlined />}
                   onClick={() => handleSearch(searchValue)}
@@ -426,13 +415,13 @@ const LayoutAdmin: React.FC = () => {
                   Search
                 </Button>
                 <div className='flex items-center space-x-2'>
-                  <Button
+                  {/* <Button
                     icon={<DownloadOutlined />}
                     size='large'
                     className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
                   >
                     Export
-                  </Button>
+                  </Button> */}
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`products/add`}>Add Product</Link>
                   </Button>
@@ -444,12 +433,12 @@ const LayoutAdmin: React.FC = () => {
                     <Button type='link' className='text-blue-500'>
                       All Product
                     </Button>
-                    <Button type='link'>Published</Button>
+                    {/* <Button type='link'>Published</Button>
                     <Button type='link'>Low Stock</Button>
-                    <Button type='link'>Draft</Button>
+                    <Button type='link'>Draft</Button> */}
                   </div>
                 </div>
-                <div className='flex items-center space-x-4 '>
+                {/* <div className='flex items-center space-x-4 '>
                   <Input className='w-64' placeholder='Search product...' prefix={<SearchOutlined />} />
                   <div className='border border-black-100'>
                     <Button icon={<CalendarOutlined />} className='border-none shadow-none '>
@@ -461,7 +450,7 @@ const LayoutAdmin: React.FC = () => {
                       Filters
                     </Button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </>
           )}
@@ -479,7 +468,7 @@ const LayoutAdmin: React.FC = () => {
                     <Badge count={4} className='cursor-pointer'>
                       <BellOutlined className='text-xl text-blue-500' />
                     </Badge>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>

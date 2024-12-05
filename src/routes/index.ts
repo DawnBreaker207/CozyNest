@@ -16,7 +16,6 @@ import AdminProductPage from '@/pages/admin/product/ProductPage'
 import ProductAddPage from '@/pages/admin/product/add/ProductAdd'
 import ProductEditPage from '@/pages/admin/product/edit/ProductEdit'
 import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
-import ReportsPage from '@/pages/admin/report/ReportPage'
 import LinkPage from '@/pages/website/Link/page'
 import Login from '@/pages/website/auth/Login'
 import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
@@ -123,8 +122,7 @@ function App() {
         { path: 'coupons/:id/edit', Component: CouponEdit },
         { path: 'customer', Component: AdminCustomerPage },
         { path: 'customer/:id', Component: AdminCustomerDetailPage },
-        // Report
-        { path: 'report', Component: ReportsPage }
+
       ]
     }
   ])

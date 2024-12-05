@@ -59,7 +59,7 @@ const CartPage = () => {
     }
   }
   const handleDeleteCart = () => {
-    const cartId = data?.res?.cartId // Lấy cartId từ dữ liệu giỏ hàng
+    const cartId = data?.res?.cart_id // Lấy cartId từ dữ liệu giỏ hàng
     if (cartId) {
       deleteCart(cartId) // Gọi deleteCart với cartId
       message.success('Toàn bộ Sản phẩm đã được xóa khỏi giỏ hàng')

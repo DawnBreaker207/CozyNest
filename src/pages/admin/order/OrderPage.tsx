@@ -174,9 +174,9 @@ const AdminOrderPage = () => {
     <div className="mt-10">
       <div className="flex items-center ml-6">
         <Search placeholder="Search order..." />
-        <Button type="default" icon={<DownloadOutlined />} className="ml-2">
+        {/* <Button type="default" icon={<DownloadOutlined />} className="ml-2">
           Export
-        </Button>
+        </Button> */}
         <Button onClick={() => setOpen(true)} type="primary" icon={<PlusOutlined />} className="ml-2">
           Add Order
         </Button>
@@ -186,7 +186,7 @@ const AdminOrderPage = () => {
           <div className="mr-auto">
             <Button type="dashed">All Orders</Button>
           </div>
-          <DatePicker placeholder="Select Date" className="mr-2" />
+          {/* <DatePicker placeholder="Select Date" className="mr-2" /> */}
         </div>
         <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 5 }} />
       </div>
