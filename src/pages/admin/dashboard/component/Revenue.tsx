@@ -1,61 +1,64 @@
-// src/components/TopSellingProductsChart.tsx
-import React, { useState } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import React, { useState, useEffect } from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
-type Product = {
-  name: string
-  revenueDaily: number
-  revenueWeekly: number
-  revenueMonthly: number
-  revenueYearly: number
+type RevenueData = {
+  time: string
+  'Doanh thu': number
 }
 
-const topProductsData: Product[] = [
-  { name: 'Sản phẩm 1', revenueDaily: 500, revenueWeekly: 3500, revenueMonthly: 15000, revenueYearly: 180000 },
-  { name: 'Sản phẩm 2', revenueDaily: 700, revenueWeekly: 4900, revenueMonthly: 21000, revenueYearly: 250000 },
-  { name: 'Sản phẩm 3', revenueDaily: 800, revenueWeekly: 5600, revenueMonthly: 24000, revenueYearly: 300000 },
-  { name: 'Sản phẩm 4', revenueDaily: 400, revenueWeekly: 2800, revenueMonthly: 12000, revenueYearly: 150000 },
-  { name: 'Sản phẩm 5', revenueDaily: 600, revenueWeekly: 4200, revenueMonthly: 18000, revenueYearly: 200000 }
-]
+// Dữ liệu giả định cho doanh thu theo tuần, tháng, năm
+const revenueData = {
+  weekly: [
+    { time: 'Tuần 1', 'Doanh thu': 1000000 },
+    { time: 'Tuần 2', 'Doanh thu': 800000 },
+    { time: 'Tuần 3', 'Doanh thu': 3000000 },
+    { time: 'Tuần 4', 'Doanh thu': 1300000 }
+  ],
+  monthly: [
+    { time: 'Tháng 1', 'Doanh thu': 4000000 },
+    { time: 'Tháng 2', 'Doanh thu': 2500000 },
+    { time: 'Tháng 3', 'Doanh thu': 5000000 },
+    { time: 'Tháng 4', 'Doanh thu': 2800000 },
+    { time: 'Tháng 5', 'Doanh thu': 3000000 },
+    { time: 'Tháng 6', 'Doanh thu': 1000000 },
+    { time: 'Tháng 7', 'Doanh thu': 6500000 },
+    { time: 'Tháng 8', 'Doanh thu': 4000000 },
+    { time: 'Tháng 9', 'Doanh thu': 3000000 },
+    { time: 'Tháng 10', 'Doanh thu': 5000000 },
+    { time: 'Tháng 11', 'Doanh thu': 7000000 },
+    { time: 'Tháng 12', 'Doanh thu': 9000000 }
+  ],
+  yearly: [
+    { time: '2021', 'Doanh thu': 40000000 },
+    { time: '2022', 'Doanh thu': 50000000 },
+    { time: '2023', 'Doanh thu': 60000000 },
+    { time: '2024', 'Doanh thu': 70000000 }
+  ]
+}
 
 const Revenue = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('daily') // Trạng thái chọn
+  const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('monthly')
+  const [data, setData] = useState<RevenueData[]>(revenueData.monthly)
 
-  // Hàm xử lý thay đổi lựa chọn
+  useEffect(() => {
+    // Cập nhật dữ liệu khi `selectedPeriod` thay đổi
+    setData(revenueData[selectedPeriod])
+  }, [selectedPeriod]) // Chỉ chạy lại khi `selectedPeriod` thay đổi
+
   const handlePeriodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedPeriod(event.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')
+    setSelectedPeriod(event.target.value as 'weekly' | 'monthly' | 'yearly')
   }
 
-  // Chuyển đổi dữ liệu theo khoảng thời gian đã chọn
-  const data = topProductsData.map((product) => ({
-    name: product.name,
-    revenue: product[`revenue${selectedPeriod.charAt(0).toUpperCase() + selectedPeriod.slice(1)}` as keyof Product] // Lấy revenue theo loại đã chọn
-  }))
-
-  const title =
-    selectedPeriod === 'daily'
-      ? 'Doanh thu theo ngày'
-      : selectedPeriod === 'weekly'
-        ? 'Doanh thu theo tuần'
-        : selectedPeriod === 'monthly'
-          ? 'Doanh thu theo tháng'
-          : 'Doanh thu theo năm'
-
-  // Màu sắc cho các dòng
-  const colors = ['#4B8E8D', '#F39C12', '#E74C3C', '#3498DB', '#2ECC71']
-
   return (
-    <div className='bg-white p-6 rounded-lg shadow-lg mb-6'>
-      <h3 className='text-2xl font-semibold text-center text-gray-700 mb-4'>{title}</h3>
+    <div className='bg-white p-6 rounded-lg mb-6 shadow-xl'>
+      <h3 className='text-2xl font-semibold text-center mb-4'>Thống kê doanh thu</h3>
 
-      {/* Dropdown để chọn khoảng thời gian */}
       <div className='mb-4 flex justify-center'>
         <select
-          className='p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 '
+          className='p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none'
           value={selectedPeriod}
           onChange={handlePeriodChange}
         >
-          <option value='daily'>Theo ngày</option>
           <option value='weekly'>Theo tuần</option>
           <option value='monthly'>Theo tháng</option>
           <option value='yearly'>Theo năm</option>
@@ -63,14 +66,14 @@ const Revenue = () => {
       </div>
 
       <ResponsiveContainer width='100%' height={300}>
-        <LineChart data={data}>
+        <BarChart data={data}>
           <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='name' />
+          <XAxis dataKey='time' />
           <YAxis />
-          <Tooltip />
+          <Tooltip formatter={(value) => new Intl.NumberFormat().format(Number(value)) + ' VND'} />
           <Legend />
-          <Line type='monotone' dataKey='revenue' stroke={colors[0]} strokeWidth={3} />
-        </LineChart>
+          <Bar dataKey='Doanh thu' fill='#60a5fa' barSize={30} />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   )
