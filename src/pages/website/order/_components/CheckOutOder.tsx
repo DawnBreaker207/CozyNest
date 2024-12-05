@@ -71,14 +71,15 @@ const CheckOutOrder = () => {
       key: 'thumbnail',
       render: (text: string) => <img src={text} alt='product' className='w-16 h-16' />
     },
-    { title: 'Mô tả', dataIndex: 'productName', key: 'productName' },
+    { title: 'Mô tả', dataIndex: 'name', key: 'name' },
+    { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
     { title: 'Giá', dataIndex: 'price', key: 'price', render: (price: number) => `${price}₫` }
   ]
 
-  const data = orderData?.products?.map((product: any, index: number) => ({
+  const data = orderData?.order_details?.map((product: any, index: number) => ({
     key: index,
     thumbnail: product.thumbnail,
-    productName: product.originName,
+    name: product.sku_id.name,
     quantity: product.quantity,
     price: product.price
   }))
@@ -92,7 +93,7 @@ const CheckOutOrder = () => {
           {/* Trạng thái đơn hàng */}
           <div className='flex items-center mt-4'>
             <div>
-              {orderData.paid ? (
+              {orderData.payment_status === "Paid" ? (
                 <>
                   <h2 className='text-xl font-semibold'>Đặt hàng thành công</h2>
                   <p className='text-gray-600'>Mã đơn hàng #{orderData.invoiceId}</p>
@@ -106,9 +107,8 @@ const CheckOutOrder = () => {
               )}
             </div>
             <div
-              className={`flex justify-center items-center w-12 h-12 border-2 mx-5 my-4 ${
-                orderData.paid ? 'border-green-500' : 'border-red-500'
-              } rounded-full bg-white cursor-pointer`}
+              className={`flex justify-center items-center w-12 h-12 border-2 mx-5 my-4 ${orderData.paid ? 'border-green-500' : 'border-red-500'
+                } rounded-full bg-white cursor-pointer`}
             >
               {orderData.paid ? (
                 <CheckOutlined className='text-green-500 text-xl' />
@@ -124,12 +124,12 @@ const CheckOutOrder = () => {
               <h3 className='text-xl font-semibold'>Thông tin giao hàng</h3>
             </div>
             <div className='px-2'>
-              <p>{orderData.customerName}</p>
-              <p>{orderData.phoneNumber}</p>
+              <p>{orderData.customer_name}</p>
+              <p>{orderData.phone_number}</p>
               <p>{orderData.addressShipping}</p>
 
               <h3 className='text-lg font-semibold mt-4'>Phương thức thanh toán</h3>
-              {orderData.paymentMethod === 'COD' ? (
+              {orderData.payment_method === 'COD' ? (
                 <p>Thanh toán khi giao hàng (COD)</p>
               ) : orderData.paid ? (
                 <p>Thanh toán online đã hoàn tất</p>
@@ -158,7 +158,7 @@ const CheckOutOrder = () => {
                 type='primary'
                 danger
                 className='mt-6'
-                // onClick={() => navigate(`/checkouts/payment?orderId=${orderId}`)}
+              // onClick={() => navigate(`/checkouts/payment?orderId=${orderId}`)}
               >
                 Thanh toán lại
               </Button>

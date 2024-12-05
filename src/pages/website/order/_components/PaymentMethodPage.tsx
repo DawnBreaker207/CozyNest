@@ -59,7 +59,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       transportation_fee: 50000,
       paid: false,
       status: 'Processing',
-      payment_status: 'unpaid',
+      payment_status: 'Unpaid',
       products:
         data?.res?.products.map((product: any) => {
           // Tìm variant phù hợp với sku_id của sản phẩm

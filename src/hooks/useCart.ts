@@ -166,7 +166,7 @@ const useCart = () => {
     }
 
     try {
-      await instance.delete(`/cart/remove-all/${userId}`)
+      await instance.delete(`/cart/remove-cart/${userId}`)
       queryClient.invalidateQueries({ queryKey: ['cart', userId] })
       setTimeout(() => refetch(), 250)
     } catch (error) {
