@@ -45,6 +45,12 @@ const AdminCustomerPage = () => {
   const handleStatusChange = (userId: string, checked: boolean) => {
     const user = users.find((u) => u._id === userId)
     if (user) {
+      // Kiểm tra nếu người dùng có vai trò là admin
+      if (user.role === 'admin') {
+        messageApi.warning('Không thể thay đổi trạng thái của tài khoản admin')
+        return
+      }
+
       const newStatus = checked ? true : false
       const updatedUser = { ...user, status: newStatus }
       mutate(updatedUser)
