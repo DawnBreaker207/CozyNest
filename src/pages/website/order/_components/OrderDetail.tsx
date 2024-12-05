@@ -19,7 +19,7 @@ const OrderDetail = () => {
     if (orderId) {
       // Gọi API để lấy chi tiết đơn hàng theo orderId từ URL
       instance
-        .get(`/orders/orderByOrderId/${orderId}`)
+        .get(`/orders/${orderId}`)
         .then((response) => {
           if (response?.data?.res) {
             setOrder(response?.data?.res)
@@ -140,7 +140,7 @@ const OrderDetail = () => {
           <strong>Phí vận chuyển: 50,000 VNĐ</strong>
         </p>
         <p>
-          <strong>Tổng tiền: {order.billTotals.toLocaleString() || 0} VNĐ</strong>
+          <strong>Tổng tiền: {order.billTotals || 0} VNĐ</strong>
         </p>
         <p>
           <strong>Phương thức thanh toán: {order.paymentMethod}</strong>

@@ -39,6 +39,8 @@ import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 import OrderDetail from '@/pages/website/order/_components/OrderDetail'
 import OrderPage from '@/pages/website/order/_components/OrderPage'
 import PaymentResultPage from '@/pages/website/order/_components/PaymentResultPage '
+import PaymentPage from '@/pages/website/order/_components/RetryPayment'
+import StockPropblem from '@/pages/website/order/_components/StockPropblem'
 import CheckoutPage from '@/pages/website/order/page'
 import ProductsPage from '@/pages/website/products/_components/ProductPage'
 import ProductsPageDetail from '@/pages/website/products/_components/ProductPageDetail'
@@ -63,9 +65,11 @@ function App() {
       { path: 'category/:id', Component:CategoryProductsPage   }, // Route path="/products_page?category=:categoryId" element={<ProductsPage />} /> {/* Trang sản phẩm của danh mục */}
 
         { path: 'cart', Component: CartPage },
-        { path: 'cart/check_out_form', Component: CheckoutPage },
+        { path: 'check_out', Component: CheckoutPage },
         { path: 'paymentresult', Component: PaymentResultPage },
         { path: 'orders/orderdetail', Component: OrderDetail },
+        { path: 'paymentRetry/:id', Component: PaymentPage },
+        { path: 'stock_propblem', Component: StockPropblem },
         { path: 'intro', Component: Introduction },
         { path: 'orders', Component: OrderPage },
         { path: 'login', Component: Login },

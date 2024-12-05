@@ -113,7 +113,7 @@ const Header = () => {
 
   // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    if (quantities[index] < 10) {
+    if (quantities[index]) {
       setQuantity(index, quantities[index] + 1)
       mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
     }

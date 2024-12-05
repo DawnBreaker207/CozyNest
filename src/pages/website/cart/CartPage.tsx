@@ -1,18 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCartStore } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
 
+import instance from '@/configs/axios'
 import { message, Modal } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import CouponCard from './_components/CouponCard'
 
 const CartPage = () => {
   const { products, quantities, setQuantity } = useCartStore()
   const { data, calculateTotal, mutate, deleteCart } = useCart()
-  const navigate = useNavigate()
 
+  const navigate = useNavigate()
+  const handleCheckout = async () => {
+    const cartItems = products.map((product, index) => {
+      return {
+        productId: product.sku_id.product_id._id, // Đảm bảo _id là một thuộc tính hợp lệ
+        skuId: product.sku_id._id, // Đảm bảo sku_id._id là hợp lệ
+        quantity: quantities[index] // Kiểm tra số lượng
+      }
+    })
+    try {
+      // Gọi API kiểm tra tồn kho
+      const response = await instance.post('/stock/checkStock', { cartItems })
+
+      if (response.status === 200) {
+        // Nếu tồn kho đủ, chuyển hướng đến trang thanh toán
+        navigate('/check_out')
+      }
+    } catch (error: any) {
+      // Nếu có lỗi, tức là có sản phẩm vượt quá số lượng tồn kho
+      if (error.response && error.response.status === 400) {
+        const unavailableProducts = error.response.data.res
+        // Lưu dữ liệu sản phẩm không đủ số lượng vào localStorage
+        localStorage.setItem('unavailableProducts', JSON.stringify(unavailableProducts))
+
+        // Chuyển hướng sang trang vấn đề tồn kho
+        navigate('/stock_propblem')
+      } else {
+        // Hiển thị thông báo lỗi khác
+        message.error('Đã có lỗi xảy ra khi kiểm tra tồn kho')
+      }
+    }
+  }
   // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    if (quantities[index] < 10) {
+    if (quantities[index]) {
       setQuantity(index, quantities[index] + 1)
       mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
     }
@@ -211,11 +244,12 @@ const CartPage = () => {
               {calculateTotal() === 0 ? (
                 <div className='text-center text-red-500'>Không có sản phẩm nào trong giỏ hàng</div>
               ) : (
-                <Link to={`check_out_form`}>
-                  <button className='bg-[#fca120] text-white w-full py-[10px] mt-3 border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'>
-                    Thanh toán
-                  </button>
-                </Link>
+                <button
+                  className='bg-[#fca120] text-white w-full py-[10px] mt-3 border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
+                  onClick={handleCheckout}
+                >
+                  Thanh toán
+                </button>
               )}
             </div>
 

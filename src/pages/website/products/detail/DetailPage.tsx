@@ -21,7 +21,7 @@ const ProductDetail = () => {
 
   const { id } = useParams() // Lấy productId từ URL
   const { data, isLoading, error } = useProduct(id)
-  // console.log(data)
+  console.log(data) 
   const { addToCart } = useCart() // Lấy hàm addToCart từ hook
   // Lấy tất cả các màu sắc từ variants
   const variants = data?.variants || [] // Đảm bảo variants không undefined
@@ -45,10 +45,28 @@ const ProductDetail = () => {
   }, [colors, selectedColorId]) // Chạy lại khi colors thay đổi
   const handleAddToCart = () => {
     if (selectedColorId && count > 0) {
+      // Lấy thông tin sản phẩm và SKU dựa trên `selectedColorId`
+      const selectedVariant = product.variants.find((variant) => variant.sku_id._id === selectedColorId)
+      console.log(selectedVariant)
+      if (!selectedVariant) {
+        message.error('Không tìm thấy thông tin sản phẩm.')
+        return
+      }
+
+      // Kiểm tra tồn kho
+      if (count > selectedVariant?.sku_id.stock) {
+        message.error('Sản phẩm bạn vừa mua đã vượt quá số lượng tồn kho.')
+        return
+      }
+
+      // Thêm vào giỏ hàng nếu đủ tồn kho
       message.success('Thêm vào giỏ hàng thành công')
-      addToCart(selectedColorId, count) // Sử dụng addToCart từ hook để thêm vào giỏ hàng
+      addToCart(selectedColorId, count) // Sử dụng `addToCart` từ hook để thêm vào giỏ hàng
+    } else {
+      message.error('Vui lòng chọn số lượng hợp lệ.')
     }
   }
+
   const handleColorSelect = (id: string, price: number) => {
     setSelectedColorId(id) // Cập nhật id màu sắc được chọn
     setPriceVar(price)
@@ -60,7 +78,7 @@ const ProductDetail = () => {
   const category = product?.category_id?._id
 
   const increase = () => {
-    if (count < 10) setCount(count + 1)
+    if (count) setCount(count + 1)
   }
 
   const decrease = () => {
@@ -95,7 +113,7 @@ const ProductDetail = () => {
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
-        <div className='flex flex-col  h-min'>
+        <div className='flex flex-col'>
           <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-10 mx-auto'>
             {/* List of Thumbnails */}
             <div className='lg:flex flex-wrap flex-col hidden'>
@@ -166,14 +184,14 @@ const ProductDetail = () => {
             <h1 className=' font-bold text-2xl'>{product.name}</h1>
             <div className='flex gap-[30px] mt-3'>
               <span id='pro_sku' className='text-sm font-light'>
-                Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'>2001256</span>
+                Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'></span>
               </span>
               <span className='text-sm font-light'>
                 Tình trạng: <span className='text-[#fca120] font-semibold ml-1'>Còn hàng</span>
               </span>
               <span className='text-sm font-light'>
                 Thương hiệu:
-                <span className='text-[#fca120] font-semibold ml-1'>{product.brand}</span>
+                <span className='text-[#fca120] font-semibold ml-1'>{product.SKU}</span>
               </span>
             </div>
           </div>
@@ -352,84 +370,85 @@ const ProductDetail = () => {
           <div>
             <ReviewComponent />
           </div>
-        </div>
-        {/* Product Description */}
-        <div
-          className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'} overflow-hidden lg:-mt-[345px]`}
-        >
-          <div className='productDetail--navs mg-top mt-[15px]'>
-            <div className='nav tab-title'>
-              <b className='nav-item active text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
-            </div>
-            <hr className='mb-[20px]' />
-            <div className={`tab-pane fade show active ${isCollapsed ? 'h-[250px]' : 'h-auto'} transition-all`}>
-              <div
-                className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
-              >
-                <p>{product.description}</p>
-                <p>--------------</p>
-                {/* More product description details */}
-                <table className='table-auto w-full border-collapse mt-[10px]'>
-                  <tbody>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Sản phẩm
-                      </th>
-                      <td className=''>{product.name}</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Bộ sưu tập
-                      </th>
-                      <td className=''>{product.brand}</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Kích cỡ
-                      </th>
-                      <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Màu sắc
-                      </th>
-                      <td className=''>Màu trắng/ màu đen</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Chất liệu
-                      </th>
-                      <td className=''>Sứ</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Xuất xứ
-                      </th>
-                      <td className=''>Trung Quốc</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Đơn vị
-                      </th>
-                      <td className=''>SET</td>
-                    </tr>
-                  </tbody>
-                </table>
+
+          {/* Product Description */}
+          <div
+            className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden mt-[10px]`}
+          >
+            <div className='productDetail--navs mg-top mt-[15px]'>
+              <div className='nav tab-title'>
+                <b className='nav-item active text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
               </div>
-            </div>
-            <div className='description-btn flex justify-center mt-[10px]'>
-              <button
-                className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-[#fca120]' : 'text-[#fca120]'} p-2 rounded-md`}
-                onClick={handleToggleCollapse}
-              >
-                {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
-              </button>
+              <hr className='mb-[20px]' />
+              <div className={`tab-pane fade show active ${isCollapsed ? 'h-[250px]' : 'h-auto'} transition-all`}>
+                <div
+                  className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
+                >
+                  <p>{product.description}</p>
+                  <p>--------------</p>
+                  {/* More product description details */}
+                  <table className='table-auto w-full border-collapse mt-[10px]'>
+                    <tbody>
+                      <tr>
+                        <th scope='row' className='btn-th text-left align-top pr-12'>
+                          Sản phẩm
+                        </th>
+                        <td className=''>{product.name}</td>
+                      </tr>
+                      <tr>
+                        <th scope='row' className='btn-th text-left align-top pr-12'>
+                          Bộ sưu tập
+                        </th>
+                        <td className=''>{product.brand}</td>
+                      </tr>
+                      <tr>
+                        <th scope='row' className='btn-th text-left align-top pr-12'>
+                          Kích cỡ
+                        </th>
+                        <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
+                      </tr>
+                      <tr>
+                        <th scope='row' className='btn-th text-left align-top pr-12'>
+                          Màu sắc
+                        </th>
+                        <td className=''>Màu trắng/ màu đen</td>
+                      </tr>
+                      <tr>
+                        <th scope='row' className='btn-th text-left align-top pr-12'>
+                          Chất liệu
+                        </th>
+                        <td className=''>Sứ</td>
+                      </tr>
+                      <tr>
+                        <th scope='row' className='btn-th text-left align-top pr-12'>
+                          Xuất xứ
+                        </th>
+                        <td className=''>Trung Quốc</td>
+                      </tr>
+                      <tr>
+                        <th scope='row' className='btn-th text-left align-top pr-12'>
+                          Đơn vị
+                        </th>
+                        <td className=''>SET</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className='description-btn flex justify-center mt-[10px]'>
+                <button
+                  className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-[#fca120]' : 'text-[#fca120]'} p-2 rounded-md`}
+                  onClick={handleToggleCollapse}
+                >
+                  {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className='mb-20 container b'>
+      <div className='mb-20 container'>
         <RelatedProduct id={category} />
         <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>

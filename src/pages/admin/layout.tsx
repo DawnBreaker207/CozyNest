@@ -48,9 +48,7 @@ const LayoutAdmin: React.FC = () => {
   const navigate = useNavigate()
   const { Logout } = useUser()
   const userJson = useCookie('user', {})
-  console.log(userJson)
   const role = userJson ? userJson?.[0].role : null
-  console.log(role)
   // Trạng thái kiểm tra quyền
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
 

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* PaymentMethodPage.tsx */
 
-import { useState, useEffect } from 'react'
 import instance from '@/configs/axios'
 import useCart from '@/hooks/useCart'
+import { useCookie } from '@/hooks/useStorage'
 import { RightOutlined } from '@ant-design/icons'
 import { Button, Form, notification, Radio } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
-import { useCookie } from '@/hooks/useStorage'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 interface PaymentMethodPageProps {
   orderData: any
   onSubmit: (paymentMethod: string) => Promise<void>
@@ -58,22 +58,33 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       receivedDate: null,
       transportation_fee: 50000,
       paid: false,
-      status: 'Pending',
+      status: 'Processing',
       payment_status: 'unpaid',
       products:
-        data?.res?.products.map((product: any) => ({
-          product_id: product.sku_id.product_id._id,
-          productName: product.sku_id.product_id.name,
-          thumbnail: product.sku_id.product_id.thumbnail,
-          quantity: product.quantity,
-          price: product.price * product.quantity
-        })) || []
+        data?.res?.products.map((product: any) => {
+          // Tìm variant phù hợp với sku_id của sản phẩm
+          const currentVariant = product?.sku_id?.product_id?.variants.find(
+            (variant: any) => variant?.sku_id === product?.sku_id?._id
+          )
+
+          return {
+            productId: product.sku_id.product_id._id,
+            originName: product.sku_id.product_id.name,
+            productName: product.sku_id.product_id.name,
+            thumbnail: product.sku_id.product_id.thumbnail,
+            price: product.price * product.quantity,
+            quantity: product.quantity,
+            variant_id: product.sku_id._id, // Variant ID
+            variant_name: product.sku_id.name, // Variant Name
+            variant_label: currentVariant ? currentVariant.option_value_id.label : 'Không xác định' // Thêm thông tin biến thể
+          }
+        }) || []
     }
 
     try {
       // Tạo đơn hàng trước
       console.log(`Orders: ${finalOrderData}`)
-
+      console.log('Products:', finalOrderData.products)
       const orderResponse = await instance.post('/orders', finalOrderData)
       const orderId = orderResponse.data?.res?._id
       // console.log(orderId)
