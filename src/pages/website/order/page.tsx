@@ -45,7 +45,7 @@ const CheckoutPage = () => {
     const finalOrderData = {
       ...orderData,
       paymentMethod,
-      couponCode,
+      couponName,
       discount: couponValue
     }
 

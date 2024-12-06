@@ -81,16 +81,25 @@ const OrderDetail = () => {
 
   const productColumns = [
     {
-      title: 'Ảnh sản phẩm',
+      title: 'Hình ảnh',
       dataIndex: 'thumbnail',
       key: 'thumbnail',
-      render: (text: string) => (
-        <img src={text} alt='Product Thumbnail' style={{ width: 50, height: 50, objectFit: 'cover' }} />
+      render: () => (
+        <img
+          src='https://res.cloudinary.com/didbnrsmz/image/upload/v1732811019/CozyNest/T%E1%BB%A7_Gi%C3%A0y_T%E1%BB%A7_Trang_Tr%C3%AD_G%E1%BB%97_MOHO_VIENNA_203_qwp3uh.webp'
+          alt='product'
+          className='w-16 h-16'
+        />
       )
     },
-    { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
+    { title: 'Mô tả', dataIndex: 'name', key: 'name' },
     { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
-    { title: 'Giá', dataIndex: 'price', key: 'price' }
+    { title: 'Giá', dataIndex: 'price', key: 'price', render: (price: number) => `${price.toLocaleString()}₫` },
+    {
+      title: 'Tổng giá',
+      key: 'totalPrice',
+      render: (record: any) => `${(record.price * record.quantity).toLocaleString()}₫`
+    }
   ]
 
   return (
@@ -107,7 +116,7 @@ const OrderDetail = () => {
       </Card>
 
       {/* Hiển thị hành trình trạng thái */}
-      <Card title='Hành trình trạng thái' className='mb-6'>
+      <Card title='Lịch sử trạng thái' className='mb-6'>
         <div className='flex flex-wrap gap-4 mt-4'>
           {statuses.map((status, index) => {
             const normalizedCurrentStatus = currentStatus.trim().toLowerCase()
@@ -174,10 +183,10 @@ const OrderDetail = () => {
           <strong>Phí vận chuyển: 50,000 VNĐ</strong>
         </p>
         <p>
-          <strong>Phí lắp đặt : {order.order_details.installation_fee || 0} VNĐ</strong>
+          <strong>Phí lắp đặt : {order.order_details.installation_fee.toLocaleString() || 0} VNĐ</strong>
         </p>
         <p>
-          <strong>Tổng tiền: {order.total_amount || 0} VNĐ</strong>
+          <strong>Tổng tiền: {order.total_amount.toLocaleString() || 0} VNĐ</strong>
         </p>
         <p>
           <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>

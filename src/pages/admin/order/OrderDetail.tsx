@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
+import { useCookie } from '@/hooks/useStorage'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Col, Modal, Row, Table, Tag } from 'antd'
@@ -9,8 +10,11 @@ import { useParams } from 'react-router-dom'
 const AdminOrderDetail = () => {
   const { id } = useParams<{ id: string }>()
   const [currentStatus, setCurrentStatus] = useState<string>('Processing')
-
+  const [statusHistory, setStatusHistory] = useState<any[]>([]) // Lưu lịch sử trạng thái
   const queryClient = useQueryClient()
+  const [user] = useCookie('user', {})
+  const username = user?.username
+  console.log(username)
 
   // Lấy chi tiết đơn hàng
   const { data, isLoading, isError } = useQuery({
@@ -40,6 +44,19 @@ const AdminOrderDetail = () => {
       if (data.res.status) {
         setCurrentStatus(data.res.status)
       }
+
+      // Lấy tên người xác nhận từ cookie
+
+      // Cập nhật lịch sử trạng thái nếu có thông tin thời gian
+      const history = []
+      if (data.res.updatedAt) {
+        history.push({
+          label: statuses.find((s) => s.value === data.res.status)?.label,
+          time: new Date(data.res.updatedAt).toLocaleString(), // Hiển thị thời gian đúng định dạng
+          confirmedBy: username // Thêm tên người xác nhận
+        })
+      }
+      setStatusHistory(history)
     }
   }, [data])
 
@@ -66,7 +83,7 @@ const AdminOrderDetail = () => {
     console.log('Order ID:', orderId) // Debugging log
 
     Modal.confirm({
-      title: 'Are you sure you want to change the status?',
+      title: 'Bạn có chắc chắn muốn cập nhật trạng thái? sau khi cập nhật không thể hoàn tác',
       icon: <ExclamationCircleOutlined />,
       onOk: () => updateOrderStatus(orderId, newStatus)
     })
@@ -74,7 +91,7 @@ const AdminOrderDetail = () => {
 
   if (isLoading) return <div>Đang tải...</div>
   if (isError) return <div>Lỗi khi tải chi tiết đơn hàng</div>
-
+  console.log(data)
   const order = data?.res
 
   // Danh sách các trạng thái
@@ -86,6 +103,17 @@ const AdminOrderDetail = () => {
       {/* Lịch sử trạng thái */}
       <div className='mb-6'>
         <h3 className='font-semibold'>Lịch sử trạng thái đơn hàng</h3>
+        <div className='mt-4'>
+          {statusHistory.length > 0 &&
+            statusHistory.map((item, index) => (
+              <div key={index}>
+                <div>{item.label}</div>
+                <div>
+                  {item.time} - Xác nhận bởi: {item.confirmedBy}
+                </div>
+              </div>
+            ))}
+        </div>
         <div className='flex flex-wrap gap-4 mt-10'>
           {statuses.map((status, index) => {
             const isPastStatus =
@@ -121,7 +149,7 @@ const AdminOrderDetail = () => {
               <strong>Khách hàng</strong>: {order.customer_name || 'Không có'}
             </div>
             <div className='p-3 border rounded mt-2'>
-              <strong>Địa chỉ giao hàng</strong>: {order.shipping_info || 'Không có'}
+              <strong>Địa chỉ giao hàng</strong>: {order.address || 'Không có'}
             </div>
             <div className='p-3 border rounded mt-2'>
               <strong>Số điện thoại</strong>: {order.phone_number}
@@ -151,7 +179,7 @@ const AdminOrderDetail = () => {
       <div className='bg-white p-6 rounded shadow mb-6'>
         <h3 className='font-semibold mb-4'>Thông tin sản phẩm</h3>
         <Table
-          dataSource={order?.order_details || []}
+          dataSource={Array.isArray(order?.order_details?.products) ? order.order_details.products : []} // Đảm bảo là mảng
           pagination={false}
           rowKey={(record: any) => record._id}
           columns={[
@@ -171,7 +199,7 @@ const AdminOrderDetail = () => {
               title: 'Tên sản phẩm',
               dataIndex: 'sku_id',
               key: 'name',
-              render: (sku) => sku?.name || 'N/A'
+              render: (sku) => sku?.name || 'N/A' // Truy xuất tên sản phẩm từ sku_id
             },
             {
               title: 'Số lượng',
@@ -202,22 +230,35 @@ const AdminOrderDetail = () => {
         <Table
           dataSource={[
             {
-              shippingFee: order.shipping_fee,
-              couponCode: order.coupon_code || 'Không có',
-              totalAmount: order.total_amount
+              // Tính tổng giá sản phẩm từ `products`
+              totalProductPrice:
+                order?.order_details?.products?.reduce(
+                  (acc: number, product: { price: number; quantity: number }) => acc + product.price * product.quantity,
+                  0
+                ) || 0,
+              shippingFee: order?.shipping_fee || 50000, // Lấy phí vận chuyển từ order
+              installationFee: order?.order_details?.installation_fee || 0, // Lấy phí lắp đặt
+              totalAmount: order?.total_amount || 0 // Tổng thanh toán
             }
           ]}
           columns={[
             {
-              title: 'Phí giao hàng',
-              dataIndex: 'shippingFee',
-              key: 'shippingFee',
-              render: () => `50.000 VNĐ`
+              title: 'Tổng giá sản phẩm',
+              dataIndex: 'totalProductPrice',
+              key: 'totalProductPrice',
+              render: (value) => `${value.toLocaleString()} VNĐ`
             },
             {
-              title: 'Mã giảm giá',
-              dataIndex: 'couponCode',
-              key: 'couponCode'
+              title: 'Phí vận chuyển',
+              dataIndex: 'shippingFee',
+              key: 'shippingFee',
+              render: (value) => `${value.toLocaleString()} VNĐ`
+            },
+            {
+              title: 'Phí lắp đặt',
+              dataIndex: 'installationFee',
+              key: 'installationFee',
+              render: (value) => `${value.toLocaleString()} VNĐ`
             },
             {
               title: 'Tổng thanh toán',
