@@ -11,6 +11,7 @@ import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import AdminCustomerPage from '@/pages/admin/customer/page'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
+import AdminOrderDetail from '@/pages/admin/order/OrderDetail'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import ProductAddPage from '@/pages/admin/product/add/ProductAdd'
@@ -165,6 +166,8 @@ function App() {
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },
         { path: 'order', Component: AdminOrderPage },
+        { path: 'orderDetail/:id', Component: AdminOrderDetail },
+
         // Customer
         { path: 'coupons', Component: CouponPage },
         { path: 'coupons/add', Component: CouponAdd },

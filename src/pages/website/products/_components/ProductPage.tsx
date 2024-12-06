@@ -1,4 +1,3 @@
-import { Cart } from '@/components/icons'
 import useCart from '@/hooks/useCart'
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { useFilterProducts, usePaginate, useSortProducts } from '@/hooks/useProduct'
@@ -26,6 +25,7 @@ const ProductsPage = () => {
   const { sortProducts } = useSortProducts(products)
   const { filterProductsByPrice } = useFilterProducts(products)
   const filteredProducts = filterProductsByPrice(selectedPriceRanges)
+  const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: number }>({})
 
   const {
     currentPage,
@@ -145,7 +145,6 @@ const ProductsPage = () => {
           </div>
         </div>
       )}
-
       <div className='flex flex-row justify-between items-center my-4 px-8 space-x-2 md:space-x-4'>
         {/* Nút Bộ lọc */}
         <Button icon={<FilterOutlined />} onClick={show} className='flex items-center text-sm md:text-base'>
@@ -193,7 +192,6 @@ const ProductsPage = () => {
           ))}
         </div>
       )}
-
       <Drawer width={280} title='BỘ LỌC' onClose={onClose} open={open} placement='left'>
         <div>
           <div className='p-2'>
@@ -290,51 +288,73 @@ const ProductsPage = () => {
       </Drawer>
       {/* sản phẩm  */}
       <div className='grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 items-center gap-8 mx-8 mb-4'>
-        {currentProducts?.length === 0 ? (
-          <div className='col-span-5 text-center'>
-            <h2 className='text-2xl text-gray-600'>Không có sản phẩm nào đúng theo yêu cầu!</h2>
-          </div>
-        ) : (
-          currentProducts.map((product: IProduct, index: number) => (
-            <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
+        {products.map((product) => {
+          // Kiểm tra các variant và lấy giá trị từ sku_id
+          const firstVariant = product?.variants?.[0]
+          console.log(firstVariant)
+
+          const price = firstVariant?.sku_id?.price || 0 // Sử dụng giá mặc định là 0 nếu không có giá
+          // const priceDiscountPercent = firstVariant?.sku_id?.price_discount_percent || 0
+          // const discountedPrice = price - price * (priceDiscountPercent / 100)
+
+          return (
+            <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
               <Link to={`/detail/${product._id}`}>
                 <div className='relative'>
-                  <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                    <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
-                    <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
+                  <div className='flex transition-transform ease-in-out duration-500'>
+                    <img src={product?.images[0]?.url} alt={product?.name} className='object-cover' />
                   </div>
+
                   <FaRegEye
                     className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
                     title='Xem nhanh'
                   />
-                  <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                    -{product?.discount}%
-                  </span>
+                  {/* {priceDiscountPercent > 0 && (
+                      <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
+                        -{priceDiscountPercent}%
+                      </span>
+                    )} */}
                 </div>
               </Link>
               <div className='mx-2 text-center space-y-2 mt-3'>
                 <h3>{product?.name}</h3>
                 <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                  <span className='text-[#FF0000] font-semibold'>
-                    {product?.price - product?.price * (product?.discount / 100)}₫
-                  </span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px]'>{product?.price}₫</span>
+                  <span className='text-[#FF0000] font-semibold'>{price.toLocaleString()}₫</span>
+                  {
+                    <span className='text-[#878c8f] font-light line-through text-[13px]'>
+                      {price.toLocaleString()}₫
+                    </span>
+                  }
                 </div>
-                <button
-                  className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
-                  onClick={() => handleAddToCart(String(product._id))}
-                >
-                  <span className='text-[12px] uppercase font-semibold text-ellipsis'>Thêm vào giỏ</span>
-                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Cart />
-                  </div>
-                </button>
+                <div className='flex space-x-4'>
+                  {product.variants.map((variant, idx) => {
+                    const value = variant.option_value_id.value
+                    const bgColor =
+                      value === 'Nâu' ? 'bg-[#A0522D]' : value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
+                    const isSelected = selectedVariants[product._id] === idx
+
+                    return (
+                      <div
+                        key={idx}
+                        className={`w-6 h-6 rounded-full ${bgColor} cursor-pointer`}
+                        title={value}
+                        style={{
+                          outline: isSelected ? '1px solid black' : 'none',
+                          outlineOffset: '3px'
+                        }}
+                        // Khi hover vào thì chọn màu đó
+                        onMouseEnter={() => setSelectedVariants((prev) => ({ ...prev, [product._id]: idx }))}
+                        // Khi click vào thì cũng lưu lại màu đã chọn
+                        onClick={() => setSelectedVariants((prev) => ({ ...prev, [product._id]: idx }))}
+                      />
+                    )
+                  })}
+                </div>
               </div>
             </div>
-          ))
-        )}
+          )
+        })}
       </div>
-
       <div className='flex justify-center w-[22%] items-center my-4 gap-8 max-w-screen-lg mx-auto'>
         <button
           title='Previous'

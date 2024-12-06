@@ -17,7 +17,6 @@ const OrderDetail = () => {
 
   useEffect(() => {
     if (orderId) {
-      // Gọi API để lấy chi tiết đơn hàng theo orderId từ URL
       instance
         .get(`/orders/${orderId}`)
         .then((response) => {
@@ -39,12 +38,11 @@ const OrderDetail = () => {
 
   useEffect(() => {
     if (isOrderNotFound) {
-      // Sau 5 giây sẽ tự động quay về trang chủ
       const timer = setTimeout(() => {
         navigate('/')
       }, 5000)
 
-      return () => clearTimeout(timer) // Dọn dẹp timer khi component unmount
+      return () => clearTimeout(timer)
     }
   }, [isOrderNotFound, navigate])
 
@@ -65,23 +63,22 @@ const OrderDetail = () => {
   }
 
   // Định nghĩa các trạng thái đơn hàng
-  const orderStatuses: { [key: string]: string } = {
-    Processing: 'Đang xử lý',
-    Pending: 'Chờ xác nhận',
-    Confirmed: 'Đã xác nhận',
-    'Pending-Ship': 'Đang chờ bên vận chuyển',
-    Delivering: 'Đang vận chuyển',
-    Delivered: 'Giao hàng thành công',
-    Canceled: 'Đã hủy đơn hàng',
-    Completed: 'Đơn hàng hoàn thành',
-    Returned: 'Hoàn trả đơn hàng',
-    Refunded: 'Hoàn trả đơn hàng và hoàn tiền'
-  }
+  const statuses = [
+    { label: 'Đang xử lý', value: 'Processing' },
+    { label: 'Chờ xác nhận', value: 'Pending' },
+    { label: 'Đã xác nhận', value: 'Confirmed' },
+    { label: 'Đang chờ bên vận chuyển', value: 'Pending-Ship' },
+    { label: 'Đang vận chuyển', value: 'Delivering' },
+    { label: 'Giao hàng thành công', value: 'Delivered' },
+    { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Hoàn trả đơn hàng', value: 'Returned' },
+    { label: 'Hoàn trả đơn hàng và hoàn tiền', value: 'Refunded' },
+    { label: 'Đã hủy đơn hàng', value: 'Canceled' }
+  ]
 
-  // Lấy trạng thái hiển thị từ orderStatuses
-  const orderStatusDisplay = orderStatuses[order.status] || order.status
+  // Tìm trạng thái hiện tại
+  const currentStatus = order.status
 
-  // Định nghĩa các cột cho bảng sản phẩm
   const productColumns = [
     {
       title: 'Ảnh sản phẩm',
@@ -92,7 +89,7 @@ const OrderDetail = () => {
       )
     },
     { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
-    { title: "Số lượng", dataIndex: 'quantity', key: 'quantity' },
+    { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
     { title: 'Giá', dataIndex: 'price', key: 'price' }
   ]
 
@@ -104,8 +101,42 @@ const OrderDetail = () => {
           <strong>Ngày đặt hàng:</strong> {new Date(order.createdAt).toLocaleString()}
         </p>
         <p>
-          <strong>Trạng thái đơn hàng:</strong> {orderStatusDisplay}
+          <strong>Trạng thái đơn hàng:</strong>{' '}
+          {statuses.find((s) => s.value === currentStatus)?.label || currentStatus}
         </p>
+      </Card>
+
+      {/* Hiển thị hành trình trạng thái */}
+      <Card title='Hành trình trạng thái' className='mb-6'>
+        <div className='flex flex-wrap gap-4 mt-4'>
+          {statuses.map((status, index) => {
+            const normalizedCurrentStatus = currentStatus.trim().toLowerCase()
+            const normalizedStatusValue = status.value.trim().toLowerCase()
+
+            const isPast = index < statuses.findIndex((s) => s.value.trim().toLowerCase() === normalizedCurrentStatus)
+            const isCurrent = normalizedStatusValue === normalizedCurrentStatus
+
+            let btnType: 'default' | 'primary' | 'dashed' = 'default'
+            if (isPast) {
+              btnType = 'dashed'
+            } else if (isCurrent) {
+              btnType = 'primary'
+            }
+
+            console.log(`Status: ${status.label}, isPast: ${isPast}, isCurrent: ${isCurrent}, btnType: ${btnType}`)
+
+            return (
+              <Button
+                key={index}
+                type={btnType}
+                disabled
+                style={isCurrent ? { backgroundColor: '#1890ff', color: '#fff' } : {}}
+              >
+                {status.label}
+              </Button>
+            )
+          })}
+        </div>
       </Card>
 
       <Card title='Thông tin giao hàng' className='mb-6'>
@@ -134,7 +165,7 @@ const OrderDetail = () => {
           }))}
           rowKey={(record) => record.productId}
           pagination={false}
-          scroll={{ x: 'max-content' }} // Cho phép cuộn ngang khi cần thiết
+          scroll={{ x: 'max-content' }}
         />
       </Card>
 
@@ -149,6 +180,7 @@ const OrderDetail = () => {
           <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
         </p>
       </Card>
+
       <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>
         <Button type='primary' className='w-full sm:w-auto'>
           Liên hệ hỗ trợ
