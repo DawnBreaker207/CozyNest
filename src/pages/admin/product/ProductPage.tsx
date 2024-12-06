@@ -96,7 +96,7 @@ const AdminProductPage = () => {
             okText='Có'
             cancelText='Không'
           >
-            <Button icon={<DeleteOutlined />} danger/>
+            <Button icon={<DeleteOutlined />} danger />
           </Popconfirm>
           <Link to={`/admin/products/${product._id}/options`}>
             <Button>Thuộc tính</Button>

@@ -66,7 +66,7 @@ export const menus: MenuProps['items'] = [
   },
   {
     key: 'sub2',
-    label: 'Kệ trang trí',
+    label: 'Kệ trang trí'
   },
   {
     key: 'sub3',
@@ -74,7 +74,6 @@ export const menus: MenuProps['items'] = [
   },
   {
     key: 'sub4',
-    label: 'Tủ',
-    
+    label: 'Tủ'
   }
 ]

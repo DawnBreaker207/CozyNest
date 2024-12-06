@@ -76,7 +76,7 @@ const AdminOptionValue = (props: Props) => {
               okText='Có'
               cancelText='Không'
             >
-              <Button icon={<DeleteOutlined />} danger/>
+              <Button icon={<DeleteOutlined />} danger />
             </Popconfirm>
           </Space>
         )

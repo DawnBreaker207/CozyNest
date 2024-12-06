@@ -76,7 +76,7 @@ const CheckOutOrder = () => {
     { title: 'Giá', dataIndex: 'price', key: 'price', render: (price: number) => `${price}₫` }
   ]
 
-  const data = orderData?.order_details?.map((product: any, index: number) => ({
+  const data = orderData?.order_details?.products?.map((product: any, index: number) => ({
     key: index,
     thumbnail: product.thumbnail,
     name: product.sku_id.name,
@@ -111,7 +111,7 @@ const CheckOutOrder = () => {
                 orderData.payment_status === 'Paid' ? 'border-green-500' : 'border-red-500'
               } rounded-full bg-white cursor-pointer`}
             >
-              {orderData.payment_status === 'Paid' ? (
+              {orderData.payment_status === "Paid" ? (
                 <CheckOutlined className='text-green-500 text-xl' />
               ) : (
                 <CloseOutlined className='text-red-500 text-xl' />
@@ -127,7 +127,7 @@ const CheckOutOrder = () => {
             <div className='px-2'>
               <p>{orderData.customer_name}</p>
               <p>{orderData.phone_number}</p>
-              <p>{orderData.addressShipping}</p>
+              <p>{orderData.address}</p>
 
               <h3 className='text-lg font-semibold mt-4'>Phương thức thanh toán</h3>
               {orderData.payment_method === 'COD' ? (

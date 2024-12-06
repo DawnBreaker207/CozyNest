@@ -48,7 +48,18 @@ const Header = () => {
       setIsOpen(false)
     }
   }
-
+  const [categories, setCategories] = useState<ICategory[]>([])
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await instance.get('/categories')
+        setCategories(data.res) // Giả sử `data` là mảng danh mục
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+    fetchCategories()
+  }, [])
   // Thêm sự kiện lắng nghe nhấp ra ngoài
   useEffect(() => {
     document.addEventListener('click', handleClickOutside)
@@ -149,10 +160,10 @@ const Header = () => {
   const { Search } = Input
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
-  if (error) {
-    Logout()
-    return window.location.reload()
-  }
+  // if (error) {
+  //   Logout()
+  //   return window.location.reload()
+  // }
   const users: MenuProps['items'] = user
     ? [
         {
@@ -194,18 +205,7 @@ const Header = () => {
             key: '2'
           }
         ]
-  const [categories, setCategories] = useState<ICategory[]>([])
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { data } = await instance.get('/categories')
-        setCategories(data.res) // Giả sử `data` là mảng danh mục
-      } catch (err) {
-        console.error('Error fetching categories:', err)
-      }
-    }
-    fetchCategories()
-  }, [])
+
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -249,10 +249,7 @@ const Header = () => {
                     {categories.map((category) => (
                       <>
                         <li key={category._id} className='hover:bg-gray-100'>
-                          <Link
-                            to={`/category/${category._id}`}
-                            className='block px-4 py-2 text-gray-700'
-                          >
+                          <Link to={`/category/${category._id}`} className='block px-4 py-2 text-gray-700'>
                             {category.name}
                           </Link>
                         </li>

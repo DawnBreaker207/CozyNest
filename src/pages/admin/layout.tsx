@@ -1,4 +1,3 @@
-import { search } from '@/components/icons'
 import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
@@ -8,11 +7,8 @@ import {
   BellOutlined,
   CalendarOutlined,
   CommentOutlined,
-  DeleteOutlined,
   DownloadOutlined,
   DownOutlined,
-  EditOutlined,
-  EyeOutlined,
   FilterOutlined,
   LogoutOutlined,
   OrderedListOutlined,
@@ -21,22 +17,7 @@ import {
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import {
-  Avatar,
-  Badge,
-  Button,
-  Dropdown,
-  Input,
-  Layout,
-  List,
-  Menu,
-  message,
-  Modal,
-  Popconfirm,
-  Space,
-  Spin,
-  theme
-} from 'antd'
+import { Badge, Button, Dropdown, Input, Layout, List, Menu, message, Modal, Spin, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MdOutlineColorLens } from 'react-icons/md'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -324,7 +305,6 @@ const LayoutAdmin: React.FC = () => {
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
                 {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
                 <div className='flex items-center space-x-2'>
-                  
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`categories/add`}>Add Category</Link>
                   </Button>

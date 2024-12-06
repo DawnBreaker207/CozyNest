@@ -82,9 +82,7 @@ const Linkone: React.FC = () => {
                           <span className=' items-center text-sm text-gray-500'>{image.caption}</span>
                         </div>
                       )
-                     
                   )}
-                
               </div>
             ))}
           </div>

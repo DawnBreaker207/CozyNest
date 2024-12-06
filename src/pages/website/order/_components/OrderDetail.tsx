@@ -150,14 +150,14 @@ const OrderDetail = () => {
           <strong>Email:</strong> {order.email}
         </p>
         <p>
-          <strong>Địa chỉ nhận hàng:</strong> {order.addressShipping}
+          <strong>Địa chỉ nhận hàng:</strong> {order.address}
         </p>
       </Card>
 
       <Card title='Thông tin sản phẩm' className='mb-6'>
         <Table
           columns={productColumns}
-          dataSource={order.order_details.map((product: any) => ({
+          dataSource={order.order_details.products.map((product: any) => ({
             ...product,
             name: product.sku_id.name,
             thumbnail: product.sku_id.image,
@@ -172,6 +172,9 @@ const OrderDetail = () => {
       <Card className='mb-6'>
         <p>
           <strong>Phí vận chuyển: 50,000 VNĐ</strong>
+        </p>
+        <p>
+          <strong>Phí lắp đặt : {order.order_details.installation_fee || 0} VNĐ</strong>
         </p>
         <p>
           <strong>Tổng tiền: {order.total_amount || 0} VNĐ</strong>

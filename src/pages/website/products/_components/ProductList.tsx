@@ -55,7 +55,6 @@ const ProductList = ({ products = [] }: ProductListProps) => {
   useEffect(() => {
     // Mặc định chọn màu đầu tiên cho mỗi sản phẩm khi render
     const defaultVariants = products.reduce((acc, product) => {
-
       acc[product._id] = 0 // Chọn màu đầu tiên
       return acc
     }, {})
@@ -135,8 +134,9 @@ const ProductList = ({ products = [] }: ProductListProps) => {
       {/* Data cart */}
       {selectedProduct && ( // Đảm bảo chỉ render nếu selectedProduct tồn tại
         <div
-          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-            }`}
+          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${
+            isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+          }`}
         >
           <div className='bg-white p-5 rounded-lg'>
             <div className='float-right'>
@@ -216,7 +216,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                     </span>
 
                     <button
-                    title='Prev'
+                      title='Prev'
                       className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
                       onClick={() =>
                         setActiveImageIndex((activeImageIndex - 1 + thumbnails.length) % thumbnails.length)
@@ -226,7 +226,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                     </button>
 
                     <button
-                    title='Next'
+                      title='Next'
                       className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
                       onClick={() => setActiveImageIndex((activeImageIndex + 1) % thumbnails.length)}
                     >

@@ -57,6 +57,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       payment_method: selectedPaymentMethod,
       receivedDate: null,
       transportation_fee: 50000,
+      installation_fee: installationFee,
       paid: false,
       status: 'Processing',
       payment_status: 'Unpaid',
@@ -74,8 +75,8 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
             thumbnail: product.sku_id.product_id.thumbnail,
             price: product.price * product.quantity,
             quantity: product.quantity,
-            variant_id: product.sku_id._id, // Variant ID
-            variant_name: product.sku_id.name, // Variant Name
+            sku_id: product.sku_id._id, // Variant ID
+            name: product.sku_id.name, // Variant Name
             variant_label: currentVariant ? currentVariant.option_value_id.label : 'Không xác định' // Thêm thông tin biến thể
           }
         }) || []

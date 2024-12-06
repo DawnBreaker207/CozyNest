@@ -3,8 +3,13 @@ export interface Variants {
   option_id: { _id: string; name: string }
   option_value_id: { _id: string; value: string }
   sku_id: {
-    price_discount_percent: number; _id: string; SKU: string; name: string; price: number; stock: number 
-}
+    price_discount_percent: number
+    _id: string
+    SKU: string
+    name: string
+    price: number
+    stock: number
+  }
 }
 export interface IProduct {
   sku_id: string

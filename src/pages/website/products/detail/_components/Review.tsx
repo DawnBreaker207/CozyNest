@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
-const ReviewComponent = ({product}: any) => {
+const ReviewComponent = ({ product }: any) => {
   const [image, setImage] = useState<{ file: File; name: string } | null>(null)
   const navigate = useNavigate()
   const [showAll, setShowAll] = useState(false)
@@ -203,17 +203,10 @@ const ReviewComponent = ({product}: any) => {
                   </div>
                   <p className='text-sm text-gray-600 mt-2'>{review.comment}</p>
                   {/* Hiển thị nhiều hình ảnh sản phẩm */}
-                
-                    <div className='mt-4 grid grid-cols-3 gap-2'>
-                   
-                        <img
-                         title='ảnh sản phẩm'
-                          src={review.image}
-                          className='w-32 h-32 object-cover rounded-md'
-                        />
-                   
-                    </div>
-                
+
+                  <div className='mt-4 grid grid-cols-3 gap-2'>
+                    <img title='ảnh sản phẩm' src={review.image} className='w-32 h-32 object-cover rounded-md' />
+                  </div>
                 </div>
               </div>
             ))}

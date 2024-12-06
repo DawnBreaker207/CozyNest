@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
-import { useLocalStorage } from '@/hooks/useStorage'
+import { useCookie } from '@/hooks/useStorage'
 import { EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, DatePicker, Space, Table, Tag } from 'antd'
@@ -8,7 +8,7 @@ import Search from 'antd/es/transfer/search'
 import { Link } from 'react-router-dom'
 
 const AdminOrderPage = () => {
-  const [user] = useLocalStorage('user', {})
+  const [user] = useCookie('user', {})
   const token = user?.data?.accessToken
 
   const { data, isLoading, isError, error } = useQuery({
@@ -98,7 +98,6 @@ const AdminOrderPage = () => {
           Returned: 'magenta',
           Refunded: 'purple'
         }
-
         return <Tag color={statusColors[status] || 'gray'}>{status.replace('-', ' ')}</Tag>
       }
     },
