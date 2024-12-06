@@ -67,7 +67,7 @@ const AdminCustomerPage = () => {
               <img src={search} alt='' className='absolute w-[30px] pl-[14px]' />
               <input
                 type='text'
-                placeholder='Search order. . .'
+                placeholder='Search users. . .'
                 className='w-full px-4 py-2 rounded-lg border border-[#E0E2E7] pl-10'
               />
             </div>

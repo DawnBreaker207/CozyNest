@@ -15,6 +15,10 @@ export const getAllUser = async (params?: Partial<IUsers>) => {
 
 // Lấy thông tin người dùng theo ID
 export const getUserById = async (id: string | undefined) => {
+  if (!id) {
+    throw new Error('User ID is required')
+  }
+
   try {
     const { data } = await instance.get(`/users/${id}`)
     return data.res
