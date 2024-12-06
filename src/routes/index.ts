@@ -15,7 +15,16 @@ import AdminOrderPage from '@/pages/admin/order/OrderPage'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import ProductAddPage from '@/pages/admin/product/add/ProductAdd'
 import ProductEditPage from '@/pages/admin/product/edit/ProductEdit'
+import AdminOption from '@/pages/admin/product/option/AdminOption'
+import AdminOptionAdd from '@/pages/admin/product/option/add/AdminOptionAdd'
+import AdminOptionEdit from '@/pages/admin/product/option/edit/AdminOptionEdit'
+import AdminOptionValue from '@/pages/admin/product/optionvalue/AdminOptionValue'
+import AdminOptionValueAdd from '@/pages/admin/product/optionvalue/add/AdminOptionValueAdd'
+import AdminOptionValueEdit from '@/pages/admin/product/optionvalue/edit/AdminOptionValueEdit'
 import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
+import UpdateVariant from '@/pages/admin/product/variant/_components/UpdateVariant'
+import ReportsPage from '@/pages/admin/report/ReportPage'
+import AdminReview from '@/pages/admin/review/AdminReview'
 import LinkPage from '@/pages/website/Link/page'
 import Login from '@/pages/website/auth/Login'
 import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
@@ -60,8 +69,8 @@ function App() {
         // Cart
 
         { path: 'products_page/:id', Component: ProductsPageDetail },
-         
-      { path: 'category/:id', Component:CategoryProductsPage   }, // Route path="/products_page?category=:categoryId" element={<ProductsPage />} /> {/* Trang sản phẩm của danh mục */}
+
+        { path: 'category/:id', Component: CategoryProductsPage }, // Route path="/products_page?category=:categoryId" element={<ProductsPage />} /> {/* Trang sản phẩm của danh mục */}
 
         { path: 'cart', Component: CartPage },
         { path: 'check_out', Component: CheckoutPage },
@@ -107,11 +116,51 @@ function App() {
         { path: 'products', Component: AdminProductPage },
         { path: 'products/add', Component: ProductAddPage },
         { path: 'products/:id/edit', Component: ProductEditPage },
+
+        // Review
+        { path: 'reviews', Component: AdminReview },
+
         // Order
+
+        // Variant
         {
-          path: 'products/:id/variants',
+          path: 'products/:product_id/variants',
           Component: AdminVariantPage
         },
+        {
+          path: 'products/:product_id/variants/:sku_id/update',
+          Component: UpdateVariant
+        },
+
+        // Option
+        {
+          path: 'products/:product_id/options',
+          Component: AdminOption
+        },
+        {
+          path: 'products/:product_id/options/add',
+          Component: AdminOptionAdd
+        },
+        {
+          path: 'products/:product_id/options/:option_id/edit',
+          Component: AdminOptionEdit
+        },
+
+        // Option Value
+        {
+          path: 'products/:product_id/options_value/:option_id',
+          Component: AdminOptionValue
+        },
+        {
+          path: 'products/:product_id/options_value/:option_id/add',
+          Component: AdminOptionValueAdd
+        },
+        {
+          path: 'products/:product_id/options_value/:option_id/:value_id/edit',
+          Component: AdminOptionValueEdit
+        },
+
+        // Articles
         { path: 'articles', Component: AdminArticlePage },
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },
@@ -121,8 +170,7 @@ function App() {
         { path: 'coupons/add', Component: CouponAdd },
         { path: 'coupons/:id/edit', Component: CouponEdit },
         { path: 'customer', Component: AdminCustomerPage },
-        { path: 'customer/:id', Component: AdminCustomerDetailPage },
-
+        { path: 'customer/:id', Component: AdminCustomerDetailPage }
       ]
     }
   ])
