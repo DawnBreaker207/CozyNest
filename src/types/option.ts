@@ -1,7 +1,5 @@
-export interface OptionalValueType {
+export interface OptionType {
   _id: string
-  product_id: string
-  label: string
   name: string
   position: number
 }

@@ -66,11 +66,15 @@ export const menus: MenuProps['items'] = [
   },
   {
     key: 'sub2',
-    label: 'Sản phẩm nổi bật',
-    children: [
-      { key: '4', label: 'Trang trí phòng khách' },
-      { key: '5', label: 'Trang trí phòng ngủ' },
-      { key: '6', label: 'Sân vườn thoải mái' }
-    ]
+    label: 'Kệ trang trí',
+  },
+  {
+    key: 'sub3',
+    label: 'Giường Gỗ'
+  },
+  {
+    key: 'sub4',
+    label: 'Tủ',
+    
   }
 ]

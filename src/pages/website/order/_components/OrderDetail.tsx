@@ -19,7 +19,7 @@ const OrderDetail = () => {
     if (orderId) {
       // Gọi API để lấy chi tiết đơn hàng theo orderId từ URL
       instance
-        .get(`/orders/orderByOrderId/${orderId}`)
+        .get(`/orders/${orderId}`)
         .then((response) => {
           if (response?.data?.res) {
             setOrder(response?.data?.res)
@@ -91,16 +91,17 @@ const OrderDetail = () => {
         <img src={text} alt='Product Thumbnail' style={{ width: 50, height: 50, objectFit: 'cover' }} />
       )
     },
-    { title: 'Tên sản phẩm', dataIndex: 'productName', key: 'productName' },
+    { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
+    { title: "Số lượng", dataIndex: 'quantity', key: 'quantity' },
     { title: 'Giá', dataIndex: 'price', key: 'price' }
   ]
 
   return (
     <div className='lg:px-32 p-10'>
       <Card className='mb-6'>
-        <Title level={2}>Mã đơn hàng: {order.invoiceId}</Title>
+        <Title level={2}>Mã đơn hàng: {order._id}</Title>
         <p>
-          <strong>Ngày đặt hàng:</strong> {new Date(order.orderTime).toLocaleString()}
+          <strong>Ngày đặt hàng:</strong> {new Date(order.createdAt).toLocaleString()}
         </p>
         <p>
           <strong>Trạng thái đơn hàng:</strong> {orderStatusDisplay}
@@ -109,10 +110,10 @@ const OrderDetail = () => {
 
       <Card title='Thông tin giao hàng' className='mb-6'>
         <p>
-          <strong>Tên người nhận:</strong> {order.customerName}
+          <strong>Tên người nhận:</strong> {order.customer_name}
         </p>
         <p>
-          <strong>Số điện thoại:</strong> {order.phoneNumber}
+          <strong>Số điện thoại:</strong> {order.phone_number}
         </p>
         <p>
           <strong>Email:</strong> {order.email}
@@ -125,8 +126,10 @@ const OrderDetail = () => {
       <Card title='Thông tin sản phẩm' className='mb-6'>
         <Table
           columns={productColumns}
-          dataSource={order.products.map((product: any) => ({
+          dataSource={order.order_details.map((product: any) => ({
             ...product,
+            name: product.sku_id.name,
+            thumbnail: product.sku_id.image,
             total: product.price * product.quantity
           }))}
           rowKey={(record) => record.productId}
@@ -140,10 +143,10 @@ const OrderDetail = () => {
           <strong>Phí vận chuyển: 50,000 VNĐ</strong>
         </p>
         <p>
-          <strong>Tổng tiền: {order.billTotals.toLocaleString() || 0} VNĐ</strong>
+          <strong>Tổng tiền: {order.total_amount || 0} VNĐ</strong>
         </p>
         <p>
-          <strong>Phương thức thanh toán: {order.paymentMethod}</strong>
+          <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
         </p>
       </Card>
       <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>

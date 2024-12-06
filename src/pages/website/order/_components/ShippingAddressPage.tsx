@@ -63,11 +63,14 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
   }
 
   const onFinish = (values: any) => {
-    const addressShipping = `${values.address}, ${getWardName(values.village)}, ${getDistrictName(values.district)}, ${getProvinceName(values.city)}`
+    console.log(values);
+
+    const address = `${values.address}, ${getWardName(values.village)}, ${getDistrictName(values.district)}, ${getProvinceName(values.city)}`
     onNext({
-      addressShipping,
-      customerName: values.customerName,
-      phoneNumber: values.phoneNumber,
+      address,
+      shipping_address: address,
+      customer_name: values.customer_name,
+      phone_number: values.phone_number,
       email: values.email
     })
     console.log(values) // Log dữ liệu để kiểm tra
@@ -84,10 +87,10 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
       </span>
       <h2 className='text-lg font-semibold mb-4'>Địa chỉ giao hàng</h2>
       <Form className='' layout='vertical' onFinish={onFinish}>
-        <Form.Item label='Họ và tên' name='customerName' rules={[{ required: true }]}>
+        <Form.Item label='Họ và tên' name='customer_name' rules={[{ required: true }]}>
           <Input className='h-10' placeholder='Nhập họ và tên' />
         </Form.Item>
-        <Form.Item label='Số điện thoại' name='phoneNumber' rules={[{ required: true }]}>
+        <Form.Item label='Số điện thoại' name='phone_number' rules={[{ required: true }]}>
           <Input className='h-10' placeholder='Nhập số điện thoại của bạn' />
         </Form.Item>
         <Form.Item label='Địa chỉ email' name='email' rules={[{ required: true }]}>

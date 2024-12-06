@@ -64,16 +64,16 @@ const NewsPage = () => {
               <div className='border-t-2 border-orange-500 mb-2' />
               <Menu mode='inline' style={{ border: 'none' }} theme='light'>
                 <Menu.Item key='1'>
-                  <Link to='/tin-moi-nhat'>Tin mới nhất (8)</Link>
+                  <Link to='#'>Tin mới nhất (8)</Link>
                 </Menu.Item>
                 <Menu.Item key='2'>
-                  <Link to='/kien-thuc-nha-dep'>Kiến thức nhà đẹp</Link>
+                  <Link to='#'>Kiến thức nhà đẹp</Link>
                 </Menu.Item>
                 <Menu.Item key='3'>
-                  <Link to='/kien-truc-phong-thuy'>Kiến trúc phong thủy</Link>
+                  <Link to='#'>Kiến trúc phong thủy</Link>
                 </Menu.Item>
                 <Menu.Item key='4'>
-                  <Link to='/video-du-an'>Video dự án</Link>
+                  <Link to='#'>Video dự án</Link>
                 </Menu.Item>
               </Menu>
             </div>

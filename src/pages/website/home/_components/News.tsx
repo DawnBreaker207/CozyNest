@@ -106,6 +106,7 @@ const News = () => {
         >
           {articles.map((newsItem) => (
             <div key={newsItem._id} className='px-2'>
+              <Link to={`/articles/${newsItem._id}`}>
               <Card
                 hoverable
                 cover={<img alt={newsItem.title} src={newsItem.thumbnail} className='rounded-t-lg' />}
@@ -132,6 +133,8 @@ const News = () => {
                   }
                 />
               </Card>
+              </Link>
+             
             </div>
           ))}
         </Carousel>

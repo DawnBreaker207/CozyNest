@@ -1,3 +1,5 @@
+import { search } from '@/components/icons'
+import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
 import {
@@ -5,8 +7,11 @@ import {
   AppstoreOutlined,
   BellOutlined,
   CalendarOutlined,
+  DeleteOutlined,
   DownloadOutlined,
   DownOutlined,
+  EditOutlined,
+  EyeOutlined,
   FilterOutlined,
   LogoutOutlined,
   OrderedListOutlined,
@@ -15,22 +20,152 @@ import {
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Avatar, Badge, Button, Input, Layout, Menu, Modal, theme } from 'antd'
+import {
+  Avatar,
+  Badge,
+  Button,
+  Dropdown,
+  Input,
+  Layout,
+  List,
+  Menu,
+  message,
+  Modal,
+  Popconfirm,
+  Space,
+  Spin,
+  theme
+} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MdOutlineColorLens } from 'react-icons/md'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 const { Header, Content, Footer, Sider } = Layout
 
 const LayoutAdmin: React.FC = () => {
+  const [searchValue, setSearchValue] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState([])
   const navigate = useNavigate()
   const { Logout } = useUser()
   const userJson = useCookie('user', {})
-  console.log(userJson)
   const role = userJson ? userJson?.[0].role : null
-  console.log(role)
+  // Trạng thái kiểm tra quyền
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
+
   useEffect(() => {
-    navigate(role === 'admin' || role === 'manager' ? '/admin' : '/login')
-  }, [navigate, role])
+    if (role === 'admin' || role === 'manager') {
+      setIsAuthorized(true)
+      navigate('/admin') // Điều hướng vào trang admin
+    } else {
+      setIsAuthorized(false)
+      navigate('/login') // Điều hướng về trang login
+    }
+  }, [role]) // Chỉ chạy lại khi role thay đổi
+  const handleSearch = async (value: string) => {
+    if (!value.trim()) {
+      message.warning('Vui lòng nhập từ khóa tìm kiếm!')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      // Gọi API với query từ người dùng
+      const response = await instance.get('http://localhost:8888/api/v1/search', {
+        params: { query: value }
+      })
+
+      setResults(response.data) // Lưu kết quả vào state
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        message.info('Không tìm thấy sản phẩm nào.')
+      } else {
+        message.error('Đã có lỗi xảy ra khi tìm kiếm!')
+      }
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  const handleSearchArticle = async (value: string) => {
+    if (!value.trim()) {
+      message.warning('Vui lòng nhập từ khóa tìm kiếm!')
+      return
+    }
+
+    setLoading(true)
+    try {
+      // Gọi API với query từ người dùng
+      const response = await instance.get('http://localhost:8888/api/v1/search/articles', {
+        params: { query: value }
+      })
+
+      setResults(response.data) // Lưu kết quả vào state
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        message.info('Không tìm thấy sản phẩm nào.')
+      } else {
+        message.error('Đã có lỗi xảy ra khi tìm kiếm!')
+      }
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  const searchMenuArticle = (
+    <div className='bg-white border rounded shadow-md w-full max-h-64 overflow-auto'>
+      {loading ? (
+        <Spin className='p-4' />
+      ) : results.length > 0 ? (
+        <List
+          size='small'
+          dataSource={results}
+          renderItem={(item: any) => (
+            <List.Item>
+              <div className='flex items-center justify-between p-2 w-full'>
+                <img src={item.thumbnail} alt='' width={70} className='w-[70px] h-[70px] ' />
+                <span className='ml-2 text-base'>{item.title}</span>
+                <p className='text-base'> {item.author}</p>
+                <Link to={`/detail/${item.id}`} className='text-base'>
+                  xem nhanh
+                </Link>
+              </div>
+            </List.Item>
+          )}
+        />
+      ) : (
+        <p className='p-4 text-gray-500'>Không tìm thấy sản phẩm</p>
+      )}
+    </div>
+  )
+  const searchMenu = (
+    <div className='bg-white border rounded shadow-md w-full max-h-64 overflow-auto'>
+      {loading ? (
+        <Spin className='p-4' />
+      ) : results.length > 0 ? (
+        <List
+          size='small'
+          dataSource={results}
+          renderItem={(item: any) => (
+            <List.Item>
+              <div className='flex items-center justify-between p-2 w-full'>
+                <img src={item.thumbnail} alt='' className='w-[70px] h-[70px] object-cover' />
+                <span className='ml-2 text-base'>{item.name}</span>
+                <span className='ml-2 text-base'>{item.brand}</span>
+                <p className='text-base'>Gia: {item.price}</p>
+                <Link to={`/detail/${item.id}`} className='text-base'>
+                  xem nhanh
+                </Link>
+              </div>
+            </List.Item>
+          )}
+        />
+      ) : (
+        <p className='p-4 text-gray-500'>Không tìm thấy sản phẩm</p>
+      )}
+    </div>
+  )
+
   const handleLogout = () => {
     Modal.confirm({
       title: 'Bạn có chắc chắn muốn đăng xuất không?',
@@ -68,12 +203,14 @@ const LayoutAdmin: React.FC = () => {
           <span className='text-xl text-[#353535] ml-[25px]'>{title}</span>
         </div>
         <div className='flex items-center space-x-4 mr-[14px]'>
-          <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+          {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
         </div>
       </div>
     </Header>
   )
-
+  if (isAuthorized === null) {
+    return null // Hoặc một spinner loading nếu cần
+  }
   //TODO: ???????
   const isAddProductPage = location.pathname === '/admin/products/add'
   const isEditProductPage = location.pathname === `/admin/products/${id}/edit`
@@ -140,11 +277,6 @@ const LayoutAdmin: React.FC = () => {
             },
             {
               key: '7',
-              icon: <UploadOutlined />,
-              label: <NavLink to={`/admin/report`}>Reports</NavLink>
-            },
-            {
-              key: '8',
               icon: <LogoutOutlined />,
               label: (
                 <NavLink to='#' onClick={handleLogout}>
@@ -178,20 +310,14 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Category</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
-                <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' />
+                {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
                 <div className='flex items-center space-x-2'>
-                  <Button
-                    icon={<DownloadOutlined />}
-                    size='large'
-                    className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
-                  >
-                    Export
-                  </Button>
+                  
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`categories/add`}>Add Category</Link>
                   </Button>
@@ -207,20 +333,43 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Articles</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
-                <Input className='w-3/4' placeholder='Search articles...' prefix={<SearchOutlined />} size='large' />
+                {/* Input và nút tìm kiếm */}
+                <Dropdown
+                  overlay={searchMenuArticle}
+                  trigger={['click']}
+                  visible={searchValue.length > 0 && !loading && results.length > 0}
+                >
+                  <Input
+                    className='w-3/4'
+                    placeholder='Search product...'
+                    prefix={<SearchOutlined />}
+                    size='large'
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onPressEnter={() => handleSearchArticle(searchValue)}
+                  />
+                </Dropdown>
+                <Button
+                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 -ml-[100px] '
+                  type='primary'
+                  icon={<SearchOutlined />}
+                  onClick={() => handleSearchArticle(searchValue)}
+                >
+                  Search
+                </Button>
                 <div className='flex items-center space-x-2'>
-                  <Button
+                  {/* <Button
                     icon={<DownloadOutlined />}
                     size='large'
                     className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
                   >
                     Export
-                  </Button>
+                  </Button> */}
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`articles/add`}>Add Articles</Link>
                   </Button>
@@ -236,20 +385,43 @@ const LayoutAdmin: React.FC = () => {
                     <span className='text-xl text-[#353535] ml-[25px]'>Product</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
-                <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' />
+                {/* Input và nút tìm kiếm */}
+                <Dropdown
+                  overlay={searchMenu}
+                  trigger={['click']}
+                  visible={searchValue.length > 0 && !loading && results.length > 0}
+                >
+                  <Input
+                    className='w-3/4'
+                    placeholder='Search product...'
+                    prefix={<SearchOutlined />}
+                    size='large'
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onPressEnter={() => handleSearch(searchValue)}
+                  />
+                </Dropdown>
+                <Button
+                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 -ml-24'
+                  type='primary'
+                  icon={<SearchOutlined />}
+                  onClick={() => handleSearch(searchValue)}
+                >
+                  Search
+                </Button>
                 <div className='flex items-center space-x-2'>
-                  <Button
+                  {/* <Button
                     icon={<DownloadOutlined />}
                     size='large'
                     className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
                   >
                     Export
-                  </Button>
+                  </Button> */}
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`products/add`}>Add Product</Link>
                   </Button>
@@ -261,12 +433,12 @@ const LayoutAdmin: React.FC = () => {
                     <Button type='link' className='text-blue-500'>
                       All Product
                     </Button>
-                    <Button type='link'>Published</Button>
+                    {/* <Button type='link'>Published</Button>
                     <Button type='link'>Low Stock</Button>
-                    <Button type='link'>Draft</Button>
+                    <Button type='link'>Draft</Button> */}
                   </div>
                 </div>
-                <div className='flex items-center space-x-4 '>
+                {/* <div className='flex items-center space-x-4 '>
                   <Input className='w-64' placeholder='Search product...' prefix={<SearchOutlined />} />
                   <div className='border border-black-100'>
                     <Button icon={<CalendarOutlined />} className='border-none shadow-none '>
@@ -278,7 +450,7 @@ const LayoutAdmin: React.FC = () => {
                       Filters
                     </Button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </>
           )}
@@ -296,7 +468,7 @@ const LayoutAdmin: React.FC = () => {
                     <Badge count={4} className='cursor-pointer'>
                       <BellOutlined className='text-xl text-blue-500' />
                     </Badge>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>

@@ -18,11 +18,9 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
   const form = useForm({
     resolver: zodResolver(ProductZodSchema),
     defaultValues: {
-      originId: null,
       name: '',
       thumbnail: '',
-      categoryId: '',
-      brand: '',
+      category_id: '',
       description: '',
       price: 0,
       discount: 0,

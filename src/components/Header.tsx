@@ -1,3 +1,4 @@
+import instance from '@/configs/axios'
 import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
@@ -16,54 +17,74 @@ import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, me
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
-import instance from '@/configs/axios'
+import { ICategory } from '@/types/category'
 
 const { useToken } = theme
 
 const Header = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState([]);
+  const [searchValue, setSearchValue] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState([])
   const [, contextHolder] = message.useMessage()
   const { token } = useToken()
   const { data, calculateTotal, mutate } = useCart()
+
   const { Logout, user, userId } = useUser()
   const { products, quantities, setQuantity } = useCartStore()
   const [isVisible, setIsVisible] = useState(false)
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
   const { data: userData, error } = useAdminUser(userId ?? '')
+  const [isOpen, setIsOpen] = useState(false) // Quản lý trạng thái mở/đóng menu
 
+  // Toggle trạng thái menu
+  const toggleMenu = () => {
+    setIsOpen(!isOpen)
+  }
+
+  // Đóng menu khi nhấp ra ngoài
+  const handleClickOutside = (e: any) => {
+    if (!e.target.closest('.menu-container')) {
+      setIsOpen(false)
+    }
+  }
+
+  // Thêm sự kiện lắng nghe nhấp ra ngoài
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
   const handleSearch = async (value: string) => {
     if (!value.trim()) {
-      message.warning("Vui lòng nhập từ khóa tìm kiếm!");
-      return;
+      message.warning('Vui lòng nhập từ khóa tìm kiếm!')
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
 
     try {
       // Gọi API với query từ người dùng
-      const response = await instance.get("http://localhost:8888/api/v1/search", {
-        params: { query: value },
-      });
+      const response = await instance.get('http://localhost:8888/api/v1/search', {
+        params: { query: value }
+      })
 
-      setResults(response.data); // Lưu kết quả vào state
+      setResults(response.data) // Lưu kết quả vào state
     } catch (error: any) {
       if (error.response?.status === 404) {
-        message.info("Không tìm thấy sản phẩm nào.");
+        message.info('Không tìm thấy sản phẩm nào.')
       } else {
-        message.error("Đã có lỗi xảy ra khi tìm kiếm!");
+        message.error('Đã có lỗi xảy ra khi tìm kiếm!')
       }
-      console.error(error);
+      console.error(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   const clearResults = () => {
-    setResults([]); // Xóa kết quả tìm kiếm
-  };
-  
+    setResults([]) // Xóa kết quả tìm kiếm
+  }
 
   const toggleDrawer = (isVisible: boolean, isOpen: boolean) => {
     setVisible(isVisible)
@@ -92,7 +113,7 @@ const Header = () => {
 
   // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    if (quantities[index] < 10) {
+    if (quantities[index]) {
       setQuantity(index, quantities[index] + 1)
       mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
     }
@@ -173,7 +194,18 @@ const Header = () => {
             key: '2'
           }
         ]
-
+  const [categories, setCategories] = useState<ICategory[]>([])
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await instance.get('/categories')
+        setCategories(data.res) // Giả sử `data` là mảng danh mục
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+    fetchCategories()
+  }, [])
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -191,11 +223,46 @@ const Header = () => {
             <NavLink to={'/'} className='text-muted hover:text-muted-foreground'>
               Trang chủ
             </NavLink>
-            <Dropdown menu={{ items: menus }}>
-              <NavLink to={'/products_page'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
-              </NavLink>
-            </Dropdown>
+            <div className='relative menu-container'>
+              {/* Menu Button */}
+              <div
+                className='cursor-pointer flex items-center'
+                onClick={toggleMenu} // Toggle trạng thái menu
+              >
+                <span className='text-muted hover:text-muted-foreground'>Sản phẩm</span>
+                <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
+              </div>
+
+              {/* Dropdown Menu */}
+              {isOpen && ( // Hiển thị menu nếu `isOpen` là `true`
+                <div className='absolute top-full left-0 mt-2 bg-white shadow-md rounded-lg w-[200px] z-10'>
+                  <ul className='py-2'>
+                    {/* Mục "Sản phẩm mới" */}
+                    <hr />
+                    <li className='hover:bg-gray-100'>
+                      <Link to='/products_page' className='block px-4 py-2 text-gray-700'>
+                        Sản phẩm mới
+                      </Link>
+                      <hr />
+                    </li>
+                    {/* Danh sách các danh mục */}
+                    {categories.map((category) => (
+                      <>
+                        <li key={category._id} className='hover:bg-gray-100'>
+                          <Link
+                            to={`/category/${category._id}`}
+                            className='block px-4 py-2 text-gray-700'
+                          >
+                            {category.name}
+                          </Link>
+                        </li>
+                        <hr />
+                      </>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
               Giới thiệu
             </NavLink>
@@ -215,64 +282,58 @@ const Header = () => {
             </NavLink>
           </div>
           <div className='flex items-center space-x-4'>
-          <Dropdown
-      trigger={["click"]}
-      onVisibleChange={(visible) => {
-        if (!visible) clearResults(); // Xóa lịch sử khi dropdown đóng
-      }}
-      dropdownRender={() => (
-        <div style={contentStyle}>
-          <Space direction="vertical" style={{ padding: 8 }}>
-            {/* Thanh tìm kiếm */}
-            <Search
-              placeholder="Tìm kiếm sản phẩm..."
-              onSearch={handleSearch}
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              loading={loading}
-              className="w-full"
-            />
-          </Space>
+            <Dropdown
+              trigger={['click']}
+              onOpenChange={(visible) => {
+                if (!visible) clearResults() // Xóa lịch sử khi dropdown đóng
+              }}
+              dropdownRender={() => (
+                <div style={contentStyle}>
+                  <Space direction='vertical' style={{ padding: 8 }}>
+                    {/* Thanh tìm kiếm */}
+                    <Search
+                      placeholder='Tìm kiếm sản phẩm...'
+                      onSearch={handleSearch}
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      loading={loading}
+                      className='w-full'
+                    />
+                  </Space>
 
-          {/* Hiển thị kết quả */}
-          <Divider style={{ margin: "8px 0" }} />
-          {results.length > 0 ? (
-            <List
-              size="small"
-              bordered
-              dataSource={results}
-              renderItem={(item:any) => (
-                <List.Item>
-                <img
-                  src={item.thumbnail}
-                  alt={item.name}
-                  style={{ width: 50, height: 50, marginRight: 8 }}
-                />
-                <div>
-                  <strong>{item.name}</strong>
-                  <p className="text-sm text-gray-500">{item.description}</p>
-                   {/* Link tới trang chi tiết sản phẩm */}
-                   <Link to={`/detail/${item._id}`}className="text-blue-500 hover:underline">
-                          Xem chi tiết
-                        </Link>
+                  {/* Hiển thị kết quả */}
+                  <Divider style={{ margin: '8px 0' }} />
+                  {results.length > 0 ? (
+                    <List
+                      size='small'
+                      bordered
+                      dataSource={results}
+                      renderItem={(item: any) => (
+                        <List.Item>
+                          <img src={item.thumbnail} alt={item.name} style={{ width: 50, height: 50, marginRight: 8 }} />
+                          <div>
+                            <strong>{item.name}</strong>
+                            <p className='text-sm text-gray-500'>{item.description}</p>
+                            {/* Link tới trang chi tiết sản phẩm */}
+                            <Link to={`/detail/${item._id}`} className='text-blue-500 hover:underline'>
+                              Xem chi tiết
+                            </Link>
+                          </div>
+                        </List.Item>
+                      )}
+                    />
+                  ) : (
+                    <p className='text-center text-gray-500 p-2'>{loading ? 'Đang tải...' : 'Không có kết quả'}</p>
+                  )}
                 </div>
-              </List.Item>
               )}
-            />
-          ) : (
-            <p className="text-center text-gray-500 p-2">
-              {loading ? "Đang tải..." : "Không có kết quả"}
-            </p>
-          )}
-        </div>
-      )}
-    >
-      <span onClick={(e) => e.preventDefault()}>
-        <Space>
-          <Button shape="circle" icon={<SearchOutlined />} />
-        </Space>
-      </span>
-    </Dropdown>
+            >
+              <span onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <Button shape='circle' icon={<SearchOutlined />} />
+                </Space>
+              </span>
+            </Dropdown>
             <Dropdown
               menu={{ items: users }}
               trigger={['click']}
@@ -359,53 +420,58 @@ const Header = () => {
               </span>
             </Link>
           </Drawer>
-
           {/* giỏ hàng  */}
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
             {products.length > 0 ? (
               <div>
-                {products.map((product: any, index: number) => (
-                  <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
-                    {/* Hình ảnh và thông tin sản phẩm */}
-                    <div className='flex items-center'>
-                      <img
-                        src={product.sku_id.product_id.thumbnail}
-                        alt={product.sku_id.name}
-                        className='w-16 h-16 object-cover'
-                      />
-                      <div className='ml-2 flex flex-col justify-between'>
-                        <p className='font-semibold'>{product.sku_id.name}</p>
-                        <div className='flex items-center justify-center mt-2'>
-                          <button
-                            onClick={() => decrease(index)} // Truyền index để giảm số lượng
-                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
-                          >
-                            -
-                          </button>
-                          <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
-                          <button
-                            onClick={() => increase(index)} // Truyền index để tăng số lượng
-                            className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
-                          >
-                            +
-                          </button>
+                {products.map((product: any, index: number) => {
+                  // Tìm variant phù hợp với sku_id
+                  const currentVariant = product?.sku_id?.product_id?.variants.find(
+                    (variant: any) => variant?.sku_id === product?.sku_id?._id
+                  )
+
+                  return (
+                    <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                      {/* Hình ảnh và thông tin sản phẩm */}
+                      <div className='flex items-center'>
+                        <img
+                          src={product.sku_id.product_id.images[0].url}
+                          alt={product.sku_id.name}
+                          className='w-16 h-20 object-cover'
+                        />
+                        <div className='ml-2 flex flex-col justify-between'>
+                          <p className='font-semibold'>{product.sku_id.product_id.name}</p>
+
+                          {/* Hiển thị giá trị option_value_id của variant hiện tại */}
+                          <p>{currentVariant?.option_value_id?.label || 'Không xác định'}</p>
+
+                          <div className='flex items-center justify-center mt-2'>
+                            <button
+                              onClick={() => decrease(index)} // Truyền index để giảm số lượng
+                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                            >
+                              -
+                            </button>
+                            <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
+                            <button
+                              onClick={() => increase(index)} // Truyền index để tăng số lượng
+                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                            >
+                              +
+                            </button>
+                          </div>
                         </div>
                       </div>
-                      <span className='font-bold'>{(product.price * quantities[index]).toLocaleString()}₫</span>
-                      <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.productId._id })}>
-                        <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
-                      </button>
+                      {/* Giá sản phẩm */}
+                      <div className='flex flex-col items-end'>
+                        <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.sku_id._id })}>
+                          <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                        </button>
+                        <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
+                      </div>
                     </div>
-
-                    {/* Giá sản phẩm */}
-                    <div className='flex flex-col items-end'>
-                      <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.sku_id._id })}>
-                        <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
-                      </button>
-                      <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
                 {/* Tổng tiền */}
                 <div className='mt-4'>
                   <div className='flex justify-between font-semibold'>

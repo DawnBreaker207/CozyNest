@@ -438,6 +438,7 @@ const ProductsPageDetail = () => {
 
       <div className='flex justify-center w-[22%] items-center my-4 gap-8 max-w-screen-lg mx-auto'>
         <button
+          title='Previous'
           onClick={handlePrevPage}
           disabled={currentPage === 1}
           className='border-solid border-2 text-white px-3 py-2 rounded'
@@ -448,6 +449,7 @@ const ProductsPageDetail = () => {
           Trang {currentPage} / {totalPages}
         </span>
         <button
+        title='Next'
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           className='border-solid border-2 text-white px-3 py-2 rounded'

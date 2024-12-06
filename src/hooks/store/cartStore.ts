@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { IProductCart } from '@/types/producrCart'
 import { IProduct } from '@/types/product'
-import { Color } from 'antd/es/color-picker/color'
+import { Color } from 'antd/es/color-picker'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 interface CartState {
-  products: any[]
+  products: IProductCart[]
   quantities: number[]
   setProducts: (products: any[]) => void
   setQuantities: (quantities: number[]) => void
