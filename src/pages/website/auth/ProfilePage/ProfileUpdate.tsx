@@ -1,61 +1,42 @@
-import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
-import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
-import { IUsers } from '@/types/user'
-import { Button, Form, Input, Modal, Switch, message } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import { Rule } from 'antd/es/form'
 import { useEffect, useState } from 'react'
-import CustomLoadingPage from '@/components/Loading'
 import Cookies from 'js-cookie'
-import PhoneInput from 'react-phone-input-2'
+// import PhoneInput from 'react-phone-input-2'
+import CustomLoadingPage from '@/components/Loading'
+import { useAdminUser } from '@/hooks/useAdminUsersQuery'
+import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
+import { IUsers } from '@/types/user'
 
-interface CustomerModalProps {
-  isModalVisible: boolean
-  handleCancel: () => void
-  handleToggle: (checked: boolean) => void
+interface ProfileProps {
   formVisible: boolean
+  handleToggle: (checked: boolean) => void
   validatePhoneNumber: (rule: Rule, value: string) => Promise<void>
 }
 
-const ProfileModal: React.FC<CustomerModalProps> = ({
-  isModalVisible,
-  handleCancel,
-  handleToggle,
-  formVisible,
-  validatePhoneNumber
-}) => {
+const ProfilePage: React.FC<ProfileProps> = () => {
   const [messageApi, contextHolder] = message.useMessage()
-
-  // Khai báo state cho userId
   const [userId, setUserId] = useState<string | undefined>(undefined)
+  const [form] = Form.useForm()
 
   useEffect(() => {
     const userDataString = Cookies.get('user')
-    // console.log(userDataString)
-
     if (userDataString) {
       const userData = JSON.parse(userDataString)
-      // console.log(userData)
-
-      // Kiểm tra xem dữ liệu có hợp lệ không
       if (userData && Object.keys(userData).length > 0) {
-        // Lấy ra ID người dùng từ thuộc tính `res`
         const retrievedUserId = userData?._id
-        // Gán userId vào state
         setUserId(retrievedUserId)
       }
     }
-  }, []) // useEffect chỉ chạy 1 lần sau khi component mount
+  }, [])
 
-  const { data, isLoading, isError, error } = useAdminUsersQuery({ _id: userId })
-  // console.log(data)
+  const id = userId || undefined
+  const { data, isLoading, error } = useAdminUser(id)
 
   const { mutate } = useAdminUsersMutations({
     action: 'UPDATE',
     onSuccess: () => {
       messageApi.success('Cập nhật thành công')
-      setTimeout(() => {
-        handleCancel()
-      }, 600)
     }
   })
 
@@ -63,75 +44,82 @@ const ProfileModal: React.FC<CustomerModalProps> = ({
     mutate({ ...data, ...values, _id: userId })
   }
 
-  if (isLoading)
-    return (
-      <div>
-        <CustomLoadingPage />
-      </div>
-    )
-  if (isError) return <div>{error.message}</div>
+  const handleCancel = () => {
+    form.resetFields()
+  }
+
+  if (isLoading) {
+    return <CustomLoadingPage />
+  }
+
+  if (error) {
+    return <div>{error?.message || 'Có lỗi xảy ra'}</div>
+  }
 
   return (
     <>
       {contextHolder}
-      <Modal
-        title={<h1 className='text-[#353535] font-medium text-xl mb-7'>Update Customer</h1>}
-        open={isModalVisible}
-        onCancel={handleCancel}
-        okText='Update'
-        centered
-        width={900}
-        footer={null}
-      >
-        <Form layout='vertical' autoComplete='off' onFinish={onFinish} initialValues={{ ...data }}>
-          {/* Thêm prop form vào đây */}
-          <h2 className='text-[#8B8D97] font-medium mb-5'>Customer Information</h2>
-          <Form.Item name='username' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
-            <Input placeholder='Customer Name' />
+      <div>
+        <Form form={form} layout='vertical' autoComplete='off' onFinish={onFinish} initialValues={{ ...data }}>
+          <Form.Item
+            name='username'
+            label='Tên khách hàng'
+            rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          >
+            <Input
+              className='w-full py-3 px-4 border border-gray-300 rounded-md text-sm'
+              placeholder='Tên khách hàng'
+            />
           </Form.Item>
           <Form.Item
             name='email'
+            label='Email khách hàng'
             rules={[
               { required: true, message: 'Không được bỏ trống!' },
               { type: 'email', message: 'Email không đúng định dạng' }
             ]}
           >
-            <Input placeholder='Customer Email' />
+            <Input
+              className='w-full py-3 px-4 border border-gray-300 rounded-md text-sm'
+              placeholder='Email khách hàng'
+            />
           </Form.Item>
           <Form.Item
             name='phoneNumber'
-            rules={[{ required: true, message: 'Không được bỏ trống!' }, { validator: validatePhoneNumber }]}
+            label='Số điện thoại khách hàng'
+            rules={[
+              { required: true, message: 'Không được bỏ trống!' },
+              {
+                pattern: /^0\d{9}$/,
+                message: 'Số điện thoại phải bắt đầu bằng 0 và gồm 10 chữ số'
+              }
+            ]}
           >
-            <PhoneInput country={'us'} countryCodeEditable={false} inputStyle={{ width: '100%' }} />
+            <Input className='w-full py-3 px-4 border border-gray-300 rounded-md text-sm' placeholder='Số điện thoại' />
           </Form.Item>
-          <div className='mb-6'>
-            <label className='mr-4 text-[#8B8D97] text-sm'>Add Address</label>
-            <Switch checked={formVisible} onChange={handleToggle} size='small' />
-          </div>
-          {formVisible && (
-            <>
-              <Form.Item name='address'>
-                <Input placeholder='Building No., Street Address' />
-              </Form.Item>
-              <Form.Item name='city' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
-                <Input placeholder='City' />
-              </Form.Item>
-            </>
-          )}
-          <div className='flex text-left gap-2'>
-            <Button key='cancel' onClick={handleCancel} className='py-4 px-10'>
+
+          <div className='flex gap-4'>
+            <Button
+              key='cancel'
+              onClick={handleCancel}
+              className='py-2 px-6 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400'
+            >
               Cancel
             </Button>
             <Form.Item>
-              <Button type='primary' htmlType='submit' className='py-4 px-10'>
+              <Button
+                type='primary'
+                htmlType='submit'
+                className='py-2 px-6 bg-blue-600 text-white rounded-md hover:bg-blue-700'
+              >
                 Update
               </Button>
             </Form.Item>
           </div>
         </Form>
-      </Modal>
+      </div>
     </>
   )
 }
 
-export default ProfileModal
+export default ProfilePage
