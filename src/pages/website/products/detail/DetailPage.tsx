@@ -46,7 +46,7 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (selectedColorId && count > 0) {
       // Lấy thông tin sản phẩm và SKU dựa trên `selectedColorId`
-      const selectedVariant = product.variants.find((variant) => variant.sku_id._id === selectedColorId)
+      const selectedVariant = product.variants?.find((variant) => variant.sku_id._id === selectedColorId)
       console.log(selectedVariant)
       if (!selectedVariant) {
         message.error('Không tìm thấy thông tin sản phẩm.')
@@ -183,14 +183,14 @@ const ProductDetail = () => {
             <h1 className=' font-bold text-2xl'>{product.name}</h1>
             <div className='flex gap-[30px] mt-3'>
               <span id='pro_sku' className='text-sm font-light'>
-                Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'></span>
+                Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'>{product.SKU}</span>
               </span>
               <span className='text-sm font-light'>
-                Tình trạng: <span className='text-[#fca120] font-semibold ml-1'>Còn hàng</span>
+                Số lượng: <span className='text-[#fca120] font-semibold ml-1'>{product?.variants?.[0]?.sku_id?.stock}</span>
               </span>
               <span className='text-sm font-light'>
                 Thương hiệu:
-                <span className='text-[#fca120] font-semibold ml-1'>{product.SKU}</span>
+                <span className='text-[#fca120] font-semibold ml-1'>{product?.category_id?.name}</span>
               </span>
             </div>
           </div>
@@ -367,12 +367,12 @@ const ProductDetail = () => {
           </div>
           <hr className='h-[1px] bg-black border-none my-5' />
           <div>
-            {/* <ReviewComponent /> */}
+             {/* <ReviewComponent />  */}
           </div>
         </div>
         {/* Product Description */}
         <div
-          className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[96px] `}
+          className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[72px] `}
         >
           <div className='productDetail--navs mg-top mt-[15px]'>
             <div className='nav tab-title'>
@@ -448,7 +448,7 @@ const ProductDetail = () => {
 
       <div className='mb-20 container'>
         <RelatedProduct id={category} />
-        <div className='mt-[60px]'>
+        {/* <div className='mt-[60px]'>
           <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Sản phẩm đã xem</h1>
           <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
             <div className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
@@ -480,7 +480,7 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )
