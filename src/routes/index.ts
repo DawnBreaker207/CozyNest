@@ -24,7 +24,6 @@ import AdminOptionValueAdd from '@/pages/admin/product/optionvalue/add/AdminOpti
 import AdminOptionValueEdit from '@/pages/admin/product/optionvalue/edit/AdminOptionValueEdit'
 import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
 import UpdateVariant from '@/pages/admin/product/variant/_components/UpdateVariant'
-import ReportsPage from '@/pages/admin/report/ReportPage'
 import AdminReview from '@/pages/admin/review/AdminReview'
 import LinkPage from '@/pages/website/Link/page'
 import Login from '@/pages/website/auth/Login'

@@ -4,7 +4,7 @@ import useCart from '@/hooks/useCart'
 import { useCookie } from '@/hooks/useStorage'
 import { IProduct } from '@/types/product'
 import { CloseOutlined } from '@ant-design/icons'
-import { message } from 'antd'
+import { Button, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
@@ -402,18 +402,17 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                       </span>
                     )} */}
                   </div>
-                </Link>
-                <div className='mx-2 text-center space-y-2 mt-3'>
+                  <div className='mx-2 text-center space-y-2 mt-3'>
                   <h3>{product?.name}</h3>
                   <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
                     <span className='text-[#FF0000] font-semibold'>{price.toLocaleString()}₫</span>
-                    {
+                    {/* {
                       <span className='text-[#878c8f] font-light line-through text-[13px]'>
                         {price.toLocaleString()}₫
                       </span>
-                    }
+                    } */}
                   </div>
-                  <div className='flex space-x-4'>
+                  {/* <div className='flex space-x-4'>
                     {product.variants.map((variant, idx) => {
                       const value = variant.option_value_id.value
                       const bgColor =
@@ -436,8 +435,11 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                         />
                       )
                     })}
-                  </div>
+                  </div> */}
+                  <Button >xem chi tiết</Button>
                 </div>
+                </Link>
+              
               </div>
             )
           })}
