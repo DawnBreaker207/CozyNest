@@ -14,12 +14,16 @@ interface PaymentMethodPageProps {
   onSubmit: (paymentMethod: string) => Promise<void>
   totalAfterDiscount: number
   onInstallationCostChange: (cost: number) => void
+  couponName: string
+  couponValue: number
 }
 
 const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   orderData,
   totalAfterDiscount,
-  onInstallationCostChange
+  onInstallationCostChange,
+  couponName,
+  couponValue
 }) => {
   const [user] = useCookie('user', {})
   // const token = user?.data?.accessToken
@@ -43,12 +47,11 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
     onInstallationCostChange(installationFee)
 
     if (shippingMethod === 'standard') {
-      onInstallationCostChange(50000); // Giao hàng tiêu chuẩn
+      onInstallationCostChange(50000) // Giao hàng tiêu chuẩn
     } else if (shippingMethod === 'express') {
-      onInstallationCostChange(80000); // Giao hàng nhanh
+      onInstallationCostChange(80000) // Giao hàng nhanh
     }
   }
-  
 
   useEffect(() => {
     onInstallationCostChange(installationFee)
@@ -63,8 +66,9 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       total_amount: totalAfterDiscount,
       payment_method: selectedPaymentMethod,
       receivedDate: null,
+      total: couponValue,
+      coupon: couponName,
       installation_fee: installationFee,
-      paid: false,
       status: 'Processing',
       payment_status: 'Unpaid',
       products:
@@ -92,6 +96,9 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       // Tạo đơn hàng trước
       console.log(`Orders: ${finalOrderData.total_amount}`)
       console.log('Products:', finalOrderData.products)
+      console.log('total:', finalOrderData.total)
+      console.log('coupon:', finalOrderData.coupon)
+
       const orderResponse = await instance.post('/orders', finalOrderData)
       const orderId = orderResponse.data?.res?._id
       // console.log(orderId)

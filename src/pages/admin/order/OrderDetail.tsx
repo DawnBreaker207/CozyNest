@@ -238,7 +238,8 @@ const AdminOrderDetail = () => {
                 ) || 0,
               shippingFee: order?.shipping_fee || 50000, // Lấy phí vận chuyển từ order
               installationFee: order?.order_details?.installation_fee || 0, // Lấy phí lắp đặt
-              totalAmount: order?.total_amount || 0 // Tổng thanh toán
+              totalAmount: order?.total_amount || 0, // Tổng thanh toán
+              couponValue: order?.order_details?.total || 0
             }
           ]}
           columns={[
@@ -250,12 +251,18 @@ const AdminOrderDetail = () => {
             },
             {
               title: 'Phí vận chuyển',
-              dataIndex: 'shippingFee',
-              key: 'shippingFee',
+              dataIndex: 'couponValue',
+              key: 'couponValue',
               render: (value) => `${value.toLocaleString()} VNĐ`
             },
             {
               title: 'Phí lắp đặt',
+              dataIndex: 'installationFee',
+              key: 'installationFee',
+              render: (value) => `${value.toLocaleString()} VNĐ`
+            },
+            {
+              title: 'Giảm Giá',
               dataIndex: 'installationFee',
               key: 'installationFee',
               render: (value) => `${value.toLocaleString()} VNĐ`
@@ -269,6 +276,24 @@ const AdminOrderDetail = () => {
           ]}
           pagination={false}
         />
+      </div>
+      <div className='border-t mt-4 pt-4'>
+        <div className='flex flex-col mt-4 font-bold text-base'>
+          {/* Tiêu đề "Thông tin thanh toán" */}
+          <div className='text-xl font-semibold mb-4'>Thông tin thanh toán</div>
+
+          {/* Hiển thị thông tin phương thức thanh toán */}
+          <div className='flex space-x-3 mb-2'>
+            <span>Phương thức thanh toán:</span>
+            <span>{order?.payment_method[0]?.orderInfo}</span>
+          </div>
+
+          {/* Hiển thị trạng thái thanh toán, kiểm tra để hiển thị "Chưa thanh toán" hoặc "Đã thanh toán" */}
+          <div className='flex space-x-3'>
+            <span>Trạng thái thanh toán:</span>
+            <span>{order?.payment_status === 'Unpaid' ? 'Chưa thanh toán' : 'Đã thanh toán'}</span>
+          </div>
+        </div>
       </div>
     </div>
   )

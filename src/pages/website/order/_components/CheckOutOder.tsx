@@ -207,14 +207,39 @@ const CheckOutOrder = () => {
             <Table columns={columns} dataSource={data} pagination={false} className='my-4' />
             <div className='border-t mt-4 pt-4'>
               <div className='flex flex-col mt-4 font-bold text-lg'>
+                {/* Hiển thị chi phí sản phẩm */}
                 <div className='flex justify-between'>
-                  <span>Chi phí Vận chuyển</span>
-                  <span>{(orderData.order_details.shipping_fee).toLocaleString() || 0}₫</span>
+                  <span>Chi Phí Sản Phẩm</span>
+                  <span>
+                    {orderData.order_details.products
+                      .reduce((total: any, product: { total_money: any }) => total + product.total_money, 0)
+                      .toLocaleString()}
+                    ₫
+                  </span>
                 </div>
+                {/* Hiển thị chi phí vận chuyển */}
                 <div className='flex justify-between'>
-                  <span>Chi phí lắp đặt tại nhà</span>
-                  <span>{orderData.order_details.installation_fee.toLocaleString() || 0}₫</span>
+                  <span>Chi Phí Vận chuyển</span>
+                  <span>{(50000).toLocaleString()}₫</span>
                 </div>
+
+                {/* Hiển thị chi phí lắp đặt nếu có */}
+                {orderData.order_details.installation_fee > 0 && (
+                  <div className='flex justify-between'>
+                    <span>Chi Phí lắp đặt tại nhà</span>
+                    <span>{orderData.order_details.installation_fee.toLocaleString()}₫</span>
+                  </div>
+                )}
+
+                {/* Hiển thị mã giảm giá nếu có */}
+                {orderData.order_details.total > 0 && (
+                  <div className='flex justify-between'>
+                    <span>Mã Giảm Giá: {orderData.order_details.coupon}</span>
+                    <span className='text-red-600'>- {orderData.order_details.total.toLocaleString()}₫</span>
+                  </div>
+                )}
+
+                {/* Hiển thị tổng cộng đơn hàng */}
                 <div className='flex justify-between'>
                   <span>Tổng cộng đơn hàng</span>
                   <span>{orderData.total_amount.toLocaleString()}₫</span>

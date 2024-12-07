@@ -25,8 +25,6 @@ interface Color {
 }
 
 const ProductList = ({ products = [] }: ProductListProps) => {
-  console.log(products)
-
   // Sử dụng Zustand store thay vì useState
   const {
     quantity,

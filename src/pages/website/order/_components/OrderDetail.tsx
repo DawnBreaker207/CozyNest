@@ -179,18 +179,50 @@ const OrderDetail = () => {
       </Card>
 
       <Card className='mb-6'>
-        <p>
-          <strong>Phí vận chuyển: 50,000 VNĐ</strong>
-        </p>
-        <p>
-          <strong>Phí lắp đặt : {order.order_details.installation_fee.toLocaleString() || 0} VNĐ</strong>
-        </p>
-        <p>
-          <strong>Tổng tiền: {order.total_amount.toLocaleString() || 0} VNĐ</strong>
-        </p>
-        <p>
-          <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
-        </p>
+        <div className='border-t mt-4 pt-4'>
+          <div className='flex flex-col mt-4 font-bold text-base'>
+            {/* Hiển thị chi phí sản phẩm */}
+            <div className='flex justify-between'>
+              <span>Chi Phí Sản Phẩm</span>
+              <span>
+                {order.order_details.products
+                  .reduce((total: any, product: { total_money: any }) => total + product.total_money, 0)
+                  .toLocaleString()}
+                ₫
+              </span>
+            </div>
+            {/* Hiển thị chi phí vận chuyển */}
+            <div className='flex justify-between'>
+              <span>Chi Phí Vận chuyển</span>
+              <span>{(50000).toLocaleString()}₫</span>
+            </div>
+
+            {/* Hiển thị chi phí lắp đặt nếu có */}
+            {order.order_details.installation_fee > 0 && (
+              <div className='flex justify-between'>
+                <span>Chi Phí lắp đặt tại nhà</span>
+                <span>{order.order_details.installation_fee.toLocaleString()}₫</span>
+              </div>
+            )}
+
+            {/* Hiển thị mã giảm giá nếu có */}
+            {order.order_details.total > 0 && (
+              <div className='flex justify-between'>
+                <span>Mã Giảm Giá: {order.order_details.coupon}</span>
+                <span className='text-red-600'>- {order.order_details.total.toLocaleString()}₫</span>
+              </div>
+            )}
+
+            {/* Hiển thị tổng cộng đơn hàng */}
+            <div className='flex justify-between'>
+              <span>Tổng cộng đơn hàng</span>
+              <span>{order.total_amount.toLocaleString()}₫</span>
+            </div>
+          </div>
+          <p>
+            <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
+          </p>
+        </div>
       </Card>
 
       <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>
