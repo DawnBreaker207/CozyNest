@@ -38,7 +38,7 @@ export const addCategory = async (category: Partial<ICategory>) => {
 // Xóa một danh mục
 export const removeCategory = async (category: Partial<ICategory>): Promise<void> => {
   try {
-    await instance.delete(`/categories/${category._id}`)
+    await instance.patch(`/categories/${category._id}`)
     return
   } catch (error) {
     console.log(error)

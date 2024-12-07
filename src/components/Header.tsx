@@ -19,6 +19,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
 import { ICategory } from '@/types/category'
+import { useCookie } from '@/hooks/useStorage'
 
 const { useToken } = theme
 
@@ -167,47 +168,60 @@ const Header = () => {
   //   Logout()
   //   return window.location.reload()
   // }
+
+  const userJson = useCookie('user', {})
+  const role = userJson ? userJson?.[0].role : null
+
   const users: MenuProps['items'] = user
-    ? [
-        {
-          label: <a href='/profile'>Thông tin tài khoản</a>,
-          key: '0'
-        },
-        {
-          label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={Logout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
-    : window.innerWidth < 800
-      ? [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
-      : [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
-          },
-          {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
+  ? [
+      {
+        label: <a href='/profile'>Thông tin tài khoản</a>,
+        key: '0'
+      },
+      {
+        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+        key: '1'
+      },
+      ...(role === 'admin'
+        ? [
+            {
+              label: <a href='/admin'>Quản lý</a>, // Liên kết đến trang quản lý
+              key: '2'
+            }
+          ]
+        : []), // Nếu không phải admin, không thêm menu này
+      { type: 'divider' }, // Đường kẻ phân cách
+      {
+        label: (
+          <a href='/' onClick={Logout}>
+            Đăng xuất
+          </a>
+        ),
+        key: '3'
+      }
+    ]
+  : window.innerWidth < 800
+  ? [
+      {
+        label: <NavLink to='/register'>Đăng ký</NavLink>,
+        key: '1'
+      },
+      {
+        label: <NavLink to='/login'>Đăng nhập</NavLink>,
+        key: '2'
+      }
+    ]
+  : [
+      {
+        label: <NavLink to='/register'>Đăng ký</NavLink>,
+        key: '1'
+      },
+      {
+        label: <NavLink to='/login'>Đăng nhập</NavLink>,
+        key: '2'
+      }
+    ];
+
 
   const handleDelete = () => {
     // Thực hiện hành động mutate

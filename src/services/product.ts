@@ -39,7 +39,7 @@ export const addProduct = async (product: Partial<IProduct>) => {
 // Xóa sản phẩm
 export const removeProduct = async (product: Partial<IProduct>): Promise<void> => {
   try {
-    await instance.delete(`/products/${product._id}`)
+    await instance.patch(`/products/${product._id}`)
     return
   } catch (error) {
     console.error('Lỗi khi xóa sản phẩm:', error)

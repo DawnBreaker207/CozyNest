@@ -131,13 +131,10 @@ const LayoutAdmin: React.FC = () => {
           renderItem={(item: any) => (
             <List.Item>
               <div className='flex items-center justify-between p-2 w-full'>
-                <img src={item.thumbnail} alt='' className='w-[70px] h-[70px] object-cover' />
+                {/* <img src={item.image} alt='' className='w-[70px] h-[70px] object-cover' /> */}
                 <span className='ml-2 text-base'>{item.name}</span>
                 <span className='ml-2 text-base'>{item.brand}</span>
-                <p className='text-base'>Gia: {item.price}</p>
-                <Link to={`/detail/${item.id}`} className='text-base'>
-                  xem nhanh
-                </Link>
+                {/* <p className='text-base'>Gia: {item.price}</p> */}
               </div>
             </List.Item>
           )}
@@ -326,7 +323,7 @@ const LayoutAdmin: React.FC = () => {
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
                 {/* Input và nút tìm kiếm */}
-                <Dropdown
+                {/* <Dropdown
                   overlay={searchMenuArticle}
                   trigger={['click']}
                   visible={searchValue.length > 0 && !loading && results.length > 0}
@@ -348,7 +345,7 @@ const LayoutAdmin: React.FC = () => {
                   onClick={() => handleSearchArticle(searchValue)}
                 >
                   Search
-                </Button>
+                </Button> */}
                 <div className='flex items-center space-x-2'>
                   {/* <Button
                     icon={<DownloadOutlined />}
@@ -460,7 +457,7 @@ const LayoutAdmin: React.FC = () => {
                 </div>
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
-                <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' />
+                {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
                 <div className='flex items-center space-x-2'>
                   <Button
                     icon={<DownloadOutlined />}
