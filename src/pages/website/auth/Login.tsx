@@ -17,9 +17,9 @@ const Login = () => {
       return await login(formData)
     },
     onSuccess: (data) => {
-      console.log(data)
+      // console.log(data)
 
-      openNotify('Success', 'Đăng nhập thành công')
+      openNotify('Thành công', 'Đăng nhập thành công')
 
       // Lưu thông tin vào cookie
       // Cookies.set('accessToken', accessToken, { expires: 1 });

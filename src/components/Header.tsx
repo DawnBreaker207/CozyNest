@@ -4,6 +4,7 @@ import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
 import { useUser } from '@/hooks/useUser'
 import {
+  DeleteOutlined,
   DownOutlined,
   MailOutlined,
   MehOutlined,
@@ -13,7 +14,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Space, theme } from 'antd'
+import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Modal, Space, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
@@ -22,6 +23,8 @@ import { ICategory } from '@/types/category'
 const { useToken } = theme
 
 const Header = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
   const [searchValue, setSearchValue] = useState('')
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
@@ -206,6 +209,11 @@ const Header = () => {
           }
         ]
 
+  const handleDelete = () => {
+    // Thực hiện hành động mutate
+    mutate({ action: 'REMOVE', sku_id: products[0].sku_id._id })
+    setIsModalVisible(false) // Ẩn modal sau khi xóa
+  }
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -461,9 +469,20 @@ const Header = () => {
                       </div>
                       {/* Giá sản phẩm */}
                       <div className='flex flex-col items-end'>
-                        <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.sku_id._id })}>
-                          <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                        <button title='Xóa' onClick={() => setIsModalVisible(true)}>
+                          <DeleteOutlined />
                         </button>
+
+                        <Modal
+                          title='Xác nhận xóa'
+                          open={isModalVisible}
+                          onOk={handleDelete}
+                          onCancel={() => setIsModalVisible(false)}
+                          okText='Xóa'
+                          cancelText='Hủy'
+                        >
+                          <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+                        </Modal>
                         <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
                       </div>
                     </div>
