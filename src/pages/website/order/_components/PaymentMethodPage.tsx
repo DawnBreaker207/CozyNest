@@ -36,12 +36,19 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   const handleShippingChange = (e: any) => {
     const shippingMethod = e.target.value
     if (shippingMethod === 'home_install') {
-      setInstallationFee(100000) // Phí lắp đặt
-    } else {
-      setInstallationFee(0)
+      setInstallationFee(100000) // Phí lắp đặt tại nhà
+    } else if (shippingMethod === 'self_install') {
+      setInstallationFee(0) // Phí lắp đặt là 0 khi tự lắp đặt
     }
     onInstallationCostChange(installationFee)
+
+    if (shippingMethod === 'standard') {
+      onInstallationCostChange(50000); // Giao hàng tiêu chuẩn
+    } else if (shippingMethod === 'express') {
+      onInstallationCostChange(80000); // Giao hàng nhanh
+    }
   }
+  
 
   useEffect(() => {
     onInstallationCostChange(installationFee)
@@ -56,7 +63,6 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       total_amount: totalAfterDiscount,
       payment_method: selectedPaymentMethod,
       receivedDate: null,
-      transportation_fee: 50000,
       installation_fee: installationFee,
       paid: false,
       status: 'Processing',
@@ -168,10 +174,10 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
               </Radio>
             </Radio.Group>
           </Form.Item>
-          <h2 className='text-lg font-semibold mb-4 mt-7'>Phương thức vận chuyển</h2>
+          {/* <h2 className='text-lg font-semibold mb-4 mt-7'>Phương thức vận chuyển</h2>
           <div className='p-6 bg-white rounded-lg shadow-md'>
-            <Form.Item name='shipping' rules={[{ required: true, message: 'Vui lòng chọn phương thức vận chuyển!' }]}>
-              <Radio.Group className='flex flex-col space-y-4'>
+            <Form.Item name='shipping' rules={[{ required: true, message: 'Vui lòng chọn phương thức vận chuyển!' }]} >
+              <Radio.Group className='flex flex-col space-y-4' onChange={handleShippingChange}>
                 <Radio className='flex items-center border border-2px p-4' value='standard'>
                   Giao hàng tiêu chuẩn
                 </Radio>
@@ -180,14 +186,16 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
                 </Radio>
               </Radio.Group>
             </Form.Item>
-          </div>
+          </div> */}
           <h2 className='text-lg font-semibold mb-4 mt-7'>Dịch vụ lắp đặt</h2>
-
           <div className='p-6 bg-white rounded-lg shadow-md'>
             <Form.Item name='service'>
               <Radio.Group onChange={handleShippingChange} className='flex flex-col space-y-4'>
                 <Radio className='flex items-center border border-2px p-4' value='home_install'>
                   Lắp đặt tại nhà
+                </Radio>
+                <Radio className='flex items-center border border-2px p-4' value='self_install'>
+                  Tự lắp đặt
                 </Radio>
               </Radio.Group>
             </Form.Item>

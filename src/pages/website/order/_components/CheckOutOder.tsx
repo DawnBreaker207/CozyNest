@@ -209,7 +209,7 @@ const CheckOutOrder = () => {
               <div className='flex flex-col mt-4 font-bold text-lg'>
                 <div className='flex justify-between'>
                   <span>Chi phí Vận chuyển</span>
-                  <span>{(50000).toLocaleString()}₫</span>
+                  <span>{(orderData.order_details.shipping_fee).toLocaleString() || 0}₫</span>
                 </div>
                 <div className='flex justify-between'>
                   <span>Chi phí lắp đặt tại nhà</span>

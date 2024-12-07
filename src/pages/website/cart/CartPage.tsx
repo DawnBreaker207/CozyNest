@@ -73,7 +73,7 @@ const CartPage = () => {
   const couponCode3 = 'EORI9894'
 
   return (
-    <div className='mb-14 mt-5'>
+    <div className='mb-32 mt-5 '>
       <div className='container'>
         <span className='text-sm font-light text-[#252A2B]'>
           Trang chủ / Giỏ hàng <span className=''>({products.length})</span>
@@ -245,7 +245,7 @@ const CartPage = () => {
                 </li>
                 <li className='text-sm flex items-center'>
                   <div className='w-[6px] h-[6px] bg-[#252A2B] rounded-full mr-2'></div>
-                  Quý khách vui lòng chuyển khoản trước vào tài khoản <br /> ngân hàng  của công ty và cung cấp thông tin giao dịch để xác nhận.
+                  Quý khách vui lòng chuyển khoản trước vào tài <br /> khoản  ngân hàng  của công ty và cung cấp thông tin <br /> giao dịch để xác nhận.
                 </li>
               </ul>
 
