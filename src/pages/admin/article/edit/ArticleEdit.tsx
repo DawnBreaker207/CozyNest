@@ -117,9 +117,9 @@ const ArticleEditPage = () => {
               </Upload>
               <div className='mt-2'>
                 {thumbnail ? (
-                  <img src={thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
+                  <img src={data?.thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
-                  <span>No thumbnail uploaded</span>
+                  <img src={data?.thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 )}
               </div>
             </Form.Item>
