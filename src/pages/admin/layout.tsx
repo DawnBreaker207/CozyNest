@@ -1,4 +1,3 @@
-import { search } from '@/components/icons'
 import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
@@ -7,11 +6,9 @@ import {
   AppstoreOutlined,
   BellOutlined,
   CalendarOutlined,
-  DeleteOutlined,
+  CommentOutlined,
   DownloadOutlined,
   DownOutlined,
-  EditOutlined,
-  EyeOutlined,
   FilterOutlined,
   LogoutOutlined,
   OrderedListOutlined,
@@ -20,22 +17,7 @@ import {
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import {
-  Avatar,
-  Badge,
-  Button,
-  Dropdown,
-  Input,
-  Layout,
-  List,
-  Menu,
-  message,
-  Modal,
-  Popconfirm,
-  Space,
-  Spin,
-  theme
-} from 'antd'
+import { Badge, Button, Dropdown, Input, Layout, List, Menu, message, Modal, Spin, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MdOutlineColorLens } from 'react-icons/md'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -229,8 +211,8 @@ const LayoutAdmin: React.FC = () => {
   const isCouponEdit = location.pathname === `/admin/coupons/${id}/edit`
   const isArticles = location.pathname === `/admin/articles`
   const isVariantPage = location.pathname === `/admin/products/${id}/variants`
-
-  console.log('🚀 ~ isVariantPage:', isVariantPage)
+  const isOptionPage = location.pathname === `/admin/products/${id}/options`
+  const isReviewPage = location.pathname === `/admin/reviews`
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -248,39 +230,44 @@ const LayoutAdmin: React.FC = () => {
             {
               key: '2',
               icon: <ApartmentOutlined />,
-              label: <NavLink to={`/admin/products`}>Product Manager</NavLink>
+              label: <NavLink to={`/admin/products`}>Quản lý sản phẩm </NavLink>
             },
             {
               key: '3',
               icon: <OrderedListOutlined />,
-              label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
-            },
-            {
-              key: '9',
-              icon: <OrderedListOutlined />,
-              label: <NavLink to={`/admin/coupons`}>Coupon Manager</NavLink>
+              label: <NavLink to={`/admin/categories`}>Quản lý danh mục</NavLink>
             },
             {
               key: '4',
               icon: <UploadOutlined />,
-              label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
+              label: <NavLink to={`/admin/order`}>Quản lý đơn hàng </NavLink>
             },
             {
               key: '5',
               icon: <CalendarOutlined />,
-              label: <NavLink to={`/admin/articles`}>Articles</NavLink>
+              label: <NavLink to={`/admin/articles`}>Bài viết</NavLink>
             },
             {
               key: '6',
-              icon: <UserOutlined />,
-              label: <NavLink to={`/admin/customer`}>Customer Manager</NavLink>
+              icon: <CommentOutlined />,
+              label: <NavLink to={`/admin/reviews`}>Bình luận</NavLink>
             },
             {
               key: '7',
+              icon: <UserOutlined />,
+              label: <NavLink to={`/admin/customer`}>Quản lý khách hàng</NavLink>
+            },
+            {
+              key: '8',
+              icon: <OrderedListOutlined />,
+              label: <NavLink to={`/admin/coupons`}>Mã giảm giá</NavLink>
+            },
+            {
+              key: '9',
               icon: <LogoutOutlined />,
               label: (
                 <NavLink to='#' onClick={handleLogout}>
-                  Logout
+                  Đăng xuất
                 </NavLink>
               )
             }
@@ -300,14 +287,15 @@ const LayoutAdmin: React.FC = () => {
         {isAddColorPage && renderHeader('Add Color')}
         {isEditColorPage && renderHeader('Edit Color')}
         {isDetailColorPage && renderHeader('Detail Color')}
-        {isVariantPage && renderHeader('Variant')}
+        {isVariantPage && renderHeader('Variants')}
+        {isOptionPage && renderHeader('Options')}
         <Content>
           {isCategoryPage && (
             <>
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Category</span>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Loại</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
                     {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
@@ -317,9 +305,8 @@ const LayoutAdmin: React.FC = () => {
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
                 {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
                 <div className='flex items-center space-x-2'>
-                  
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
-                    <Link to={`categories/add`}>Add Category</Link>
+                    <Link to={`categories/add`}>Thêm sản phẩm</Link>
                   </Button>
                 </div>
               </div>
@@ -330,7 +317,7 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Articles</span>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Bài viết</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
                     {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
@@ -371,7 +358,7 @@ const LayoutAdmin: React.FC = () => {
                     Export
                   </Button> */}
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
-                    <Link to={`articles/add`}>Add Articles</Link>
+                    <Link to={`articles/add`}>Thêm bài viết</Link>
                   </Button>
                 </div>
               </div>
@@ -382,7 +369,7 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Product</span>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Sản phẩm</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
                     {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
@@ -412,7 +399,7 @@ const LayoutAdmin: React.FC = () => {
                   icon={<SearchOutlined />}
                   onClick={() => handleSearch(searchValue)}
                 >
-                  Search
+                  Tìm kiếm
                 </Button>
                 <div className='flex items-center space-x-2'>
                   {/* <Button
@@ -431,7 +418,7 @@ const LayoutAdmin: React.FC = () => {
                 <div className='flex items-center space-x-4 border border-black-100 rounded-lg'>
                   <div className='flex space-x-4'>
                     <Button type='link' className='text-blue-500'>
-                      All Product
+                      Tất cả sản phẩm
                     </Button>
                     {/* <Button type='link'>Published</Button>
                     <Button type='link'>Low Stock</Button>
@@ -459,7 +446,7 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Color</span>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Màu</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
                     <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
@@ -480,10 +467,10 @@ const LayoutAdmin: React.FC = () => {
                     size='large'
                     className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
                   >
-                    Export
+                    Xuất
                   </Button>
                   <Button type='primary' icon={<MdOutlineColorLens className='text-xl' />} size='large'>
-                    Color
+                    Màu
                   </Button>
                 </div>
               </div>
@@ -491,23 +478,23 @@ const LayoutAdmin: React.FC = () => {
                 <div className='flex items-center space-x-4 border border-black-100 rounded-lg'>
                   <div className='flex space-x-4'>
                     <Button type='link' className='text-blue-500'>
-                      All Color
+                      Tất cả màu
                     </Button>
-                    <Button type='link'>Published</Button>
-                    <Button type='link'>Low Stock</Button>
-                    <Button type='link'>Draft</Button>
+                    <Button type='link'>Đã bán</Button>
+                    <Button type='link'>Còn ít hàng</Button>
+                    <Button type='link'>Tồn kho </Button>
                   </div>
                 </div>
                 <div className='flex items-center space-x-4 '>
                   <Input className='w-64' placeholder='Search product...' prefix={<SearchOutlined />} />
                   <div className='border border-black-100'>
                     <Button icon={<CalendarOutlined />} className='border-none shadow-none '>
-                      Select Date
+                      Chọn ngày
                     </Button>
                   </div>
                   <div className='border border-black-100'>
                     <Button icon={<FilterOutlined />} className='border-none shadow-none'>
-                      Filters
+                      Bộ lọc
                     </Button>
                   </div>
                 </div>

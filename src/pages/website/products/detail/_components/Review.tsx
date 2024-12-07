@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
-const ReviewComponent = () => {
+const ReviewComponent = ({ product }: any) => {
   const [image, setImage] = useState<{ file: File; name: string } | null>(null)
   const navigate = useNavigate()
   const [showAll, setShowAll] = useState(false)
@@ -27,19 +27,18 @@ const ReviewComponent = () => {
     queryKey: ['reviews'],
     queryFn: async () => {
       try {
-        return await instance.get(`/review/${id}`)
+        return await instance.get(`/reviews/${id}`)
       } catch (error) {
         throw new Error((error as any).message)
       }
     }
   })
   const dataReview = data?.data?.data
-  console.log('🚀 ~ ReviewComponent ~ data:', dataReview)
 
   const { mutate } = useMutation({
     mutationFn: async (formData: IReview) => {
       try {
-        return instance.post(`/review`, formData)
+        return instance.post(`/reviews`, formData)
       } catch (error) {
         throw new Error('Thêm đánh giá thất bại')
       }
@@ -204,17 +203,10 @@ const ReviewComponent = () => {
                   </div>
                   <p className='text-sm text-gray-600 mt-2'>{review.comment}</p>
                   {/* Hiển thị nhiều hình ảnh sản phẩm */}
-                
-                    <div className='mt-4 grid grid-cols-3 gap-2'>
-                   
-                        <img
-                         title='ảnh sản phẩm'
-                          src={review.image}
-                          className='w-32 h-32 object-cover rounded-md'
-                        />
-                   
-                    </div>
-                
+
+                  <div className='mt-4 grid grid-cols-3 gap-2'>
+                    <img title='ảnh sản phẩm' src={review.image} className='w-32 h-32 object-cover rounded-md' />
+                  </div>
                 </div>
               </div>
             ))}
@@ -272,7 +264,7 @@ const ReviewComponent = () => {
       >
         <div>
           <h2 className='text-xl font-bold'>Đánh giá & nhận xét</h2>
-          <h3 className='text-lg font-bold mt-4'>Sofa 1 chỗ Orientale da beige R5</h3>
+          <h3 className='text-lg font-bold mt-4'>{product.name}</h3>
           <Form form={form} onFinish={onFinish}>
             <Form.Item name='rating' rules={[{ required: true, message: 'Vui lòng chọn đánh giá!' }]}>
               <Rate tooltips={desc} />

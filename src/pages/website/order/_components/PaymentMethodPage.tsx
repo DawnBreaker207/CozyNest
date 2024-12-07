@@ -14,12 +14,16 @@ interface PaymentMethodPageProps {
   onSubmit: (paymentMethod: string) => Promise<void>
   totalAfterDiscount: number
   onInstallationCostChange: (cost: number) => void
+  couponName: string
+  couponValue: number
 }
 
 const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   orderData,
   totalAfterDiscount,
-  onInstallationCostChange
+  onInstallationCostChange,
+  couponName,
+  couponValue
 }) => {
   const [user] = useCookie('user', {})
   // const token = user?.data?.accessToken
@@ -36,11 +40,17 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   const handleShippingChange = (e: any) => {
     const shippingMethod = e.target.value
     if (shippingMethod === 'home_install') {
-      setInstallationFee(100000) // Phí lắp đặt
-    } else {
-      setInstallationFee(0)
+      setInstallationFee(100000) // Phí lắp đặt tại nhà
+    } else if (shippingMethod === 'self_install') {
+      setInstallationFee(0) // Phí lắp đặt là 0 khi tự lắp đặt
     }
     onInstallationCostChange(installationFee)
+
+    if (shippingMethod === 'standard') {
+      onInstallationCostChange(50000) // Giao hàng tiêu chuẩn
+    } else if (shippingMethod === 'express') {
+      onInstallationCostChange(80000) // Giao hàng nhanh
+    }
   }
 
   useEffect(() => {
@@ -56,8 +66,9 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       total_amount: totalAfterDiscount,
       payment_method: selectedPaymentMethod,
       receivedDate: null,
-      transportation_fee: 50000,
-      paid: false,
+      total: couponValue,
+      coupon: couponName,
+      installation_fee: installationFee,
       status: 'Processing',
       payment_status: 'Unpaid',
       products:
@@ -74,8 +85,8 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
             thumbnail: product.sku_id.product_id.thumbnail,
             price: product.price * product.quantity,
             quantity: product.quantity,
-            variant_id: product.sku_id._id, // Variant ID
-            variant_name: product.sku_id.name, // Variant Name
+            sku_id: product.sku_id._id, // Variant ID
+            name: product.sku_id.name, // Variant Name
             variant_label: currentVariant ? currentVariant.option_value_id.label : 'Không xác định' // Thêm thông tin biến thể
           }
         }) || []
@@ -83,8 +94,11 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
 
     try {
       // Tạo đơn hàng trước
-      console.log(`Orders: ${finalOrderData}`)
+      console.log(`Orders: ${finalOrderData.total_amount}`)
       console.log('Products:', finalOrderData.products)
+      console.log('total:', finalOrderData.total)
+      console.log('coupon:', finalOrderData.coupon)
+
       const orderResponse = await instance.post('/orders', finalOrderData)
       const orderId = orderResponse.data?.res?._id
       // console.log(orderId)
@@ -167,10 +181,10 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
               </Radio>
             </Radio.Group>
           </Form.Item>
-          <h2 className='text-lg font-semibold mb-4 mt-7'>Phương thức vận chuyển</h2>
+          {/* <h2 className='text-lg font-semibold mb-4 mt-7'>Phương thức vận chuyển</h2>
           <div className='p-6 bg-white rounded-lg shadow-md'>
-            <Form.Item name='shipping' rules={[{ required: true, message: 'Vui lòng chọn phương thức vận chuyển!' }]}>
-              <Radio.Group className='flex flex-col space-y-4'>
+            <Form.Item name='shipping' rules={[{ required: true, message: 'Vui lòng chọn phương thức vận chuyển!' }]} >
+              <Radio.Group className='flex flex-col space-y-4' onChange={handleShippingChange}>
                 <Radio className='flex items-center border border-2px p-4' value='standard'>
                   Giao hàng tiêu chuẩn
                 </Radio>
@@ -179,14 +193,16 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
                 </Radio>
               </Radio.Group>
             </Form.Item>
-          </div>
+          </div> */}
           <h2 className='text-lg font-semibold mb-4 mt-7'>Dịch vụ lắp đặt</h2>
-
           <div className='p-6 bg-white rounded-lg shadow-md'>
             <Form.Item name='service'>
               <Radio.Group onChange={handleShippingChange} className='flex flex-col space-y-4'>
                 <Radio className='flex items-center border border-2px p-4' value='home_install'>
                   Lắp đặt tại nhà
+                </Radio>
+                <Radio className='flex items-center border border-2px p-4' value='self_install'>
+                  Tự lắp đặt
                 </Radio>
               </Radio.Group>
             </Form.Item>

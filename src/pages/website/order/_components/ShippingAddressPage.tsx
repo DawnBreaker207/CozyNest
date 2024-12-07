@@ -63,7 +63,7 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
   }
 
   const onFinish = (values: any) => {
-    console.log(values);
+    console.log(values)
 
     const address = `${values.address}, ${getWardName(values.village)}, ${getDistrictName(values.district)}, ${getProvinceName(values.city)}`
     onNext({
@@ -87,17 +87,17 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
       </span>
       <h2 className='text-lg font-semibold mb-4'>Địa chỉ giao hàng</h2>
       <Form className='' layout='vertical' onFinish={onFinish}>
-        <Form.Item label='Họ và tên' name='customer_name' rules={[{ required: true }]}>
+        <Form.Item label='Họ và tên' name='customer_name' rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}>
           <Input className='h-10' placeholder='Nhập họ và tên' />
         </Form.Item>
-        <Form.Item label='Số điện thoại' name='phone_number' rules={[{ required: true }]}>
+        <Form.Item label='Số điện thoại' name='phone_number' rules={[{ required: true, pattern: /^[0-9]{10}$/, message: 'Số điện thoại không hợp lệ' }]}>
           <Input className='h-10' placeholder='Nhập số điện thoại của bạn' />
         </Form.Item>
-        <Form.Item label='Địa chỉ email' name='email' rules={[{ required: true }]}>
+        <Form.Item label='Địa chỉ email' name='email' rules={[{ required: true ,message: 'Vui lòng nhập email'}]}>
           <Input className='h-10' type='email' placeholder='Nhập email' />
         </Form.Item>
         <div className='flex flex-col lg:space-x-10 md:flex-row '>
-          <Form.Item label='Tỉnh/Thành phố' name='city' className='lg:w-60'>
+          <Form.Item label='Tỉnh/Thành phố' name='city' className='lg:w-60' rules={[{ required: true, message: 'Vui lòng chọn tỉnh thành phố' }]}>
             <Select className='h-10' placeholder='Chọn tỉnh/thành phố' onChange={handleProvinceChange} allowClear>
               {provinces.map((province) => (
                 <Select.Option key={province.ProvinceID} value={province.ProvinceID}>
@@ -131,7 +131,7 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
             </Select>
           </Form.Item>
         </div>
-        <Form.Item label='Địa chỉ' name='address' rules={[{ required: true }]}>
+        <Form.Item label='Địa chỉ' name='address' rules={[{ required: true ,message: 'Vui lòng nhập điểm giao hàng'}]}>
           <Input className='h-10' placeholder='Nhập địa chỉ cụ thể (Số nhà, Tòa nhà ...)' />
         </Form.Item>
         <Form.Item label='Thông tin thêm' name='note'>

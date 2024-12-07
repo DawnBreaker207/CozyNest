@@ -8,8 +8,7 @@ export const register = async (input: Partial<IUsers>) => {
     const { data } = await instance.post<ResAPI<IUsers>>(`/auth/register`, input)
     return data
   } catch (error) {
-    console.log(error)
-    throw new Error('Dang ky that bai')
+    throw new Error('Đăng ký thất bại')
   }
 }
 export const login = async (input: Partial<IUsers>): Promise<AxiosResponse> => {
@@ -17,9 +16,7 @@ export const login = async (input: Partial<IUsers>): Promise<AxiosResponse> => {
     const { data } = await instance.post(`/auth/login`, input)
     return data.res // Trả về dữ liệu từ phản hồi
   } catch (error) {
-    console.log(error)
-
-    throw error
+    throw new Error('Đăng nhập thất bại')
   }
 }
 
@@ -28,7 +25,6 @@ export const forgotPassword = async (input: Partial<IUsers>) => {
     const { data } = await instance.post<ResAPI<IUsers>>(`/users/forgotPassword`, input)
     return data
   } catch (error) {
-    console.log(error)
-    throw error
+    throw new Error('Đăng ký thất bại')
   }
 }

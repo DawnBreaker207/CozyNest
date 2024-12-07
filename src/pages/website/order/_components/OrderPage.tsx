@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
-import { useLocalStorage } from '@/hooks/useStorage'
+import { useCookie, useLocalStorage } from '@/hooks/useStorage'
 import { useQuery } from '@tanstack/react-query'
 import { Card, Typography, Row, Col, Spin, Button, Pagination } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -29,8 +29,8 @@ const OrderPage = () => {
   const { Title, Text } = Typography
   const navigate = useNavigate()
 
-  const [user] = useLocalStorage('user', {})
-  const userId = user?.data?.res?._id
+  const [user] = useCookie('user', {})
+  const userId = user?._id
 
   const [currentPage, setCurrentPage] = useState(1)
   const pageSize = 5 // Số đơn hàng mỗi trang

@@ -449,7 +449,7 @@ const ProductsPageDetail = () => {
           Trang {currentPage} / {totalPages}
         </span>
         <button
-        title='Next'
+          title='Next'
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           className='border-solid border-2 text-white px-3 py-2 rounded'

@@ -4,6 +4,7 @@ import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
 import { useUser } from '@/hooks/useUser'
 import {
+  DeleteOutlined,
   DownOutlined,
   MailOutlined,
   MehOutlined,
@@ -13,7 +14,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Space, theme } from 'antd'
+import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Modal, Space, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
@@ -22,6 +23,8 @@ import { ICategory } from '@/types/category'
 const { useToken } = theme
 
 const Header = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
   const [searchValue, setSearchValue] = useState('')
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
@@ -48,7 +51,18 @@ const Header = () => {
       setIsOpen(false)
     }
   }
-
+  const [categories, setCategories] = useState<ICategory[]>([])
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await instance.get('/categories')
+        setCategories(data.res) // Giả sử `data` là mảng danh mục
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+    fetchCategories()
+  }, [])
   // Thêm sự kiện lắng nghe nhấp ra ngoài
   useEffect(() => {
     document.addEventListener('click', handleClickOutside)
@@ -149,10 +163,10 @@ const Header = () => {
   const { Search } = Input
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
-  if (error) {
-    Logout()
-    return window.location.reload()
-  }
+  // if (error) {
+  //   Logout()
+  //   return window.location.reload()
+  // }
   const users: MenuProps['items'] = user
     ? [
         {
@@ -194,18 +208,12 @@ const Header = () => {
             key: '2'
           }
         ]
-  const [categories, setCategories] = useState<ICategory[]>([])
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { data } = await instance.get('/categories')
-        setCategories(data.res) // Giả sử `data` là mảng danh mục
-      } catch (err) {
-        console.error('Error fetching categories:', err)
-      }
-    }
-    fetchCategories()
-  }, [])
+
+  const handleDelete = () => {
+    // Thực hiện hành động mutate
+    mutate({ action: 'REMOVE', sku_id: products[0].sku_id._id })
+    setIsModalVisible(false) // Ẩn modal sau khi xóa
+  }
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -249,10 +257,7 @@ const Header = () => {
                     {categories.map((category) => (
                       <>
                         <li key={category._id} className='hover:bg-gray-100'>
-                          <Link
-                            to={`/category/${category._id}`}
-                            className='block px-4 py-2 text-gray-700'
-                          >
+                          <Link to={`/category/${category._id}`} className='block px-4 py-2 text-gray-700'>
                             {category.name}
                           </Link>
                         </li>
@@ -464,9 +469,20 @@ const Header = () => {
                       </div>
                       {/* Giá sản phẩm */}
                       <div className='flex flex-col items-end'>
-                        <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.sku_id._id })}>
-                          <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                        <button title='Xóa' onClick={() => setIsModalVisible(true)}>
+                          <DeleteOutlined />
                         </button>
+
+                        <Modal
+                          title='Xác nhận xóa'
+                          open={isModalVisible}
+                          onOk={handleDelete}
+                          onCancel={() => setIsModalVisible(false)}
+                          okText='Xóa'
+                          cancelText='Hủy'
+                        >
+                          <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+                        </Modal>
                         <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
                       </div>
                     </div>

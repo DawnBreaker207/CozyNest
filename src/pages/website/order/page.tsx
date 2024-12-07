@@ -45,7 +45,7 @@ const CheckoutPage = () => {
     const finalOrderData = {
       ...orderData,
       paymentMethod,
-      couponCode,
+      couponName,
       discount: couponValue
     }
 
@@ -94,6 +94,8 @@ const CheckoutPage = () => {
             onSubmit={handleSubmitOrder}
             totalAfterDiscount={totalAfterDiscount}
             onInstallationCostChange={(cost: number) => setInstallationFee(cost)}
+            couponName={couponName} // Chuyển couponName đến PaymentMethodPage
+            couponValue={couponValue} // Chuyển couponValue đến PaymentMethodPage
           />
         )}
       </div>

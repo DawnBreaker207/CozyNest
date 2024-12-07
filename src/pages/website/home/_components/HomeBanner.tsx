@@ -29,7 +29,7 @@ const HomeBanner = () => {
                     href='#'
                     className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out  inline-block'
                   >
-                   xem thêm 
+                    xem thêm
                   </a>
                 </div>
               </div>
@@ -60,7 +60,7 @@ const HomeBanner = () => {
                     href='#'
                     className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out  inline-block'
                   >
-                   xem thêm
+                    xem thêm
                   </a>
                 </div>
               </div>

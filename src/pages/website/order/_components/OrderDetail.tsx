@@ -17,7 +17,6 @@ const OrderDetail = () => {
 
   useEffect(() => {
     if (orderId) {
-      // Gọi API để lấy chi tiết đơn hàng theo orderId từ URL
       instance
         .get(`/orders/${orderId}`)
         .then((response) => {
@@ -39,12 +38,11 @@ const OrderDetail = () => {
 
   useEffect(() => {
     if (isOrderNotFound) {
-      // Sau 5 giây sẽ tự động quay về trang chủ
       const timer = setTimeout(() => {
         navigate('/')
       }, 5000)
 
-      return () => clearTimeout(timer) // Dọn dẹp timer khi component unmount
+      return () => clearTimeout(timer)
     }
   }, [isOrderNotFound, navigate])
 
@@ -65,35 +63,43 @@ const OrderDetail = () => {
   }
 
   // Định nghĩa các trạng thái đơn hàng
-  const orderStatuses: { [key: string]: string } = {
-    Processing: 'Đang xử lý',
-    Pending: 'Chờ xác nhận',
-    Confirmed: 'Đã xác nhận',
-    'Pending-Ship': 'Đang chờ bên vận chuyển',
-    Delivering: 'Đang vận chuyển',
-    Delivered: 'Giao hàng thành công',
-    Canceled: 'Đã hủy đơn hàng',
-    Completed: 'Đơn hàng hoàn thành',
-    Returned: 'Hoàn trả đơn hàng',
-    Refunded: 'Hoàn trả đơn hàng và hoàn tiền'
-  }
+  const statuses = [
+    { label: 'Đang xử lý', value: 'Processing' },
+    { label: 'Chờ xác nhận', value: 'Pending' },
+    { label: 'Đã xác nhận', value: 'Confirmed' },
+    { label: 'Đang chờ bên vận chuyển', value: 'Pending-Ship' },
+    { label: 'Đang vận chuyển', value: 'Delivering' },
+    { label: 'Giao hàng thành công', value: 'Delivered' },
+    { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Hoàn trả đơn hàng', value: 'Returned' },
+    { label: 'Hoàn trả đơn hàng và hoàn tiền', value: 'Refunded' },
+    { label: 'Đã hủy đơn hàng', value: 'Canceled' }
+  ]
 
-  // Lấy trạng thái hiển thị từ orderStatuses
-  const orderStatusDisplay = orderStatuses[order.status] || order.status
+  // Tìm trạng thái hiện tại
+  const currentStatus = order.status
 
-  // Định nghĩa các cột cho bảng sản phẩm
   const productColumns = [
     {
-      title: 'Ảnh sản phẩm',
+      title: 'Hình ảnh',
       dataIndex: 'thumbnail',
       key: 'thumbnail',
-      render: (text: string) => (
-        <img src={text} alt='Product Thumbnail' style={{ width: 50, height: 50, objectFit: 'cover' }} />
+      render: () => (
+        <img
+          src='https://res.cloudinary.com/didbnrsmz/image/upload/v1732811019/CozyNest/T%E1%BB%A7_Gi%C3%A0y_T%E1%BB%A7_Trang_Tr%C3%AD_G%E1%BB%97_MOHO_VIENNA_203_qwp3uh.webp'
+          alt='product'
+          className='w-16 h-16'
+        />
       )
     },
-    { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
-    { title: "Số lượng", dataIndex: 'quantity', key: 'quantity' },
-    { title: 'Giá', dataIndex: 'price', key: 'price' }
+    { title: 'Mô tả', dataIndex: 'name', key: 'name' },
+    { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
+    { title: 'Giá', dataIndex: 'price', key: 'price', render: (price: number) => `${price.toLocaleString()}₫` },
+    {
+      title: 'Tổng giá',
+      key: 'totalPrice',
+      render: (record: any) => `${(record.price * record.quantity).toLocaleString()}₫`
+    }
   ]
 
   return (
@@ -104,8 +110,42 @@ const OrderDetail = () => {
           <strong>Ngày đặt hàng:</strong> {new Date(order.createdAt).toLocaleString()}
         </p>
         <p>
-          <strong>Trạng thái đơn hàng:</strong> {orderStatusDisplay}
+          <strong>Trạng thái đơn hàng:</strong>{' '}
+          {statuses.find((s) => s.value === currentStatus)?.label || currentStatus}
         </p>
+      </Card>
+
+      {/* Hiển thị hành trình trạng thái */}
+      <Card title='Lịch sử trạng thái' className='mb-6'>
+        <div className='flex flex-wrap gap-4 mt-4'>
+          {statuses.map((status, index) => {
+            const normalizedCurrentStatus = currentStatus.trim().toLowerCase()
+            const normalizedStatusValue = status.value.trim().toLowerCase()
+
+            const isPast = index < statuses.findIndex((s) => s.value.trim().toLowerCase() === normalizedCurrentStatus)
+            const isCurrent = normalizedStatusValue === normalizedCurrentStatus
+
+            let btnType: 'default' | 'primary' | 'dashed' = 'default'
+            if (isPast) {
+              btnType = 'dashed'
+            } else if (isCurrent) {
+              btnType = 'primary'
+            }
+
+            console.log(`Status: ${status.label}, isPast: ${isPast}, isCurrent: ${isCurrent}, btnType: ${btnType}`)
+
+            return (
+              <Button
+                key={index}
+                type={btnType}
+                disabled
+                style={isCurrent ? { backgroundColor: '#1890ff', color: '#fff' } : {}}
+              >
+                {status.label}
+              </Button>
+            )
+          })}
+        </div>
       </Card>
 
       <Card title='Thông tin giao hàng' className='mb-6'>
@@ -119,14 +159,14 @@ const OrderDetail = () => {
           <strong>Email:</strong> {order.email}
         </p>
         <p>
-          <strong>Địa chỉ nhận hàng:</strong> {order.addressShipping}
+          <strong>Địa chỉ nhận hàng:</strong> {order.address}
         </p>
       </Card>
 
       <Card title='Thông tin sản phẩm' className='mb-6'>
         <Table
           columns={productColumns}
-          dataSource={order.order_details.map((product: any) => ({
+          dataSource={order.order_details.products.map((product: any) => ({
             ...product,
             name: product.sku_id.name,
             thumbnail: product.sku_id.image,
@@ -134,21 +174,57 @@ const OrderDetail = () => {
           }))}
           rowKey={(record) => record.productId}
           pagination={false}
-          scroll={{ x: 'max-content' }} // Cho phép cuộn ngang khi cần thiết
+          scroll={{ x: 'max-content' }}
         />
       </Card>
 
       <Card className='mb-6'>
-        <p>
-          <strong>Phí vận chuyển: 50,000 VNĐ</strong>
-        </p>
-        <p>
-          <strong>Tổng tiền: {order.total_amount || 0} VNĐ</strong>
-        </p>
-        <p>
-          <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
-        </p>
+        <div className='border-t mt-4 pt-4'>
+          <div className='flex flex-col mt-4 font-bold text-base'>
+            {/* Hiển thị chi phí sản phẩm */}
+            <div className='flex justify-between'>
+              <span>Chi Phí Sản Phẩm</span>
+              <span>
+                {order.order_details.products
+                  .reduce((total: any, product: { total_money: any }) => total + product.total_money, 0)
+                  .toLocaleString()}
+                ₫
+              </span>
+            </div>
+            {/* Hiển thị chi phí vận chuyển */}
+            <div className='flex justify-between'>
+              <span>Chi Phí Vận chuyển</span>
+              <span>{(50000).toLocaleString()}₫</span>
+            </div>
+
+            {/* Hiển thị chi phí lắp đặt nếu có */}
+            {order.order_details.installation_fee > 0 && (
+              <div className='flex justify-between'>
+                <span>Chi Phí lắp đặt tại nhà</span>
+                <span>{order.order_details.installation_fee.toLocaleString()}₫</span>
+              </div>
+            )}
+
+            {/* Hiển thị mã giảm giá nếu có */}
+            {order.order_details.total > 0 && (
+              <div className='flex justify-between'>
+                <span>Mã Giảm Giá: {order.order_details.coupon}</span>
+                <span className='text-red-600'>- {order.order_details.total.toLocaleString()}₫</span>
+              </div>
+            )}
+
+            {/* Hiển thị tổng cộng đơn hàng */}
+            <div className='flex justify-between'>
+              <span>Tổng cộng đơn hàng</span>
+              <span>{order.total_amount.toLocaleString()}₫</span>
+            </div>
+          </div>
+          <p>
+            <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
+          </p>
+        </div>
       </Card>
+
       <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>
         <Button type='primary' className='w-full sm:w-auto'>
           Liên hệ hỗ trợ

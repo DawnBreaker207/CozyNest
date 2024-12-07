@@ -40,7 +40,7 @@ const PaymentResultPage = () => {
         }
 
         // Cập nhật đơn hàng
-        await instance.put(`/orders/updateStatus/${orderId}`, {
+        await instance.put(`/orders/updateStatusPayment/${orderId}`, {
           ...currentOrder,
           payment_status: 'Paid'
         })

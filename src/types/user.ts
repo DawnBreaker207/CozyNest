@@ -7,6 +7,6 @@ export interface IUsers {
   phoneNumber: string
   address: string
   role: string
-  status: string
+  status: boolean
   city: string
 }

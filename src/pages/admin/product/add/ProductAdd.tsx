@@ -3,7 +3,7 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useProductMutation from '@/hooks/useProductMutation'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
-import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, InputNumber, message, Select, Upload } from 'antd'
 import { useState } from 'react'
@@ -49,89 +49,32 @@ const ProductAddPage = () => {
         <Form layout='vertical' onFinish={onFinish}>
           <div className='flex justify-between'>
             <div>
-              <span className='text-[#3A5BFF]'>Product</span> <CaretRightOutlined /> <span>Add Product</span>
+              <h1 className='text-2xl font-bold'>Thêm sản phẩm</h1>
             </div>
             <div className='flex items-center space-x-2'>
-              <Button icon={<CloseOutlined />} className='text-[#858D9D] border border-gray-400 hover:bg-gray-200'>
-                <Link to={`/admin/products`}>Cancel</Link>
-              </Button>
-              <Button
-                type='primary'
-                htmlType='submit'
-                icon={<PlusOutlined />}
-                className='bg-blue-500 hover:bg-blue-600'
-              >
-                Add Product
+              <Button>
+                <BackwardOutlined />
+                <Link to={`/admin/products`}>Quay lại</Link>
               </Button>
             </div>
           </div>
           <div className='flex justify-between mt-5'>
             <div className='w-[75%] pr-4'>
-              <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>General Information</h1>
               <Form.Item
-                label='Product Name'
+                label='Tên sản phẩm'
                 name='name'
                 rules={[{ required: true, message: 'Tên sản phẩm là bắt buộc' }]}
               >
-                <Input placeholder='Type product name here...' className='w-full bg-[#F9F9FC]' />
+                <Input placeholder='Tên sản phẩm' className='w-full' />
               </Form.Item>
-              <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Pricing</h1>
-              <Form.Item label='Price' name='price' rules={[{ required: true, message: 'Giá sản phẩm là bắt buộc' }]}>
-                <InputNumber placeholder='Type base price here...' className='w-full bg-[#F9F9FC]' />
+              <Form.Item label='Mô tả sản phẩm' name='description'>
+                <Input.TextArea rows={4} placeholder='Mô tả' className='w-full' />
               </Form.Item>
-              <Form.Item label='Discount Percentage (%)' name='discount'>
-                <InputNumber placeholder='Type discount percentage here...' className='w-full bg-[#F9F9FC]' />
-              </Form.Item>
-              <Form.Item label='Description' name='description'>
-                <Input.TextArea
-                  rows={4}
-                  placeholder='Type product description here...'
-                  className='w-full bg-[#F9F9FC]'
-                />
-              </Form.Item>
-              <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Media</h1>
-              <div>
-                <div className='grid grid-cols-1 gap-4'>
-                  {/* <Form.Item label='Ảnh sản phẩm' name='images'>
-                    <Upload
-                      multiple
-                      beforeUpload={(file) => {
-                        setImages((prev) => [...prev, { file, name: file.name }]);
-                        return false; // Prevent automatic upload
-                      }}
-                      showUploadList={false}
-                    >
-                      <Button icon={<UploadOutlined />}>Tải lên ảnh sản phẩm</Button>
-                    </Upload>
-                    <div className="mt-2">
-                      {images.map(({ name }) => (
-                        <span key={name} className="mr-2">{name}</span>
-                      ))}
-                    </div>
-                  </Form.Item> */}
-
-                  <Form.Item label='Ảnh đại diện' name='thumbnail'>
-                    <Upload
-                      beforeUpload={(file) => {
-                        setThumbnail({ file, name: file.name })
-                        return false // Prevent automatic upload
-                      }}
-                      showUploadList={false}
-                    >
-                      <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>
-                    </Upload>
-                    {thumbnail && <span className='mt-2'>{thumbnail.name}</span>}
-                  </Form.Item>
-                </div>
-              </div>
             </div>
             <div className='w-[20%]'>
-              <Form.Item label='Brand' name='brand'>
-                <Input placeholder='Type product description here...' className='w-full bg-[#F9F9FC]' />
-              </Form.Item>
               <Form.Item
                 label='Danh mục'
-                name='categoryId'
+                name='category_id'
                 rules={[{ required: true, message: 'Bắt buộc chọn danh mục!' }]}
               >
                 <Select
@@ -144,14 +87,23 @@ const ProductAddPage = () => {
                   }))}
                 />
               </Form.Item>
+              <Form.Item
+                label='Mã sản phẩm'
+                name='SKU'
+                rules={[{ required: true, message: 'Mã sản phẩm là bắt buộc!' }]}
+              >
+                <Input placeholder='Mã sản phẩm' className='w-full' />
+              </Form.Item>
               <div>
-                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
-                <Form.Item name='isHidden' valuePropName='checked'>
-                  <Checkbox>Hide Product</Checkbox>
+                <Form.Item label='Trạng thái hiển thị' name='is_hidden' valuePropName='checked'>
+                  <Checkbox>Hiển thị</Checkbox>
                 </Form.Item>
               </div>
             </div>
           </div>
+          <Button type='primary' htmlType='submit' icon={<PlusOutlined />}>
+            Thêm sản phẩm
+          </Button>
         </Form>
       </div>
     </>

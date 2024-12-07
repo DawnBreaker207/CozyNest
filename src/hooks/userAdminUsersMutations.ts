@@ -26,6 +26,7 @@ const useAdminUsersMutations = ({ action, onSuccess }: useAdminUsersMutationProp
       status: false
     }
   })
+
   const { mutate, ...rest } = useMutation({
     mutationFn: async (user: IUsers) => {
       switch (action) {
@@ -41,20 +42,29 @@ const useAdminUsersMutations = ({ action, onSuccess }: useAdminUsersMutationProp
         queryClient.invalidateQueries({
           queryKey: ['USER_KEY']
         })
+        setTimeout(() => {
+          messageApi.success({
+            content: 'Cập nhật thành công!',
+            duration: 2
+          })
+        }, 0)
       } else {
-        // Xử lý trường hợp không có dữ liệu trả về từ API
-        messageApi.error({
-          content: 'Có lỗi xảy ra, vui lòng thử lại sau',
-          duration: 2
-        })
+        setTimeout(() => {
+          messageApi.error({
+            content: 'Có lỗi xảy ra, vui lòng thử lại sau',
+            duration: 2
+          })
+        }, 0)
       }
     },
     onError: (error) => {
-      console.log(error)
-      messageApi.error({
-        content: 'Có lỗi xảy ra trong quá trình xử lý',
-        duration: 2
-      })
+      console.error(error)
+      setTimeout(() => {
+        messageApi.error({
+          content: 'Có lỗi xảy ra trong quá trình xử lý',
+          duration: 2
+        })
+      }, 0)
     }
   })
 

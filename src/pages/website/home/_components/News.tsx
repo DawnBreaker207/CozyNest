@@ -107,34 +107,33 @@ const News = () => {
           {articles.map((newsItem) => (
             <div key={newsItem._id} className='px-2'>
               <Link to={`/articles/${newsItem._id}`}>
-              <Card
-                hoverable
-                cover={<img alt={newsItem.title} src={newsItem.thumbnail} className='rounded-t-lg' />}
-                className='rounded-lg shadow-lg overflow-hidden relative h-[300px]'
-              >
-                <div className='absolute top-2 left-2 bg-white text-[#FCA120] px-2 py-1 rounded-br-lg'>
-                  {newsItem.created_at}
-                </div>
-                <Meta
-                  title={<span className='text-[#FCA120]'>{newsItem.title}</span>}
-                  description={
-                    <div>
-                      <p className='text-gray-600 mb-2'>{newsItem.title.substring(0, 20)}... </p>
-                      <Link
-                        to={`/articles/${newsItem._id}`}
-                        className='text-black hover:text-orange-600 flex items-center mt-4'
-                      >
-                        Xem thêm
-                        <svg className='w-4 h-4 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                          <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 5l7 7-7 7' />
-                        </svg>
-                      </Link>
-                    </div>
-                  }
-                />
-              </Card>
+                <Card
+                  hoverable
+                  cover={<img alt={newsItem.title} src={newsItem.thumbnail} className='rounded-t-lg' />}
+                  className='rounded-lg shadow-lg overflow-hidden relative h-[300px]'
+                >
+                  <div className='absolute top-2 left-2 bg-white text-[#FCA120] px-2 py-1 rounded-br-lg'>
+                    {newsItem.created_at}
+                  </div>
+                  <Meta
+                    title={<span className='text-[#FCA120]'>{newsItem.title}</span>}
+                    description={
+                      <div>
+                        <p className='text-gray-600 mb-2'>{newsItem.title.substring(0, 20)}... </p>
+                        <Link
+                          to={`/articles/${newsItem._id}`}
+                          className='text-black hover:text-orange-600 flex items-center mt-4'
+                        >
+                          Xem thêm
+                          <svg className='w-4 h-4 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 5l7 7-7 7' />
+                          </svg>
+                        </Link>
+                      </div>
+                    }
+                  />
+                </Card>
               </Link>
-             
             </div>
           ))}
         </Carousel>

@@ -1,15 +1,14 @@
-export interface SkuType extends Document {
+export interface ISku {
   _id: string
-  sku_id: string
   product_id: string
+  name?: string
   SKU: string
-  name: string
   slug: string
   shared_url: string
   price: number
+  stock: number
   price_before_discount?: number
   price_discount_percent?: number
-  stock: number
   image?: {
     id: string
     url: string
