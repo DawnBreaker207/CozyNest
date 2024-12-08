@@ -95,7 +95,8 @@ const AdminOrderDetail = () => {
   const order = data?.res
 
   // Danh sách các trạng thái
-
+  console.log('statuses:', statuses)
+  console.log('currentStatus:', currentStatus)
   return (
     <div className='container mx-auto mt-10 px-6'>
       <h1 className='text-2xl font-bold mb-6'>Chi tiết đơn hàng</h1>
@@ -107,33 +108,60 @@ const AdminOrderDetail = () => {
           {statusHistory.length > 0 &&
             statusHistory.map((item, index) => (
               <div key={index}>
-                <div>{item.label}</div>
-                <div>
-                  {item.time} - Xác nhận bởi: {item.confirmedBy}
-                </div>
+                <div>Trạng Thái: {item.label}</div>
+                <div>Thời Gian: {item.time}</div>
               </div>
             ))}
         </div>
         <div className='flex flex-wrap gap-4 mt-10'>
           {statuses.map((status, index) => {
-            const isPastStatus =
-              statuses.findIndex((s) => s.value === status.value) < statuses.findIndex((s) => s.value === currentStatus)
-            const isDisabled = isPastStatus // Chỉ disable các trạng thái đã qua
-            const btnType = status.value === currentStatus ? 'primary' : 'default'
+            // Chắc chắn currentStatus là trạng thái hiện tại của đơn hàng (ví dụ: 'Processing', 'Delivered', ...)
+            const isProcessing = currentStatus === 'Processing'
+            const isPending = currentStatus === 'Pending'
+            const isDelivered = currentStatus === 'Delivered'
+            const isCompleted = currentStatus === 'Completed'
+
+            // Lấy chỉ mục của trạng thái hiện tại và trạng thái mục tiêu
+            const currentIndex = statuses.findIndex((s) => s.value === currentStatus)
+            const targetIndex = statuses.findIndex((s) => s.value === status.value)
+
+            // Điều kiện vô hiệu hóa nút
+            let isDisabled = true
+
+            if (status.value === 'Canceled') {
+              // "Hủy đơn hàng" chỉ được phép khi đang xử lý hoặc đang chờ
+              isDisabled = !(isProcessing || isPending)
+            } else if (status.value === 'Returned' || status.value === 'Refunded') {
+              // "Hoàn trả đơn hàng" và "Hoàn tiền" chỉ hiển thị khi đã giao hàng, vô hiệu hóa nếu đã hoàn thành
+              isDisabled = !isDelivered || isCompleted
+            } else {
+              // Các trạng thái khác: chỉ cho phép chuyển liền kề
+              isDisabled =
+                targetIndex !== currentIndex + 1 && // Chỉ cho phép trạng thái kế tiếp
+                !(targetIndex === currentIndex - 1 && isProcessing) // Hoặc quay lại nếu đang xử lý
+            }
+
+            // Kiểm tra nếu trạng thái là hiện tại thì không vô hiệu hóa
+            if (status.value === currentStatus.trim()) {
+              isDisabled = true
+            }
+
+            // Kiểm tra và đặt kiểu nút: trạng thái hiện tại là 'primary', còn lại là 'default'
+            const btnType = 'default'
 
             return (
               <Button
                 key={index}
                 onClick={() => {
                   if (id && !isDisabled) {
-                    handleStatusChange(id, status.value)
+                    handleStatusChange(id, status.value) // Gửi yêu cầu thay đổi trạng thái nếu không bị vô hiệu hóa
                   }
                 }}
-                disabled={isDisabled}
-                className={`px-4 py-2 ${isDisabled ? 'cursor-not-allowed opacity-50' : ''} flex-shrink-0`}
+                className={`px-4 py-2 ${isDisabled ? 'cursor-not-allowed opacity-50' : ''}
+        ${status.value === currentStatus ? 'border border-blue-500 bg-blue-500 text-white' : ''} flex-shrink-0`}
                 type={btnType}
               >
-                {status.label}
+                {status.label} {/* Hiển thị tên trạng thái */}
               </Button>
             )
           })}

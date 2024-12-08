@@ -4,7 +4,6 @@ import { useCookie } from '@/hooks/useStorage'
 import { EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, DatePicker, Space, Table, Tag } from 'antd'
-import Search from 'antd/es/transfer/search'
 import { Link } from 'react-router-dom'
 
 const AdminOrderPage = () => {
@@ -39,37 +38,37 @@ const AdminOrderPage = () => {
 
   const columns = [
     {
-      title: 'Order ID',
+      title: 'Mã Đơn Hàng',
       dataIndex: 'orderId',
       key: 'orderId'
     },
     {
-      title: 'Product',
+      title: 'Số Lượng Sản Phẩm',
       dataIndex: 'product',
       key: 'product'
     },
     {
-      title: 'Date',
+      title: 'Thời Gian Đặt Hàng',
       dataIndex: 'date',
       key: 'date'
     },
     {
-      title: 'Customer',
+      title: 'Người Đặt Hàng',
       dataIndex: 'customer',
       key: 'customer_name'
     },
     {
-      title: 'Total',
+      title: 'Tổng Đơn Hàng',
       dataIndex: 'total',
       key: 'total_amount'
     },
     {
-      title: 'Payment',
+      title: 'Phương Thức Thanh Toán',
       dataIndex: 'payment',
       key: 'payment'
     },
     {
-      title: 'Status',
+      title: 'Trạng Thái',
       dataIndex: 'status',
       key: 'status',
       render: (
@@ -102,7 +101,7 @@ const AdminOrderPage = () => {
       }
     },
     {
-      title: 'Action',
+      title: 'Hành Động',
       key: 'action',
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       render: (_: any, record: any) => (
