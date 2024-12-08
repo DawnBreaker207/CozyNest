@@ -9,7 +9,7 @@ import CouponCard from '../../cart/_components/CouponCard'
 import RelatedProduct from '../_components/RelatedProduct'
 import ReviewComponent from './_components/Review'
 import useCart from '@/hooks/useCart'
-import { message } from 'antd'
+import { message, Spin } from 'antd'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -72,8 +72,10 @@ const ProductDetail = () => {
     setPriceVar(price)
   }
   //Kiểm tra dữ liệu product
-  if (!data || !data) return <p>Product not found</p>
+  if (!data || !data) return <Spin size='large' />
   const product = data
+  console.log(product)
+
   const category = product?.category_id?._id
 
   const increase = () => {
@@ -88,22 +90,13 @@ const ProductDetail = () => {
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed)
   }
-  const couponCode1 = 'A87TYRT55'
-  const couponCode2 = 'QH5G8J0Y'
-  const couponCode3 = 'A789UYT'
-
-  // const [image, setImage] = useState('https://via.placeholder.com/500')
-  const thumbnails = [
-    '/src/assets/images/product/img-slide-1.jpg',
-    '/src/assets/images/product/img-slide-2.webp',
-    '/src/assets/images/product/img-slide-3.webp',
-    '/src/assets/images/product/img-slide-4.webp',
-    '/src/assets/images/product/img-slide-5.webp',
-    '/src/assets/images/product/img-slide-6.webp'
-  ]
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <div>
+        <Spin size='large' />
+      </div>
+    )
   }
 
   if (error) {
@@ -166,15 +159,6 @@ const ProductDetail = () => {
                 <GrFormNext className='w-[35px] h-[35px]' />
               </button>
             </div>
-            {/* Share Section */}
-            {/* <div className='share flex flex-row items-center justify-center xl:mr-24 mt-4'>
-              <span className='font-light'>Chia sẻ:</span>
-              <img src='/src/assets/images/share/fb.svg' className='w-[30px] h-[30px] ml-4' />
-              <img src='/src/assets/images/share/mess.svg' className='w-[30px] h-[30px] ml-4' />
-              <img src='/src/assets/images/share/twitter.svg' className='w-[30px] h-[30px] ml-4' />
-              <img src='/src/assets/images/share/phone.svg' className='w-[35px] h-[35px] ml-4' />
-              <img src='/src/assets/images/share/link.svg' className='w-[25px] h-[25px] ml-4' />
-            </div> */}
           </div>
         </div>
 
@@ -186,7 +170,8 @@ const ProductDetail = () => {
                 Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'>{product.SKU}</span>
               </span>
               <span className='text-sm font-light'>
-                Số lượng: <span className='text-[#fca120] font-semibold ml-1'>{product?.variants?.[0]?.sku_id?.stock}</span>
+                Số lượng kho:{' '}
+                <span className='text-[#fca120] font-semibold ml-1'>{product?.variants?.[0]?.sku_id?.stock}</span>
               </span>
               <span className='text-sm font-light'>
                 Thương hiệu:
@@ -331,49 +316,6 @@ const ProductDetail = () => {
             </div>
           </div>
           <hr className='h-[1px] bg-gray-400 border-none my-5' />
-
-          {/* Coupon Section */}
-          <div className='lg:flex lg:flex-wrap  lg:space-x-0  lg:gap-4 mt-[10px]'>
-            <div className='coupon w-1/2,5 lg:w-[48%]'>
-              <CouponCard
-                couponCode={couponCode1}
-                imageUrl='/src/assets/images/coupon/coupon_2_img.webp'
-                expirationDate='10/10/2024'
-                title='Miễn phí vận chuyển'
-                description='Đơn hàng từ 300k'
-                condition='Dành cho đơn hàng từ 300k'
-              />
-            </div>
-            <div className='coupon w-1/2,5 lg:w-[48%]'>
-              <CouponCard
-                couponCode={couponCode2}
-                imageUrl='/src/assets/images/coupon/coupon_1_img.webp'
-                expirationDate='10/10/2024'
-                title='Giảm 20%'
-                description='Đơn hàng từ 200k'
-                condition='Dành cho đơn hàng từ 200k'
-              />
-            </div>
-            <div className='coupon w-1/2,5 lg:w-[48%]'>
-              <CouponCard
-                couponCode={couponCode3}
-                imageUrl='/src/assets/images/coupon/coupon_3_img.webp'
-                expirationDate='10/10/2024'
-                title='Giảm 10%'
-                description='Đơn hàng từ 100k'
-                condition='Dành cho đơn hàng từ 100k'
-              />
-            </div>
-          </div>
-          <hr className='h-[1px] bg-black border-none my-5' />
-          <div>
-             {/* <ReviewComponent />  */}
-          </div>
-        </div>
-        {/* Product Description */}
-        <div
-          className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[72px] `}
-        >
           <div className='productDetail--navs mg-top mt-[15px]'>
             <div className='nav tab-title'>
               <b className='nav-item active text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
@@ -434,14 +376,24 @@ const ProductDetail = () => {
                 </table>
               </div>
             </div>
-            <div className='description-btn flex justify-center mt-[10px]'>
+            {/* <div className='description-btn flex justify-center mt-[10px]'>
               <button
                 className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-[#fca120]' : 'text-[#fca120]'} p-2 rounded-md`}
                 onClick={handleToggleCollapse}
               >
                 {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
               </button>
-            </div>
+            </div> */}
+          </div>
+        </div>
+        {/* Product Description */}
+
+        <div
+          className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[350px] `}
+        >
+          {' '}
+          <div>
+            <ReviewComponent product={product} />{' '}
           </div>
         </div>
       </div>
