@@ -33,7 +33,9 @@ const ReviewComponent = ({ product }: any) => {
       }
     }
   })
-  const dataReview = data?.data?.data
+  const dataReview = data?.data?.data || []
+console.log(product);
+
 
   const { mutate } = useMutation({
     mutationFn: async (formData: IReview) => {
@@ -120,7 +122,7 @@ const ReviewComponent = ({ product }: any) => {
   return (
     <div className='p-6 border border-gray-200 rounded-lg mt-24 mr-10'>
       {contextHolder}
-      {dataReview && dataReview.length > 0 ? (
+      {dataReview.length > 0 ? (
         <>
           <h4 className='text-lg font-semibold mb-4'>Đánh giá & nhận xét</h4>
           <div className='flex items-center justify-between mb-5'>

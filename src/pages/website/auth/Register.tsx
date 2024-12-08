@@ -15,13 +15,13 @@ const Register = () => {
       try {
         return await instance.post(`/auth/register`, formData)
       } catch (error) {
-        throw new Error('Dang ky that bai')
+        throw new Error('Đăng Ký Thất Bại')
       }
     },
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Dang ky thanh cong'
+        content: 'Đăng Ký Thành Công'
       }),
         setTimeout(() => {
           navigate(`/login`)
