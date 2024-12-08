@@ -13,7 +13,7 @@ const CustomLoadingPage = () => {
     >
       <Spin size='large' tip='Preparing your experience...'>
         {/* Nội dung bạn muốn hiển thị khi đang loading */}
-        <div>Loading content...</div>
+        {/* <div>Loading content...</div> */}
       </Spin>
     </div>
   )

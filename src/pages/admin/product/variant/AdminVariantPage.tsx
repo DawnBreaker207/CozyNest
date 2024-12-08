@@ -22,9 +22,9 @@ const AdminVariantPage = () => {
   })
 
   const { mutate } = useMutation({
-    mutationFn: async (product_id: number | string) => {
+    mutationFn: async (sku_id: number | string) => {
       try {
-        return await instance.delete(`/variants/${product_id}`)
+        return await instance.delete(`/variants/${product_id}/${sku_id}`)
       } catch (error) {
         throw new Error((error as any).message)
       }
@@ -74,7 +74,7 @@ const AdminVariantPage = () => {
     mutateVariantAdd()
   }
 
-  const dataSource = data?.data?.res.map((variant: IVariant) => ({
+  const dataSource = data?.data?.res.map((variant: any) => ({
     key: variant._id,
     ...variant
   }))
@@ -90,6 +90,14 @@ const AdminVariantPage = () => {
       title: 'Tên biến thể',
       dataIndex: 'name',
       key: 'name'
+    },
+    {
+      title: 'Ảnh biến thể',
+      dataIndex: 'image',
+      key: 'image',
+      render: (image: any) => {
+        return <img src={image} alt='' className={`${image ? 'size-28' : ''}`} />
+      }
     },
     {
       title: 'Số lượng',
@@ -117,19 +125,19 @@ const AdminVariantPage = () => {
       )
     },
     {
-      title: 'Action',
+      title: 'Hành động',
       key: 'action',
-      render: (_: any, variant: any) => {
-        const sku_id = variant.option_value[0].sku_id
+      render: (_: any, sku: any) => {
+        console.log('🚀 ~ AdminVariantPage ~ sku:', sku)
         return (
           <Space size='middle'>
-            <Link to={`/admin/products/${product_id}/variants/${sku_id}/update`}>
+            <Link to={`/admin/products/${product_id}/variants/${sku._id}/update`}>
               <Button icon={<EditOutlined />} />
             </Link>
             <Popconfirm
               title='Xóa biến thể'
               description='Bạn có chắc chắn muốn xóa biến thể này?'
-              onConfirm={() => mutate(variant._id!)}
+              onConfirm={() => mutate(sku._id!)}
               okText='Có'
               cancelText='Không'
             >
@@ -162,7 +170,6 @@ const AdminVariantPage = () => {
       <Table dataSource={dataSource} columns={columns} />
       <div>
         <Button type='primary' onClick={handleUpdate}>
-          <PlusOutlined className='mr-1' />
           Cập nhật lại biến thể
         </Button>
       </div>

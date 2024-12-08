@@ -386,9 +386,9 @@ const ProductList = ({ products = [] }: ProductListProps) => {
               <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
                 <Link to={`/detail/${product._id}`}>
                   <div className='relative'>
-                    <div className='flex transition-transform ease-in-out duration-500'>
+                    {/* <div className='flex transition-transform ease-in-out duration-500'>
                       <img src={product?.images[0]?.url} alt={product?.name} className='object-cover' />
-                    </div>
+                    </div> */}
 
                     <FaRegEye
                       className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
@@ -401,16 +401,16 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                     )} */}
                   </div>
                   <div className='mx-2 text-center space-y-2 mt-3'>
-                  <h3>{product?.name}</h3>
-                  <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                    <span className='text-[#FF0000] font-semibold'>{price.toLocaleString()}₫</span>
-                    {/* {
+                    <h3>{product?.name}</h3>
+                    <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+                      <span className='text-[#FF0000] font-semibold'>{price.toLocaleString()}₫</span>
+                      {/* {
                       <span className='text-[#878c8f] font-light line-through text-[13px]'>
                         {price.toLocaleString()}₫
                       </span>
                     } */}
-                  </div>
-                  {/* <div className='flex space-x-4'>
+                    </div>
+                    {/* <div className='flex space-x-4'>
                     {product.variants.map((variant, idx) => {
                       const value = variant.option_value_id.value
                       const bgColor =
@@ -434,10 +434,9 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                       )
                     })}
                   </div> */}
-                  <Button >xem chi tiết</Button>
-                </div>
+                    <Button>xem chi tiết</Button>
+                  </div>
                 </Link>
-              
               </div>
             )
           })}
