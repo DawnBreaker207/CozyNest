@@ -81,8 +81,7 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
     <div className=''>
       <span className='text-sm font-light text-[#252A2B]'>
         <p className='text-sm'>
-          <Link to={`/cart`}>Giỏ hàng</Link> <RightOutlined />{' '}
-          <Link to={`/cart/check_out_form`}>Thông tin giao hàng</Link>
+          <Link to={`/cart`}>Giỏ hàng</Link> <RightOutlined /> <Link to={`/check_out`}>Thông tin giao hàng</Link>
         </p>
       </span>
       <h2 className='text-lg font-semibold mb-4'>Địa chỉ giao hàng</h2>

@@ -102,37 +102,46 @@ const ProductDetail = () => {
   if (error) {
     return <div>Error: {error.message}</div>
   }
+  console.log(product)
+
   return (
     <div>
       <div className='lg:grid lg:grid-cols-2 flex flex-col mt-10 container xl:gap-0 lg:gap-6'>
         <div className='flex flex-col h-min'>
+          {/* Thumbnails và Images */}
           <div className='flex lg:flex-row flex-col col-span-1 gap-4 lg:mx-10 mx-auto'>
             {/* List of Thumbnails */}
             <div className='lg:flex flex-wrap flex-col hidden'>
-              {product.images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image.url} // Sử dụng URL ảnh từ dữ liệu sản phẩm
-                  alt={`Ảnh thu nhỏ sản phẩm ${index + 1}`}
-                  className='w-16 h-16 mb-3 cursor-pointer'
-                  onClick={() => setActiveImageIndex(index)}
-                />
-              ))}
+              {product?.variants
+                .find((variant) => variant.sku_id._id === selectedColorId) // Lọc variant dựa trên màu đã chọn
+                ?.sku_id?.image?.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image} // Sử dụng URL ảnh từ variant tương ứng với màu đã chọn
+                    alt={`Ảnh thu nhỏ sản phẩm ${index + 1}`}
+                    className='w-16 h-16 mb-3 cursor-pointer'
+                    onClick={() => setActiveImageIndex(index)}
+                  />
+                ))}
             </div>
 
             <div className='relative lg:mx-0 md:w-[520px] md:h-[520px] h-auto w-full overflow-hidden'>
               <div
                 className='flex lg:mx-auto transition-transform duration-1000 ease-in-out'
-                style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+                style={{
+                  transform: `translateX(-${activeImageIndex * 100}%)`
+                }}
               >
-                {product.images.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image.url} // Sử dụng URL ảnh từ dữ liệu sản phẩm
-                    alt={`Ảnh sản phẩm ${index + 1}`}
-                    className='max-w-full h-auto' // Giữ tỷ lệ ảnh và phù hợp với container
-                  />
-                ))}
+                {product?.variants
+                  .find((variant) => variant.sku_id._id === selectedColorId) // Lọc variant dựa trên màu đã chọn
+                  ?.sku_id?.image?.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image} // Sử dụng URL ảnh từ variant tương ứng với màu đã chọn
+                      alt={`Ảnh sản phẩm ${index + 1}`}
+                      className='max-w-full h-auto' // Giữ tỷ lệ ảnh và phù hợp với container
+                    />
+                  ))}
               </div>
 
               <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
@@ -144,7 +153,14 @@ const ProductDetail = () => {
                 title='Quay lại'
                 className='absolute left-0 top-1/2 transform -translate-y-1/2 p-2'
                 onClick={() =>
-                  setActiveImageIndex((activeImageIndex - 1 + product.images.length) % product.images.length)
+                  setActiveImageIndex(
+                    (activeImageIndex -
+                      1 +
+                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                        ?.length) %
+                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                        ?.length
+                  )
                 }
               >
                 <GrFormPrevious className='w-[35px] h-[35px]' />
@@ -154,7 +170,13 @@ const ProductDetail = () => {
               <button
                 title='Tiếp theo'
                 className='absolute right-0 top-1/2 transform -translate-y-1/2 p-2'
-                onClick={() => setActiveImageIndex((activeImageIndex + 1) % product.images.length)}
+                onClick={() =>
+                  setActiveImageIndex(
+                    (activeImageIndex + 1) %
+                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                        ?.length
+                  )
+                }
               >
                 <GrFormNext className='w-[35px] h-[35px]' />
               </button>
@@ -181,26 +203,6 @@ const ProductDetail = () => {
           </div>
 
           {/* Price Section */}
-          <div className='price flex justify-start items-center gap-3 mt-[30px]'>
-            <span className='name-price text-[19px] font-semibold'>Giá:</span>
-            <div className='pricedetail flex flex-row items-center gap-2'>
-              {/* Hiển thị giá sau khi giảm */}
-              <span className='text-[#FF0000] font-semibold text-[24px]'>{priceVar.toLocaleString()}₫</span>
-
-              {/* Kiểm tra nếu có giảm giá và hiển thị giá cũ bị gạch ngang */}
-              {product.variants[0]?.sku_id?.price_discount_percent > 0 && (
-                <>
-                  {/* <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                    {product.variants[0]?.sku_id?.price_discount_percent}%
-                  </span> */}
-                  {/* Giá trước khi giảm */}
-                  <span className='text-gray-500 line-through text-[18px]'>
-                    {product.variants[0]?.sku_id?.price.toLocaleString()}₫
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
 
           {/* Màu sắc Section */}
           <div className='flex flex-wrap items-center mt-6 gap-3'>
