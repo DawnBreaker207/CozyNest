@@ -3,7 +3,7 @@ const BannerSection = () => {
     <div className='container mx-auto mt-10 md:mt-20'>
       <div className='line-banner-bottom flex flex-col lg:flex-row mb-8'>
         <div className='col-banner media-banner flex-1 mb-4 lg:mb-0'>
-          <a href='' aria-label='Trang trí phòng khách'>
+          <a href='articles/6755bdf510b20aaf2466bc49' aria-label='Trang trí phòng khách'>
             <picture>
               <img
                 className='w-full lazyloaded'
@@ -17,7 +17,7 @@ const BannerSection = () => {
           <div className='info-banner-bottom text-center p-5   '>
             <div className='title-text-banner mb-4 text-center'>
               <h4 className='lg:text-5xl text-2xl font-normal text-[#fca120]'>
-                <a href='' aria-label='Trang trí phòng khách'>
+                <a  href='articles/6755bdf510b20aaf2466bc49' aria-label='Trang trí phòng khách'>
                   Trang trí phòng khách
                 </a>
               </h4>
@@ -29,9 +29,9 @@ const BannerSection = () => {
             <div className='action-banner-bottom'>
               <a
                 className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out mt-4 inline-block'
-                href=''
+                href='articles/6755bdf510b20aaf2466bc49'
                 aria-label='Trang trí phòng khách'
-              >
+              > 
                 Xem ngay
               </a>
             </div>
@@ -43,7 +43,7 @@ const BannerSection = () => {
           <div className='info-banner-bottom  p-5'>
             <div className='title-text-banner mb-4'>
               <h4 className='lg:text-5xl text-2xl font-normal text-[#fca120]'>
-                <a href='' aria-label='Trang trí sân vườn'>
+                <a href='articles/6755bf0310b20aaf2466bf0f' aria-label='Trang trí sân vườn'>
                   Trang trí sân vườn
                 </a>
               </h4>
@@ -56,7 +56,7 @@ const BannerSection = () => {
             <div className='action-banner-bottom'>
               <a
                 className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out mt-4 inline-block'
-                href='/collections/all'
+                href='articles/6755bf0310b20aaf2466bf0f'
                 aria-label='Trang trí sân vườn'
               >
                 Xem ngay
@@ -65,7 +65,7 @@ const BannerSection = () => {
           </div>
         </div>
         <div className='col-banner media-banner flex-1 mt-4 lg:-mt-8 lg:-ml-7'>
-          <a href='' aria-label='Trang trí sân vườn'>
+          <a href='articles/6755bf0310b20aaf2466bf0f' aria-label='Trang trí sân vườn'>
             <picture>
               <img
                 className='w-full lazyloaded'

@@ -265,7 +265,7 @@ const ProductsPage = () => {
 
             <hr />
             {/* Color Filter */}
-            <div className='my-4'>
+            {/* <div className='my-4'>
               <h4 className='mb-2'>Màu sắc</h4>
               <div className='flex flex-wrap gap-2'>
                 {[
@@ -282,7 +282,7 @@ const ProductsPage = () => {
                   <div key={index} className={`w-6 h-6 border rounded cursor-pointer ${colorClass}`} />
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </Drawer>
@@ -315,7 +315,7 @@ const ProductsPage = () => {
                       </span>
                     )} */}
                 </div>
-              </Link>
+             
               <div className='mx-2 text-center space-y-2 mt-3'>
                 <h3>{product?.name}</h3>
                 <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
@@ -326,7 +326,7 @@ const ProductsPage = () => {
                     </span>
                   }
                 </div>
-                <div className='flex space-x-4'>
+                {/* <div className='flex space-x-4'>
                   {product.variants.map((variant, idx) => {
                     const value = variant.option_value_id.value
                     const bgColor =
@@ -349,8 +349,10 @@ const ProductsPage = () => {
                       />
                     )
                   })}
-                </div>
+                </div> */}
+                <Button className='mt-2'>xem chi tiết</Button>
               </div>
+              </Link>
             </div>
           )
         })}

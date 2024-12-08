@@ -376,14 +376,14 @@ const ProductDetail = () => {
                 </table>
               </div>
             </div>
-            {/* <div className='description-btn flex justify-center mt-[10px]'>
+            <div className='description-btn flex justify-center mt-[10px]'>
               <button
                 className={`expandable-content_toggle ${isCollapsed ? 'border border-red-500 text-[#fca120]' : 'text-[#fca120]'} p-2 rounded-md`}
                 onClick={handleToggleCollapse}
               >
                 {isCollapsed ? '+ Xem thêm' : '- Rút gọn nội dung'}
               </button>
-            </div> */}
+            </div>
           </div>
         </div>
         {/* Product Description */}
@@ -392,7 +392,7 @@ const ProductDetail = () => {
           className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[350px] `}
         >
           {' '}
-          <div>
+          <div className='review lg:-mt-[100px] xl:mt-[200px] '>
             <ReviewComponent product={product} />{' '}
           </div>
         </div>

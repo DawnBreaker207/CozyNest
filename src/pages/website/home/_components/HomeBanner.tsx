@@ -26,7 +26,7 @@ const HomeBanner = () => {
                 </p>
                 <div className='action-home-banner mt-5 '>
                   <a
-                    href='#'
+                    href='articles/6755aa7c1744eb758094ec8c'
                     className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out  inline-block'
                   >
                     xem thêm
@@ -57,7 +57,7 @@ const HomeBanner = () => {
                 </p>
                 <div className='action-home-banner mt-5'>
                   <a
-                    href='#'
+                    href='articles/6755b4681744eb758094ef71'
                     className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out  inline-block'
                   >
                     xem thêm
