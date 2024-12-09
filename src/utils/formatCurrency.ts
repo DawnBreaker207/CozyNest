@@ -1,8 +1,10 @@
 const CURRENCY_FORMATTER = new Intl.NumberFormat(undefined, {
-  currency: 'USD',
-  style: 'currency'
+  currency: 'VND',
+  style: 'currency',
+  currencyDisplay: 'narrowSymbol'
 })
 
 export const formatCurrency = (number: number) => {
-  return CURRENCY_FORMATTER.format(number)
+  const formatted = CURRENCY_FORMATTER.format(number)
+  return formatted.replace(/^(\D+)(.+)$/, '$2 $1').trim()
 }

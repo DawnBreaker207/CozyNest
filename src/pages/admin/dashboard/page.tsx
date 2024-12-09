@@ -2,6 +2,7 @@ import instance from '@/configs/axios'
 import { useEffect, useState } from 'react'
 import Revenue from './component/Revenue'
 import { Table, Tag } from 'antd'
+import { formatCurrency } from '../../../utils/formatCurrency'
 interface Order {
   _id: string
   customer_name: string
@@ -121,9 +122,7 @@ const DashboardPage: React.FC = () => {
               <img src='/src/assets/images/content/thu-nhap.png' alt='' className='size-8' />
               <p className='font-medium text-lg'>Tổng doanh thu</p>
             </div>
-            <span className='text-xl font-semibold'>
-              {totalRevenue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
-            </span>
+            <span className='text-xl font-semibold'>{formatCurrency(totalRevenue)}</span>
           </div>
         </div>
         <div className='rounded-xl shadow-xl'>
@@ -155,7 +154,7 @@ const DashboardPage: React.FC = () => {
         </div>
       </div>
       <div className='grid grid-cols-2 gap-x-8 gap-y-10'>
-        <div> 
+        <div>
           <div className='bg-white p-4 rounded-lg shadow-xl'>
             <h2 className='text-2xl font-semibold mb-5 text-center'>Đơn hàng gần nhất</h2>
             <div className='p-4'>

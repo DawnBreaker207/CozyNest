@@ -328,7 +328,11 @@ const Header = () => {
                       dataSource={results}
                       renderItem={(item: any) => (
                         <List.Item>
-                          <img src={item.thumbnail} alt={item.name} style={{ width: 50, height: 50, marginRight: 8 }} />
+                          <img
+                            src={item?.images?.[0]?.url}
+                            alt={item.name}
+                            style={{ width: 50, height: 50, marginRight: 8 }}
+                          />
                           <div>
                             <strong>{item.name}</strong>
                             <p className='text-sm text-gray-500'>{item.description}</p>
