@@ -59,7 +59,7 @@ const OrderDetail = () => {
             console.error('Đơn hàng không tồn tại')
             return
           }
-          if (currentOrder.status !== 'Processing' && currentOrder.status !== 'Pending') {
+          if (currentOrder?.res?.status !== 'Processing' && currentOrder?.res?.status !== 'Pending') {
             // Hiển thị thông báo bằng Ant Design
             notification.error({
               message: 'Thông báo',

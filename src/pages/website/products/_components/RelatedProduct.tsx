@@ -32,38 +32,38 @@ const RelatedProduct = ({ id }: Props) => {
       <h2 className='text-[#fca120] font-semibold text-[25px] mb-8'>Xem thêm sản phẩm cùng loại</h2>
       <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
         {products
-        .filter((product) => !product.is_hidden)
-        .map((product) => {
-          console.log(product)
+          .filter((product) => !product.is_hidden)
+          .map((product) => {
+            console.log(product)
 
-          // Kiểm tra các variant và lấy giá trị từ sku_id
-          const firstVariant = product?.variants?.[0]
-          console.log(firstVariant)
+            // Kiểm tra các variant và lấy giá trị từ sku_id
+            const firstVariant = product?.variants?.[0]
+            console.log(firstVariant)
 
-          const price = firstVariant?.sku_id?.price || 0 // Sử dụng giá mặc định là 0 nếu không có giá
-          // const priceDiscountPercent = firstVariant?.sku_id?.price_discount_percent || 0
-          // const discountedPrice = price - price * (priceDiscountPercent / 100)
+            const price = firstVariant?.sku_id?.price || 0 // Sử dụng giá mặc định là 0 nếu không có giá
+            // const priceDiscountPercent = firstVariant?.sku_id?.price_discount_percent || 0
+            // const discountedPrice = price - price * (priceDiscountPercent / 100)
 
-          return (
-            <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
-              <Link to={`/detail/${product._id}`}>
+            return (
+              <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
                 <div className='relative'>
                   <div className='flex transition-transform ease-in-out duration-500'>
-                    <img
-                      src={
-                        hoveredImages[product._id] || // Ảnh hiện tại được hover
-                        product?.variants?.[0]?.sku_id?.image?.[0] || // Ảnh mặc định ban đầu
-                        'default-image.jpg' // Ảnh mặc định nếu không có
-                      }
-                      alt={product?.name}
-                      className='object-cover'
-                    />
+                    <a href={`/detail/${product._id}`}>
+                      <img
+                        src={
+                          hoveredImages[product._id] || // Ảnh hiện tại được hover
+                          product?.variants?.[0]?.sku_id?.image?.[0] || // Ảnh mặc định ban đầu
+                          'default-image.jpg' // Ảnh mặc định nếu không có
+                        }
+                        alt={product?.name}
+                        className='object-cover'
+                      />
+                      <FaRegEye
+                        className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
+                        title='Xem nhanh'
+                      />
+                    </a>
                   </div>
-
-                  <FaRegEye
-                    className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                    title='Xem nhanh'
-                  />
                 </div>
 
                 <div className='mx-2 text-center space-y-2 mt-3'>
@@ -76,10 +76,9 @@ const RelatedProduct = ({ id }: Props) => {
                   </div>
                   <Button>xem chi tiết</Button>
                 </div>
-              </Link>
-            </div>
-          )
-        })}
+              </div>
+            )
+          })}
       </div>
     </div>
   )
