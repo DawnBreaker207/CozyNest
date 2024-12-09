@@ -14,7 +14,7 @@ const AdminOrderPage = () => {
     queryKey: ['orders'],
     queryFn: async () => {
       try {
-        return await instance.get('/orders', {
+        return await instance.get('/orders?_sort=createdAt', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -24,6 +24,8 @@ const AdminOrderPage = () => {
       }
     }
   })
+  console.log(data)
+
   const dataSource =
     data?.data?.res?.items.map((order: any, index: number) => ({
       key: index + 1,
