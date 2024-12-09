@@ -87,7 +87,7 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
       <h2 className='text-lg font-semibold mb-4'>Địa chỉ giao hàng</h2>
       <Form className='' layout='vertical' onFinish={onFinish}>
         <Form.Item
-          name='fullName'
+          name='customer_name'
           rules={[
             { required: true, message: 'Vui lòng nhập họ và tên' },
             {

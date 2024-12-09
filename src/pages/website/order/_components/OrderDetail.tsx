@@ -84,13 +84,18 @@ const OrderDetail = () => {
       title: 'Hình ảnh',
       dataIndex: 'thumbnail',
       key: 'thumbnail',
-      render: () => (
-        <img
-          src='https://res.cloudinary.com/didbnrsmz/image/upload/v1732811019/CozyNest/T%E1%BB%A7_Gi%C3%A0y_T%E1%BB%A7_Trang_Tr%C3%AD_G%E1%BB%97_MOHO_VIENNA_203_qwp3uh.webp'
-          alt='product'
-          className='w-16 h-16'
-        />
-      )
+      render: (text, record) => {
+        // Sử dụng trực tiếp từ `record` đã được map
+        const image = record.thumbnail // Lấy hình ảnh từ `record.thumbnail`
+
+        return (
+          <img
+            src={image || 'default-image.jpg'} // Kiểm tra nếu không có ảnh thì sử dụng ảnh mặc định
+            alt={record.name || 'product'}
+            className='w-16 h-16'
+          />
+        )
+      }
     },
     { title: 'Mô tả', dataIndex: 'name', key: 'name' },
     { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
@@ -169,7 +174,7 @@ const OrderDetail = () => {
           dataSource={order.order_details.products.map((product: any) => ({
             ...product,
             name: product.sku_id.name,
-            thumbnail: product.sku_id.image,
+            thumbnail: product.sku_id.image[0],
             total: product.price * product.quantity
           }))}
           rowKey={(record) => record.productId}

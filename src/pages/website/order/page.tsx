@@ -112,11 +112,7 @@ const CheckoutPage = () => {
             return (
               <div key={product.sku_id._id} className='mb-5 flex justify-between items-center'>
                 <div className='flex items-center gap-3'>
-                  <img
-                    src={product.sku_id.product_id.images[0].url}
-                    className='xl:w-20 lg:w-20 w-16 sm:w-20'
-                    alt={product.name}
-                  />
+                  <img src={product.sku_id.image[0]} className='xl:w-20 lg:w-20 w-16 sm:w-20' alt={product.name} />
                   <div className='flex flex-col'>
                     <span className='font-semibold text-[#252A2B]'>{product.sku_id.product_id.name}</span>
 

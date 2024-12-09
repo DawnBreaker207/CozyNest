@@ -453,7 +453,7 @@ const Header = () => {
                       {/* Hình ảnh và thông tin sản phẩm */}
                       <div className='flex items-center'>
                         <img
-                          src={product.sku_id.product_id.images[0].url}
+                          src={product.sku_id.image[0]}
                           alt={product.sku_id.name}
                           className='w-16 h-20 object-cover'
                         />

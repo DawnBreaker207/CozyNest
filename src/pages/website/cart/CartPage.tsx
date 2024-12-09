@@ -68,9 +68,6 @@ const CartPage = () => {
     }
   }
 
-  const couponCode1 = 'EORI9894'
-  const couponCode2 = 'EORI9894'
-  const couponCode3 = 'EORI9894'
 
   return (
     <div className='mb-32 mt-5 '>
@@ -129,7 +126,7 @@ const CartPage = () => {
                       <div className='flex items-center gap-4'>
                         <div>
                           <img
-                            src={product.sku_id.product_id.images[0]?.url || product.sku_id.product_id.thumbnail} // Hiển thị hình ảnh
+                            src={product.sku_id.image[0] || product.sku_id.product_id.thumbnail} // Hiển thị hình ảnh
                             alt={product.sku_id.product_id.name} // Sử dụng tên sản phẩm cho alt
                             className='md:size-20 size-14 min-w-14 min-h-14'
                           />
