@@ -74,7 +74,7 @@ const StockProblem = () => {
             <div key={index} className='flex justify-between items-center'>
               <div className='flex items-center space-x-4'>
                 <img
-                  src='https://picsum.photos/seed/picsum/200/300'
+                  src={issue.image || 'https://picsum.photos/seed/picsum/200/300'}
                   alt='Product'
                   className='w-24 h-24 object-cover rounded'
                 />

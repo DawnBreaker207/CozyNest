@@ -126,9 +126,8 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   return (
     <div>
       <p className='text-sm space-x-2'>
-        <Link to={`/cart`}>Giỏ hàng</Link> <RightOutlined />{' '}
-        <Link to={`/cart/check_out_form`}>Thông tin giao hàng</Link> <RightOutlined />{' '}
-        <Link to={`/cart/check_out_form`}>Phương thức thanh toán</Link>
+        <Link to={`/cart`}>Giỏ hàng</Link> <RightOutlined /> <Link to={`/check_out`}>Thông tin giao hàng</Link>{' '}
+        <RightOutlined /> <Link to={``}>Phương thức thanh toán</Link>
       </p>
       <Form layout='vertical' onFinish={handlePayment}>
         <h2 className='text-lg font-semibold mb-4 mt-7'>Phương thức thanh toán</h2>
