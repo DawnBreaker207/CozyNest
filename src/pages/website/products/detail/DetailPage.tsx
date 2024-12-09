@@ -395,7 +395,7 @@ const ProductDetail = () => {
           className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[350px] `}
         >
           {' '}
-          <div className='review lg:-mt-[100px] xl:mt-[200px] '>
+          <div className='review lg:-mt-[180px] xl:mt-[280px] '>
             <ReviewComponent product={product} />{' '}
           </div>
         </div>
