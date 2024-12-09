@@ -79,8 +79,10 @@ const CheckoutPage = () => {
     setCouponValue(coupon.couponValue)
   }
   // Tính tổng sau khi áp dụng giảm giá và chi phí lắp đặt
-  const totalAfterDiscount = calculateTotal() + 50000 + installationFee - couponValue
-
+  let totalAfterDiscount = calculateTotal() + 50000 + installationFee - couponValue
+  if (totalAfterDiscount < 0) {
+    totalAfterDiscount = 0
+  }
   const isEligibleForDiscount = totalAfterDiscount >= 500000
 
   return (
