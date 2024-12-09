@@ -3,7 +3,7 @@ import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Col, Modal, Row, Table, Tag } from 'antd'
+import { Button, Col, Modal, Row, Spin, Table, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -14,8 +14,6 @@ const AdminOrderDetail = () => {
   const queryClient = useQueryClient()
   const [user] = useCookie('user', {})
   const username = user?.username
-  console.log(username)
-
   // Lấy chi tiết đơn hàng
   const { data, isLoading, isError } = useQuery({
     queryKey: ['orderDetail', id],
@@ -65,7 +63,6 @@ const AdminOrderDetail = () => {
     try {
       // Cập nhật trạng thái đơn hàng trên server
       await instance.put(`/orders/updateStatusOrder/${id}`, { status: newStatus })
-      console.log(`Order ${id} updated to ${newStatus}`)
 
       // Cập nhật lại trạng thái trong state
       setCurrentStatus(newStatus)
@@ -89,14 +86,17 @@ const AdminOrderDetail = () => {
     })
   }
 
-  if (isLoading) return <div>Đang tải...</div>
+  if (isLoading)
+    return (
+      <div>
+        <Spin size='large' />
+      </div>
+    )
   if (isError) return <div>Lỗi khi tải chi tiết đơn hàng</div>
   console.log(data)
   const order = data?.res
 
   // Danh sách các trạng thái
-  console.log('statuses:', statuses)
-  console.log('currentStatus:', currentStatus)
   return (
     <div className='container mx-auto mt-10 px-6'>
       <h1 className='text-2xl font-bold mb-6'>Chi tiết đơn hàng</h1>
@@ -215,13 +215,17 @@ const AdminOrderDetail = () => {
               title: 'Ảnh sản phẩm',
               dataIndex: 'sku_id',
               key: 'image',
-              render: (sku) => (
-                <img
-                  src={sku?.image || 'https://picsum.photos/seed/picsum/200/300'}
-                  alt={sku?.name || 'Product Image'}
-                  style={{ width: 70, height: 70, objectFit: 'cover', borderRadius: 4 }}
-                />
-              )
+              render: (sku) => {
+                // Lấy ảnh đầu tiên trong mảng image của sku_id
+                const imageUrl = sku?.image?.[0] || 'https://picsum.photos/seed/picsum/200/300' // Ảnh mặc định nếu không có
+                return (
+                  <img
+                    src={imageUrl}
+                    alt={sku?.name || 'Product Image'}
+                    style={{ width: 70, height: 70, objectFit: 'cover', borderRadius: 4 }}
+                  />
+                )
+              }
             },
             {
               title: 'Tên sản phẩm',
@@ -279,8 +283,8 @@ const AdminOrderDetail = () => {
             },
             {
               title: 'Phí vận chuyển',
-              dataIndex: 'couponValue',
-              key: 'couponValue',
+              dataIndex: 'shippingFee',
+              key: 'shippingFee',
               render: (value) => `${value.toLocaleString()} VNĐ`
             },
             {
@@ -291,8 +295,8 @@ const AdminOrderDetail = () => {
             },
             {
               title: 'Giảm Giá',
-              dataIndex: 'installationFee',
-              key: 'installationFee',
+              dataIndex: 'couponValue',
+              key: 'couponValue',
               render: (value) => `${value.toLocaleString()} VNĐ`
             },
             {

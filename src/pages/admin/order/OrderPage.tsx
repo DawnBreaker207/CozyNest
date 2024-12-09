@@ -3,7 +3,7 @@ import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, DatePicker, Space, Table, Tag } from 'antd'
+import { Button, DatePicker, Space, Spin, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
 
 const AdminOrderPage = () => {
@@ -120,7 +120,12 @@ const AdminOrderPage = () => {
     }
   ]
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div>
+        <Spin size='large' />
+      </div>
+    )
   if (isError) return <div>{error.message}</div>
 
   return (

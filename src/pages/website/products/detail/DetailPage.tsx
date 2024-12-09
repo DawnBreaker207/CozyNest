@@ -71,6 +71,7 @@ const ProductDetail = () => {
     setSelectedColorId(id) // Cập nhật id màu sắc được chọn
     setPriceVar(price)
   }
+  const selectedVariant = variants.find((variant: any) => variant.sku_id._id === selectedColorId)
   //Kiểm tra dữ liệu product
   if (!data || !data) return <Spin size='large' />
   const product = data
@@ -189,12 +190,11 @@ const ProductDetail = () => {
             <h1 className=' font-bold text-2xl'>{product.name}</h1>
             <div className='flex gap-[30px] mt-3'>
               <span id='pro_sku' className='text-sm font-light'>
-                Mã sản phẩm:{' '}
-                <span className='text-[#fca120] font-semibold ml-1'>{product?.variants?.[0]?.sku_id?.SKU}</span>
+                Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'>{selectedVariant?.sku_id?.SKU}</span>
               </span>
               <span className='text-sm font-light'>
                 Số lượng kho:{' '}
-                <span className='text-[#fca120] font-semibold ml-1'>{product?.variants?.[0]?.sku_id?.stock}</span>
+                <span className='text-[#fca120] font-semibold ml-1'>{selectedVariant?.sku_id?.stock}</span>
               </span>
               <span className='text-sm font-light'>
                 Thương hiệu:
@@ -204,11 +204,29 @@ const ProductDetail = () => {
           </div>
 
           {/* Price Section */}
-
+          <div className='price flex justify-start items-center gap-3 mt-[30px]'>
+            <span className='name-price text-[19px] font-semibold'>Giá:</span>
+            <div className='pricedetail flex flex-row items-center gap-2'>
+              {/* Hiển thị giá sau khi giảm */}
+              <span className='text-[#FF0000] font-semibold text-[24px]'>{priceVar.toLocaleString()}₫</span>
+              {/* Kiểm tra nếu có giảm giá và hiển thị giá cũ bị gạch ngang */}
+              {product.variants[0]?.sku_id?.price_discount_percent > 0 && (
+                <>
+                  {/* <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
+                    {product.variants[0]?.sku_id?.price_discount_percent}%
+                  </span> */}
+                  {/* Giá trước khi giảm */}
+                  <span className='text-gray-500 line-through text-[18px]'>
+                    {product.variants[0]?.sku_id?.price.toLocaleString()}₫
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
           {/* Màu sắc Section */}
           <div className='flex flex-wrap items-center mt-6 gap-3'>
             <h2 className='font-semibold'>Màu sắc:</h2>
-            {product.variants.map((variant: any) => {
+            {variants.map((variant: any) => {
               const color = variant.option_value_id
               const isSelected = selectedColorId === variant.sku_id._id
               const isHovered = hoveredColorId === variant._id
@@ -216,14 +234,14 @@ const ProductDetail = () => {
                 color.value === 'Nâu' ? 'bg-[#A0522D]' : color.value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
 
               // Tên màu hiển thị khi hover hoặc select
-              const displayName = isSelected || isHovered ? color.label || color.value : colors[0]?.value
+              const displayName =
+                isSelected || isHovered ? color.label || color.value : variants[0]?.option_value_id.value
 
               return (
                 <button
                   key={variant.sku_id._id}
                   onClick={() => {
                     handleColorSelect(variant.sku_id._id, variant.sku_id.price)
-                    setActiveImageIndex((activeImageIndex + 1) % product.images.length)
                   }}
                   onMouseEnter={() => setHoveredColorId(variant._id)}
                   onMouseLeave={() => setHoveredColorId(null)}
@@ -252,7 +270,6 @@ const ProductDetail = () => {
               )
             })}
           </div>
-
           {/* Quantity Section */}
           <div className='btn_1'>
             <div className='flex items-center gap-4 mt-4'>
