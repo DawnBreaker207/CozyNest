@@ -189,7 +189,8 @@ const ProductDetail = () => {
             <h1 className=' font-bold text-2xl'>{product.name}</h1>
             <div className='flex gap-[30px] mt-3'>
               <span id='pro_sku' className='text-sm font-light'>
-                Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'>{product.SKU}</span>
+                Mã sản phẩm:{' '}
+                <span className='text-[#fca120] font-semibold ml-1'>{product?.variants?.[0]?.sku_id?.SKU}</span>
               </span>
               <span className='text-sm font-light'>
                 Số lượng kho:{' '}

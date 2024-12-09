@@ -68,7 +68,6 @@ const CartPage = () => {
     }
   }
 
-
   return (
     <div className='mb-32 mt-5 '>
       <div className='container'>
@@ -143,7 +142,7 @@ const CartPage = () => {
                           )}
                           <div className='flex items-center gap-[10px]'>
                             <span className='text-red-500 font-semibold'>
-                               {product.price.toLocaleString()}₫ {/* Giá thay đổi theo số lượng */}
+                              {product.price.toLocaleString()}₫ {/* Giá thay đổi theo số lượng */}
                             </span>
                             {/* <span className='font-light line-through text-xs'>
                               {product.price.toLocaleString()}₫ 
@@ -153,7 +152,7 @@ const CartPage = () => {
                       </div>
                       <div className='flex flex-col gap-2 items-center'>
                         <span className='text-red-500 font-semibold text-end'>
-                          {(product.price * product.quantity).toLocaleString()}₫ 
+                          {(product.price * product.quantity).toLocaleString()}₫
                         </span>
                         <div className='flex items-center justify-center'>
                           <button
@@ -238,11 +237,13 @@ const CartPage = () => {
                 </li>
                 <li className='text-sm flex items-center'>
                   <div className='w-[6px] h-[6px] bg-[#252A2B] rounded-full mr-2'></div>
-                   Khách hàng thanh toán toàn bộ giá trị đơn hàng <br /> sau khi nhận và kiểm tra sản phẩm tại địa chỉ giao hàng.
+                  Khách hàng thanh toán toàn bộ giá trị đơn hàng <br /> sau khi nhận và kiểm tra sản phẩm tại địa chỉ
+                  giao hàng.
                 </li>
                 <li className='text-sm flex items-center'>
                   <div className='w-[6px] h-[6px] bg-[#252A2B] rounded-full mr-2'></div>
-                  Quý khách vui lòng chuyển khoản trước vào tài <br /> khoản  ngân hàng  của công ty và cung cấp thông tin <br /> giao dịch để xác nhận.
+                  Quý khách vui lòng chuyển khoản trước vào tài <br /> khoản ngân hàng của công ty và cung cấp thông tin{' '}
+                  <br /> giao dịch để xác nhận.
                 </li>
               </ul>
 

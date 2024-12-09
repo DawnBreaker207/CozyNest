@@ -26,7 +26,6 @@ const EditCategoryPage = () => {
   useEffect(() => {
     if (data?.res?.thumbnail) {
       setThumbnail(data.res.thumbnail)
-
     }
   }, [data])
 
@@ -111,7 +110,7 @@ const EditCategoryPage = () => {
                   <img src={thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
                   <span className='mt-2'>
-                    <img src={data?.res?.thumbnail} alt="thumbnail" />
+                    <img src={data?.res?.thumbnail} alt='thumbnail' />
                   </span>
                 )}
               </Form.Item>

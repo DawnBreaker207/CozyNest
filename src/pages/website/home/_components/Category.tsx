@@ -134,7 +134,7 @@ const Category = () => {
         <div className='sectionContent'>
           <Slider {...settings}>
             {/* Item 1 */}
-            {categories.map((category,) => (
+            {categories.map((category) => (
               <Link to={`/category/${category._id}`} key={category._id} className='block  py-2 text-gray-700'>
                 <div className='item-category p-3'>
                   {' '}

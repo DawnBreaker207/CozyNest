@@ -34,8 +34,7 @@ const ReviewComponent = ({ product }: any) => {
     }
   })
   const dataReview = data?.data?.data || []
-console.log(product);
-
+  console.log(product)
 
   const { mutate } = useMutation({
     mutationFn: async (formData: IReview) => {

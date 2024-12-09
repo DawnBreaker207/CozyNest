@@ -17,7 +17,7 @@ const BannerSection = () => {
           <div className='info-banner-bottom text-center p-5   '>
             <div className='title-text-banner mb-4 text-center'>
               <h4 className='lg:text-5xl text-2xl font-normal text-[#fca120]'>
-                <a  href='articles/6755bdf510b20aaf2466bc49' aria-label='Trang trí phòng khách'>
+                <a href='articles/6755bdf510b20aaf2466bc49' aria-label='Trang trí phòng khách'>
                   Trang trí phòng khách
                 </a>
               </h4>
@@ -31,7 +31,7 @@ const BannerSection = () => {
                 className='border border-gray-200 px-8 py-3 bg-white rounded text-current no-underline outline-none transition duration-300 ease-in-out mt-4 inline-block'
                 href='articles/6755bdf510b20aaf2466bc49'
                 aria-label='Trang trí phòng khách'
-              > 
+              >
                 Xem ngay
               </a>
             </div>
