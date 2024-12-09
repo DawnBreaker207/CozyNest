@@ -150,7 +150,7 @@ const AdminOrderPage = () => {
 
       {/* Table */}
       <div className='bg-white p-6 rounded shadow'>
-        <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 5 }} />
+        <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 10 }} />
       </div>
     </div>
   )
