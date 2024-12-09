@@ -31,11 +31,12 @@ const LayoutAdmin: React.FC = () => {
   const { Logout } = useUser()
   const userJson = useCookie('user', {})
   const role = userJson ? userJson?.[0].role : null
+  console.log(role)
   // Trạng thái kiểm tra quyền
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
 
   useEffect(() => {
-    if (role === 'admin' || role === 'manager') {
+    if (role === 'admin'  || role === 'manager' || role === 'shipper') {
       setIsAuthorized(true)
       navigate('/admin') // Điều hướng vào trang admin
     } else {
@@ -215,61 +216,54 @@ const LayoutAdmin: React.FC = () => {
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div className='demo-logo-vertical' />
         <Menu
-          theme='dark'
-          mode='inline'
-          defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: '1',
-              icon: <AppstoreOutlined />,
-              label: <NavLink to={`/admin`}>Dashboard</NavLink>
-            },
-            {
-              key: '2',
-              icon: <ApartmentOutlined />,
-              label: <NavLink to={`/admin/products`}>Quản lý sản phẩm </NavLink>
-            },
-            {
-              key: '3',
-              icon: <OrderedListOutlined />,
-              label: <NavLink to={`/admin/categories`}>Quản lý danh mục</NavLink>
-            },
-            {
-              key: '4',
-              icon: <UploadOutlined />,
-              label: <NavLink to={`/admin/order`}>Quản lý đơn hàng </NavLink>
-            },
-            {
-              key: '5',
-              icon: <CalendarOutlined />,
-              label: <NavLink to={`/admin/articles`}>Bài viết</NavLink>
-            },
-            {
-              key: '6',
-              icon: <CommentOutlined />,
-              label: <NavLink to={`/admin/reviews`}>Bình luận</NavLink>
-            },
-            {
-              key: '7',
-              icon: <UserOutlined />,
-              label: <NavLink to={`/admin/customer`}>Quản lý khách hàng</NavLink>
-            },
-            {
-              key: '8',
-              icon: <OrderedListOutlined />,
-              label: <NavLink to={`/admin/coupons`}>Mã giảm giá</NavLink>
-            },
-            {
-              key: '9',
-              icon: <LogoutOutlined />,
-              label: (
-                <NavLink to='#' onClick={handleLogout}>
-                  Đăng xuất
-                </NavLink>
-              )
-            }
-          ]}
-        />
+      theme='dark'
+      mode='inline'
+      defaultSelectedKeys={['1']}
+    >
+      {/* Menu cho admin */}
+      {role === 'admin' && (
+        <>
+          <Menu.Item key='1' icon={<AppstoreOutlined />}>
+            <NavLink to='/admin'>Dashboard</NavLink>
+          </Menu.Item>
+          <Menu.Item key='2' icon={<ApartmentOutlined />}>
+            <NavLink to='/admin/products'>Quản lý sản phẩm</NavLink>
+          </Menu.Item>
+          <Menu.Item key='3' icon={<OrderedListOutlined />}>
+            <NavLink to='/admin/categories'>Quản lý danh mục</NavLink>
+          </Menu.Item>
+          <Menu.Item key='4' icon={<UploadOutlined />}>
+            <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
+          </Menu.Item>
+          <Menu.Item key='5' icon={<CalendarOutlined />}>
+            <NavLink to='/admin/articles'>Bài viết</NavLink>
+          </Menu.Item>
+          <Menu.Item key='6' icon={<CommentOutlined />}>
+            <NavLink to='/admin/reviews'>Bình luận</NavLink>
+          </Menu.Item>
+          <Menu.Item key='7' icon={<UserOutlined />}>
+            <NavLink to='/admin/customer'>Quản lý khách hàng</NavLink>
+          </Menu.Item>
+          <Menu.Item key='8' icon={<OrderedListOutlined />}>
+            <NavLink to='/admin/coupons'>Mã giảm giá</NavLink>
+          </Menu.Item>
+        </>
+      )}
+
+      {/* Menu cho shipper */}
+      {role === 'shipper' && (
+        <Menu.Item key='4' icon={<UploadOutlined />}>
+          <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
+        </Menu.Item>
+      )}
+
+      {/* Menu đăng xuất */}
+      <Menu.Item key='9' icon={<LogoutOutlined />}>
+        <NavLink to='#' onClick={handleLogout}>
+          Đăng xuất
+        </NavLink>
+      </Menu.Item>
+    </Menu>
       </Sider>
       <Layout>
         {isAddProductPage && renderHeader('Add Product')}
