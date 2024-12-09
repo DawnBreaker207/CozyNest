@@ -133,8 +133,9 @@ const ProductList = ({ products = [] }: ProductListProps) => {
       {/* Data cart */}
       {selectedProduct && ( // Đảm bảo chỉ render nếu selectedProduct tồn tại
         <div
-          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-            }`}
+          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${
+            isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+          }`}
         >
           <div className='bg-white p-5 rounded-lg'>
             <div className='float-right'>
@@ -373,53 +374,55 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                   </button> */}
         </h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
-          {products.map((product) => {
-            console.log(product)
+          {products
+            .filter((product) => !product.is_hidden)
+            .map((product) => {
+              console.log(product)
 
-            // Kiểm tra các variant và lấy giá trị từ sku_id
-            const firstVariant = product?.variants?.[0]
-            console.log(firstVariant)
+              // Kiểm tra các variant và lấy giá trị từ sku_id
+              const firstVariant = product?.variants?.[0]
+              console.log(firstVariant)
 
-            const price = firstVariant?.sku_id?.price || 0 // Sử dụng giá mặc định là 0 nếu không có giá
-            // const priceDiscountPercent = firstVariant?.sku_id?.price_discount_percent || 0
-            // const discountedPrice = price - price * (priceDiscountPercent / 100)
+              const price = firstVariant?.sku_id?.price || 0 // Sử dụng giá mặc định là 0 nếu không có giá
+              // const priceDiscountPercent = firstVariant?.sku_id?.price_discount_percent || 0
+              // const discountedPrice = price - price * (priceDiscountPercent / 100)
 
-            return (
-              <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
-                <Link to={`/detail/${product._id}`}>
-                  <div className='relative'>
-                    <div className='flex transition-transform ease-in-out duration-500'>
-                      <img
-                        src={
-                          hoveredImages[product._id] || // Ảnh hiện tại được hover
-                          product?.variants?.[0]?.sku_id?.image?.[0] || // Ảnh mặc định ban đầu
-                          'default-image.jpg' // Ảnh mặc định nếu không có
-                        }
-                        alt={product?.name}
-                        className='object-cover'
+              return (
+                <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
+                  <Link to={`/detail/${product._id}`}>
+                    <div className='relative'>
+                      <div className='flex transition-transform ease-in-out duration-500'>
+                        <img
+                          src={
+                            hoveredImages[product._id] || // Ảnh hiện tại được hover
+                            product?.variants?.[0]?.sku_id?.image?.[0] || // Ảnh mặc định ban đầu
+                            'default-image.jpg' // Ảnh mặc định nếu không có
+                          }
+                          alt={product?.name}
+                          className='object-cover'
+                        />
+                      </div>
+
+                      <FaRegEye
+                        className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
+                        title='Xem nhanh'
                       />
                     </div>
 
-                    <FaRegEye
-                      className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                      title='Xem nhanh'
-                    />
-                  </div>
-
-                  <div className='mx-2 text-center space-y-2 mt-3'>
-                    <h3>{product?.name}</h3>
-                    <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                      {/* Hiển thị giá thay đổi khi hover */}
-                      <span className='text-[#FF0000] font-semibold'>
-                        {(hoveredPrices[product._id] || product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
-                      </span>
-                      {/* {hoveredPrices[product._id] ? (
+                    <div className='mx-2 text-center space-y-2 mt-3'>
+                      <h3>{product?.name}</h3>
+                      <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+                        {/* Hiển thị giá thay đổi khi hover */}
+                        <span className='text-[#FF0000] font-semibold'>
+                          {(hoveredPrices[product._id] || product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
+                        </span>
+                        {/* {hoveredPrices[product._id] ? (
                         <span className='text-[#878c8f] font-light line-through text-[13px]'>
                           {product?.variants?.[0]?.sku_id?.price.toLocaleString()}₫
                         </span>
                       ) : null} */}
-                    </div>
-                    {/* <div className='flex space-x-4'>
+                      </div>
+                      {/* <div className='flex space-x-4'>
                       {product.variants.map((variant, idx) => {
                         const value = variant.option_value_id.value
                         const bgColor =
@@ -462,13 +465,12 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                         )
                       })}
                     </div> */}
-                    <Button >xem chi tiết</Button>
-                  </div>
-
-                </Link>
-              </div>
-            )
-          })}
+                      <Button>xem chi tiết</Button>
+                    </div>
+                  </Link>
+                </div>
+              )
+            })}
         </div>
       </div>
     </>

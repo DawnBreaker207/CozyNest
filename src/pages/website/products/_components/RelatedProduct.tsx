@@ -29,9 +29,7 @@ const RelatedProduct = ({ id }: Props) => {
 
   return (
     <div className='mt-10'>
-      <h2 className='text-[#fca120] font-semibold text-[25px] mb-8'>
-        Xem thêm sản phẩm cùng loại
-      </h2>
+      <h2 className='text-[#fca120] font-semibold text-[25px] mb-8'>Xem thêm sản phẩm cùng loại</h2>
       <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
         {products.map((product) => {
           console.log(product)
@@ -74,9 +72,8 @@ const RelatedProduct = ({ id }: Props) => {
                       {(hoveredPrices[product._id] || product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
                     </span>
                   </div>
-                  <Button >xem chi tiết</Button>
+                  <Button>xem chi tiết</Button>
                 </div>
-
               </Link>
             </div>
           )
