@@ -31,7 +31,9 @@ const RelatedProduct = ({ id }: Props) => {
     <div className='mt-10'>
       <h2 className='text-[#fca120] font-semibold text-[25px] mb-8'>Xem thêm sản phẩm cùng loại</h2>
       <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
-        {products.map((product) => {
+        {products
+        .filter((product) => !product.is_hidden)
+        .map((product) => {
           console.log(product)
 
           // Kiểm tra các variant và lấy giá trị từ sku_id
