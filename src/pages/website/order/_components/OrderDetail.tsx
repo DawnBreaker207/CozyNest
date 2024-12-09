@@ -318,6 +318,11 @@ const OrderDetail = () => {
           <p>
             <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
           </p>
+          <p>
+            <strong>
+              Trạng thái thanh toán: {order.payment_method[0].status === 'unpaid' ? 'Chưa thanh toán' : 'Đã thanh toán'}
+            </strong>
+          </p>
         </div>
       </Card>
 

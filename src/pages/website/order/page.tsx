@@ -118,7 +118,7 @@ const CheckoutPage = () => {
 
                     {/* Hiển thị biến thể của sản phẩm */}
                     <span className='font-medium text-[#252A2B] bg-gray-200 w-fit px-2'>
-                      {currentVariant?.option_value_id?.value || 'Không có màu'}
+                      {currentVariant?.option_value_id?.label || 'Không có màu'}
                     </span>
 
                     {/* Hiển thị giá sản phẩm */}
