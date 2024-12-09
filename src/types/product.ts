@@ -24,7 +24,7 @@ export interface IProduct {
   discount: number
   sold: number
   isSale: boolean
-  isHidden: boolean
+  is_hidden: boolean
   images: string[]
   quantity: number
   createdAt: string

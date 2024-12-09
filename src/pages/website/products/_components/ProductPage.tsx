@@ -290,7 +290,9 @@ const ProductsPage = () => {
       </Drawer>
       {/* sản phẩm  */}
       <div className='grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 items-center gap-8 mx-8 mb-4'>
-        {products.map((product) => {
+        {products
+        .filter(product => !product.is_hidden)
+        .map((product) => {
           // Kiểm tra các variant và lấy giá trị từ sku_id
           const firstVariant = product?.variants?.[0]
           console.log(firstVariant)

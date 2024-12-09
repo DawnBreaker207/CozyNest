@@ -26,7 +26,7 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
       discount: 0,
       sold: 0,
       isSale: false,
-      isHidden: false,
+      is_hidden: false,
       images: [] // Làm mảng cho images
     }
   })

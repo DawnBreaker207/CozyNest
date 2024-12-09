@@ -374,7 +374,9 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                   </button> */}
         </h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
-          {products.map((product) => {
+          {products
+          .filter(product => !product.is_hidden)
+          .map((product) => {
             console.log(product)
 
             // Kiểm tra các variant và lấy giá trị từ sku_id
