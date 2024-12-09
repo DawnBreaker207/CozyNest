@@ -4,10 +4,15 @@ import { FaRegEye } from 'react-icons/fa'
 import { Cart } from '@/components/icons'
 import { IProduct } from '@/types/product'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Button } from 'antd'
 type Props = {
   id: string | undefined
 }
 const RelatedProduct = ({ id }: Props) => {
+  const [hoveredImages, setHoveredImages] = useState({})
+  const [hoveredPrices, setHoveredPrices] = useState({})
+
   const { data, isLoading } = useQuery({
     queryKey: ['RELATED_PRODUCT', id],
     queryFn: async () => {
@@ -15,6 +20,7 @@ const RelatedProduct = ({ id }: Props) => {
       return data.res
     }
   })
+  console.log(data)
 
   if (isLoading) return
 
@@ -23,40 +29,55 @@ const RelatedProduct = ({ id }: Props) => {
 
   return (
     <div className='mt-10'>
-      <h1 className='text-[#fca120] font-semibold text-[25px] mb-8'>Xem thêm sản phẩm cùng loại</h1>
+      <h2 className='text-[#fca120] font-semibold text-[25px] mb-8'>Xem thêm sản phẩm cùng loại</h2>
       <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
-        {products.map((product: IProduct, index: number) => (
-          <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 bg-white'>
-            <div className='relative'>
+        {products.map((product) => {
+          console.log(product)
+
+          // Kiểm tra các variant và lấy giá trị từ sku_id
+          const firstVariant = product?.variants?.[0]
+          console.log(firstVariant)
+
+          const price = firstVariant?.sku_id?.price || 0 // Sử dụng giá mặc định là 0 nếu không có giá
+          // const priceDiscountPercent = firstVariant?.sku_id?.price_discount_percent || 0
+          // const discountedPrice = price - price * (priceDiscountPercent / 100)
+
+          return (
+            <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
               <Link to={`/detail/${product._id}`}>
-                <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                  <img src={product?.thumbnail} alt='' className='object-cover' />
-                  <img src={product?.thumbnail} alt='' className='object-cover' />
+                <div className='relative'>
+                  <div className='flex transition-transform ease-in-out duration-500'>
+                    <img
+                      src={
+                        hoveredImages[product._id] || // Ảnh hiện tại được hover
+                        product?.variants?.[0]?.sku_id?.image?.[0] || // Ảnh mặc định ban đầu
+                        'default-image.jpg' // Ảnh mặc định nếu không có
+                      }
+                      alt={product?.name}
+                      className='object-cover'
+                    />
+                  </div>
+
+                  <FaRegEye
+                    className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
+                    title='Xem nhanh'
+                  />
                 </div>
-                <FaRegEye
-                  className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                  title='Xem nhanh'
-                />
+
+                <div className='mx-2 text-center space-y-2 mt-3'>
+                  <h3>{product?.name}</h3>
+                  <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+                    {/* Hiển thị giá thay đổi khi hover */}
+                    <span className='text-[#FF0000] font-semibold'>
+                      {(hoveredPrices[product._id] || product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
+                    </span>
+                  </div>
+                  <Button>xem chi tiết</Button>
+                </div>
               </Link>
-              <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                {product.discount}%
-              </span>
             </div>
-            <div className='mx-2 text-center space-y-2 mt-3'>
-              <h3>{product.name}</h3>
-              <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                <span className='text-[#FF0000] font-semibold'>{product.price}</span>
-                <span className='text-[#878c8f] font-light line-through text-[13px]'>1,250,000₫</span>
-              </div>
-              <button className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'>
-                <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                  <Cart />
-                </div>
-              </button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

@@ -72,7 +72,7 @@ const EditCategoryPage = () => {
     <>
       {contextHolder}
       <div className='bg-white rounded-lg'>
-        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data }}>
+        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data?.res }}>
           <div className='flex justify-between'>
             <div>
               <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Edit Category</span>
@@ -109,7 +109,9 @@ const EditCategoryPage = () => {
                 {thumbnail ? (
                   <img src={thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
-                  <span className='mt-2'>Hiện tại: {data?.res?.thumbnail}</span>
+                  <span className='mt-2'>
+                    <img src={data?.res?.thumbnail} alt='thumbnail' />
+                  </span>
                 )}
               </Form.Item>
             </div>

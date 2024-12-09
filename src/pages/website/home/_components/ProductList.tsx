@@ -17,6 +17,7 @@ type ProductListProps = {
 const ProductList = ({ products }: ProductListProps) => {
   const { addToCart } = useCart() // Sử dụng hook useCart
   const [messageApi, contextHolder] = message.useMessage()
+
   const handleAddToCart = (productId: string) => {
     addToCart(productId) // Thêm sản phẩm vào giỏ hàng
     messageApi.success('Thêm vào giỏ hàng thành công!')

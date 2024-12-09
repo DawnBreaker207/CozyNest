@@ -6,9 +6,44 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProfileModal from './ProfileUpdate'
 import UpdatePasswordModal from './UpdatePassword'
+import { Modal, Button, Upload, message } from 'antd'
+import { UploadOutlined } from '@ant-design/icons'
+import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
+import ProfileUpdateAddress from './ProfileUpdateAddress'
+import { LiaUserEditSolid } from 'react-icons/lia'
+import { TbHomeEdit } from 'react-icons/tb'
+import { MdOutlineEditCalendar } from 'react-icons/md'
+import { TbPasswordUser } from 'react-icons/tb'
 
 const ProfilePage = () => {
-  const [userId, setUserId] = useState<string | undefined>(undefined) // Khai báo state cho userId
+  const [userId, setUserId] = useState<string | undefined>(undefined)
+  const [messageApi, contextHolder] = message.useMessage()
+  const [isAvatarModalVisible, setIsAvatarModalVisible] = useState(false)
+  const [avatar, setAvatar] = useState<string | null>(null) // Ảnh tải lên mới
+  const [prevAvatar, setPrevAvatar] = useState<string | null>(null)
+  const handleAvatarClick = () => setIsAvatarModalVisible(true)
+
+  const handleUpload = (file: File) => {
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg']
+    if (!validImageTypes.includes(file.type)) {
+      message.error('Chỉ cho phép tải lên các định dạng ảnh: JPG, PNG, GIF!')
+      return false
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      message.error('Ảnh tải lên không được lớn hơn 2MB!')
+      return false
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      // Lưu ảnh cũ trước khi cập nhật ảnh mới
+      setPrevAvatar(avatar)
+      setAvatar(reader.result as string)
+      message.success('Tải ảnh lên thành công!')
+    }
+    reader.readAsDataURL(file)
+    return false
+  }
 
   useEffect(() => {
     const userDataString = Cookies.get('user')
@@ -30,30 +65,22 @@ const ProfilePage = () => {
     }
   }, [])
 
-  const [isAccountModalVisible, setIsAccountModalVisible] = useState(false)
-  const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false)
   const [formVisible, setFormVisible] = useState(false)
-
-  const showAccountModal = () => {
-    setIsAccountModalVisible(true)
-  }
-
-  const showPasswordModal = () => {
-    setIsPasswordModalVisible(true)
-  }
-
-  const handleCancel = () => {
-    setIsAccountModalVisible(false)
-    setIsPasswordModalVisible(false)
-  }
+  const [activeTab, setActiveTab] = useState('account')
 
   const handleToggle = (checked: boolean) => {
     setFormVisible(checked)
   }
 
-  // Sử dụng id từ state
   const id = userId || undefined
   const { data: userData, isLoading, error } = useAdminUser(id)
+
+  const { mutate } = useAdminUsersMutations({
+    action: 'UPDATE',
+    onSuccess: () => {
+      messageApi.success('Cập nhật ảnh thành công')
+    }
+  })
 
   if (isLoading) {
     return (
@@ -67,8 +94,12 @@ const ProfilePage = () => {
     return <div>Error: {error.message}</div>
   }
   const userDetail = userData
+  const totalPoints = 200 // Tổng điểm tối đa
+  const currentPoints = userDetail.points || 20 // Điểm hiện tại
+
   return (
     <>
+      {contextHolder}
       <div
         className='flex justify-center items-start bg-gray-100 bg-cover bg-center bg-no-repeat'
         style={{
@@ -81,98 +112,164 @@ const ProfilePage = () => {
       >
         <div className='w-full max-w-7xl flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden mt-10 mb-10'>
           <aside className='w-full md:w-1/4 bg-gray-100 p-6 border-b md:border-r'>
-            <h2 className='text-xl font-semibold text-gray-700 mb-4'>Menu</h2>
+            <div className='text-center mb-6'>
+              <img
+                src={avatar || userDetail.avatar}
+                alt='Avatar'
+                className='w-24 h-24 mx-auto rounded-full border-4 border-pink-300 cursor-pointer'
+                onClick={handleAvatarClick}
+              />
+              <h1 className='text-2xl font-semibold text-gray-700 mt-2'>{userDetail.username}</h1>
+              <div className='mt-2'>
+                {userDetail.status ? (
+                  <span className='text-[#3A5BFF] text-[12px] bg-customBlue px-2 py-[2px] rounded-md'>Active</span>
+                ) : (
+                  <span className='text-[#CC5F5F] text-[12px] bg-customWarning px-2 py-[2px] rounded-md'>Blocked</span>
+                )}
+              </div>
+            </div>
+
+            {/* Phần tích điểm và hạng tài khoản dưới dạng thẻ tín dụng */}
+            <div className='bg-gradient-to-r from-blue-500 to-green-500 p-4 rounded-lg shadow-lg mb-6'>
+              <h2 className='text-white text-xl font-semibold mb-2'>
+                Hạng tài khoản: {userDetail.rank || 'Người dùng mới'}
+              </h2>
+              <div className='flex justify-between text-white text-lg'>
+                <span>
+                  {currentPoints} / {totalPoints} điểm
+                </span>
+              </div>
+              <div className='w-full bg-white rounded-full h-2.5 mt-2'>
+                <div
+                  className='bg-blue-300 h-2.5 rounded-full'
+                  style={{
+                    width: `${(currentPoints / totalPoints) * 100}%`
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Menu phần bên trái */}
             <nav className='space-y-4'>
               <Link
-                to=''
-                className='block px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-blue-500 hover:text-white focus:bg-blue-500 focus:text-white transition duration-200'
+                to='#'
+                className={`block px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-blue-400 hover:text-black focus:bg-blue-400 focus:text-black transition duration-200 ${activeTab === 'account' ? 'bg-blue-400 text-black' : ''}`}
+                onClick={() => setActiveTab('account')}
               >
-                Thông tin tài khoản
+                <div className='flex items-center space-x-2'>
+                  <LiaUserEditSolid className='text-xl' />
+                  <span>Thông tin tài khoản</span>
+                </div>
+              </Link>
+              <Link
+                to='#updateAddress'
+                className={`block px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-blue-400 hover:text-black focus:bg-blue-400 focus:text-black transition duration-200 ${activeTab === 'address' ? 'bg-blue-400 text-black' : ''}`}
+                onClick={() => setActiveTab('address')}
+              >
+                <div className='flex items-center space-x-2'>
+                  <TbHomeEdit className='text-xl' />
+                  <span>Cập nhật địa chỉ</span>
+                </div>
               </Link>
               <Link
                 to='#orders'
-                className='block px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-blue-500 hover:text-white focus:bg-blue-500 focus:text-white transition duration-200'
+                className='block px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-blue-400 hover:text-black focus:bg-blue-400 focus:text-black transition duration-200'
               >
-                Đơn hàng
+                <div className='flex items-center space-x-2'>
+                  <MdOutlineEditCalendar className='text-xl' />
+                  <span>Đơn hàng</span>
+                </div>
+              </Link>
+              <Link
+                to='#updatePassword'
+                className={`block px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-blue-400 hover:text-black focus:bg-blue-400 focus:text-black transition duration-200 ${activeTab === 'password' ? 'bg-blue-400 text-black' : ''}`}
+                onClick={() => setActiveTab('password')}
+              >
+                <div className='flex items-center space-x-2'>
+                  <TbPasswordUser className='text-xl' />
+                  <span>Cập nhật mật khẩu</span>
+                </div>
               </Link>
             </nav>
           </aside>
 
           <div className='w-full md:w-3/4 p-8 pt-10'>
-            <div className='text-center mb-8'>
-              <h1 className='text-3xl font-bold text-gray-800'>Thông tin tài khoản</h1>
-              <p className='text-md text-gray-600'>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
-            </div>
-
-            <div id='profile' className='flex flex-col md:flex-row items-start gap-6'>
-              <div className='w-full md:w-1/3 text-center flex-shrink-0'>
-                <img
-                  src={userDetail.avatar}
-                  alt=''
-                  className='w-40 h-40 mx-auto rounded-full border-4 border-pink-300'
+            {activeTab === 'account' && (
+              <div className='text-gray-700'>
+                <h2 className='text-xl font-semibold mb-6'>Thông tin cá nhân</h2>
+                <ProfileModal
+                  handleToggle={handleToggle}
+                  formVisible={formVisible}
+                  validatePhoneNumber={validatePhoneNumber}
                 />
-                <h1 className='text-2xl font-bold text-gray-800 mt-4'>{userDetail.username}</h1>
-                <div className='text-center mt-3'>
-                  {userDetail.status ? (
-                    <span className='text-[#3A5BFF] text-[12px] bg-customBlue px-2 py-[2px] rounded-md'>Active</span>
-                  ) : (
-                    <span className='text-[#CC5F5F] text-[12px] bg-customWarning px-2 py-[2px] rounded-md'>
-                      Blocked
-                    </span>
-                  )}
-                </div>
               </div>
-
-              <div className='w-full md:w-2/3 bg-gray-100 p-6 rounded-lg'>
-                <h2 className='text-xl font-semibold text-gray-700 mb-4'>Thông tin cá nhân</h2>
-                <div className='text-gray-600 space-y-3'>
-                  <p>
-                    <strong>Email:</strong> {userDetail.email}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {userDetail.phoneNumber}
-                  </p>
-                  <p>
-                    <strong>Address:</strong> {userDetail.city}
-                  </p>
-                </div>
-
-                <div className='mt-6 flex flex-col md:flex-row md:w-full md:space-x-4 space-y-3 md:space-y-0 justify-between'>
-                  <div className='flex-grow'>
-                    <button
-                      onClick={showAccountModal}
-                      className='w-full md:w-[100%] px-6 py-3 bg-blue-500 text-white text-lg font-medium rounded-lg shadow-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300'
-                    >
-                      Cập nhật tài khoản
-                    </button>
-                    <ProfileModal
-                      isModalVisible={isAccountModalVisible}
-                      handleCancel={handleCancel}
-                      handleToggle={handleToggle}
-                      formVisible={formVisible}
-                      validatePhoneNumber={validatePhoneNumber}
-                    />
-                  </div>
-                  <div className='flex-grow'>
-                    <button
-                      onClick={showPasswordModal}
-                      className='w-full md:w-[100%] px-6 py-3 bg-blue-500 text-white text-lg font-medium rounded-lg shadow-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300'
-                    >
-                      Cập nhật mật khẩu
-                    </button>
-                    <UpdatePasswordModal
-                      isModalVisible={isPasswordModalVisible}
-                      handleCancel={handleCancel}
-                      handleToggle={handleToggle}
-                      formVisible={formVisible}
-                      userDetail={userDetail}
-                    />
-                  </div>
-                </div>
+            )}
+            {activeTab === 'address' && (
+              <div className='text-gray-700'>
+                <h2 className='text-xl font-semibold mb-6'>Địa chỉ</h2>
+                <ProfileUpdateAddress handleToggle={handleToggle} formVisible={formVisible} />
               </div>
-            </div>
+            )}
+            {activeTab === 'password' && (
+              <div id='updatePassword' className='mt-10'>
+                <UpdatePasswordModal userDetail={userDetail} />
+              </div>
+            )}
           </div>
         </div>
+        <Modal
+          title='Cập nhật ảnh đại diện'
+          open={isAvatarModalVisible}
+          onCancel={() => setIsAvatarModalVisible(false)}
+          footer={[
+            <Button
+              key='cancel'
+              onClick={() => {
+                setAvatar(prevAvatar)
+                setIsAvatarModalVisible(false)
+              }}
+            >
+              Hủy
+            </Button>,
+            <Button
+              key='save'
+              type='primary'
+              onClick={() => {
+                // Kiểm tra xem có dữ liệu người dùng và ảnh đại diện không
+                if (userData && avatar) {
+                  const updatedUserData = { ...userData, avatar }
+                  console.log('Dữ liệu sau khi cập nhật avatar:', updatedUserData)
+
+                  // Gọi mutation để cập nhật ảnh đại diện
+                  mutate(updatedUserData, {
+                    onSuccess: () => {
+                      setIsAvatarModalVisible(false)
+                    },
+                    onError: () => {
+                      setAvatar(prevAvatar)
+                      message.error(`Cập nhật ảnh đại diện thất bại do quá dung lượng cho phép`)
+                      setIsAvatarModalVisible(false)
+                    }
+                  })
+                } else {
+                  message.error('Ảnh đại diện không hợp lệ!')
+                }
+              }}
+            >
+              Lưu
+            </Button>
+          ]}
+        >
+          <Upload beforeUpload={handleUpload} showUploadList={false}>
+            <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
+          </Upload>
+          {avatar && (
+            <div style={{ marginTop: 10 }}>
+              <h3>Ảnh đã chọn:</h3>
+              <img src={avatar} alt='Avatar' style={{ width: '100%', height: 'auto', maxWidth: 200, marginTop: 10 }} />
+            </div>
+          )}
+        </Modal>
       </div>
     </>
   )

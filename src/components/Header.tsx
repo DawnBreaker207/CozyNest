@@ -4,6 +4,7 @@ import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
 import { useUser } from '@/hooks/useUser'
 import {
+  DeleteOutlined,
   DownOutlined,
   MailOutlined,
   MehOutlined,
@@ -13,14 +14,18 @@ import {
   ShoppingCartOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Space, theme } from 'antd'
+import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Modal, Space, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu, menu1, menus } from './data/Header'
+import { ICategory } from '@/types/category'
+import { useCookie } from '@/hooks/useStorage'
 
 const { useToken } = theme
 
 const Header = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
   const [searchValue, setSearchValue] = useState('')
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
@@ -34,7 +39,38 @@ const Header = () => {
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
   const { data: userData, error } = useAdminUser(userId ?? '')
+  const [isOpen, setIsOpen] = useState(false) // Quản lý trạng thái mở/đóng menu
 
+  // Toggle trạng thái menu
+  const toggleMenu = () => {
+    setIsOpen(!isOpen)
+  }
+
+  // Đóng menu khi nhấp ra ngoài
+  const handleClickOutside = (e: any) => {
+    if (!e.target.closest('.menu-container')) {
+      setIsOpen(false)
+    }
+  }
+  const [categories, setCategories] = useState<ICategory[]>([])
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await instance.get('/categories')
+        setCategories(data.res) // Giả sử `data` là mảng danh mục
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+      }
+    }
+    fetchCategories()
+  }, [])
+  // Thêm sự kiện lắng nghe nhấp ra ngoài
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [])
   const handleSearch = async (value: string) => {
     if (!value.trim()) {
       message.warning('Vui lòng nhập từ khóa tìm kiếm!')
@@ -92,7 +128,7 @@ const Header = () => {
 
   // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    if (quantities[index] < 10) {
+    if (quantities[index]) {
       setQuantity(index, quantities[index] + 1)
       mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
     }
@@ -128,52 +164,69 @@ const Header = () => {
   const { Search } = Input
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
-  if (error) {
-    Logout()
-    return window.location.reload()
-  }
+  // if (error) {
+  //   Logout()
+  //   return window.location.reload()
+  // }
+
+  const userJson = useCookie('user', {})
+  const role = userJson ? userJson?.[0].role : null
+
   const users: MenuProps['items'] = user
     ? [
-      {
-        label: <a href='/profile'>Thông tin tài khoản</a>,
-        key: '0'
-      },
-      {
-        label: <a href='#'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-        key: '1'
-      },
-      { type: 'divider' }, // Đường kẻ phân cách
-      {
-        label: (
-          <a href='/' onClick={Logout}>
-            Đăng xuất
-          </a>
-        ),
-        key: '3'
-      }
-    ]
+        {
+          label: <a href='/profile'>Thông tin tài khoản</a>,
+          key: '0'
+        },
+        {
+          label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
+          key: '1'
+        },
+        ...(role === 'admin'
+          ? [
+              {
+                label: <a href='/admin'>Quản lý</a>, // Liên kết đến trang quản lý
+                key: '2'
+              }
+            ]
+          : []), // Nếu không phải admin, không thêm menu này
+        { type: 'divider' }, // Đường kẻ phân cách
+        {
+          label: (
+            <a href='/' onClick={Logout}>
+              Đăng xuất
+            </a>
+          ),
+          key: '3'
+        }
+      ]
     : window.innerWidth < 800
       ? [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
       : [
-        {
-          label: <NavLink to='/register'>Đăng ký</NavLink>,
-          key: '1'
-        },
-        {
-          label: <NavLink to='/login'>Đăng nhập</NavLink>,
-          key: '2'
-        }
-      ]
+          {
+            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            key: '1'
+          },
+          {
+            label: <NavLink to='/login'>Đăng nhập</NavLink>,
+            key: '2'
+          }
+        ]
 
+  const handleDelete = () => {
+    // Thực hiện hành động mutate
+    mutate({ action: 'REMOVE', sku_id: products[0].sku_id._id })
+    setIsModalVisible(false) // Ẩn modal sau khi xóa
+  }
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -191,11 +244,43 @@ const Header = () => {
             <NavLink to={'/'} className='text-muted hover:text-muted-foreground'>
               Trang chủ
             </NavLink>
-            <Dropdown menu={{ items: menus }}>
-              <NavLink to={'/products_page'} className='bg-white md:items-center md:flex md:justify-between '>
-                Sản phẩm <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
-              </NavLink>
-            </Dropdown>
+            <div className='relative menu-container'>
+              {/* Menu Button */}
+              <div
+                className='cursor-pointer flex items-center'
+                onClick={toggleMenu} // Toggle trạng thái menu
+              >
+                <span className='text-muted hover:text-muted-foreground'>Sản phẩm</span>
+                <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto ml-[3px]' />
+              </div>
+
+              {/* Dropdown Menu */}
+              {isOpen && ( // Hiển thị menu nếu `isOpen` là `true`
+                <div className='absolute top-full left-0 mt-2 bg-white shadow-md rounded-lg w-[200px] z-10'>
+                  <ul className='py-2'>
+                    {/* Mục "Sản phẩm mới" */}
+                    <hr />
+                    <li className='hover:bg-gray-100'>
+                      <Link to='/products_page' className='block px-4 py-2 text-gray-700'>
+                        Sản phẩm mới
+                      </Link>
+                      <hr />
+                    </li>
+                    {/* Danh sách các danh mục */}
+                    {categories.map((category) => (
+                      <>
+                        <li key={category._id} className='hover:bg-gray-100'>
+                          <Link to={`/category/${category._id}`} className='block px-4 py-2 text-gray-700'>
+                            {category.name}
+                          </Link>
+                        </li>
+                        <hr />
+                      </>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
             <NavLink to={'/intro'} className='text-muted hover:text-muted-foreground'>
               Giới thiệu
             </NavLink>
@@ -282,12 +367,12 @@ const Header = () => {
                       </Button>
                     </div>
                   ) : // Nếu không có người dùng đăng nhập, hiển thị icon mặc định
-                    window.innerWidth < 800 ? (
-                      // <Link to={`login`}>
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    ) : (
-                      <Button shape='circle' icon={<UserOutlined />} />
-                    )}
+                  window.innerWidth < 800 ? (
+                    // <Link to={`login`}>
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  ) : (
+                    <Button shape='circle' icon={<UserOutlined />} />
+                  )}
                 </Space>
               </span>
             </Dropdown>
@@ -368,7 +453,7 @@ const Header = () => {
                       {/* Hình ảnh và thông tin sản phẩm */}
                       <div className='flex items-center'>
                         <img
-                          src={product.sku_id.product_id.images[0].url}
+                          src={product.sku_id.image[0]}
                           alt={product.sku_id.name}
                           className='w-16 h-20 object-cover'
                         />
@@ -397,9 +482,20 @@ const Header = () => {
                       </div>
                       {/* Giá sản phẩm */}
                       <div className='flex flex-col items-end'>
-                        <button onClick={() => mutate({ action: 'REMOVE', sku_id: product.sku_id._id })}>
-                          <img src='./src/assets/icon/delete.svg' alt='Remove' className='size-5 min-h-5 min-w-5' />
+                        <button title='Xóa' onClick={() => setIsModalVisible(true)}>
+                          <DeleteOutlined />
                         </button>
+
+                        <Modal
+                          title='Xác nhận xóa'
+                          open={isModalVisible}
+                          onOk={handleDelete}
+                          onCancel={() => setIsModalVisible(false)}
+                          okText='Xóa'
+                          cancelText='Hủy'
+                        >
+                          <p>Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+                        </Modal>
                         <span className='mt-4 font-semibold text-sm '>{product.price.toLocaleString()}₫</span>
                       </div>
                     </div>

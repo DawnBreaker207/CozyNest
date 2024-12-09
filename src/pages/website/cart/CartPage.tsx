@@ -1,18 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCartStore } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
 
+import instance from '@/configs/axios'
 import { message, Modal } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import CouponCard from './_components/CouponCard'
 
 const CartPage = () => {
   const { products, quantities, setQuantity } = useCartStore()
   const { data, calculateTotal, mutate, deleteCart } = useCart()
-  const navigate = useNavigate()
 
+  const navigate = useNavigate()
+  const handleCheckout = async () => {
+    const cartItems = products.map((product, index) => {
+      return {
+        productId: product.sku_id.product_id._id, // Đảm bảo _id là một thuộc tính hợp lệ
+        skuId: product.sku_id._id, // Đảm bảo sku_id._id là hợp lệ
+        quantity: quantities[index] // Kiểm tra số lượng
+      }
+    })
+    try {
+      // Gọi API kiểm tra tồn kho
+      const response = await instance.post('/stock/checkStock', { cartItems })
+
+      if (response.status === 200) {
+        // Nếu tồn kho đủ, chuyển hướng đến trang thanh toán
+        navigate('/check_out')
+      }
+    } catch (error: any) {
+      // Nếu có lỗi, tức là có sản phẩm vượt quá số lượng tồn kho
+      if (error.response && error.response.status === 400) {
+        const unavailableProducts = error.response.data.res
+        // Lưu dữ liệu sản phẩm không đủ số lượng vào localStorage
+        localStorage.setItem('unavailableProducts', JSON.stringify(unavailableProducts))
+
+        // Chuyển hướng sang trang vấn đề tồn kho
+        navigate('/stock_propblem')
+      } else {
+        // Hiển thị thông báo lỗi khác
+        message.error('Đã có lỗi xảy ra khi kiểm tra tồn kho')
+      }
+    }
+  }
   // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    if (quantities[index] < 10) {
+    if (quantities[index]) {
       setQuantity(index, quantities[index] + 1)
       mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
     }
@@ -26,7 +59,7 @@ const CartPage = () => {
     }
   }
   const handleDeleteCart = () => {
-    const cartId = data?.res?.cartId // Lấy cartId từ dữ liệu giỏ hàng
+    const cartId = data?.res?.cart_id // Lấy cartId từ dữ liệu giỏ hàng
     if (cartId) {
       deleteCart(cartId) // Gọi deleteCart với cartId
       message.success('Toàn bộ Sản phẩm đã được xóa khỏi giỏ hàng')
@@ -35,12 +68,8 @@ const CartPage = () => {
     }
   }
 
-  const couponCode1 = 'EORI9894'
-  const couponCode2 = 'EORI9894'
-  const couponCode3 = 'EORI9894'
-
   return (
-    <div className='mb-14 mt-5'>
+    <div className='mb-32 mt-5 '>
       <div className='container'>
         <span className='text-sm font-light text-[#252A2B]'>
           Trang chủ / Giỏ hàng <span className=''>({products.length})</span>
@@ -51,7 +80,7 @@ const CartPage = () => {
               <h2 className='text-xl font-semibold mb-2 text-[#fca120]'>Giỏ hàng của bạn</h2>
               {products.length === 0 ? (
                 <button
-                  onClick={() => navigate('/products')} // Điều hướng về trang sản phẩm
+                  onClick={() => navigate('/products_page')} // Điều hướng về trang sản phẩm
                   className='bg-[#fca120] text-white py-[10px] px-[10px] border rounded-lg mb-3 border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300 ml-auto'
                 >
                   Trở lại trang sản phẩm
@@ -80,7 +109,7 @@ const CartPage = () => {
               hàng
             </p>
             {/* item cart */}
-            <div className='border border-gray-300 rounded-xl p-4'>
+            <div className=' border-gray-300 rounded-xl p-4'>
               <ul className='space-y-6'>
                 {products.map((product, index) => {
                   // Lấy thông tin variant tương ứng từ variants của sản phẩm
@@ -96,7 +125,7 @@ const CartPage = () => {
                       <div className='flex items-center gap-4'>
                         <div>
                           <img
-                            src={product.sku_id.product_id.images[0]?.url || product.sku_id.product_id.thumbnail} // Hiển thị hình ảnh
+                            src={product.sku_id.image[0] || product.sku_id.product_id.thumbnail} // Hiển thị hình ảnh
                             alt={product.sku_id.product_id.name} // Sử dụng tên sản phẩm cho alt
                             className='md:size-20 size-14 min-w-14 min-h-14'
                           />
@@ -115,15 +144,15 @@ const CartPage = () => {
                             <span className='text-red-500 font-semibold'>
                               {product.price.toLocaleString()}₫ {/* Giá thay đổi theo số lượng */}
                             </span>
-                            <span className='font-light line-through text-xs'>
-                              {product.price.toLocaleString()}₫ {/* Giá gốc */}
-                            </span>
+                            {/* <span className='font-light line-through text-xs'>
+                              {product.price.toLocaleString()}₫ 
+                            </span> */}
                           </div>
                         </div>
                       </div>
                       <div className='flex flex-col gap-2 items-center'>
                         <span className='text-red-500 font-semibold text-end'>
-                          {product.price * product.quantity}₫ {/* Tổng giá cho sản phẩm với số lượng */}
+                          {(product.price * product.quantity).toLocaleString()}₫
                         </span>
                         <div className='flex items-center justify-center'>
                           <button
@@ -179,14 +208,14 @@ const CartPage = () => {
               </ul>
             </div>
             {/* End item cart */}
-            <div className='mt-5'>
+            {/* <div className='mt-5'>
               <h3 className='font-semibold text-sm mb-3'>Ghi chú đơn hàng</h3>
               <textarea
                 placeholder='Ghi chú đơn hàng'
                 className='w-full border border-gray-300 focus:border-gray-500 rounded-xl focus:outline-none p-3'
                 rows={5}
               ></textarea>
-            </div>
+            </div> */}
           </div>
           <div className='lg:w-[30%] w-full p-3 border border-gray-300 rounded-xl'>
             <div>
@@ -204,22 +233,33 @@ const CartPage = () => {
                 </li>
                 <li className='text-sm flex items-center'>
                   <div className='w-[6px] h-[6px] bg-[#252A2B] rounded-full mr-2'></div>
-                  Mã giảm giá được nhập ở trang Thanh toán
+                  Mã giảm giá được nhập ở trang Thanh toán.
+                </li>
+                <li className='text-sm flex items-center'>
+                  <div className='w-[6px] h-[6px] bg-[#252A2B] rounded-full mr-2'></div>
+                  Khách hàng thanh toán toàn bộ giá trị đơn hàng <br /> sau khi nhận và kiểm tra sản phẩm tại địa chỉ
+                  giao hàng.
+                </li>
+                <li className='text-sm flex items-center'>
+                  <div className='w-[6px] h-[6px] bg-[#252A2B] rounded-full mr-2'></div>
+                  Quý khách vui lòng chuyển khoản trước vào tài <br /> khoản ngân hàng của công ty và cung cấp thông tin{' '}
+                  <br /> giao dịch để xác nhận.
                 </li>
               </ul>
 
               {calculateTotal() === 0 ? (
                 <div className='text-center text-red-500'>Không có sản phẩm nào trong giỏ hàng</div>
               ) : (
-                <Link to={`check_out_form`}>
-                  <button className='bg-[#fca120] text-white w-full py-[10px] mt-3 border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'>
-                    Thanh toán
-                  </button>
-                </Link>
+                <button
+                  className='bg-[#fca120] text-white w-full py-[10px] mt-3 border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
+                  onClick={handleCheckout}
+                >
+                  Thanh toán
+                </button>
               )}
             </div>
 
-            <div className='mt-6'>
+            {/* <div className='mt-6'>
               <CouponCard
                 couponCode={couponCode2}
                 imageUrl='./src/assets/images/coupon/coupon_1_img.webp'
@@ -244,7 +284,7 @@ const CartPage = () => {
                 description='Đơn hàng từ 100k'
                 condition='Dành cho đơn hàng từ 100k'
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

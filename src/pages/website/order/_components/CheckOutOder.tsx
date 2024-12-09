@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
 import useCart from '@/hooks/useCart'
-import { CheckOutlined } from '@ant-design/icons'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Spin, Table, Typography, message } from 'antd'
 import { useEffect, useState } from 'react'
@@ -9,7 +9,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const fetchOrder = async (orderId: string) => {
   const { data } = await instance.get(`/orders/${orderId}`)
-  console.log(data);
   return data
 }
 
@@ -34,6 +33,7 @@ const CheckOutOrder = () => {
   })
 
   const orderData = order?.res
+  console.log(orderData)
 
   useEffect(() => {
     if (orderData && cartData?.res?.cart_id && !hasDeletedCart) {
@@ -70,50 +70,102 @@ const CheckOutOrder = () => {
       title: 'Hình ảnh',
       dataIndex: 'thumbnail',
       key: 'thumbnail',
-      render: (text: string) => <img src={text} alt='product' className='w-16 h-16' />
+      render: (text, record) => {
+        // Sử dụng trực tiếp từ `record` đã được map
+        const image = record.thumbnail // Lấy hình ảnh từ `record.thumbnail`
+
+        return (
+          <img
+            src={image || 'default-image.jpg'} // Kiểm tra nếu không có ảnh thì sử dụng ảnh mặc định
+            alt={record.name || 'product'}
+            className='w-16 h-16'
+          />
+        )
+      }
     },
-    { title: 'Mô tả', dataIndex: 'productName', key: 'productName' },
-    { title: 'Giá', dataIndex: 'price', key: 'price', render: (price: number) => `${price.toLocaleString()}₫` }
+    { title: 'Mô tả', dataIndex: 'name', key: 'name' },
+    { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
+    { title: 'Giá', dataIndex: 'price', key: 'price', render: (price: number) => `${price.toLocaleString()}₫` },
+    {
+      title: 'Tổng giá',
+      key: 'totalPrice',
+      render: (record: any) => `${(record.price * record.quantity).toLocaleString()}₫`
+    }
   ]
 
-  const data = orderData?.products?.map((product: any, index: number) => ({
+  const data = orderData?.order_details?.products?.map((product: any, index: number) => ({
     key: index,
-    thumbnail: product.thumbnail,
-    productName: product.originName,
+    thumbnail: product.sku_id.image[0],
+    name: product.sku_id.name,
     quantity: product.quantity,
     price: product.price
   }))
+  console.log(data)
 
   return (
     <div className='mx-auto'>
       <div className='flex flex-col lg:flex-row justify-between pt-10'>
         <div className='lg:w-1/2 lg:p-[66px] px-4 lg:pl-[66px] mb-8 lg:mb-0'>
           <h1 className='text-3xl font-bold'>CozyNest</h1>
-          <div className='flex items-center'>
+
+          {/* Trạng thái đơn hàng */}
+          <div className='flex items-center mt-4'>
             <div>
-              <h2 className='text-xl font-semibold'>Đặt hàng thành công</h2>
-              <p className='text-gray-600'>Mã đơn hàng #{orderData.invoiceId}</p>
-              <p className='text-gray-600'>Cảm ơn bạn đã mua hàng!</p>
+              {orderData.payment_status === 'Paid' || orderData.payment_method[0].method == 'cod' ? (
+                <>
+                  <h2 className='text-xl font-semibold'>Đặt hàng thành công</h2>
+                  <p className='text-gray-600'>Mã đơn hàng #{orderData._id}</p>
+                  <p className='text-gray-600'>Cảm ơn bạn đã mua hàng!</p>
+                </>
+              ) : (
+                <>
+                  <h2 className='text-xl font-semibold text-red-500'>Thanh toán chưa thành công.</h2>
+                  <p className='text-gray-600'>Mã đơn hàng #{orderData._id}</p>
+                </>
+              )}
             </div>
-            <div className='flex justify-center items-center w-12 h-12 border-2 mx-5 my-4 border-green-500 rounded-full bg-white cursor-pointer'>
-              <CheckOutlined className='text-green-500 text-xl' />
+            <div
+              className={`flex justify-center items-center w-12 h-12 border-2 mx-5 my-4 ${
+                orderData.payment_status === 'Paid' || orderData.payment_method[0].method == 'cod'
+                  ? 'border-green-500'
+                  : 'border-red-500'
+              } rounded-full bg-white cursor-pointer`}
+            >
+              {orderData.payment_status === 'Paid' || orderData.payment_method[0].method == 'cod' ? (
+                <CheckOutlined className='text-green-500 text-xl' />
+              ) : (
+                <CloseOutlined className='text-red-500 text-xl' />
+              )}
             </div>
           </div>
 
+          {/* Thông tin giao hàng */}
           <div className='my-4 border-[2px]'>
             <div className='px-2 mt-2'>
               <h3 className='text-xl font-semibold'>Thông tin giao hàng</h3>
             </div>
             <div className='px-2'>
-              <p>{orderData.customerName}</p>
-              <p>{orderData.phoneNumber}</p>
-              <p>{orderData.addressShipping}</p>
+              <p>{orderData.customer_name}</p>
+              <p>{orderData.phone_number}</p>
+              <p>{orderData.address}</p>
 
               <h3 className='text-lg font-semibold mt-4'>Phương thức thanh toán</h3>
-              <p>{orderData.paymentMethod === 'COD' ? 'Thanh toán khi giao hàng (COD)' : 'Thanh toán online'}</p>
+              {orderData.payment_method[0].method === 'cod' ? (
+                <p>Thanh toán khi giao hàng (COD)</p>
+              ) : orderData.payment_status === 'Paid' ? (
+                <p>Thanh toán online đã hoàn tất</p>
+              ) : (
+                <>
+                  <p>Thanh toán online qua {orderData.payment_method[0]?.method}</p>
+                  <p className='text-red-500 mb-6 mt-6'>
+                    Thanh toán chưa thành công. Vui lòng thanh toán lại để hoàn tất đơn hàng.
+                  </p>
+                </>
+              )}
             </div>
           </div>
 
+          {/* Các nút hành động */}
           <div className='space-x-3'>
             <Button type='primary' href='/' className='mt-6'>
               Tiếp tục mua hàng
@@ -121,7 +173,19 @@ const CheckOutOrder = () => {
             <Button type='primary' href={`/orders/orderdetail/?orderId=${orderId}`} className='mt-6'>
               Xem tình trạng đơn hàng
             </Button>
+            {orderData.payment_status !== 'Paid' && orderData.payment_method[0].method !== 'cod' && (
+              <Button
+                type='primary'
+                danger
+                className='mt-6'
+                // onClick={() => navigate(`/checkouts/payment?orderId=${orderId}`)}
+              >
+                Thanh toán lại
+              </Button>
+            )}
           </div>
+
+          {/* Hỗ trợ */}
           <div className='text-gray-500 mt-4'>
             <p>
               Cần hỗ trợ?{' '}
@@ -148,9 +212,44 @@ const CheckOutOrder = () => {
           <div className='hidden lg:block'>
             <Table columns={columns} dataSource={data} pagination={false} className='my-4' />
             <div className='border-t mt-4 pt-4'>
-              <div className='flex justify-between mt-4 font-bold text-lg'>
-                <span>Tổng cộng đơn hàng</span>
-                <span>{orderData.billTotals.toLocaleString()}₫</span>
+              <div className='flex flex-col mt-4 font-bold text-lg'>
+                {/* Hiển thị chi phí sản phẩm */}
+                <div className='flex justify-between'>
+                  <span>Chi Phí Sản Phẩm</span>
+                  <span>
+                    {orderData.order_details.products
+                      .reduce((total: any, product: { total_money: any }) => total + product.total_money, 0)
+                      .toLocaleString()}
+                    ₫
+                  </span>
+                </div>
+                {/* Hiển thị chi phí vận chuyển */}
+                <div className='flex justify-between'>
+                  <span>Chi Phí Vận chuyển</span>
+                  <span>{(50000).toLocaleString()}₫</span>
+                </div>
+
+                {/* Hiển thị chi phí lắp đặt nếu có */}
+                {orderData.order_details.installation_fee > 0 && (
+                  <div className='flex justify-between'>
+                    <span>Chi Phí lắp đặt tại nhà</span>
+                    <span>{orderData.order_details.installation_fee.toLocaleString()}₫</span>
+                  </div>
+                )}
+
+                {/* Hiển thị mã giảm giá nếu có */}
+                {orderData.order_details.total > 0 && (
+                  <div className='flex justify-between'>
+                    <span>Mã Giảm Giá: {orderData.order_details.coupon}</span>
+                    <span className='text-red-600'>- {orderData.order_details.total.toLocaleString()}₫</span>
+                  </div>
+                )}
+
+                {/* Hiển thị tổng cộng đơn hàng */}
+                <div className='flex justify-between'>
+                  <span>Tổng cộng đơn hàng</span>
+                  <span>{orderData.total_amount.toLocaleString()}₫</span>
+                </div>
               </div>
             </div>
           </div>

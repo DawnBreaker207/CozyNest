@@ -11,6 +11,7 @@ import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import AdminCustomerPage from '@/pages/admin/customer/page'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
+import AdminOrderDetail from '@/pages/admin/order/OrderDetail'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import ProductAddPage from '@/pages/admin/product/add/ProductAdd'
@@ -23,7 +24,6 @@ import AdminOptionValueAdd from '@/pages/admin/product/optionvalue/add/AdminOpti
 import AdminOptionValueEdit from '@/pages/admin/product/optionvalue/edit/AdminOptionValueEdit'
 import AdminVariantPage from '@/pages/admin/product/variant/AdminVariantPage'
 import UpdateVariant from '@/pages/admin/product/variant/_components/UpdateVariant'
-import ReportsPage from '@/pages/admin/report/ReportPage'
 import AdminReview from '@/pages/admin/review/AdminReview'
 import LinkPage from '@/pages/website/Link/page'
 import Login from '@/pages/website/auth/Login'
@@ -31,6 +31,7 @@ import ProfilePage from '@/pages/website/auth/ProfilePage/ProfilePage'
 import Register from '@/pages/website/auth/Register'
 import ResetPassword from '@/pages/website/auth/ResetPassword'
 import CartPage from '@/pages/website/cart/CartPage'
+import CategoryProductsPage from '@/pages/website/category/ProductPage'
 import ContactPage from '@/pages/website/contact/contact'
 import NotFound from '@/pages/website/home/_components/NotFound'
 import CustomerPolicy from '@/pages/website/home/_components/policy/CustomerPolicy'
@@ -46,6 +47,8 @@ import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 import OrderDetail from '@/pages/website/order/_components/OrderDetail'
 import OrderPage from '@/pages/website/order/_components/OrderPage'
 import PaymentResultPage from '@/pages/website/order/_components/PaymentResultPage '
+import PaymentPage from '@/pages/website/order/_components/RetryPayment'
+import StockPropblem from '@/pages/website/order/_components/StockPropblem'
 import CheckoutPage from '@/pages/website/order/page'
 import ProductsPage from '@/pages/website/products/_components/ProductPage'
 import ProductsPageDetail from '@/pages/website/products/_components/ProductPageDetail'
@@ -67,10 +70,14 @@ function App() {
 
         { path: 'products_page/:id', Component: ProductsPageDetail },
 
+        { path: 'category/:id', Component: CategoryProductsPage }, // Route path="/products_page?category=:categoryId" element={<ProductsPage />} /> {/* Trang sản phẩm của danh mục */}
+
         { path: 'cart', Component: CartPage },
-        { path: 'cart/check_out_form', Component: CheckoutPage },
+        { path: 'check_out', Component: CheckoutPage },
         { path: 'paymentresult', Component: PaymentResultPage },
         { path: 'orders/orderdetail', Component: OrderDetail },
+        { path: 'paymentRetry/:id', Component: PaymentPage },
+        { path: 'stock_propblem', Component: StockPropblem },
         { path: 'intro', Component: Introduction },
         { path: 'orders', Component: OrderPage },
         { path: 'login', Component: Login },
@@ -158,14 +165,14 @@ function App() {
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },
         { path: 'order', Component: AdminOrderPage },
+        { path: 'orderDetail/:id', Component: AdminOrderDetail },
+
         // Customer
         { path: 'coupons', Component: CouponPage },
         { path: 'coupons/add', Component: CouponAdd },
         { path: 'coupons/:id/edit', Component: CouponEdit },
         { path: 'customer', Component: AdminCustomerPage },
-        { path: 'customer/:id', Component: AdminCustomerDetailPage },
-        // Report
-        { path: 'report', Component: ReportsPage }
+        { path: 'customer/:id', Component: AdminCustomerDetailPage }
       ]
     }
   ])

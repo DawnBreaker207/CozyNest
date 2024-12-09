@@ -2,21 +2,27 @@ import IArticle from '@/types/article'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const Linkone: React.FC = () => {
+  const [articles, setArticles] = useState<IArticle[]>([])
+  const getAllArticles = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:8888/api/v1/articles')
+      setArticles(data.res)
+    } catch (error) {
+      console.error('Failed to fetch articles:', error)
+    }
+  }
+  useEffect(() => {
+    getAllArticles()
+  }, [])
   const [article, setArticle] = useState<IArticle | null>(null)
   const { id } = useParams()
   const [isOpen, setIsOpen] = useState(false) // Trạng thái để kiểm soát việc hiển thị bài viết
   const togglePosts = () => {
     setIsOpen(!isOpen) // Chuyển đổi trạng thái
   }
-
-  // const [isContentVisible, setContentVisible] = useState(false)
-
-  // const toggleContents = () => {
-  //   setContentVisible(!isContentVisible)
-  // }
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -69,10 +75,11 @@ const Linkone: React.FC = () => {
                         <div key={imgIndex} className='mr-4 lg:w-[767px] mb-4'>
                           <img
                             title={image.caption || 'Image'}
-                            className='w-full h-auto'
+                            className='w-full h-auto mb-2'
                             src={image.url}
                             alt={image.caption || 'Article image'}
                           />
+                          <span className=' items-center text-sm text-gray-500'>{image.caption}</span>
                         </div>
                       )
                   )}
@@ -98,25 +105,33 @@ const Linkone: React.FC = () => {
               </div>
 
               {!isOpen && (
-                <div className='shadow-shadowUser mt-1 px-5 pb-4'>
-                  {/* Các bài viết với kích thước hình ảnh bằng nhau */}
-                  <div className='flex items-center  mb-4'>
-                    <div className='relative'>
-                      {/* <img
-                        src=''
-                          className='w-28 h-14 object-cover' // Chiều rộng và chiều cao bằng nhau
-                           // Lấy URL hình ảnh từ mảng
-                        /> */}
-                      <span className='absolute top-1/4 left-[-16px] border-2 border-white h-[28px] w-[28px] leading-[26px] text-center rounded-full bg-[#fca120] text-[#fff] text-xs z-10'></span>
-                    </div>
-                    <div className='ml-4'>
-                      <div className='mb-1'>
-                        <p className='font-medium text-[13px] text-gray-800'>test</p> {/* Tiêu đề bài viết */}
+                <>
+                  {articles.map((article, index) => (
+                    <Link to={`/articles/${article._id}`} key={index}>
+                      <div className='shadow-shadowUser mt-1 px-5 pb-4'>
+                        {/* Các bài viết với kích thước hình ảnh bằng nhau */}
+                        <div className='flex items-center  mb-4'>
+                          <div className='relative w-auto'>
+                            <img
+                              title='img'
+                              src={article.thumbnail}
+                              className='w-40 h-14 object-cover' // Chiều rộng và chiều cao bằng nhau
+                              // Lấy URL hình ảnh từ mảng
+                            />
+                            <span className='absolute top-1/4 left-[-16px] border-2 border-white h-[28px] w-[28px] leading-[26px] text-center rounded-full bg-[#fca120] text-[#fff] text-xs z-10'></span>
+                          </div>
+                          <div className='ml-4 '>
+                            <div className='mb-1'>
+                              <p className='font-medium text-[13px] text-gray-800'>{article.title}</p>{' '}
+                              {/* Tiêu đề bài viết */}
+                            </div>
+                            <p className='text-sm text-gray-500'>{article.created_at}</p> {/* Ngày bài viết */}
+                          </div>
+                        </div>
                       </div>
-                      <p className='text-sm text-gray-500'>10/10/2004</p> {/* Ngày bài viết */}
-                    </div>
-                  </div>
-                </div>
+                    </Link>
+                  ))}
+                </>
               )}
             </div>
           </div>

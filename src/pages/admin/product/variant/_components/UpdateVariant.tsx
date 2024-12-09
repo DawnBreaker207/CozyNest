@@ -1,8 +1,11 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { BackwardOutlined } from '@ant-design/icons'
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import { BackwardOutlined, UploadOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
+import { Button, Form, FormProps, Input, InputNumber, message, Upload } from 'antd'
+import { RcFile } from 'antd/es/upload'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 type Props = {}
@@ -11,6 +14,7 @@ type FieldType = {
   name: string
   price?: number
   stock?: string
+  image?: string
   price_before_discount?: number
   price_discount_percent?: number
 }
@@ -19,6 +23,10 @@ const UpdateVariant = (props: Props) => {
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
   const { product_id, sku_id } = useParams()
+  const [content, setContent] = useState<{ heading: string; paragraph: string; images: RcFile[] }[]>([
+    { heading: '', paragraph: '', images: [] }
+  ])
+  const [thumbnail, setThumbnail] = useState<RcFile | null>(null)
   const [form] = Form.useForm()
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['variants', product_id, sku_id],
@@ -49,10 +57,30 @@ const UpdateVariant = (props: Props) => {
       })
     }
   })
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values)
-    mutate(values)
+  const handleAddContent = () => {
+    setContent([...content, { heading: '', paragraph: '', images: [] }])
   }
+  const onFinish = async (values: any) => {
+    const thumbnailUrl = thumbnail ? await uploadFileCloudinary(thumbnail) : data?.data?.res?.image
+
+    // Upload ảnh nội dung (nếu có)
+    const contentWithUploadedImages = await Promise.all(
+      content.map(async (section) => {
+        const uploadedImages = await Promise.all(
+          section.images.map(async (file) => ({
+            url: await uploadFileCloudinary(file),
+            caption: file.name
+          }))
+        )
+        return { ...section, images: uploadedImages }
+      })
+    )
+
+    const updatedValues = { ...values, content: contentWithUploadedImages, image: thumbnailUrl }
+
+    mutate(updatedValues)
+  }
+
   if (isLoading)
     return (
       <div>
@@ -78,7 +106,7 @@ const UpdateVariant = (props: Props) => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        initialValues={{ ...data?.data?.res }}
+        initialValues={{ ...data?.data?.res, image: data?.data?.res?.image || null }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
         autoComplete='off'
@@ -93,6 +121,43 @@ const UpdateVariant = (props: Props) => {
         >
           <Input disabled />
         </Form.Item>
+        <Form.Item<FieldType>
+          label='Ảnh biến thể'
+          name='image'
+          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+        >
+          <Upload
+            beforeUpload={(file) => {
+              setThumbnail(file) // Lưu file vào state thumbnail
+              form.setFieldsValue({ image: file })
+              return false
+            }}
+            showUploadList={false}
+          >
+            <Button icon={<UploadOutlined />}>Tải ảnh</Button>
+          </Upload>
+          {/* Hiển thị ảnh mới nếu đã chọn */}
+          {thumbnail && (
+            <div className='mt-2'>
+              <img
+                src={URL.createObjectURL(thumbnail)}
+                alt='Ảnh'
+                style={{ width: '100%', maxWidth: '300px', marginTop: '10px' }}
+              />
+            </div>
+          )}
+          {/* Hiển thị ảnh cũ nếu không có ảnh mới */}
+          {!thumbnail && data?.data?.res?.image && (
+            <div className='mt-2'>
+              <img
+                src={data?.data?.res?.image}
+                alt='Ảnh'
+                style={{ width: '100%', maxWidth: '300px', marginTop: '10px' }}
+              />
+            </div>
+          )}
+        </Form.Item>
+
         <Form.Item<FieldType>
           label='Số lượng'
           name='stock'

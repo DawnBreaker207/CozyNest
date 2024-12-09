@@ -1,13 +1,9 @@
 import instance from '@/configs/axios'
 import { useMutation } from '@tanstack/react-query'
-import { Modal, Form, Input, Button, message } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 
-interface CustomerModalProps {
-  isModalVisible?: boolean
-  handleCancel: () => void
-  handleToggle: (checked: boolean) => void
-  formVisible?: boolean
-  userDetail?: {
+interface ProfilePageProps {
+  userDetail: {
     email: string
   }
 }
@@ -19,7 +15,7 @@ type FieldType = {
   confirmPassword?: string
 }
 
-const UpdatePasswordModal = ({ isModalVisible, handleCancel, userDetail }: CustomerModalProps) => {
+const UpdatePasswordForm = ({ userDetail }: ProfilePageProps) => {
   const [messageApi, contextHolder] = message.useMessage()
 
   const [form] = Form.useForm()
@@ -42,7 +38,6 @@ const UpdatePasswordModal = ({ isModalVisible, handleCancel, userDetail }: Custo
       return data
     },
     onSuccess: () => {
-      handleCancel()
       messageApi.success('Đổi mật khẩu thành công!')
       form.resetFields()
     },
@@ -52,22 +47,11 @@ const UpdatePasswordModal = ({ isModalVisible, handleCancel, userDetail }: Custo
     }
   })
 
-  const handleCancelAndReset = () => {
-    handleCancel()
-    form.resetFields() // Reset lại dữ liệu khi đóng form
-  }
   return (
     <>
       {contextHolder}
-      <Modal
-        title={<h1 className='text-[#353535] font-medium text-xl mb-7'>Thay đổi mật khẩu</h1>}
-        open={isModalVisible}
-        onCancel={handleCancel}
-        okText='Update'
-        centered
-        width={900}
-        footer={null}
-      >
+      <div id='updatePassword' className='mt-10'>
+        <h1 className='text-[#353535] font-medium text-xl mb-7'>Thay đổi mật khẩu</h1>
         <Form
           layout='vertical'
           autoComplete='off'
@@ -113,7 +97,7 @@ const UpdatePasswordModal = ({ isModalVisible, handleCancel, userDetail }: Custo
           </Form.Item>
 
           <div className='flex text-left gap-2'>
-            <Button key='cancel' onClick={handleCancelAndReset} className='py-4 px-10'>
+            <Button key='cancel' onClick={() => form.resetFields()} className='py-4 px-10'>
               Cancel
             </Button>
             <Button type='primary' htmlType='submit' className='py-4 px-10'>
@@ -121,9 +105,9 @@ const UpdatePasswordModal = ({ isModalVisible, handleCancel, userDetail }: Custo
             </Button>
           </div>
         </Form>
-      </Modal>
+      </div>
     </>
   )
 }
 
-export default UpdatePasswordModal
+export default UpdatePasswordForm

@@ -70,10 +70,10 @@ const AdminProductPage = () => {
       render: (isSale: boolean) => <Tag color={isSale ? 'green' : 'yellow'}>{isSale ? 'Có' : 'Không'}</Tag>
     },
     {
-      key: 'isHidden',
+      key: 'is_hidden',
       title: 'Trạng thái hiển thị',
-      dataIndex: 'isHidden',
-      render: (isHidden: boolean) => <Tag color={isHidden ? 'red' : 'green'}>{isHidden ? 'Ẩn' : 'Hiển thị'}</Tag>
+      dataIndex: 'is_hidden',
+      render: (is_hidden: boolean) => <Tag color={is_hidden ? 'red' : 'green'}>{is_hidden ? 'Ẩn' : 'Hiển thị'}</Tag>
     },
     {
       key: 'createdAt',
@@ -96,7 +96,7 @@ const AdminProductPage = () => {
             okText='Có'
             cancelText='Không'
           >
-            <Button icon={<DeleteOutlined />} danger/>
+            <Button icon={<DeleteOutlined />} danger />
           </Popconfirm>
           <Link to={`/admin/products/${product._id}/options`}>
             <Button>Thuộc tính</Button>

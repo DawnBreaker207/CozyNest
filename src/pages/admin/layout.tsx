@@ -1,4 +1,3 @@
-import { search } from '@/components/icons'
 import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
@@ -8,11 +7,8 @@ import {
   BellOutlined,
   CalendarOutlined,
   CommentOutlined,
-  DeleteOutlined,
   DownloadOutlined,
   DownOutlined,
-  EditOutlined,
-  EyeOutlined,
   FilterOutlined,
   LogoutOutlined,
   OrderedListOutlined,
@@ -21,22 +17,7 @@ import {
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import {
-  Avatar,
-  Badge,
-  Button,
-  Dropdown,
-  Input,
-  Layout,
-  List,
-  Menu,
-  message,
-  Modal,
-  Popconfirm,
-  Space,
-  Spin,
-  theme
-} from 'antd'
+import { Badge, Button, Dropdown, Input, Layout, List, Menu, message, Modal, Spin, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MdOutlineColorLens } from 'react-icons/md'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -49,9 +30,7 @@ const LayoutAdmin: React.FC = () => {
   const navigate = useNavigate()
   const { Logout } = useUser()
   const userJson = useCookie('user', {})
-  console.log(userJson)
   const role = userJson ? userJson?.[0].role : null
-  console.log(role)
   // Trạng thái kiểm tra quyền
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
 
@@ -152,13 +131,10 @@ const LayoutAdmin: React.FC = () => {
           renderItem={(item: any) => (
             <List.Item>
               <div className='flex items-center justify-between p-2 w-full'>
-                <img src={item.thumbnail} alt='' className='w-[70px] h-[70px] object-cover' />
+                {/* <img src={item.image} alt='' className='w-[70px] h-[70px] object-cover' /> */}
                 <span className='ml-2 text-base'>{item.name}</span>
                 <span className='ml-2 text-base'>{item.brand}</span>
-                <p className='text-base'>Gia: {item.price}</p>
-                <Link to={`/detail/${item.id}`} className='text-base'>
-                  xem nhanh
-                </Link>
+                {/* <p className='text-base'>Gia: {item.price}</p> */}
               </div>
             </List.Item>
           )}
@@ -206,7 +182,7 @@ const LayoutAdmin: React.FC = () => {
           <span className='text-xl text-[#353535] ml-[25px]'>{title}</span>
         </div>
         <div className='flex items-center space-x-4 mr-[14px]'>
-          <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+          {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
         </div>
       </div>
     </Header>
@@ -251,44 +227,44 @@ const LayoutAdmin: React.FC = () => {
             {
               key: '2',
               icon: <ApartmentOutlined />,
-              label: <NavLink to={`/admin/products`}>Product Manager</NavLink>
+              label: <NavLink to={`/admin/products`}>Quản lý sản phẩm </NavLink>
             },
             {
               key: '3',
               icon: <OrderedListOutlined />,
-              label: <NavLink to={`/admin/categories`}>Category Manager</NavLink>
+              label: <NavLink to={`/admin/categories`}>Quản lý danh mục</NavLink>
             },
             {
               key: '4',
               icon: <UploadOutlined />,
-              label: <NavLink to={`/admin/order`}>Order Manager</NavLink>
+              label: <NavLink to={`/admin/order`}>Quản lý đơn hàng </NavLink>
             },
             {
               key: '5',
               icon: <CalendarOutlined />,
-              label: <NavLink to={`/admin/articles`}>Articles</NavLink>
+              label: <NavLink to={`/admin/articles`}>Bài viết</NavLink>
             },
             {
               key: '6',
               icon: <CommentOutlined />,
-              label: <NavLink to={`/admin/reviews`}>Review</NavLink>
+              label: <NavLink to={`/admin/reviews`}>Bình luận</NavLink>
             },
             {
               key: '7',
               icon: <UserOutlined />,
-              label: <NavLink to={`/admin/customer`}>Customer Manager</NavLink>
+              label: <NavLink to={`/admin/customer`}>Quản lý khách hàng</NavLink>
             },
             {
               key: '8',
               icon: <OrderedListOutlined />,
-              label: <NavLink to={`/admin/coupons`}>Coupon Manager</NavLink>
+              label: <NavLink to={`/admin/coupons`}>Mã giảm giá</NavLink>
             },
             {
               key: '9',
               icon: <LogoutOutlined />,
               label: (
                 <NavLink to='#' onClick={handleLogout}>
-                  Logout
+                  Đăng xuất
                 </NavLink>
               )
             }
@@ -316,25 +292,18 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Category</span>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Loại</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
-                <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' />
+                {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
                 <div className='flex items-center space-x-2'>
-                  <Button
-                    icon={<DownloadOutlined />}
-                    size='large'
-                    className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
-                  >
-                    Export
-                  </Button>
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
-                    <Link to={`categories/add`}>Add Category</Link>
+                    <Link to={`categories/add`}>Thêm sản phẩm</Link>
                   </Button>
                 </div>
               </div>
@@ -345,16 +314,16 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Articles</span>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Bài viết</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
                 {/* Input và nút tìm kiếm */}
-                <Dropdown
+                {/* <Dropdown
                   overlay={searchMenuArticle}
                   trigger={['click']}
                   visible={searchValue.length > 0 && !loading && results.length > 0}
@@ -370,23 +339,23 @@ const LayoutAdmin: React.FC = () => {
                   />
                 </Dropdown>
                 <Button
-                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 ml-2 mr-2 px-4'
+                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 -ml-[100px] '
                   type='primary'
                   icon={<SearchOutlined />}
                   onClick={() => handleSearchArticle(searchValue)}
                 >
                   Search
-                </Button>
+                </Button> */}
                 <div className='flex items-center space-x-2'>
-                  <Button
+                  {/* <Button
                     icon={<DownloadOutlined />}
                     size='large'
                     className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
                   >
                     Export
-                  </Button>
+                  </Button> */}
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
-                    <Link to={`articles/add`}>Add Articles</Link>
+                    <Link to={`articles/add`}>Thêm bài viết</Link>
                   </Button>
                 </div>
               </div>
@@ -397,10 +366,10 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Product</span>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Sản phẩm</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
@@ -422,21 +391,21 @@ const LayoutAdmin: React.FC = () => {
                   />
                 </Dropdown>
                 <Button
-                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 ml-2 mr-2 px-4'
+                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 -ml-24'
                   type='primary'
                   icon={<SearchOutlined />}
                   onClick={() => handleSearch(searchValue)}
                 >
-                  Search
+                  Tìm kiếm
                 </Button>
                 <div className='flex items-center space-x-2'>
-                  <Button
+                  {/* <Button
                     icon={<DownloadOutlined />}
                     size='large'
                     className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
                   >
                     Export
-                  </Button>
+                  </Button> */}
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
                     <Link to={`products/add`}>Add Product</Link>
                   </Button>
@@ -446,14 +415,14 @@ const LayoutAdmin: React.FC = () => {
                 <div className='flex items-center space-x-4 border border-black-100 rounded-lg'>
                   <div className='flex space-x-4'>
                     <Button type='link' className='text-blue-500'>
-                      All Product
+                      Tất cả sản phẩm
                     </Button>
-                    <Button type='link'>Published</Button>
+                    {/* <Button type='link'>Published</Button>
                     <Button type='link'>Low Stock</Button>
-                    <Button type='link'>Draft</Button>
+                    <Button type='link'>Draft</Button> */}
                   </div>
                 </div>
-                <div className='flex items-center space-x-4 '>
+                {/* <div className='flex items-center space-x-4 '>
                   <Input className='w-64' placeholder='Search product...' prefix={<SearchOutlined />} />
                   <div className='border border-black-100'>
                     <Button icon={<CalendarOutlined />} className='border-none shadow-none '>
@@ -465,7 +434,7 @@ const LayoutAdmin: React.FC = () => {
                       Filters
                     </Button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </>
           )}
@@ -474,7 +443,7 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Color</span>
+                    <span className='text-xl text-[#353535] ml-[25px]'>Màu</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
                     <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
@@ -483,22 +452,22 @@ const LayoutAdmin: React.FC = () => {
                     <Badge count={4} className='cursor-pointer'>
                       <BellOutlined className='text-xl text-blue-500' />
                     </Badge>
-                    <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' />
+                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
                   </div>
                 </div>
               </Header>
               <div className='flex items-center justify-between p-4 bg-white shadow-md'>
-                <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' />
+                {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
                 <div className='flex items-center space-x-2'>
                   <Button
                     icon={<DownloadOutlined />}
                     size='large'
                     className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
                   >
-                    Export
+                    Xuất
                   </Button>
                   <Button type='primary' icon={<MdOutlineColorLens className='text-xl' />} size='large'>
-                    Color
+                    Màu
                   </Button>
                 </div>
               </div>
@@ -506,23 +475,23 @@ const LayoutAdmin: React.FC = () => {
                 <div className='flex items-center space-x-4 border border-black-100 rounded-lg'>
                   <div className='flex space-x-4'>
                     <Button type='link' className='text-blue-500'>
-                      All Color
+                      Tất cả màu
                     </Button>
-                    <Button type='link'>Published</Button>
-                    <Button type='link'>Low Stock</Button>
-                    <Button type='link'>Draft</Button>
+                    <Button type='link'>Đã bán</Button>
+                    <Button type='link'>Còn ít hàng</Button>
+                    <Button type='link'>Tồn kho </Button>
                   </div>
                 </div>
                 <div className='flex items-center space-x-4 '>
                   <Input className='w-64' placeholder='Search product...' prefix={<SearchOutlined />} />
                   <div className='border border-black-100'>
                     <Button icon={<CalendarOutlined />} className='border-none shadow-none '>
-                      Select Date
+                      Chọn ngày
                     </Button>
                   </div>
                   <div className='border border-black-100'>
                     <Button icon={<FilterOutlined />} className='border-none shadow-none'>
-                      Filters
+                      Bộ lọc
                     </Button>
                   </div>
                 </div>

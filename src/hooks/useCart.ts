@@ -9,12 +9,12 @@ import { ChangeEvent, useEffect } from 'react'
 import { useCartStore } from './store/cartStore'
 import { useCookie } from './useStorage'
 
-// Định nghĩa kiểu dữ liệu cho sản phẩm trong giỏ hàng
+// Utility: Kiểm tra ObjectId hợp lệ
+const isValidObjectId = (id: string): boolean => /^[0-9a-fA-F]{24}$/.test(id)
 
 const useCart = () => {
   const queryClient = useQueryClient()
   const [user] = useCookie('user', {})
-  // const token = user?.data?.accessToken
   const userId = user?._id
 
   const setProducts = useCartStore((state) => state.setProducts)
@@ -25,26 +25,27 @@ const useCart = () => {
   const { data, refetch, ...restQuery } = useQuery<ResAPI<CartData>>({
     queryKey: ['cart', userId],
     queryFn: async () => {
-      if (!userId) {
-        return { res: { products: [], cart_id: '' } }
+      // Kiểm tra userId hợp lệ
+      if (!userId || !isValidObjectId(userId)) {
+        console.error('Invalid userId format')
+        return { res: { products: [], cartId: '' } }
       }
 
       try {
-        const { data: cartData } = await instance.get(`/cart/${userId}`, {})
+        const { data: cartData } = await instance.get(`/cart/${userId}`)
+
         return cartData
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
-          // Giỏ hàng không tồn tại, reset lại sản phẩm và số lượng
           setProducts([])
           setQuantities([])
           return { res: { products: [], cart_id: '' } }
         }
-        throw error // Ném lỗi nếu có lỗi khác
+        throw error
       }
     },
     refetchOnWindowFocus: false,
-    // Chỉ gọi API nếu userId tồn tại
-    enabled: !!userId
+    enabled: !!userId // Chỉ gọi API nếu userId tồn tại
   })
 
   // Sử dụng useEffect để cập nhật state khi dữ liệu query thành công
@@ -53,10 +54,16 @@ const useCart = () => {
       setProducts(data.res.products || [])
       setQuantities(data.res.products.map((product) => product.quantity))
     }
-  }, [data, setProducts, setQuantities]) // Chạy lại khi data thay đổi
+  }, [data, setProducts, setQuantities])
 
   // Hàm debounce để cập nhật số lượng sản phẩm trong giỏ hàng
   const updateQuantityDebounce = debounce(async (sku_id: string, quantity: number) => {
+    // Kiểm tra userId hợp lệ
+    if (!userId || !isValidObjectId(userId)) {
+      console.error('Invalid userId format')
+      return
+    }
+
     try {
       await axios.post(`/cart/update-product-quantity`, { userId, sku_id, quantity })
     } catch (error) {
@@ -83,24 +90,32 @@ const useCart = () => {
       sku_id?: string | number
       cart_id?: string
     }) => {
-      if (!userId) return
+      // Kiểm tra userId hợp lệ
+      if (!userId || !isValidObjectId(userId)) {
+        console.error('Invalid userId format')
+        return
+      }
 
       switch (action) {
         case 'INCREMENT':
           await instance.post(`/cart/increase`, { userId, sku_id })
           break
         case 'DECREMENT':
-          await instance.post(`/cart/decrease`, { userId, sku_id })
+          // Mặc định quantity là 1 nếu không có giá trị
+          // eslint-disable-next-line no-case-declarations
+          const decreaseQuantity = quantity !== undefined ? quantity : 1
+
+          // Truyền số lượng giảm cho action 'DECREMENT'
+          if (decreaseQuantity > 0) {
+            await instance.post(`/cart/decrease`, { userId, sku_id, quantity: decreaseQuantity })
+          }
           break
         case 'REMOVE':
           await instance.post(`/cart/remove-from-cart`, { userId, sku_id })
           break
         case 'ADD':
           if (quantity !== undefined) {
-            await instance.post(
-              `/cart/add-to-cart`,
-              { userId, sku_id, quantity } // Gửi quantity từ payload
-            )
+            await instance.post(`/cart/add-to-cart`, { userId, sku_id, quantity })
           }
           break
         case 'DELETE':
@@ -111,7 +126,6 @@ const useCart = () => {
       }
     },
     onSuccess: () => {
-      // Invalidate the cart query
       queryClient.invalidateQueries({ queryKey: ['cart', userId] })
       setTimeout(() => refetch(), 250)
     }
@@ -143,17 +157,23 @@ const useCart = () => {
       mutate({ action: 'DELETE', cart_id: cartId })
     }
   }
+
   // Hàm xóa tất cả sản phẩm trong giỏ hàng
   const removeAllProductsFromCart = async () => {
+    if (!userId || !isValidObjectId(userId)) {
+      console.error('Invalid userId format')
+      return
+    }
+
     try {
-      await instance.delete(`cart/remove-all/${userId}`, {})
-      // Sau khi xóa, có thể thực hiện các thao tác cập nhật lại giỏ hàng, chẳng hạn như gọi lại API để lấy dữ liệu giỏ hàng
+      await instance.delete(`/cart/remove-allproducts-cart/${userId}`)
       queryClient.invalidateQueries({ queryKey: ['cart', userId] })
       setTimeout(() => refetch(), 250)
     } catch (error) {
       console.error('Failed to remove all products from cart:', error)
     }
   }
+
   return {
     data,
     mutate,
