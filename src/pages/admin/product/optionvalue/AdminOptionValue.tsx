@@ -56,6 +56,11 @@ const AdminOptionValue = (props: Props) => {
 
   const columns = [
     {
+      title: 'Tên giá trị thuộc tính',
+      dataIndex: 'label',
+      key: 'label'
+    },
+    {
       title: 'Giá trị thuộc tính',
       dataIndex: 'value',
       key: 'value'

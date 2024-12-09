@@ -36,7 +36,7 @@ const LayoutAdmin: React.FC = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
 
   useEffect(() => {
-    if (role === 'admin'  || role === 'manager' || role === 'shipper') {
+    if (role === 'admin' || role === 'manager' || role === 'shipper') {
       setIsAuthorized(true)
       navigate('/admin') // Điều hướng vào trang admin
     } else {
@@ -215,55 +215,51 @@ const LayoutAdmin: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div className='demo-logo-vertical' />
-        <Menu
-      theme='dark'
-      mode='inline'
-      defaultSelectedKeys={['1']}
-    >
-      {/* Menu cho admin */}
-      {role === 'admin' && (
-        <>
-          <Menu.Item key='1' icon={<AppstoreOutlined />}>
-            <NavLink to='/admin'>Dashboard</NavLink>
-          </Menu.Item>
-          <Menu.Item key='2' icon={<ApartmentOutlined />}>
-            <NavLink to='/admin/products'>Quản lý sản phẩm</NavLink>
-          </Menu.Item>
-          <Menu.Item key='3' icon={<OrderedListOutlined />}>
-            <NavLink to='/admin/categories'>Quản lý danh mục</NavLink>
-          </Menu.Item>
-          <Menu.Item key='4' icon={<UploadOutlined />}>
-            <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
-          </Menu.Item>
-          <Menu.Item key='5' icon={<CalendarOutlined />}>
-            <NavLink to='/admin/articles'>Bài viết</NavLink>
-          </Menu.Item>
-          <Menu.Item key='6' icon={<CommentOutlined />}>
-            <NavLink to='/admin/reviews'>Bình luận</NavLink>
-          </Menu.Item>
-          <Menu.Item key='7' icon={<UserOutlined />}>
-            <NavLink to='/admin/customer'>Quản lý khách hàng</NavLink>
-          </Menu.Item>
-          <Menu.Item key='8' icon={<OrderedListOutlined />}>
-            <NavLink to='/admin/coupons'>Mã giảm giá</NavLink>
-          </Menu.Item>
-        </>
-      )}
+        <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
+          {/* Menu cho admin */}
+          {role === 'admin' && (
+            <>
+              <Menu.Item key='1' icon={<AppstoreOutlined />}>
+                <NavLink to='/admin'>Thống kê</NavLink>
+              </Menu.Item>
+              <Menu.Item key='2' icon={<ApartmentOutlined />}>
+                <NavLink to='/admin/products'>Quản lý sản phẩm</NavLink>
+              </Menu.Item>
+              <Menu.Item key='3' icon={<OrderedListOutlined />}>
+                <NavLink to='/admin/categories'>Quản lý danh mục</NavLink>
+              </Menu.Item>
+              <Menu.Item key='4' icon={<UploadOutlined />}>
+                <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
+              </Menu.Item>
+              <Menu.Item key='5' icon={<CalendarOutlined />}>
+                <NavLink to='/admin/articles'>Bài viết</NavLink>
+              </Menu.Item>
+              <Menu.Item key='6' icon={<CommentOutlined />}>
+                <NavLink to='/admin/reviews'>Bình luận</NavLink>
+              </Menu.Item>
+              <Menu.Item key='7' icon={<UserOutlined />}>
+                <NavLink to='/admin/customer'>Quản lý khách hàng</NavLink>
+              </Menu.Item>
+              <Menu.Item key='8' icon={<OrderedListOutlined />}>
+                <NavLink to='/admin/coupons'>Mã giảm giá</NavLink>
+              </Menu.Item>
+            </>
+          )}
 
-      {/* Menu cho shipper */}
-      {role === 'shipper' && (
-        <Menu.Item key='4' icon={<UploadOutlined />}>
-          <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
-        </Menu.Item>
-      )}
+          {/* Menu cho shipper */}
+          {role === 'shipper' && (
+            <Menu.Item key='4' icon={<UploadOutlined />}>
+              <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
+            </Menu.Item>
+          )}
 
-      {/* Menu đăng xuất */}
-      <Menu.Item key='9' icon={<LogoutOutlined />}>
-        <NavLink to='#' onClick={handleLogout}>
-          Đăng xuất
-        </NavLink>
-      </Menu.Item>
-    </Menu>
+          {/* Menu đăng xuất */}
+          <Menu.Item key='9' icon={<LogoutOutlined />}>
+            <NavLink to='#' onClick={handleLogout}>
+              Đăng xuất
+            </NavLink>
+          </Menu.Item>
+        </Menu>
       </Sider>
       <Layout>
         {isAddProductPage && renderHeader('Add Product')}
@@ -286,7 +282,7 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Loại</span>
+                    <span className='text-2xl font-bold text-[#353535] ml-[25px]'>Quản lý danh mục</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
                     {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
@@ -297,7 +293,7 @@ const LayoutAdmin: React.FC = () => {
                 {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
                 <div className='flex items-center space-x-2'>
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
-                    <Link to={`categories/add`}>Thêm sản phẩm</Link>
+                    <Link to={`categories/add`}>Thêm danh mục</Link>
                   </Button>
                 </div>
               </div>
@@ -308,7 +304,7 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Bài viết</span>
+                    <span className='text-2xl font-bold text-[#353535] ml-[25px]'>Bài viết</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
                     {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
@@ -360,7 +356,7 @@ const LayoutAdmin: React.FC = () => {
               <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
                 <div className='flex justify-between h-[60px] items-center'>
                   <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Sản phẩm</span>
+                    <span className='text-2xl text-[#353535] font-bold ml-[25px]'>Danh sách sản phẩm</span>
                   </div>
                   <div className='flex items-center space-x-4 mr-[14px]'>
                     {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
@@ -376,7 +372,7 @@ const LayoutAdmin: React.FC = () => {
                 >
                   <Input
                     className='w-3/4'
-                    placeholder='Search product...'
+                    placeholder='Tìm kiếm...'
                     prefix={<SearchOutlined />}
                     size='large'
                     value={searchValue}
@@ -385,7 +381,7 @@ const LayoutAdmin: React.FC = () => {
                   />
                 </Dropdown>
                 <Button
-                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 -ml-24'
+                  className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 -ml-[40px]'
                   type='primary'
                   icon={<SearchOutlined />}
                   onClick={() => handleSearch(searchValue)}
@@ -401,7 +397,7 @@ const LayoutAdmin: React.FC = () => {
                     Export
                   </Button> */}
                   <Button type='primary' icon={<PlusOutlined />} size='large'>
-                    <Link to={`products/add`}>Add Product</Link>
+                    <Link to={`products/add`}>Thêm sản phẩm</Link>
                   </Button>
                 </div>
               </div>

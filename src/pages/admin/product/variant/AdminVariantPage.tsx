@@ -96,7 +96,8 @@ const AdminVariantPage = () => {
       dataIndex: 'image',
       key: 'image',
       render: (image: any) => {
-        return <img src={image} alt='' className={`${image ? 'size-28' : ''}`} />
+        console.log('🚀 ~ AdminVariantPage ~ image:', image)
+        return <img src={image[0]} alt='' className={`${image[0] ? 'size-28' : ''}`} />
       }
     },
     {

@@ -1,21 +1,21 @@
 import instance from '@/configs/axios'
 import { useEffect, useState } from 'react'
 import Revenue from './component/Revenue'
-import { Table, Tag } from 'antd';
+import { Table, Tag } from 'antd'
 interface Order {
-  _id: string;
-  customer_name: string;
-  total_amount: number;
-  email: string;
-  status: string;
-  user_id: string;
-  createdAt: string;
-  order_details: OrderDetailType[];
-};
+  _id: string
+  customer_name: string
+  total_amount: number
+  email: string
+  status: string
+  user_id: string
+  createdAt: string
+  order_details: OrderDetailType[]
+}
 interface OrderDetailType {
-  product_id: string;
-  name: string;
-  quantity: number;
+  product_id: string
+  name: string
+  quantity: number
 }
 const DashboardPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([])
@@ -24,14 +24,14 @@ const DashboardPage: React.FC = () => {
     const getAllOrder = async () => {
       try {
         const { data } = await instance.get('/orders')
-        setOrders(Array.isArray(data.res.items) ? data.res.items : []);
-        console.log(data.res.items);
-        const ordersData = data.res.items;
+        setOrders(Array.isArray(data.res.items) ? data.res.items : [])
+        console.log(data.res.items)
+        const ordersData = data.res.items
         if (Array.isArray(ordersData)) {
-          setOrders(ordersData);
+          setOrders(ordersData)
           console.log(ordersData)
         } else {
-          console.error('Dữ liệu không hợp lệ, `items` không phải là mảng');
+          console.error('Dữ liệu không hợp lệ, `items` không phải là mảng')
         }
       } catch (error) {
         console.log(error)
@@ -39,46 +39,43 @@ const DashboardPage: React.FC = () => {
     }
     getAllOrder()
   }, [])
-  
+
   //*tổng doanh thu
-  const totalRevenue = orders.reduce(
-    (total, order) => total + (Number(order.total_amount) || 0),
-    0
-  );
- console.log(totalRevenue)  ;
+  const totalRevenue = orders.reduce((total, order) => total + (Number(order.total_amount) || 0), 0)
+  console.log(totalRevenue)
 
- //*đơn hàng hoàn thành
- const completedOrdersCount = orders.filter(order => order.status === 'Completed').length;
- console.log(completedOrdersCount);
+  //*đơn hàng hoàn thành
+  const completedOrdersCount = orders.filter((order) => order.status === 'Completed').length
+  console.log(completedOrdersCount)
 
- //*đơn hàng bị hủy
- const canceledOrdersCount = orders.filter(order => order.status === 'Canceled').length;
- console.log(canceledOrdersCount);
-//* số lượng khách hàng đặt hàng 
- const uniqueCustomers = new Set(orders.map(order => order.customer_name)); // Hoặc sử dụng `user_id`
-  const customerCount = uniqueCustomers.size;
+  //*đơn hàng bị hủy
+  const canceledOrdersCount = orders.filter((order) => order.status === 'Canceled').length
+  console.log(canceledOrdersCount)
+  //* số lượng khách hàng đặt hàng
+  const uniqueCustomers = new Set(orders.map((order) => order.customer_name)) // Hoặc sử dụng `user_id`
+  const customerCount = uniqueCustomers.size
 
-  const sortedOrders = orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const sortedOrders = orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-//* Lấy 5 đơn hàng gần nhất
-  const latestOrders = sortedOrders.slice(0, 5);
+  //* Lấy 5 đơn hàng gần nhất
+  const latestOrders = sortedOrders.slice(0, 5)
   console.log(latestOrders)
   const columns = [
     {
       title: 'Mã đơn hàng',
       dataIndex: '_id',
-      key: '_id',
+      key: '_id'
     },
     {
       title: 'Thời gian đặt hàng',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (text: string) => new Date(text).toLocaleString(),
+      render: (text: string) => new Date(text).toLocaleString()
     },
     {
       title: 'Người đặt hàng',
       dataIndex: 'customer_name',
-      key: 'customer_name',
+      key: 'customer_name'
     },
     {
       title: 'Trạng Thái',
@@ -112,8 +109,8 @@ const DashboardPage: React.FC = () => {
         }
         return <Tag color={statusColors[status] || 'gray'}>{status.replace('-', ' ')}</Tag>
       }
-    },
-  ];
+    }
+  ]
   return (
     <>
       <h1 className='mb-5 text-2xl font-bold'>Thống kê</h1>
@@ -158,20 +155,20 @@ const DashboardPage: React.FC = () => {
         </div>
       </div>
       <div className='grid grid-cols-2 gap-x-8 gap-y-10'>
-      <div>
-      <div className='bg-white p-4 rounded-lg shadow-xl'>
-        <h2 className='text-2xl font-semibold mb-5 text-center'>5 Đơn hàng gần nhất</h2>
-        <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Top 5 Đơn Hàng Gần Nhất</h2>
-      <Table
-        columns={columns}
-        dataSource={latestOrders}
-        rowKey="_id"
-        pagination={false} // Tắt phân trang
-      />
-    </div>
-      </div>
-    </div>
+        <div> 
+          <div className='bg-white p-4 rounded-lg shadow-xl'>
+            <h2 className='text-2xl font-semibold mb-5 text-center'>Đơn hàng gần nhất</h2>
+            <div className='p-4'>
+              {/* <h2 className="text-xl font-semibold mb-4">Top 5 Đơn Hàng Gần Nhất</h2> */}
+              <Table
+                columns={columns}
+                dataSource={latestOrders}
+                rowKey='_id'
+                pagination={false} // Tắt phân trang
+              />
+            </div>
+          </div>
+        </div>
         <Revenue />
       </div>
     </>
