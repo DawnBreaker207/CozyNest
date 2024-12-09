@@ -137,7 +137,7 @@ const CartPage = () => {
                           {/* Hiển thị option_value_id (ví dụ: màu sắc, kích thước) */}
                           {optionValue && (
                             <p className='text-sm text-gray-600'>
-                              {optionValue.value} {/* Tên của biến thể (ví dụ: màu sắc) */}
+                              {optionValue.label} {/* Tên của biến thể (ví dụ: màu sắc) */}
                             </p>
                           )}
                           <div className='flex items-center gap-[10px]'>

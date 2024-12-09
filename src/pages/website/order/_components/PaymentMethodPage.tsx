@@ -126,16 +126,19 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   return (
     <div>
       <p className='text-sm space-x-2'>
-        <Link to={`/cart`}>Giỏ hàng</Link> <RightOutlined />{' '}
-        <Link to={`/cart/check_out_form`}>Thông tin giao hàng</Link> <RightOutlined />{' '}
-        <Link to={`/cart/check_out_form`}>Phương thức thanh toán</Link>
+        <Link to={`/cart`}>Giỏ hàng</Link> <RightOutlined /> <Link to={`/check_out`}>Thông tin giao hàng</Link>{' '}
+        <RightOutlined /> <Link to={``}>Phương thức thanh toán</Link>
       </p>
       <Form layout='vertical' onFinish={handlePayment}>
         <h2 className='text-lg font-semibold mb-4 mt-7'>Phương thức thanh toán</h2>
         <div className='p-6 bg-white rounded-lg shadow-md'>
           <Form.Item name='payment' rules={[{ required: true, message: 'Vui lòng chọn phương thức thanh toán!' }]}>
             <Radio.Group onChange={handleChange} value={selectedPaymentMethod} className='flex flex-col space-y-4'>
-              <Radio className='flex items-center border border-2px p-4' value='cash'>
+              <Radio
+                className='flex items-center border border-2px p-4'
+                value='cash'
+                disabled={false} // Luôn bật COD
+              >
                 <div className='flex items-center w-10 space-x-1'>
                   <img
                     src='https://res.cloudinary.com/didbnrsmz/image/upload/v1730454239/CozyNest/cod_chqf7y.svg'
@@ -146,7 +149,11 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
                   <p className='whitespace-nowrap'>Thanh toán khi giao hàng (COD)</p>
                 </div>
               </Radio>
-              <Radio className='flex items-center border border-2px p-4' value='momo'>
+              <Radio
+                className='flex items-center border border-2px p-4'
+                value='momo'
+                disabled={totalAfterDiscount === 0} // Chỉ bật nếu tổng tiền > 0
+              >
                 <div className='flex items-center w-10 space-x-1'>
                   <img
                     src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/momo_iroppc.svg'
@@ -157,7 +164,11 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
                   <p className='whitespace-nowrap'>Thanh toán qua ví MoMo</p>
                 </div>
               </Radio>
-              <Radio className='flex items-center border border-2px p-4' value='vnpay'>
+              <Radio
+                className='flex items-center border border-2px p-4'
+                value='vnpay'
+                disabled={totalAfterDiscount === 0} // Chỉ bật nếu tổng tiền > 0
+              >
                 <div className='flex items-center w-10 space-x-1'>
                   <img
                     src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/vnpay_new_lzopgz.svg'
@@ -168,7 +179,11 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
                   <p className='whitespace-nowrap'>Thanh toán qua ví VnPay</p>
                 </div>
               </Radio>
-              <Radio className='flex items-center border border-2px p-4' value='zalopay'>
+              <Radio
+                className='flex items-center border border-2px p-4'
+                value='zalopay'
+                disabled={totalAfterDiscount === 0} // Chỉ bật nếu tổng tiền > 0
+              >
                 <div className='flex items-center w-10 space-x-1'>
                   <img
                     src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/zalopay_qazloz.svg'
@@ -181,6 +196,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
               </Radio>
             </Radio.Group>
           </Form.Item>
+
           {/* <h2 className='text-lg font-semibold mb-4 mt-7'>Phương thức vận chuyển</h2>
           <div className='p-6 bg-white rounded-lg shadow-md'>
             <Form.Item name='shipping' rules={[{ required: true, message: 'Vui lòng chọn phương thức vận chuyển!' }]} >

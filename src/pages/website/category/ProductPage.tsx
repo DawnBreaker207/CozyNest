@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FaRegEye } from 'react-icons/fa'
-import { message } from 'antd'
+import { Button, message } from 'antd'
 import useCart from '@/hooks/useCart'
 import instance from '@/configs/axios'
 import { Cart } from '@/components/icons'
@@ -60,7 +60,9 @@ const CategoryProductsPage = () => {
       <h2 className='text-2xl font-bold mb-6 '>Danh sách sản phẩm</h2>
       {currentProducts.length > 0 ? (
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
-          {currentProducts.map((product: IProduct, index: number) => (
+          {currentProducts
+          .filter((product) => !product.is_hidden)
+          .map((product: IProduct, index: number) => (
             <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
               <Link to={`/detail/${product._id}`}>
                 <div className='relative'>
@@ -77,25 +79,27 @@ const CategoryProductsPage = () => {
                     -{product?.discount}%
                   </span>
                 </div>
-              </Link>
+            
               <div className='mx-2 text-center space-y-2 mt-3'>
                 <h3>{product?.name}</h3>
                 <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
                   <span className='text-[#FF0000] font-semibold'>
                     {product?.price - product?.price * (product?.discount / 100)}₫
                   </span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px]'>{product?.price}₫</span>
+                  <span className='text-[#878c8f] font-light line-through text-[13px]'>{product?.variants[0]?.price}₫</span>
                 </div>
                 <button
                   className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
                   onClick={() => handleAddToCart(String(product._id))}
                 >
-                  <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
+                  {/* <span className='text-[12px] uppercase font-semibold text-ellipsis '></span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
                     <Cart />
-                  </div>
+                  </div> */}
                 </button>
+                <Button>xem chi tiết</Button>
               </div>
+              </Link>
             </div>
           ))}
         </div>

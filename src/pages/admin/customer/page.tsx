@@ -67,19 +67,19 @@ const AdminCustomerPage = () => {
               <img src={search} alt='' className='absolute w-[30px] pl-[14px]' />
               <input
                 type='text'
-                placeholder='Search users. . .'
+                placeholder='Tìm kiếm. . .'
                 className='w-full px-4 py-2 rounded-lg border border-[#E0E2E7] pl-10'
               />
             </div>
           </div>
           <div className='flex items-center gap-[18px]'>
-            <button className='px-[14px] py-[10px] flex items-center gap-[6px] text-[#3A5BFF] rounded-lg bg-customBlue text-sm'>
+            {/* <button className='px-[14px] py-[10px] flex items-center gap-[6px] text-[#3A5BFF] rounded-lg bg-customBlue text-sm'>
               <img src={download} alt='' />
               <span>Export</span>
-            </button>
+            </button> */}
             <button className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm'>
               <FaUsersCog className='text-xl' />
-              Customer
+              Quản lý người dùng
             </button>
           </div>
         </div>

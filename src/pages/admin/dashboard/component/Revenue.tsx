@@ -15,30 +15,30 @@ const revenueData = {
     { time: 'Tuần 4', 'Doanh thu': 1300000 }
   ],
   monthly: [
-    { time: 'Tháng 1', 'Doanh thu': 4000000 },
-    { time: 'Tháng 2', 'Doanh thu': 2500000 },
-    { time: 'Tháng 3', 'Doanh thu': 5000000 },
-    { time: 'Tháng 4', 'Doanh thu': 2800000 },
-    { time: 'Tháng 5', 'Doanh thu': 3000000 },
-    { time: 'Tháng 6', 'Doanh thu': 1000000 },
-    { time: 'Tháng 7', 'Doanh thu': 6500000 },
-    { time: 'Tháng 8', 'Doanh thu': 4000000 },
-    { time: 'Tháng 9', 'Doanh thu': 3000000 },
-    { time: 'Tháng 10', 'Doanh thu': 5000000 },
-    { time: 'Tháng 11', 'Doanh thu': 7000000 },
-    { time: 'Tháng 12', 'Doanh thu': 9000000 }
+    { time: 'Tháng 1', 'Doanh thu': 0 },
+    { time: 'Tháng 2', 'Doanh thu': 0 },
+    { time: 'Tháng 3', 'Doanh thu': 0 },
+    { time: 'Tháng 4', 'Doanh thu': 0 },
+    { time: 'Tháng 5', 'Doanh thu': 0 },
+    { time: 'Tháng 6', 'Doanh thu': 0 },
+    { time: 'Tháng 7', 'Doanh thu': 0 },
+    { time: 'Tháng 8', 'Doanh thu': 0 },
+    { time: 'Tháng 9', 'Doanh thu': 0 },
+    { time: 'Tháng 10', 'Doanh thu': 0 },
+    { time: 'Tháng 11', 'Doanh thu': 6000000 },
+    { time: 'Tháng 12', 'Doanh thu': 7000000 }
   ],
   yearly: [
-    { time: '2021', 'Doanh thu': 40000000 },
-    { time: '2022', 'Doanh thu': 50000000 },
-    { time: '2023', 'Doanh thu': 60000000 },
-    { time: '2024', 'Doanh thu': 70000000 }
+    { time: '2021', 'Doanh thu': 0 },
+    { time: '2022', 'Doanh thu': 0 },
+    { time: '2023', 'Doanh thu': 0 },
+    { time: '2024', 'Doanh thu': 20000000 }
   ]
 }
 
 const Revenue = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('monthly')
-  const [data, setData] = useState<RevenueData[]>(revenueData.monthly)
+  const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('weekly')
+  const [data, setData] = useState<RevenueData[]>(revenueData.weekly)
 
   useEffect(() => {
     // Cập nhật dữ liệu khi `selectedPeriod` thay đổi

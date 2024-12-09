@@ -14,7 +14,7 @@ const AdminOrderPage = () => {
     queryKey: ['orders'],
     queryFn: async () => {
       try {
-        return await instance.get('/orders', {
+        return await instance.get('/orders?_sort=createdAt', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -24,6 +24,8 @@ const AdminOrderPage = () => {
       }
     }
   })
+  console.log(data)
+
   const dataSource =
     data?.data?.res?.items.map((order: any, index: number) => ({
       key: index + 1,
@@ -129,10 +131,10 @@ const AdminOrderPage = () => {
   if (isError) return <div>{error.message}</div>
 
   return (
-    <div className='container mx-auto mt-10 px-6'>
+    <div className='container mx-auto  px-6'>
       {/* Header */}
       <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-2xl font-bold'>Admin Orders</h1>
+        {/* <h1 className='text-2xl font-bold'>Admin Orders</h1> */}
         {/* <div className='flex items-center'>
           <Search placeholder='Search order...' />
         </div> */}
@@ -141,14 +143,14 @@ const AdminOrderPage = () => {
       {/* Filters */}
       <div className='bg-white p-4 rounded shadow mb-4'>
         <div className='flex justify-between items-center'>
-          <Button type='dashed'>All Orders</Button>
-          <DatePicker placeholder='Select Date' />
+          <Button type='dashed'>Tất cả đơn hàng</Button>
+          <DatePicker placeholder='Chọn ngày' />
         </div>
       </div>
 
       {/* Table */}
       <div className='bg-white p-6 rounded shadow'>
-        <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 5 }} />
+        <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 10 }} />
       </div>
     </div>
   )

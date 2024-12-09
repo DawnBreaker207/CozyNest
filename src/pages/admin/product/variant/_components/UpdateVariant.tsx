@@ -32,6 +32,7 @@ const UpdateVariant = (props: Props) => {
     queryKey: ['variants', product_id, sku_id],
     queryFn: () => instance.get(`/variants/${product_id}/get/${sku_id}`)
   })
+  console.log('🚀 ~ UpdateVariant ~ data:', data)
 
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
@@ -150,7 +151,7 @@ const UpdateVariant = (props: Props) => {
           {!thumbnail && data?.data?.res?.image && (
             <div className='mt-2'>
               <img
-                src={data?.data?.res?.image}
+                src={data?.data?.res?.image[0]}
                 alt='Ảnh'
                 style={{ width: '100%', maxWidth: '300px', marginTop: '10px' }}
               />

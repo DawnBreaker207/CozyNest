@@ -35,13 +35,13 @@ const AdminArticlePage = () => {
 
   const columns = [
     {
-      title: 'Title',
+      title: 'Tiêu đề',
       dataIndex: 'title',
       key: 'title',
       render: (text: string) => <strong>{text}</strong>
     },
     {
-      title: 'Thumbnail',
+      title: 'Ảnh',
       dataIndex: 'thumbnail',
       key: 'thumbnail',
       render: (url: string) =>
@@ -52,12 +52,12 @@ const AdminArticlePage = () => {
         )
     },
     {
-      title: 'Author',
+      title: 'Người viết',
       dataIndex: 'author',
       key: 'author'
     },
     {
-      title: 'Content',
+      title: 'Nội dung',
       key: 'content',
       render: (_text: string, record: IArticle) => (
         <Collapse>
@@ -88,7 +88,7 @@ const AdminArticlePage = () => {
       )
     },
     {
-      title: 'Actions',
+      title: 'Hành động',
       key: 'actions',
       render: (_text: string, record: IArticle) => (
         <Space size='middle'>

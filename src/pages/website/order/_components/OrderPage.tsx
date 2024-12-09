@@ -126,19 +126,23 @@ const OrderPage = () => {
                         orderDetail.products &&
                         Array.isArray(orderDetail.products) &&
                         orderDetail.products.map((product: any) => (
-                          <div key={product._id} className='flex items-center mt-2'>
-                            {/* Kiểm tra trước khi truy cập vào image[0] */}
+                          <div key={product.sku_id} className='flex items-center mt-2'>
+                            {/* Sử dụng ảnh từ product (nếu có) hoặc fallback sang orderDetail.image */}
                             <img
                               src={
-                                Array.isArray(orderDetail.image) && orderDetail.image.length > 0
+                                product.image ||
+                                (Array.isArray(orderDetail.image) && orderDetail.image.length > 0
                                   ? orderDetail.image[0]
-                                  : '/path/to/default-image.jpg'
-                              } // Sử dụng hình ảnh mặc định nếu không có ảnh
-                              alt={orderDetail.name}
+                                  : '/path/to/default-image.jpg')
+                              }
+                              alt={product.name || orderDetail.name}
                               className='w-16 h-16 object-cover mr-4'
                             />
-                            <span className='font-bold'>{orderDetail.name}</span>
+                            {/* Hiển thị tên sản phẩm */}
+                            <span className='font-bold'>{product.name || orderDetail.name}</span>
+                            {/* Hiển thị số lượng */}
                             <span className='ml-2'>x{product.quantity}</span>
+                            {/* Hiển thị giá */}
                             <span className='ml-auto font-bold'>{product.price.toLocaleString('vi-VN')}₫</span>
                           </div>
                         ))
