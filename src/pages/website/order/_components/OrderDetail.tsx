@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
-import { Button, Card, Spin, Table, Typography } from 'antd'
+import { Button, Card, message, Modal, notification, Spin, Table, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -45,7 +45,96 @@ const OrderDetail = () => {
       return () => clearTimeout(timer)
     }
   }, [isOrderNotFound, navigate])
+  const cancelOrder = () => {
+    // Hiển thị Modal xác nhận
+    Modal.confirm({
+      title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
+      content: 'Sau khi hủy, bạn sẽ không thể hoàn tác hành động này.',
+      onOk: async () => {
+        try {
+          // Bước 1: Lấy thông tin đơn hàng hiện tại
 
+          const { data: currentOrder } = await instance.get(`/orders/${orderId}`)
+          if (!currentOrder) {
+            console.error('Đơn hàng không tồn tại')
+            return
+          }
+          if (currentOrder.status !== 'Processing' && currentOrder.status !== 'Pending') {
+            // Hiển thị thông báo bằng Ant Design
+            notification.error({
+              message: 'Thông báo',
+              description: 'Trạng thái đơn hàng hiện tại không thể hủy.',
+              duration: 2 // Thời gian hiển thị thông báo (2 giây)
+            })
+            // Reload lại trang sau 1,5 giây
+            setTimeout(() => {
+              window.location.reload()
+            }, 1500) // 1500ms = 1,5 giây
+            return
+          }
+          // Bước 2: Cập nhật trạng thái của đơn hàng thành "Canceled"
+          const response = await instance.put(`/orders/updateStatusOrder/${orderId}`, {
+            ...order, // Giữ lại dữ liệu cũ
+            status: 'Canceled' // Cập nhật trạng thái hủy
+          })
+
+          // Hiển thị thông báo thành công
+          message.success(`Bạn đã hủy đơn hàng ${response?.data?.res?._id} thành công`)
+          setTimeout(() => {
+            window.location.reload() // Tự động làm mới trang
+          }, 1500) // Đợi 1.5 giây trước khi làm mới trang
+          // Làm mới trang để người dùng thấy tình trạng đơn hàng đã thay đổi
+        } catch (error) {
+          console.error('Lỗi khi hủy đơn hàng:', error)
+          message.error('Có lỗi xảy ra khi hủy đơn hàng')
+        }
+      }
+    })
+  }
+  const confirmOrder = () => {
+    // Hiển thị Modal xác nhận
+    Modal.confirm({
+      title: 'Bạn có chắc chắn muốn xác nhận đơn hàng này?',
+      content: 'Hãy chắc chắn khi thực sự nhận được hàng',
+      onOk: async () => {
+        try {
+          if (!order) {
+            console.error('Đơn hàng không tồn tại')
+            return
+          }
+          if (order.status !== 'Delivered') {
+            // Hiển thị thông báo bằng Ant Design
+            notification.error({
+              message: 'Thông báo',
+              description: 'Trạng thái đơn hàng hiện tại không thể xác nhận.',
+              duration: 2 // Thời gian hiển thị thông báo (2 giây)
+            })
+
+            // Reload lại trang sau 1,5 giây
+            setTimeout(() => {
+              window.location.reload()
+            }, 1500)
+            return
+          }
+
+          // Bước 2: Cập nhật trạng thái của đơn hàng thành "Confirmed"
+          const response = await instance.put(`/orders/updateStatusOrder/${orderId}`, {
+            ...order, // Giữ lại dữ liệu cũ
+            status: 'Completed' // Cập nhật trạng thái xác nhận
+          })
+
+          // Hiển thị thông báo thành công
+          message.success(`Đơn hàng ${response?.data?.res?._id} đã được xác nhận thành công`)
+          setTimeout(() => {
+            window.location.reload() // Tự động làm mới trang
+          }, 1500) // Đợi 1.5 giây trước khi làm mới trang
+        } catch (error) {
+          console.error('Lỗi khi xác nhận đơn hàng:', error)
+          message.error('Có lỗi xảy ra khi xác nhận đơn hàng')
+        }
+      }
+    })
+  }
   if (loading) {
     return <Spin size='large' />
   }
@@ -122,6 +211,10 @@ const OrderDetail = () => {
 
       {/* Hiển thị hành trình trạng thái */}
       <Card title='Lịch sử trạng thái' className='mb-6'>
+        <div className='mt-4'>
+          <div>Trạng Thái: {order.status}</div>
+          <div>Thời Gian: {new Date(order.updatedAt).toLocaleString()}</div>
+        </div>
         <div className='flex flex-wrap gap-4 mt-4'>
           {statuses.map((status, index) => {
             const normalizedCurrentStatus = currentStatus.trim().toLowerCase()
@@ -136,8 +229,6 @@ const OrderDetail = () => {
             } else if (isCurrent) {
               btnType = 'primary'
             }
-
-            console.log(`Status: ${status.label}, isPast: ${isPast}, isCurrent: ${isCurrent}, btnType: ${btnType}`)
 
             return (
               <Button
@@ -234,7 +325,23 @@ const OrderDetail = () => {
         <Button type='primary' className='w-full sm:w-auto'>
           Liên hệ hỗ trợ
         </Button>
-        <Button className='bg-red-400 text-white w-full sm:w-auto'>Hủy đơn hàng</Button>
+        <Button
+          className='bg-red-400 text-white w-full sm:w-auto'
+          onClick={cancelOrder} // Khi nhấn Hủy đơn hàng
+          disabled={order.status !== 'Processing' && order.status !== 'Pending'}
+        >
+          Hủy đơn hàng
+        </Button>
+        <Button
+          className='bg-blue-500 text-white w-full sm:w-auto'
+          onClick={confirmOrder} // Khi nhấn Xác nhận đơn hàng
+          disabled={order.status !== 'Delivered'}
+        >
+          Xác nhận đơn hàng
+        </Button>
+        <Button className='bg-yellow-500 text-white w-full sm:w-auto' disabled={order.status !== 'Delivered'}>
+          Hoàn trả đơn hàng
+        </Button>
         <Link to='/'>
           <Button className='bg-green-600 text-white w-full sm:w-auto'>Tiếp tục mua hàng</Button>
         </Link>

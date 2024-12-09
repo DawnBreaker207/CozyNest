@@ -21,8 +21,10 @@ const orderStatusMap: { [key: string]: string } = {
 }
 
 const fetchOrderByUserId = async (userId: any) => {
-  const response = await instance.get(`orders/orderByUserId?userId=${userId}`)
-  return response.data.res.orders
+  const response = await instance.get(`orders/orderByUserId?id=${userId}`)
+  console.log(response.data.res.items)
+
+  return response.data.res.items
 }
 
 const OrderPage = () => {
@@ -90,6 +92,7 @@ const OrderPage = () => {
   // Xác định đơn hàng hiển thị theo trang
   const startIndex = (currentPage - 1) * pageSize
   const currentOrders = sortedOrders.slice(startIndex, startIndex + pageSize)
+  console.log(currentOrders)
 
   const handleOrderClick = (orderId: string) => {
     const orderRef = orderRefs.current[orderId]
@@ -112,35 +115,52 @@ const OrderPage = () => {
                 style={{ scrollMarginTop: '100px' }} // Đặt khoảng cách khi cuộn tới
               >
                 <Title level={3} className='mt-2'>
-                  Mã đơn hàng: {order.invoiceId}{' '}
+                  Mã đơn hàng: {order._id}{' '}
                 </Title>
                 <div className='border-b py-4'>
                   <Text className='font-bold'>Thông tin sản phẩm</Text>
-                  {order.products.map((product: any) => (
-                    <div key={product.productId} className='flex items-center mt-2'>
-                      <img src={product.thumbnail} alt={product.productName} className='w-16 h-16 object-cover mr-4' />
-                      <span className='font-bold'>{product.productName}</span>
-                      <span className='ml-2'>x{product.quantity}</span>
-                      <span className='ml-auto font-bold'>{product.price.toLocaleString('vi-VN')}₫</span>
-                    </div>
-                  ))}
+                  {order.order_details &&
+                    Array.isArray(order.order_details) &&
+                    order.order_details.map(
+                      (orderDetail: any) =>
+                        orderDetail.products &&
+                        Array.isArray(orderDetail.products) &&
+                        orderDetail.products.map((product: any) => (
+                          <div key={product._id} className='flex items-center mt-2'>
+                            {/* Kiểm tra trước khi truy cập vào image[0] */}
+                            <img
+                              src={
+                                Array.isArray(orderDetail.image) && orderDetail.image.length > 0
+                                  ? orderDetail.image[0]
+                                  : '/path/to/default-image.jpg'
+                              } // Sử dụng hình ảnh mặc định nếu không có ảnh
+                              alt={orderDetail.name}
+                              className='w-16 h-16 object-cover mr-4'
+                            />
+                            <span className='font-bold'>{orderDetail.name}</span>
+                            <span className='ml-2'>x{product.quantity}</span>
+                            <span className='ml-auto font-bold'>{product.price.toLocaleString('vi-VN')}₫</span>
+                          </div>
+                        ))
+                    )}
+
                   <div className='mt-5'>
                     <Text className='font-bold'>Thông tin người nhận</Text>
                     <div className='flex justify-between mt-4'>
                       <Text>Ngày đặt hàng:</Text>
-                      <Text className='font-bold'>{new Date(order.orderTime).toLocaleString('vi-VN')}</Text>
+                      <Text className='font-bold'>{new Date(order.createdAt).toLocaleString('vi-VN')}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Tên người nhận:</Text>
-                      <Text className='font-bold'>{order.customerName}</Text>
+                      <Text className='font-bold'>{order.customer_name}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>SĐT người nhận:</Text>
-                      <Text className='font-bold'>{order.phoneNumber}</Text>
+                      <Text className='font-bold'>{order.phone_number}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Địa chỉ giao hàng:</Text>
-                      <Text className='font-bold'>{order.addressShipping}</Text>
+                      <Text className='font-bold'>{order.address}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Trạng thái:</Text>
@@ -148,11 +168,48 @@ const OrderPage = () => {
                     </div>
                     <div className='flex justify-between'>
                       <Text>Phương thức thanh toán:</Text>
-                      <Text className='font-bold'>{order.paymentMethod}</Text>
+                      <Text className='font-bold'>{order.payment_method[0]?.orderInfo || 'Chưa xác định'}</Text>
                     </div>
+                    {/* Tính tổng giá sản phẩm */}
                     <div className='flex justify-between mt-4'>
+                      <Text>Chi phí sản phẩm:</Text>
+                      <Text className='font-bold'>
+                        {order.order_details &&
+                          Array.isArray(order.order_details) &&
+                          order.order_details
+                            .reduce((total: any, orderDetail: { products: any[] }) => {
+                              return (
+                                total +
+                                  (orderDetail.products &&
+                                    Array.isArray(orderDetail.products) &&
+                                    orderDetail.products.reduce((productTotal, product) => {
+                                      return productTotal + product.price * product.quantity
+                                    }, 0)) || 0
+                              )
+                            }, 0)
+                            .toLocaleString()}
+                        ₫
+                      </Text>
+                    </div>
+                    <div className='flex justify-between'>
+                      <Text>Chi phí lắp đặt tại nhà:</Text>
+                      <Text className='font-bold'>{order.order_details[0].installation_fee.toLocaleString()}₫</Text>
+                    </div>
+
+                    <div className='flex justify-between '>
+                      <Text>Chi phí vận chuyển:</Text>
+                      <Text className='font-bold'>{(50000).toLocaleString()}₫</Text>
+                    </div>
+                    {/* Hiển thị mã giảm giá nếu có */}
+                    {order.order_details[0].total > 0 && (
+                      <div className='flex justify-between'>
+                        <span>Mã Giảm Giá: {order.order_details[0].coupon}</span>
+                        <span className='text-red-600'>- {order.order_details[0].total.toLocaleString()}₫</span>
+                      </div>
+                    )}
+                    <div className='flex justify-between '>
                       <Text>Tổng cộng:</Text>
-                      <Text className='font-bold'>{order.billTotals.toLocaleString('vi-VN')}₫</Text>
+                      <Text className='font-bold'>{order.total_amount.toLocaleString()}₫</Text>
                     </div>
                     <Button type='primary' href={`/orders/orderdetail/?orderId=${order._id}`} className='mt-6'>
                       Xem tình trạng đơn hàng
@@ -161,6 +218,7 @@ const OrderPage = () => {
                 </div>
               </div>
             ))}
+
             {/* Phân trang */}
             <Pagination
               current={currentPage}
@@ -186,28 +244,28 @@ const OrderPage = () => {
                       className='font-bold cursor-pointer text-blue-600'
                       onClick={() => handleOrderClick(order._id)} // Thêm sự kiện nhấn
                     >
-                      Mã đơn hàng: {order.invoiceId}
+                      Mã đơn hàng: {order._id}
                     </Text>
                   </div>
                   <div className='flex justify-between'>
                     <Text>Ngày:</Text>
-                    <Text className='font-bold'>{new Date(order.orderTime).toLocaleString('vi-VN')}</Text>
+                    <Text className='font-bold'>{new Date(order.createdAt).toLocaleString('vi-VN')}</Text>
                   </div>
                   <div className='flex justify-between'>
                     <Text>Tên người nhận:</Text>
-                    <Text className='font-bold'>{order.customerName}</Text>
+                    <Text className='font-bold'>{order.customer_name}</Text>
                   </div>
                   <div className='flex justify-between'>
                     <Text>SĐT người nhận:</Text>
-                    <Text className='font-bold'>{order.phoneNumber}</Text>
+                    <Text className='font-bold'>{order.phone_number}</Text>
                   </div>
                   <div className='flex justify-between'>
                     <Text>Địa chỉ giao hàng:</Text>
-                    <Text className='font-bold'>{order.addressShipping}</Text>
+                    <Text className='font-bold'>{order.address}</Text>
                   </div>
                   <div className='flex justify-between'>
                     <Text>Tổng cộng:</Text>
-                    <Text className='font-bold'>{order.billTotals.toLocaleString('vi-VN')}₫</Text>
+                    <Text className='font-bold'>{order.total_amount.toLocaleString()} ₫</Text>
                   </div>
                 </div>
               ))}

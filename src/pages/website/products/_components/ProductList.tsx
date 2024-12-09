@@ -133,9 +133,8 @@ const ProductList = ({ products = [] }: ProductListProps) => {
       {/* Data cart */}
       {selectedProduct && ( // Đảm bảo chỉ render nếu selectedProduct tồn tại
         <div
-          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${
-            isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-          }`}
+          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+            }`}
         >
           <div className='bg-white p-5 rounded-lg'>
             <div className='float-right'>
@@ -416,13 +415,13 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                       <span className='text-[#FF0000] font-semibold'>
                         {(hoveredPrices[product._id] || product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
                       </span>
-                      {hoveredPrices[product._id] ? (
+                      {/* {hoveredPrices[product._id] ? (
                         <span className='text-[#878c8f] font-light line-through text-[13px]'>
                           {product?.variants?.[0]?.sku_id?.price.toLocaleString()}₫
                         </span>
-                      ) : null}
+                      ) : null} */}
                     </div>
-                    <div className='flex space-x-4'>
+                    {/* <div className='flex space-x-4'>
                       {product.variants.map((variant, idx) => {
                         const value = variant.option_value_id.value
                         const bgColor =
@@ -464,8 +463,10 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                           />
                         )
                       })}
-                    </div>
+                    </div> */}
+                    <Button >xem chi tiết</Button>
                   </div>
+
                 </Link>
               </div>
             )
