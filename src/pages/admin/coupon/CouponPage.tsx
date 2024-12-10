@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Popconfirm, Space, Table, Tag, message, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import { useCouponQuery } from '@/hooks/useCouponQuery'
@@ -105,12 +105,15 @@ const CouponPage = () => {
         <div style={{ color: 'red' }}>Có lỗi xảy ra: {error.message}</div>
       ) : (
         <>
-          <div className='flex justify-between'>
-            <h1 className='text-2xl font-bold mb-4'>Danh sách mã giảm giá</h1>
+          <div className='mb-5'>
             <Link to='/admin/coupons/add'>
-              <Button type='primary'>Thêm mới mã giảm giá</Button>
+              <Button type='primary'>
+                <PlusOutlined />
+                Thêm mới mã giảm giá
+              </Button>
             </Link>
           </div>
+
           <Table
             columns={columns}
             dataSource={data?.res?.docs || []}
