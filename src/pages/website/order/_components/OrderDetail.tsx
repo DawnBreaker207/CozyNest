@@ -73,7 +73,8 @@ const OrderDetail = () => {
             return
           }
           // Bước 2: Cập nhật trạng thái của đơn hàng thành "Canceled"
-          const response = await instance.put(`/orders/updateStatusOrder/${orderId}`, {
+          //* Update: Sửa lại api hủy đơn 
+          const response = await instance.patch(`/orders/cancel/${orderId}`, {
             ...order, // Giữ lại dữ liệu cũ
             status: 'Canceled' // Cập nhật trạng thái hủy
           })
