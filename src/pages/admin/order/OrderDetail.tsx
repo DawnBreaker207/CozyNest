@@ -104,15 +104,16 @@ const AdminOrderDetail = () => {
       {/* Lịch sử trạng thái */}
       <div className='mb-6'>
         <h3 className='font-semibold'>Lịch sử trạng thái đơn hàng</h3>
-        <div className='mt-4'>
-          {statusHistory.length > 0 &&
-            statusHistory.map((item, index) => (
-              <div key={index}>
-                <div>Trạng Thái: {item.label}</div>
-                <div>Thời Gian: {item.time}</div>
+        <div className='mt-4 flex space-x-4'>
+          {order.status_detail.length > 0 &&
+            order.status_detail.map((item: any, index: number) => (
+              <div key={index} className='detail'>
+                <p>Trạng thái: {item.status}</p>
+                <p>Thời gian: {new Date(item.created_at).toLocaleString()}</p>
               </div>
             ))}
         </div>
+
         <div className='flex flex-wrap gap-4 mt-10'>
           {statuses.map((status, index) => {
             // Chắc chắn currentStatus là trạng thái hiện tại của đơn hàng (ví dụ: 'Processing', 'Delivered', ...)

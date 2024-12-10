@@ -193,12 +193,12 @@ const LayoutAdmin: React.FC = () => {
   }
   //TODO: ???????
   const isAddProductPage = location.pathname === '/admin/products/add'
-  const isEditProductPage = location.pathname === `/admin/products/${id}/edit`
   const isAddCategoryPage = location.pathname === '/admin/categories/add'
   const isEditCategoryPage = location.pathname === `/admin/categories/${id}/edit`
   const isCategoryPage = location.pathname === `/admin/categories`
   const isProductPage = location.pathname === `/admin/products`
   const isOrderPage = location.pathname === `/admin/order`
+  const isOrderReturnsPage = location.pathname === `/admin/order_returns`
   const isCustomer = location.pathname === `/admin/customer`
   const isCoupon = location.pathname === `/admin/coupons`
   const isCouponAdd = location.pathname === `/admin/coupons/add`
@@ -206,7 +206,6 @@ const LayoutAdmin: React.FC = () => {
   const isArticles = location.pathname === `/admin/articles`
   const isVariantPage = location.pathname === `/admin/products/${id}/variants`
   const isOptionPage = location.pathname === `/admin/products/${id}/options`
-  const isReviewPage = location.pathname === `/admin/reviews`
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -224,9 +223,14 @@ const LayoutAdmin: React.FC = () => {
               <Menu.Item key='3' icon={<OrderedListOutlined />}>
                 <NavLink to='/admin/categories'>Quản lý danh mục</NavLink>
               </Menu.Item>
-              <Menu.Item key='4' icon={<UploadOutlined />}>
-                <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
-              </Menu.Item>
+              <Menu.SubMenu key='4' icon={<UploadOutlined />} title='Quản lý đơn hàng'>
+                <Menu.Item key='4-1'>
+                  <NavLink to='/admin/order'>Danh sách đơn hàng</NavLink>
+                </Menu.Item>
+                <Menu.Item key='4-2'>
+                  <NavLink to='/admin/order_returns'>Quản lý hoàn trả</NavLink>
+                </Menu.Item>
+              </Menu.SubMenu>
               <Menu.Item key='5' icon={<CalendarOutlined />}>
                 <NavLink to='/admin/articles'>Bài viết</NavLink>
               </Menu.Item>
@@ -262,13 +266,13 @@ const LayoutAdmin: React.FC = () => {
         {isOrderPage && renderHeader('Quản lý đơn hàng')}
         {isCustomer && renderHeader('Quản lý người dùng')}
         {isAddCategoryPage && renderHeader('Thêm mới danh mục')}
-        {isEditProductPage && renderHeader('Cập nhật sản phẩm')}
+        {isOrderReturnsPage && renderHeader('Quản lý đơn hàng hoàn')}
         {isEditCategoryPage && renderHeader('Cập nhật danh mục')}
         {isCoupon && renderHeader('Quản lý mã giảm giá')}
         {isCouponAdd && renderHeader('Thêm mới mã giảm giá')}
         {isCouponEdit && renderHeader('Cập nhật mã giảm giá')}
         {isVariantPage && renderHeader('Quản lí biến thể')}
-        {isOptionPage && renderHeader('Quản lý ')}
+        {isOptionPage && renderHeader('Quản lý Option ')}
         <Content>
           {isCategoryPage && (
             <>

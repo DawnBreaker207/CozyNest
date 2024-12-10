@@ -13,6 +13,7 @@ import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
 import AdminOrderDetail from '@/pages/admin/order/OrderDetail'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
+import ReturnOrdersAdmin from '@/pages/admin/order/OrderReturns'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import ProductAddPage from '@/pages/admin/product/add/ProductAdd'
 import ProductEditPage from '@/pages/admin/product/edit/ProductEdit'
@@ -121,6 +122,9 @@ function App() {
         { path: 'reviews', Component: AdminReview },
 
         // Order
+        { path: 'order', Component: AdminOrderPage },
+        { path: 'orderDetail/:id', Component: AdminOrderDetail },
+        { path: 'order_returns', Component: ReturnOrdersAdmin },
 
         // Variant
         {
@@ -164,8 +168,6 @@ function App() {
         { path: 'articles', Component: AdminArticlePage },
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },
-        { path: 'order', Component: AdminOrderPage },
-        { path: 'orderDetail/:id', Component: AdminOrderDetail },
 
         // Customer
         { path: 'coupons', Component: CouponPage },
