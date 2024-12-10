@@ -9,6 +9,7 @@ export interface Variants {
     name: string
     price: number
     stock: number
+    sold: number
   }
 }
 export interface IProduct {

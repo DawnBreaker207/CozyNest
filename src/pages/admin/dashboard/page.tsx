@@ -3,8 +3,15 @@ import Revenue from './component/Revenue'
 import TopProduct from './component/TopProduct'
 import { useQuery } from '@tanstack/react-query'
 import instance from '@/configs/axios'
+import { useState } from 'react'
+import { Select } from 'antd'
+import RecentOrder from './component/RecentOrder'
 
 const DashboardPage = () => {
+  const [selectedComponent, setSelectedComponent] = useState('TopProduct') // State cho component được chọn
+  const handleComponentChange = (value: string) => {
+    setSelectedComponent(value)
+  }
   const {
     data: userData,
     isLoading: isLoadingUsers,
@@ -34,7 +41,9 @@ const DashboardPage = () => {
   // Tính tổng doanh thu cho các đơn hàng đã hoàn thành
   const totalRevenue = data?.data?.res.items
     ? data.data.res.items
-        .filter((order: any) => order.status === 'Completed') // Lọc các đơn hàng có trạng thái 'Completed'
+        .filter((order: any) => {
+          return order.status === 'Completed'
+        }) // Lọc các đơn hàng có trạng thái 'Completed'
         .reduce((sum: number, order: any) => sum + order.total_amount, 0) // Cộng tổng số tiền
     : 0
 
@@ -101,8 +110,20 @@ const DashboardPage = () => {
           </div>
         </div>
       </div>
+      <div className='mb-10'>
+        <Select
+          defaultValue='TopProduct'
+          style={{ width: 200 }}
+          onChange={handleComponentChange}
+          options={[
+            { value: 'TopProduct', label: 'Top sản phẩm bán chạy' },
+            { value: 'RecentOrder', label: 'Đơn hàng gần đây' }
+          ]}
+        />
+      </div>
       <div className='grid grid-cols-2 gap-x-8 gap-y-10'>
-        <TopProduct />
+        {selectedComponent === 'TopProduct' && <TopProduct />}
+        {selectedComponent === 'RecentOrder' && <RecentOrder />}
         <Revenue />
       </div>
     </>
