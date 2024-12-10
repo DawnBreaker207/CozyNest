@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom'
 const AdminOrderDetail = () => {
   const { id } = useParams<{ id: string }>()
   const [currentStatus, setCurrentStatus] = useState<string>('Processing')
-  const [statusHistory, setStatusHistory] = useState<any[]>([]) // Lưu lịch sử trạng thái
   const queryClient = useQueryClient()
   const [user] = useCookie('user', {})
   const username = user?.username
@@ -54,7 +53,6 @@ const AdminOrderDetail = () => {
           confirmedBy: username // Thêm tên người xác nhận
         })
       }
-      setStatusHistory(history)
     }
   }, [data])
 

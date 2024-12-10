@@ -4,6 +4,7 @@ import { Button, Card, message, Modal, notification, Spin, Table, Typography } f
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ReturnOrderButton from './ReturnOrderButton '
+import { CheckCircleOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
 
@@ -93,7 +94,7 @@ const OrderDetail = () => {
             return
           }
           // Bước 2: Cập nhật trạng thái của đơn hàng thành "Canceled"
-          //* Update: Sửa lại api hủy đơn 
+          //* Update: Sửa lại api hủy đơn
           const response = await instance.patch(`/orders/cancel/${orderId}`, {
             ...order, // Giữ lại dữ liệu cũ
             status: 'Canceled' // Cập nhật trạng thái hủy
@@ -156,6 +157,63 @@ const OrderDetail = () => {
       }
     })
   }
+  const handleReturnAndRefund = () => {
+    // Hiển thị Modal xác nhận
+    Modal.confirm({
+      title: 'Bạn có chắc chắn muốn hoàn trả và hoàn tiền cho đơn hàng này?',
+      content: 'Hãy chắc chắn khi thực sự muốn hoàn trả sản phẩm và yêu cầu hoàn tiền',
+      onOk: async () => {
+        try {
+          const { data: currentOrder } = await instance.get(`/orders/${orderId}`)
+          if (!currentOrder) {
+            console.error('Đơn hàng không tồn tại')
+            return
+          }
+          if (currentOrder?.res?.status !== 'Returned') {
+            // Hiển thị thông báo nếu đơn hàng đã hoàn trả hoặc đã hoàn tiền
+            notification.error({
+              message: 'Thông báo',
+              description: 'Đơn hàng đã được hoàn trả hoặc hoàn tiền trước đó.',
+              duration: 2 // Thời gian hiển thị thông báo (2 giây)
+            })
+
+            // Reload lại trang sau 1,5 giây
+            setTimeout(() => {
+              window.location.reload()
+            }, 1500)
+            return
+          }
+
+          // Bước 2: Cập nhật trạng thái của đơn hàng thành "Refunded"
+          const response = await instance.put(`/orders/updateStatusOrder/${orderId}`, {
+            ...order, // Giữ lại dữ liệu cũ
+            status: 'Refunded' // Cập nhật trạng thái hoàn trả và hoàn tiền
+          })
+
+          // Hiển thị thông báo thành công
+          Modal.confirm({
+            title: 'Yêu cầu hoàn tiền của đơn hàng',
+            content: `Yêu cầu hoàn tiền của đơn hàng ${response?.data?.res?._id} đã thành công. Số tiền sẽ được hoàn lại trong thời gian sớm nhất. Cảm ơn quý khách đã sử dụng dịch vụ của CozyNest!`,
+            icon: <CheckCircleOutlined style={{ color: 'green', fontSize: '30px' }} />,
+            onOk: () => {
+              window.location.reload()
+            },
+            onCancel: () => {
+              window.location.reload()
+            },
+            onClose: () => {
+              // Tự động reload sau khi tắt modal (OK hoặc Cancel)
+              window.location.reload()
+            }
+          })
+        } catch (error) {
+          console.error('Lỗi khi hoàn trả và hoàn tiền đơn hàng:', error)
+          message.error('Có lỗi xảy ra khi hoàn trả và hoàn tiền đơn hàng')
+        }
+      }
+    })
+  }
+
   if (loading) {
     return <Spin size='large' />
   }
@@ -241,6 +299,15 @@ const OrderDetail = () => {
 
       {/* Hiển thị hành trình trạng thái */}
       <Card title='Lịch sử trạng thái' className='mb-6'>
+        <div className='mt-4 flex space-x-4'>
+          {order.status_detail.length > 0 &&
+            order.status_detail.map((item: any, index: number) => (
+              <div key={index} className='detail'>
+                <p>{item.status}</p>
+                <p>{new Date(item.created_at).toLocaleString()}</p>
+              </div>
+            ))}
+        </div>
         <div className='mt-4'>
           {/* Hiển thị trạng thái của đơn hàng hiện tại */}
           <div>
@@ -417,8 +484,8 @@ const OrderDetail = () => {
 
         <Button
           className='bg-yellow-500 text-white w-full sm:w-auto'
-          // onClick={handleReturnAndRefund}
-          disabled={order.status === 'Returned'} // Disable nếu trạng thái đơn hàng là 'Returned'
+          onClick={handleReturnAndRefund}
+          disabled={order.status !== 'Returned'}
         >
           Hoàn trả và hoàn tiền
         </Button>
