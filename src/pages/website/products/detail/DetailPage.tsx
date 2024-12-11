@@ -356,7 +356,8 @@ const ProductDetail = () => {
                       </th>
                       <td className=''>{product.name}</td>
                     </tr>
-                    <tr>
+                    
+                    {/* <tr>
                       <th scope='row' className='btn-th text-left align-top pr-12'>
                         Bộ sưu tập
                       </th>
@@ -373,13 +374,13 @@ const ProductDetail = () => {
                         Màu sắc
                       </th>
                       <td className=''>Màu trắng/ màu đen</td>
-                    </tr>
-                    <tr>
+                    </tr> */}
+                    {/* <tr>
                       <th scope='row' className='btn-th text-left align-top pr-12'>
                         Chất liệu
                       </th>
                       <td className=''>Sứ</td>
-                    </tr>
+                    </tr> */}
                     <tr>
                       <th scope='row' className='btn-th text-left align-top pr-12'>
                         Xuất xứ

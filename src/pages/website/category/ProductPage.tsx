@@ -73,19 +73,13 @@ const CategoryProductsPage = () => {
               <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
                 <Link to={`/detail/${product._id}`}>
                   <div className='relative'>
-                    <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
+                    <div className='flex transition-transform ease-in-out duration-500'>
                       <img
                         src={product?.variants?.[0]?.sku_id?.image?.[0]}
                         alt={product?.name}
                         className='object-cover'
                       />
-                      <img
-                        src={product?.variants?.[0]?.sku_id?.image?.[1]}
-                        alt={product?.name}
-                        className='object-cover'
-                      />
                     </div>
-
                     <FaRegEye
                       className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
                       title='Xem nhanh'
