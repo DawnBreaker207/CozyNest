@@ -30,8 +30,8 @@ const ArticleEditPage = () => {
   })
 
   useEffect(() => {
-    if (data?.res?.thumbnail) {
-      setThumbnail(data?.res?.thumbnail)
+    if (data?.thumbnail) {
+      setThumbnail(data.thumbnail)
     }
   }, [data])
 
@@ -119,7 +119,7 @@ const ArticleEditPage = () => {
                 {thumbnail ? (
                   <img src={data?.thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
-                  <img src={data?.thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
+                  <p>No thumbnail uploaded</p>
                 )}
               </div>
             </Form.Item>
@@ -189,13 +189,14 @@ const ArticleEditPage = () => {
                                   </Upload>
                                   <div className='mt-2'>
                                     <img
-                                      src={form.getFieldValue([
-                                        'content',
-                                        field.name,
-                                        'images',
-                                        imageField.name,
-                                        'url'
-                                      ])}
+                                      // src={form.getFieldValue([
+                                      //   'content',
+                                      //   field.name,
+                                      //   'images',
+                                      //   imageField.name,
+                                      //   'url'
+                                      // ])}
+                                      src={data.content[index].images[imageField.name].url}
                                       alt='Uploaded'
                                       className='w-20 h-20 object-cover rounded'
                                     />
