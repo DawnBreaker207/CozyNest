@@ -15,10 +15,14 @@ const ReviewComponent = ({ product }: any) => {
   const [image, setImage] = useState<{ file: File; name: string } | null>(null)
   const navigate = useNavigate()
   const [showAll, setShowAll] = useState(false)
-  const [selectedRating, setSelectedRating] = useState(null)
+  const [selectedRating, setSelectedRating] = useState<number | null>(null)
   const [messageApi, contextHolder] = message.useMessage()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [sortOption, setSortOption] = useState('moi')
+  const handleSortChange = (value: any) => {
+    setSortOption(value)
+  }
   const { id } = useParams()
   const [form] = Form.useForm()
   const queryClient = useQueryClient()
@@ -34,7 +38,15 @@ const ReviewComponent = ({ product }: any) => {
     }
   })
   const dataReview = data?.data?.data || []
-  console.log(product)
+  console.log('🚀 ~ ReviewComponent ~ dataReview:', dataReview)
+  const sortedReviews = [...dataReview].sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime()
+    const dateB = new Date(b.createdAt).getTime()
+    if (sortOption === 'moi') {
+      return dateB - dateA
+    }
+    return dateA - dateB
+  })
 
   const { mutate } = useMutation({
     mutationFn: async (formData: IReview) => {
@@ -62,7 +74,7 @@ const ReviewComponent = ({ product }: any) => {
   })
 
   const showModal = () => {
-    if (userId) {
+    if (userId._id) {
       setIsModalOpen(true)
     } else {
       setIsLoginModalOpen(true)
@@ -159,30 +171,29 @@ const ReviewComponent = ({ product }: any) => {
             <div className='text-lg font-semibold'>Lọc đánh giá</div>
 
             <Select
-              defaultValue='moi'
-              // onChange={handleChange}
+              value={sortOption}
+              onChange={handleSortChange}
               options={[
                 { value: 'moi', label: 'Mới nhất' },
-                { value: 'cao', label: 'Đánh giá cao -> thấp' },
-                { value: 'thấp', label: 'Đánh giá thấp -> cao' }
+                { value: 'cu', label: 'Cũ nhất' }
               ]}
             />
           </div>
           <div className='flex gap-2 mb-4'>
             <button
-              onClick={() => setSelectedRating(null)}
+              onClick={() => setSelectedRating(null)} // Đặt lại bộ lọc để hiển thị tất cả các đánh giá
               className={`py-1 px-2 rounded-2xl ${
                 selectedRating === null ? 'bg-[#fca120] text-white' : 'bg-gray-50 text-black'
               }`}
             >
               Tất cả
             </button>
-            {[1, 2, 3, 4, 5].map((star: any) => (
+            {[1, 2, 3, 4, 5].map((star: number) => (
               <button
                 key={star}
-                onClick={() => setSelectedRating(star)}
+                onClick={() => setSelectedRating(star)} // Đặt đánh giá sao đã chọn khi người dùng nhấn
                 className={`py-1 px-2 rounded-2xl ${
-                  selectedRating === star ? 'bg-[#fca120] text-white' : 'bg-gray-50 text-black '
+                  selectedRating === star ? 'bg-[#fca120] text-white' : 'bg-gray-50 text-black'
                 }`}
               >
                 {star} <StarFilled className='text-sm text-[#fadb14]' />
@@ -192,25 +203,27 @@ const ReviewComponent = ({ product }: any) => {
 
           {/* Hiển thị danh sách các đánh giá */}
           <div className='space-y-4 p-4'>
-            {dataReview.slice(0, showAll ? dataReview.length : 2).map((review: any, index: number) => (
-              <div key={index} className='flex gap-4 items-start pb-4'>
-                <img src={review.user_id.avatar} alt='User avatar' className='w-12 h-12 rounded-full' />
-                <div className='flex-1'>
-                  <div className='flex items-center justify-between'>
-                    <p className='font-semibold text-lg'>{review.user_id.username}</p>
-                    <div className='flex items-center text-[#fca120]'>
-                      <Rate disabled allowHalf value={review.rating} className='text-sm' />
+            {sortedReviews
+              .filter((review: any) => selectedRating === null || review.rating === selectedRating)
+              .slice(0, showAll ? sortedReviews.length : 2)
+              .map((review: any, index: number) => (
+                <div key={index} className='flex gap-4 items-start pb-4'>
+                  <img src={review.user_id.avatar} alt='User avatar' className='w-12 h-12 rounded-full' />
+                  <div className='flex-1'>
+                    <div className='flex items-center justify-between'>
+                      <p className='font-semibold text-lg'>{review.user_id.username}</p>
+                      <div className='flex items-center text-[#fca120]'>
+                        <Rate disabled allowHalf value={review.rating} className='text-sm' />
+                      </div>
+                    </div>
+                    <p className='text-sm text-gray-600 mt-2'>{review.comment}</p>
+                    {/* Hiển thị hình ảnh của sản phẩm */}
+                    <div className='mt-4 grid grid-cols-3 gap-2'>
+                      <img title='ảnh sản phẩm' src={review.image} className='w-32 h-32 object-cover rounded-md' />
                     </div>
                   </div>
-                  <p className='text-sm text-gray-600 mt-2'>{review.comment}</p>
-                  {/* Hiển thị nhiều hình ảnh sản phẩm */}
-
-                  <div className='mt-4 grid grid-cols-3 gap-2'>
-                    <img title='ảnh sản phẩm' src={review.image} className='w-32 h-32 object-cover rounded-md' />
-                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
           <div className='flex items-center gap-4 mt-4'>
             {!showAll && (
