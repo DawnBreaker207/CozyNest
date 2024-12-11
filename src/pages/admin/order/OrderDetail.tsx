@@ -33,7 +33,7 @@ const AdminOrderDetail = () => {
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
     { label: 'Hoàn trả đơn hàng và hoàn tiền', value: 'Refunded' },
-    { label: 'Đã hủy đơn hàng', value: 'Canceled' }
+    { label: 'Đã hủy đơn hàng', value: 'cancelled' }
   ]
   // Khi dữ liệu đơn hàng đã được lấy xong, cập nhật lại trạng thái
   useEffect(() => {
@@ -65,7 +65,7 @@ const AdminOrderDetail = () => {
 
       if (response.data.res) {
         console.log('Hủy đơn hàng thành công', response.data.res)
-        setCurrentStatus('Canceled') // Cập nhật trạng thái là "Canceled"
+        setCurrentStatus('cancelled') // Cập nhật trạng thái là "Canceled"
         queryClient.invalidateQueries({
           queryKey: ['orderDetail', id]
         })
@@ -99,7 +99,7 @@ const AdminOrderDetail = () => {
       icon: <ExclamationCircleOutlined />,
       onOk: () => {
         // Kiểm tra nếu trạng thái là "Hủy đơn hàng", gọi API hủy đơn hàng
-        if (newStatus === 'Canceled') {
+        if (newStatus === 'cancelled') {
           cancelOrder(orderId) // Gọi hàm hủy đơn hàng
         } else {
           updateOrderStatus(orderId, newStatus) // Cập nhật trạng thái cho các trạng thái khác
@@ -145,17 +145,22 @@ const AdminOrderDetail = () => {
 
             let isDisabled = true
 
-            if (status.value === 'Canceled') {
-              // "Hủy đơn hàng" chỉ được phép khi đang xử lý hoặc đang chờ
-              isDisabled = !(isProcessing || isPending)
-            } else if (status.value === 'Returned' || status.value === 'Refunded') {
-              // "Hoàn trả đơn hàng" và "Hoàn tiền" luôn bị vô hiệu hóa
+            // Kiểm tra nếu trạng thái hiện tại là "Canceled", vô hiệu hóa tất cả các nút
+            if (currentStatus === 'cancelled') {
               isDisabled = true
             } else {
-              // Các trạng thái khác: chỉ cho phép chuyển liền kề
-              isDisabled =
-                targetIndex !== currentIndex + 1 && // Chỉ cho phép trạng thái kế tiếp
-                !(targetIndex === currentIndex - 1 && isProcessing) // Hoặc quay lại nếu đang xử lý
+              if (status.value === 'cancelled') {
+                // "Hủy đơn hàng" chỉ được phép khi đang xử lý hoặc đang chờ
+                isDisabled = !(isProcessing || isPending)
+              } else if (status.value === 'Returned' || status.value === 'Refunded') {
+                // "Hoàn trả đơn hàng" và "Hoàn tiền" luôn bị vô hiệu hóa
+                isDisabled = true
+              } else {
+                // Các trạng thái khác: chỉ cho phép chuyển liền kề
+                isDisabled =
+                  targetIndex !== currentIndex + 1 && // Chỉ cho phép trạng thái kế tiếp
+                  !(targetIndex === currentIndex - 1 && isProcessing) // Hoặc quay lại nếu đang xử lý
+              }
             }
 
             // Luôn vô hiệu hóa trạng thái hiện tại (currentStatus)
@@ -171,7 +176,7 @@ const AdminOrderDetail = () => {
                 onClick={() => {
                   if (id && !isDisabled) {
                     // Nếu trạng thái là "Hủy đơn hàng", gọi API cancelOrder
-                    if (status.value === 'Canceled') {
+                    if (status.value === 'cancelled') {
                       handleStatusChange(id, status.value) // Sử dụng confirm trước khi hủy
                     } else {
                       handleStatusChange(id, status.value) // Gửi yêu cầu thay đổi trạng thái cho các trạng thái khác
