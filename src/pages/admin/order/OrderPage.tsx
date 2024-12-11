@@ -3,12 +3,15 @@ import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, DatePicker, Space, Spin, Table, Tag } from 'antd'
+import { Button, Select, Space, Spin, Table, Tag } from 'antd'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const AdminOrderPage = () => {
   const [user] = useCookie('user', {})
   const token = user?.data?.accessToken
+  const [statusFilter, setStatusFilter] = useState<string | undefined>('') // Lưu trạng thái lọc
+  const [dateFilter, setDateFilter] = useState<any | undefined>(null) // Lưu ngày lọc
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['orders'],
@@ -24,19 +27,31 @@ const AdminOrderPage = () => {
       }
     }
   })
-  console.log(data)
 
   const dataSource =
-    data?.data?.res?.items.map((order: any, index: number) => ({
-      key: index + 1,
-      orderId: order._id || order.invoiceId, // Make sure you're using the correct field for the order ID
-      product: `${order.products.length} Product` || 'N/A',
-      date: new Date(order.createdAt).toLocaleDateString(),
-      customer: order.customer_name,
-      total: `${order.total_amount.toLocaleString()} VNĐ`,
-      payment: order.payment_method[0].orderInfo,
-      status: order.status
-    })) || []
+    data?.data?.res?.items
+      .map((order: any, index: number) => ({
+        key: index + 1,
+        orderId: order._id || order.invoiceId,
+        product: `${order.products.length} Product` || 'N/A',
+        date: new Date(order.createdAt).toLocaleDateString(), // Định dạng lại ngày
+        customer: order.customer_name,
+        total: `${order.total_amount.toLocaleString()} VNĐ`,
+        payment: order.payment_method[0].orderInfo,
+        status: order.status
+      }))
+      .filter((order: any) => {
+        // Lọc theo trạng thái nếu có filter
+        const isStatusMatch = statusFilter ? order.status === statusFilter : true
+
+        const isDateMatch = dateFilter
+          ? new Date(order.date).toLocaleDateString() === dateFilter.format('DD/MM/YYYY')
+          : true
+        console.log(isStatusMatch)
+        console.log(isDateMatch)
+
+        return isStatusMatch && isDateMatch
+      }) || []
 
   const columns = [
     {
@@ -73,20 +88,7 @@ const AdminOrderPage = () => {
       title: 'Trạng Thái',
       dataIndex: 'status',
       key: 'status',
-      render: (
-        status:
-          | 'Processing'
-          | 'Pending'
-          | 'Confirmed'
-          | 'Pending-Ship'
-          | 'Delivering'
-          | 'Delivered'
-          | 'Canceled'
-          | 'Completed'
-          | 'Returned'
-          | 'Refunded'
-      ) => {
-        // Ánh xạ trạng thái với màu tương ứng
+      render: (status: string) => {
         const statusColors: { [key in typeof status]: string } = {
           Processing: 'blue',
           Pending: 'yellow',
@@ -105,18 +107,11 @@ const AdminOrderPage = () => {
     {
       title: 'Hành Động',
       key: 'action',
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       render: (_: any, record: any) => (
         <Space size='middle'>
-          {/* <Link to='#'>
-            <Button icon={<EditOutlined />} />
-          </Link> */}
           <Link to={`/admin/orderDetail/${record.orderId}`}>
             <Button icon={<EyeOutlined />} />
           </Link>
-          {/* <Link to='#'>
-            <DeleteOutlined />
-          </Link> */}
         </Space>
       )
     }
@@ -132,19 +127,41 @@ const AdminOrderPage = () => {
 
   return (
     <div className='container mx-auto  px-6'>
-      {/* Header */}
       <div className='flex justify-between items-center mb-6'>
-        {/* <h1 className='text-2xl font-bold'>Admin Orders</h1> */}
-        {/* <div className='flex items-center'>
-          <Search placeholder='Search order...' />
-        </div> */}
+        <h1 className='text-2xl font-bold'>Danh Sách Đơn Hàng</h1>
       </div>
 
       {/* Filters */}
       <div className='bg-white p-4 rounded shadow mb-4'>
         <div className='flex justify-between items-center'>
-          <Button type='dashed'>Tất cả đơn hàng</Button>
-          <DatePicker placeholder='Chọn ngày' />
+          <Button
+            type='dashed'
+            onClick={() => {
+              setStatusFilter('')
+              setDateFilter(null)
+            }}
+          >
+            Tất cả đơn hàng
+          </Button>
+          {/* <DatePicker placeholder='Chọn ngày' value={dateFilter} onChange={setDateFilter} format='DD/MM/YYYY' /> */}
+          <Select
+            value={statusFilter}
+            onChange={(value) => setStatusFilter(value)}
+            placeholder='Chọn trạng thái'
+            style={{ width: 200 }}
+          >
+            <Select.Option value=''>Tất cả trạng thái</Select.Option>
+            <Select.Option value='Processing'>Processing</Select.Option>
+            <Select.Option value='Pending'>Pending</Select.Option>
+            <Select.Option value='Confirmed'>Confirmed</Select.Option>
+            <Select.Option value='Pending-Ship'>Pending-Ship</Select.Option>
+            <Select.Option value='Delivering'>Delivering</Select.Option>
+            <Select.Option value='Delivered'>Delivered</Select.Option>
+            <Select.Option value='Canceled'>Canceled</Select.Option>
+            <Select.Option value='Completed'>Completed</Select.Option>
+            <Select.Option value='Returned'>Returned</Select.Option>
+            <Select.Option value='Refunded'>Refunded</Select.Option>
+          </Select>
         </div>
       </div>
 

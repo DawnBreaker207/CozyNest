@@ -35,8 +35,7 @@ const ProductsPage = () => {
     currentItems: currentProducts,
     handleNextPage,
     handlePrevPage
-  } = usePaginate(filteredProducts, 15)
-
+  } = usePaginate(filteredProducts, 15) // Sử dụng các sản phẩm đã lọc cho phân trang
   useEffect(() => {
     if (data) setProducts(data.res)
   }, [data])
@@ -47,10 +46,6 @@ const ProductsPage = () => {
   const onClose = () => {
     setVisible(false)
     setOpen(false)
-  }
-  const handleAddToCart = (productId: string) => {
-    addToCart(productId) // Thêm sản phẩm vào giỏ hàng
-    messageApi.success('Thêm vào giỏ hàng thành công!')
   }
   const handleMenuClick = (key: string) => {
     setProducts(sortProducts(key))
@@ -303,7 +298,7 @@ const ProductsPage = () => {
                   </button> */}
         </h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
-          {products
+          {currentProducts
             .filter((product) => !product.is_hidden)
             .map((product) => {
               console.log(product)

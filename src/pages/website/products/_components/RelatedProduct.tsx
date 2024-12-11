@@ -62,19 +62,18 @@ const RelatedProduct = ({ id }: Props) => {
                         className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
                         title='Xem nhanh'
                       />
+                      <div className='mx-2 text-center space-y-2 mt-3'>
+                        <h3>{product?.name}</h3>
+                        <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+                          {/* Hiển thị giá thay đổi khi hover */}
+                          <span className='text-[#FF0000] font-semibold'>
+                            {(hoveredPrices[product._id] || product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
+                          </span>
+                        </div>
+                        <Button>xem chi tiết</Button>
+                      </div>
                     </a>
                   </div>
-                </div>
-
-                <div className='mx-2 text-center space-y-2 mt-3'>
-                  <h3>{product?.name}</h3>
-                  <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                    {/* Hiển thị giá thay đổi khi hover */}
-                    <span className='text-[#FF0000] font-semibold'>
-                      {(hoveredPrices[product._id] || product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
-                    </span>
-                  </div>
-                  <Button>xem chi tiết</Button>
                 </div>
               </div>
             )

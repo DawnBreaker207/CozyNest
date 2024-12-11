@@ -160,35 +160,22 @@ const ProductsPageDetail = () => {
     if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
 
     return products.filter((product) => {
-      if (
-        priceRanges.includes('Dưới 1.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) < 1000000
-      )
-        return true
-      if (
-        priceRanges.includes('1.000.000₫ - 2.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) >= 1000000 &&
-        product?.price - product?.price * (product?.discount / 100) <= 2000000
-      )
-        return true
-      if (
-        priceRanges.includes('2.000.000₫ - 3.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) >= 2000000 &&
-        product?.price - product?.price * (product?.discount / 100) <= 3000000
-      )
-        return true
-      if (
-        priceRanges.includes('3.000.000₫ - 4.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) >= 3000000 &&
-        product?.price - product?.price * (product?.discount / 100) <= 4000000
-      )
-        return true
-      if (
-        priceRanges.includes('Trên 4.000.000₫') &&
-        product?.price - product?.price * (product?.discount / 100) > 4000000
-      )
-        return true
-      return false
+      console.log(product)
+
+      // Duyệt qua các variants của sản phẩm để lấy giá từ sku_id
+      return product.variants.some((variant) => {
+        console.log(variant)
+
+        const price = variant.sku_id.price // Lấy giá từ sku_id, bỏ qua giảm giá nếu không có dữ liệu
+        console.log(price)
+
+        if (priceRanges.includes('Dưới 1.000.000₫') && price < 1000000) return true
+        if (priceRanges.includes('1.000.000₫ - 2.000.000₫') && price >= 1000000 && price <= 2000000) return true
+        if (priceRanges.includes('2.000.000₫ - 3.000.000₫') && price >= 2000000 && price <= 3000000) return true
+        if (priceRanges.includes('3.000.000₫ - 4.000.000₫') && price >= 3000000 && price <= 4000000) return true
+        if (priceRanges.includes('Trên 4.000.000₫') && price > 4000000) return true
+        return false
+      })
     })
   }
 
@@ -207,6 +194,7 @@ const ProductsPageDetail = () => {
   const endIndex = startIndex + productsPerPage
   const currentProducts = filteredProducts?.slice(startIndex, endIndex)
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
+  console.log(currentProducts)
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -311,9 +299,9 @@ const ProductsPageDetail = () => {
                 <div key={category._id}>
                   {' '}
                   {/* Thêm key để tránh lỗi React */}
-                  <Link className='text-black hover:text-yellow-500' to={`/products_page/${category._id}`}>
+                  <a href={`/products_page/${category._id}`} className='text-black hover:text-yellow-500'>
                     {category.name}
-                  </Link>
+                  </a>
                   <br />
                 </div>
               ))}
@@ -367,25 +355,6 @@ const ProductsPageDetail = () => {
             </div>
 
             <hr />
-            {/* Color Filter */}
-            <div className='my-4'>
-              <h4 className='mb-2'>Màu sắc</h4>
-              <div className='flex flex-wrap gap-2'>
-                {[
-                  'bg-pink-500',
-                  'bg-orange-500',
-                  'bg-red-500',
-                  'bg-gray-400',
-                  'bg-white',
-                  'bg-black',
-                  'bg-green-500',
-                  'bg-yellow-500',
-                  'bg-blue-500'
-                ].map((colorClass, index) => (
-                  <div key={index} className={`w-6 h-6 border rounded cursor-pointer ${colorClass}`} />
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </Drawer>
@@ -396,43 +365,46 @@ const ProductsPageDetail = () => {
             <h2 className='text-2xl text-gray-600'>Không có sản phẩm nào đúng theo yêu cầu!</h2>
           </div>
         ) : (
-          currentProducts.map((product: IProduct, index: number) => (
-            <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
-              <Link to={`/detail/${product._id}`}>
-                <div className='relative'>
-                  <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                    <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
-                    <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
-                  </div>
-                  <FaRegEye
-                    className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                    title='Xem nhanh'
-                  />
-                  <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                    -{product?.discount}%
-                  </span>
+          currentProducts
+            .filter((product) => !product.is_hidden)
+            .map((product: IProduct) => {
+              const firstVariant = product?.variants?.[0]
+              const price = firstVariant?.sku_id?.price || 0 // Giá mặc định là 0 nếu không có giá
+
+              return (
+                <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
+                  <Link to={`/detail/${product._id}`}>
+                    <div className='relative'>
+                      <div className='flex transition-transform ease-in-out duration-500'>
+                        <img
+                          src={product?.variants?.[0]?.sku_id?.image?.[0] || 'default-image.jpg'}
+                          alt={product?.name}
+                          className='object-cover'
+                        />
+                      </div>
+
+                      <FaRegEye
+                        className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
+                        title='Xem nhanh'
+                      />
+                    </div>
+
+                    <div className='mx-2 text-center space-y-2 mt-3'>
+                      <h3>{product?.name}</h3>
+                      <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+                        <span className='text-[#FF0000] font-semibold'>{price.toLocaleString()}₫</span>
+                        {price !== firstVariant?.sku_id?.price && (
+                          <span className='text-[#878c8f] font-light line-through text-[13px]'>
+                            {firstVariant?.sku_id?.price?.toLocaleString()}₫
+                          </span>
+                        )}
+                      </div>
+                      <Button>xem chi tiết</Button>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-              <div className='mx-2 text-center space-y-2 mt-3'>
-                <h3>{product?.name}</h3>
-                <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                  <span className='text-[#FF0000] font-semibold'>
-                    {product?.price - product?.price * (product?.discount / 100)}₫
-                  </span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px]'>{product?.price}₫</span>
-                </div>
-                <button
-                  className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
-                  onClick={() => handleAddToCart(String(product._id))}
-                >
-                  <span className='text-[12px] uppercase font-semibold text-ellipsis'>Thêm vào giỏ</span>
-                  <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                    <Cart />
-                  </div>
-                </button>
-              </div>
-            </div>
-          ))
+              )
+            })
         )}
       </div>
 
