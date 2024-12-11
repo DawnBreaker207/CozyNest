@@ -110,7 +110,7 @@ const DashboardPage = () => {
           </div>
         </div>
       </div>
-      <div className='mb-10'>
+      <div className='mb-5'>
         <Select
           defaultValue='TopProduct'
           style={{ width: 200 }}

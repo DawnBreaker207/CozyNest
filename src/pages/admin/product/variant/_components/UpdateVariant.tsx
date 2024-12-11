@@ -176,12 +176,22 @@ const UpdateVariant = (props: Props) => {
         >
           <InputNumber />
         </Form.Item>
+
         <Form.Item<FieldType>
           label='Giá cũ'
           name='price_before_discount'
           rules={[
             { required: true, message: 'Không được bỏ trống!' },
-            { type: 'number', min: 0, message: 'Giá phải lớn hơn 0' }
+            { type: 'number', min: 0, message: 'Giá phải lớn hơn 0' },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                const price = getFieldValue('price')
+                if (value <= price) {
+                  return Promise.reject(new Error('Giá cũ phải lớn hơn giá mới!'))
+                }
+                return Promise.resolve()
+              }
+            })
           ]}
         >
           <InputNumber />

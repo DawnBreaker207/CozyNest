@@ -30,7 +30,7 @@ const Revenue = () => {
     isError,
     error
   } = useQuery({
-    queryKey: ['thongke'],
+    queryKey: ['orders'],
     queryFn: async () => {
       try {
         return await instance.get(`/orders`)
@@ -70,7 +70,7 @@ const Revenue = () => {
         orders.forEach((order: any) => {
           if (order.status === 'Completed') {
             // Chỉ tính các đơn hàng có trạng thái "Completed"
-            const orderDate = new Date(order.date_issued)
+            const orderDate = new Date(order.createdAt)
             const month = orderDate.getMonth() + 1 // Tháng (1-12)
             const year = orderDate.getFullYear() // Năm (2024, 2025, ...)
 

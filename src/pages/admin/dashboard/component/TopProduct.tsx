@@ -1,79 +1,110 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { useProductQuery } from '@/hooks/useProductQuery'
-import { getAllProducts } from '@/services/product'
-import { formatCurrency } from '@/utils/formatCurrency'
 import { useQuery } from '@tanstack/react-query'
-import { Card, Table } from 'antd'
-import { snakeCase } from 'lodash'
-const { Column } = Table
+import { Table } from 'antd'
 
-interface ProductSales {
-  totalQuantity: number
-  totalRevenue: number
-  name: string
-}
-const TopProduct = () => {
-  const { data, isLoading, isError, error } = useProductQuery()
-  console.log(data?.res)
+type Props = {}
 
-  const products = data?.res || []
-
-  // Tính tổng số lượng và doanh thu cho từng sản phẩm
-  const productSales: { [sku_id: string]: ProductSales } = {}
-
-  products.forEach((product: any) => {
-    // Duyệt qua các variants của sản phẩm
-    product.variants?.forEach((variant: any) => {
-      const sku_id = variant.sku_id._id // Lấy sku_id từ variant
-
-      if (sku_id) {
-        if (!productSales[sku_id]) {
-          productSales[sku_id] = { totalQuantity: 0, totalRevenue: 0, name: product.name }
-        }
-        // Tổng số lượng và doanh thu dựa trên sold và price của variant
-        productSales[sku_id].totalQuantity += variant.sku_id.sold || 0
-        productSales[sku_id].totalRevenue += (variant.sku_id.price || 0) * (variant.sku_id.sold || 0)
+const TopProduct = (props: Props) => {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      try {
+        return await instance.get(`/orders`)
+      } catch (error) {
+        throw new Error((error as any).message)
       }
+    }
+  })
+
+  // 1. Lọc các đơn hàng đã hoàn thành
+  const completedOrders = data?.data?.res?.items.filter((order: any) => order.status === 'Completed')
+  console.log('🚀 ~ TopProduct ~ completedOrders:', completedOrders)
+
+  // 2. Tổng hợp số lượng theo sku_id, đồng thời lưu trữ tên và hình ảnh
+  const productSales: Record<string, { SKU: string; quantity: number; name: string; image: string[]; price: number }> =
+    {}
+
+  completedOrders.forEach((order: any) => {
+    order.products.forEach((product: any) => {
+      product.products.forEach((item: any) => {
+        const skuId = item.sku_id // sku_id là đối tượng chứa _id và các thông tin khác
+
+        // Kiểm tra sku_id có hợp lệ hay không
+        if (skuId && skuId._id) {
+          if (productSales[skuId._id]) {
+            productSales[skuId._id].quantity += item.quantity
+          } else {
+            productSales[skuId._id] = {
+              SKU: skuId.SKU, // SKU lấy từ đối tượng sku_id
+              quantity: item.quantity,
+              name: skuId.name, // Tên sản phẩm lấy từ sku_id
+              price: item.price,
+              image: skuId.image || [] // Hình ảnh lấy từ sku_id
+            }
+          }
+        }
+      })
     })
   })
-  // Sắp xếp các sản phẩm theo số lượng bán (từ cao đến thấp)
-  const topProducts = Object.entries(productSales)
-    .map(([sku_id, sales]) => ({
-      sku_id,
-      name: sales.name,
-      totalQuantity: sales.totalQuantity,
-      totalRevenue: sales.totalRevenue
-    }))
-    .sort((a, b) => b.totalQuantity - a.totalQuantity) // Sắp xếp giảm dần theo số lượng bán
 
-  // Lấy top 5 sản phẩm bán chạy nhất
-  const top5Products = topProducts.slice(0, 5)
+  // 3. Sắp xếp theo số lượng đã bán (cao nhất trước)
+  const sortedProducts = Object.entries(productSales)
+    .map(([sku_id, data]) => ({ sku_id, ...data }))
+    .sort((a, b) => b.quantity - a.quantity)
 
-  if (isLoading)
-    return (
-      <div>
-        <CustomLoadingPage />
-      </div>
-    )
+  // 4. Chọn 5 sản phẩm bán chạy nhất
+  const topProducts = sortedProducts.slice(0, 5)
 
-  if (isError) return <div>{error.message}</div>
+  // 5. Dữ liệu cho bảng, SKU sẽ được chuyển sang chữ in hoa
+  const tableData = topProducts.map((product, index) => ({
+    key: index + 1,
+    SKU: product.SKU,
+    quantity: product.quantity,
+    name: product.name,
+    price: product.price,
+    image: product.image.length > 0 ? product.image[0] : '' // Lấy ảnh đầu tiên nếu có
+  }))
+
+  // Cột trong bảng
+  const columns = [
+    {
+      title: 'SKU',
+      dataIndex: 'SKU',
+      key: 'SKU'
+    },
+    {
+      title: 'Hình Ảnh',
+      dataIndex: 'image',
+      key: 'image',
+      render: (image: string) =>
+        image ? <img src={image} alt='Product' style={{ width: 50, height: 50 }} /> : <span>No Image</span>
+    },
+    {
+      title: 'Tên Sản Phẩm',
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: 'Giá Sản Phẩm',
+      dataIndex: 'price',
+      key: 'price'
+    },
+    {
+      title: 'Số lượt bán',
+      dataIndex: 'quantity',
+      key: 'quantity'
+    }
+  ]
+
+  if (isLoading) return <CustomLoadingPage />
+  if (isError) return <div>{error?.message}</div>
 
   return (
     <div>
-      <div className='bg-white p-4 rounded-lg shadow-xl'>
-        <h2 className='text-2xl font-semibold mb-5 text-center'>Top sản phẩm bán chạy</h2>
-        <Table dataSource={top5Products} pagination={{ pageSize: 5 }} rowKey='sku_id'>
-          <Column title='Mã sản phẩm' dataIndex='sku_id' key='sku_id' />
-          <Column title='Tên sản phẩm' dataIndex='name' key='name' />
-          <Column title='Số lượng đã bán' dataIndex='totalQuantity' key='totalQuantity' className='text-center' />
-          <Column
-            title='Doanh thu'
-            dataIndex='totalRevenue'
-            key='totalRevenue'
-            render={(text) => formatCurrency(text)} // Định dạng doanh thu
-          />
-        </Table>
+      <div className='bg-white p-2 rounded-lg shadow-xl'>
+        <h2 className='text-2xl font-semibold mb-5 text-center'>Top 5 Sản Phẩm Bán Chạy</h2>
+        <Table dataSource={tableData} columns={columns} pagination={false} />
       </div>
     </div>
   )
