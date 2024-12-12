@@ -5,12 +5,15 @@ import { EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Select, Space, Spin, Table, Tag } from 'antd'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const AdminOrderPage = () => {
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const initialStatusFilter = searchParams.get('status') || ''
   const [user] = useCookie('user', {})
   const token = user?.data?.accessToken
-  const [statusFilter, setStatusFilter] = useState<string | undefined>('') // Lưu trạng thái lọc
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(initialStatusFilter) // Lưu trạng thái lọc
   const [dateFilter, setDateFilter] = useState<any | undefined>(null) // Lưu ngày lọc
 
   const { data, isLoading, isError, error } = useQuery({

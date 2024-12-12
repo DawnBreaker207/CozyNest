@@ -6,6 +6,7 @@ import instance from '@/configs/axios'
 import { useState } from 'react'
 import { Select } from 'antd'
 import RecentOrder from './component/RecentOrder'
+import { Link } from 'react-router-dom'
 
 const DashboardPage = () => {
   const [selectedComponent, setSelectedComponent] = useState('TopProduct') // State cho component được chọn
@@ -82,33 +83,33 @@ const DashboardPage = () => {
             </span>
           </div>
         </div>
-        <div className='rounded-xl shadow-xl'>
+        <Link to={`/admin/order?status=Completed`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/cart.png' alt='' className='size-8' />
-              <p className='font-medium text-lg'>Đơn hàng hoàn thành</p>
+              <p className='font-medium text-lg text-black'>Đơn hàng hoàn thành</p>
             </div>
-            <span className='text-xl font-semibold'>{completedOrders}</span>
+            <span className='text-xl font-semibold text-black'>{completedOrders}</span>
           </div>
-        </div>
-        <div className='rounded-xl shadow-xl'>
+        </Link>
+        <Link to={`/admin/order?status=Canceled`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/delete.png' alt='' className='size-8' />
-              <p className='font-medium text-lg'>Đơn hàng bị hủy</p>
+              <p className='font-medium text-lg text-black'>Đơn hàng bị hủy</p>
             </div>
-            <span className='text-xl font-semibold'>{canceledOrders}</span>
+            <span className='text-xl font-semibold text-black'>{canceledOrders}</span>
           </div>
-        </div>
-        <div className='rounded-xl shadow-xl'>
+        </Link>
+        <Link to={`/admin/order?status=Canceled`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/user.png' alt='' className='size-8' />
-              <p className='font-medium text-lg'>Khách hàng</p>
+              <p className='font-medium text-lg text-black'>Khách hàng</p>
             </div>
-            <span className='text-xl font-semibold'>{memberCount}</span>
+            <span className='text-xl font-semibold text-black'>{memberCount}</span>
           </div>
-        </div>
+        </Link>
       </div>
       <div className='mb-5'>
         <Select

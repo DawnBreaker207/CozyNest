@@ -219,7 +219,9 @@ const ReviewComponent = ({ product }: any) => {
                     <p className='text-sm text-gray-600 mt-2'>{review.comment}</p>
                     {/* Hiển thị hình ảnh của sản phẩm */}
                     <div className='mt-4 grid grid-cols-3 gap-2'>
-                      <img title='ảnh sản phẩm' src={review.image} className='w-32 h-32 object-cover rounded-md' />
+                      {review.image && (
+                        <img title='ảnh sản phẩm' src={review.image} className='w-32 h-32 object-cover rounded-md' />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -283,7 +285,13 @@ const ReviewComponent = ({ product }: any) => {
             <Form.Item name='rating' rules={[{ required: true, message: 'Vui lòng chọn đánh giá!' }]}>
               <Rate tooltips={desc} />
             </Form.Item>
-            <Form.Item name='comment' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+            <Form.Item
+              name='comment'
+              rules={[
+                { required: true, message: 'Không được bỏ trống!' },
+                { max: 500, message: 'Bình luận không được quá 500 ký tự!' }
+              ]}
+            >
               <TextArea rows={5} placeholder='Nhập nhận xét của bạn...' />
             </Form.Item>
             <Upload

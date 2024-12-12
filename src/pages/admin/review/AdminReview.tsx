@@ -77,7 +77,10 @@ const AdminReview = (props: Props) => {
     {
       title: 'Nội dung đánh giá',
       dataIndex: 'comment',
-      key: 'comment'
+      key: 'comment',
+      render: (comment: any) => {
+        return <p className='max-w-[450px]'>{comment}</p>
+      }
     },
     {
       title: 'Số sao đánh giá',
@@ -90,26 +93,26 @@ const AdminReview = (props: Props) => {
           </div>
         )
       }
-    },
-    {
-      title: 'Hành động',
-      key: 'action',
-      render: (_: any, review: any) => {
-        return (
-          <Space size='middle'>
-            <Popconfirm
-              title='Xóa đánh giá'
-              description='Bạn có chắc chắn muốn xóa đánh giá này?'
-              onConfirm={() => mutate(review._id!)}
-              okText='Có'
-              cancelText='Không'
-            >
-              <Button icon={<DeleteOutlined />} danger />
-            </Popconfirm>
-          </Space>
-        )
-      }
     }
+    // {
+    //   title: 'Hành động',
+    //   key: 'action',
+    //   render: (_: any, review: any) => {
+    //     return (
+    //       <Space size='middle'>
+    //         <Popconfirm
+    //           title='Xóa đánh giá'
+    //           description='Bạn có chắc chắn muốn xóa đánh giá này?'
+    //           onConfirm={() => mutate(review._id!)}
+    //           okText='Có'
+    //           cancelText='Không'
+    //         >
+    //           <Button icon={<DeleteOutlined />} danger />
+    //         </Popconfirm>
+    //       </Space>
+    //     )
+    //   }
+    // }
   ]
   if (isLoading)
     return (
