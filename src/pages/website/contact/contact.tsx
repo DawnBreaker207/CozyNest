@@ -40,11 +40,9 @@ const ContactPage = () => {
           </Title>
           <Text strong>Hà Nội:</Text> số 03 Lê Trọng Tấn, Khương Mai, Thanh Xuân, Hà Nội
           <br />
-          <Text strong>Hotline:</Text>
+          <Text strong>Hotline:</Text> 0338261234
           <br />
-          <Text strong>HN:</Text>
-          <br />
-          <Text strong>Email:</Text>
+          <Text strong>Email:</Text> nguyenthiphuonganh@gmail.com
           <Form onFinish={onFinish} layout='vertical' style={{ marginTop: '24px' }}>
             <Form.Item name='name' label='Tên ' rules={[{ required: true, message: 'Vui lòng nhập tên của bạn!' }]}>
               <Input placeholder='Tên của bạn' />

@@ -15,6 +15,7 @@ export default interface IArticle {
     }
   ]
   author: string
+  isHidden: boolean
   created_at: string
   updated_at: string
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import useArticleMutation from '@/hooks/useArticleMutation'
-import { Button, Form, Input, message, Upload } from 'antd'
+import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import ReactQuill from 'react-quill' // Import ReactQuill
@@ -171,6 +171,14 @@ const ArticleAddPage = () => {
             <Input placeholder='Type author name here...' className='w-full bg-[#F9F9FC]' />
           </Form.Item>
         </Form>
+        <div className='w-[20%]'>
+              <div>
+                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
+                <Form.Item name='isHidden' valuePropName='checked'>
+                  <Checkbox>hiển thị</Checkbox>
+                </Form.Item>
+              </div>
+            </div>
       </div>
     </>
   )

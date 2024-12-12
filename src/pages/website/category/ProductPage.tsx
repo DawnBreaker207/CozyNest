@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FaRegEye } from 'react-icons/fa'
 import { Button, message } from 'antd'
@@ -7,6 +7,9 @@ import instance from '@/configs/axios'
 import { Cart } from '@/components/icons'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
+import { formatCurrency } from '../../../utils/formatCurrency'
+import { getAllProducts } from '@/services/product'
+import { getAllCategories } from '@/services/category'
 
 const CategoryProductsPage = () => {
   const [products, setProducts] = useState<IProduct[]>([])
@@ -21,7 +24,7 @@ const CategoryProductsPage = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const { data } = await instance.get('/categories')
+      const data = await getAllCategories()
       setCategories(data.res)
     }
     fetchCategories()
@@ -29,16 +32,18 @@ const CategoryProductsPage = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data } = await instance.get('/products')
+      const data = await getAllProducts()
       setProducts(data.res)
     }
     fetchProducts()
   }, [categoryId])
 
   let filteredProducts: IProduct[] = []
-  if (categories != null) {
-    filteredProducts = categories.find((category) => category._id === categoryId)?.products || []
-  }
+  console.log(products)
+
+  filteredProducts = useMemo(() => {
+    return categories.find((category) => category._id === categoryId)?.products || []
+  }, [categories, categoryId])
 
   const handleAddToCart = (productId: string) => {
     addToCart(productId)
@@ -54,6 +59,8 @@ const CategoryProductsPage = () => {
       setCurrentPage(page)
     }
   }
+  console.log(filteredProducts)
+  console.log(currentProducts)
 
   return (
     <div className='mx-auto container mt-20'>
@@ -61,47 +68,52 @@ const CategoryProductsPage = () => {
       {currentProducts.length > 0 ? (
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
           {currentProducts
-          .filter((product) => !product.is_hidden)
-          .map((product: IProduct, index: number) => (
-            <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
-              <Link to={`/detail/${product._id}`}>
-                <div className='relative'>
-                  <div className='flex group-hover:-translate-x-full transition-transform ease-in-out duration-500'>
-                    <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
-                    <img src={product?.thumbnail} alt={product?.name} className='object-cover' />
+            .filter((product) => !product.is_hidden)
+            .map((product: IProduct) => (
+              <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
+                <Link to={`/detail/${product._id}`}>
+                  <div className='relative'>
+                    <div className='flex transition-transform ease-in-out duration-500'>
+                      <img
+                        src={product?.variants?.[0]?.sku_id?.image?.[0]}
+                        alt={product?.name}
+                        className='object-cover'
+                      />
+                    </div>
+                    <FaRegEye
+                      className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
+                      title='Xem nhanh'
+                    />
+                    <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
+                      -{product?.discount}%
+                    </span>
                   </div>
 
-                  <FaRegEye
-                    className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                    title='Xem nhanh'
-                  />
-                  <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                    -{product?.discount}%
-                  </span>
-                </div>
-            
-              <div className='mx-2 text-center space-y-2 mt-3'>
-                <h3>{product?.name}</h3>
-                <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                  <span className='text-[#FF0000] font-semibold'>
-                    {product?.price - product?.price * (product?.discount / 100)}₫
-                  </span>
-                  <span className='text-[#878c8f] font-light line-through text-[13px]'>{product?.variants[0]?.price}₫</span>
-                </div>
-                <button
-                  className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
-                  onClick={() => handleAddToCart(String(product._id))}
-                >
-                  {/* <span className='text-[12px] uppercase font-semibold text-ellipsis '></span>
+                  <div className='mx-2 text-center space-y-2 mt-3'>
+                    <h3>{product?.name}</h3>
+                    <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+                      <span className='text-[#FF0000] font-semibold'>
+                        {/* {product?.price - product?.price * (product?.discount / 100)}₫ */}
+                        {formatCurrency(product?.variants?.[0]?.sku_id?.price as number)}
+                      </span>
+                      {/* <span className='text-[#878c8f] font-light line-through text-[13px]'>
+                        {formatCurrency(product?.variants?.[0]?.sku_id?.price as number)}
+                      </span> */}
+                    </div>
+                    <button
+                      className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
+                      onClick={() => handleAddToCart(String(product._id))}
+                    >
+                      {/* <span className='text-[12px] uppercase font-semibold text-ellipsis '></span>
                   <div className='p-[6px] bg-[#FCA120] rounded-full'>
                     <Cart />
                   </div> */}
-                </button>
-                <Button>xem chi tiết</Button>
+                    </button>
+                    <Button>xem chi tiết</Button>
+                  </div>
+                </Link>
               </div>
-              </Link>
-            </div>
-          ))}
+            ))}
         </div>
       ) : (
         <div className='text-center mt-20 text-gray-500  h-[280px]'>Không có sản phẩm nào để hiển thị.</div>

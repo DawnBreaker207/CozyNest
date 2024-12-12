@@ -24,8 +24,8 @@ const EditCategoryPage = () => {
     }
   })
   useEffect(() => {
-    if (data?.res?.thumbnail) {
-      setThumbnail(data.res.thumbnail)
+    if (data?.thumbnail) {
+      setThumbnail(data.thumbnail)
     }
   }, [data])
 
@@ -58,7 +58,7 @@ const EditCategoryPage = () => {
       thumbnail
     }
 
-    mutate({ ...data?.res, ...updatedValues, _id: id })
+    mutate({ ...data, ...updatedValues, _id: id })
   }
   if (!id) {
     messageApi.error('ID danh mục không hợp lệ')
@@ -72,7 +72,7 @@ const EditCategoryPage = () => {
     <>
       {contextHolder}
       <div className='bg-white rounded-lg'>
-        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data?.res }}>
+        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data }}>
           <div className='flex justify-between'>
             <div>
               <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Edit Category</span>
@@ -110,7 +110,7 @@ const EditCategoryPage = () => {
                   <img src={thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
                   <span className='mt-2'>
-                    <img src={data?.res?.thumbnail} alt='thumbnail' />
+                    <img src={data?.thumbnail} alt='thumbnail' />
                   </span>
                 )}
               </Form.Item>

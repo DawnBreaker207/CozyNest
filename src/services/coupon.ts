@@ -21,8 +21,8 @@ export const addCoupon = async (coupon: ICoupon) => {
 }
 
 // API để chỉnh sửa mã giảm giá
-export const editCoupon = async (coupon: ICoupon) => {
-  const response = await instance.put(`/coupon/${coupon._id}`, coupon)
+export const editCoupon = async (coupon: any) => {
+  const response = await instance.patch(`/coupon/${coupon._id}`, coupon)
   return response.data
 }
 

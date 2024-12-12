@@ -3,7 +3,7 @@ import { useArticleQuery } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button, Collapse, Empty, Image, message, Popconfirm, Space, Table, Tooltip, Typography } from 'antd'
+import { Button, Collapse, Empty, Image, message, Popconfirm, Space, Table, Tag, Tooltip, Typography } from 'antd'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import CustomLoadingPage from '@/components/Loading'
@@ -86,6 +86,13 @@ const AdminArticlePage = () => {
           )}
         </Collapse>
       )
+    },
+    ,
+    {
+      key: 'isHidden',
+      title: 'Trạng thái hiển thị',
+      dataIndex: 'isHidden',
+      render: (isHidden: boolean) => <Tag color={isHidden ? 'green' : 'red'}>{isHidden ? 'Hiển thị' : 'Ẩn'}</Tag>
     },
     {
       title: 'Hành động',

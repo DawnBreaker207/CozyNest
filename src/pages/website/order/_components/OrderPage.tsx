@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Card, Col, Pagination, Row, Spin, Typography } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { formatCurrency } from '../../../../utils/formatCurrency'
 
 // Đối tượng ánh xạ trạng thái
 const orderStatusMap: { [key: string]: string } = {
@@ -143,7 +144,7 @@ const OrderPage = () => {
                             {/* Hiển thị số lượng */}
                             <span className='ml-2'>x{product.quantity}</span>
                             {/* Hiển thị giá */}
-                            <span className='ml-auto font-bold'>{product.price.toLocaleString('vi-VN')}₫</span>
+                            <span className='ml-auto font-bold'>{formatCurrency(product.total_money)}</span>
                           </div>
                         ))
                     )}
@@ -197,23 +198,23 @@ const OrderPage = () => {
                     </div>
                     <div className='flex justify-between'>
                       <Text>Chi phí lắp đặt tại nhà:</Text>
-                      <Text className='font-bold'>{order.order_details[0].installation_fee.toLocaleString()}₫</Text>
+                      <Text className='font-bold'>{formatCurrency(order.order_details[0].installation_fee)}₫</Text>
                     </div>
 
                     <div className='flex justify-between '>
                       <Text>Chi phí vận chuyển:</Text>
-                      <Text className='font-bold'>{(50000).toLocaleString()}₫</Text>
+                      <Text className='font-bold'>{formatCurrency(50000)}</Text>
                     </div>
                     {/* Hiển thị mã giảm giá nếu có */}
                     {order.order_details[0].total > 0 && (
                       <div className='flex justify-between'>
                         <span>Mã Giảm Giá: {order.order_details[0].coupon}</span>
-                        <span className='text-red-600'>- {order.order_details[0].total.toLocaleString()}₫</span>
+                        <span className='text-red-600'>- {formatCurrency(order.order_details[0].total)}</span>
                       </div>
                     )}
                     <div className='flex justify-between '>
                       <Text>Tổng cộng:</Text>
-                      <Text className='font-bold'>{order.total_amount.toLocaleString()}₫</Text>
+                      <Text className='font-bold'>{formatCurrency(order.total_amount)}₫</Text>
                     </div>
                     <Button type='primary' href={`/orders/orderdetail/?orderId=${order._id}`} className='mt-6'>
                       Xem tình trạng đơn hàng
@@ -269,7 +270,7 @@ const OrderPage = () => {
                   </div>
                   <div className='flex justify-between'>
                     <Text>Tổng cộng:</Text>
-                    <Text className='font-bold'>{order.total_amount.toLocaleString()} ₫</Text>
+                    <Text className='font-bold'>{formatCurrency(order.total_amount)}</Text>
                   </div>
                 </div>
               ))}

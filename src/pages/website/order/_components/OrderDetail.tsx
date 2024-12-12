@@ -3,11 +3,14 @@ import instance from '@/configs/axios'
 import { Button, Card, message, Modal, notification, Spin, Table, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import ReturnOrderButton from './ReturnOrderButton '
+import { CheckCircleOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
 
 const OrderDetail = () => {
   const [order, setOrder] = useState<any>(null)
+  const [returnOrder, setReturnOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [loading, setLoading] = useState<boolean>(true)
   const [isOrderNotFound, setIsOrderNotFound] = useState<boolean>(false) // Trạng thái để kiểm tra đơn hàng không tồn tại
   const params = new URLSearchParams(location.search)
@@ -35,6 +38,24 @@ const OrderDetail = () => {
         })
     }
   }, [orderId])
+  useEffect(() => {
+    if (orderId) {
+      instance
+        .get(`/orders/return?search=${orderId}`)
+        .then((response) => {
+          if (response?.data?.res) {
+            setReturnOrder(response?.data?.res)
+          } else {
+            setReturnOrder(null)
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching return order:', error)
+          message.error('Có lỗi xảy ra khi lấy thông tin đơn hàng hoàn trả.')
+        })
+    }
+  }, [orderId])
+  console.log(returnOrder)
 
   useEffect(() => {
     if (isOrderNotFound) {
@@ -73,7 +94,8 @@ const OrderDetail = () => {
             return
           }
           // Bước 2: Cập nhật trạng thái của đơn hàng thành "Canceled"
-          const response = await instance.put(`/orders/updateStatusOrder/${orderId}`, {
+          //* Update: Sửa lại api hủy đơn
+          const response = await instance.patch(`/orders/cancel/${orderId}`, {
             ...order, // Giữ lại dữ liệu cũ
             status: 'Canceled' // Cập nhật trạng thái hủy
           })
@@ -135,6 +157,63 @@ const OrderDetail = () => {
       }
     })
   }
+  const handleReturnAndRefund = () => {
+    // Hiển thị Modal xác nhận
+    Modal.confirm({
+      title: 'Bạn có chắc chắn muốn hoàn trả và hoàn tiền cho đơn hàng này?',
+      content: 'Hãy chắc chắn khi thực sự muốn hoàn trả sản phẩm và yêu cầu hoàn tiền',
+      onOk: async () => {
+        try {
+          const { data: currentOrder } = await instance.get(`/orders/${orderId}`)
+          if (!currentOrder) {
+            console.error('Đơn hàng không tồn tại')
+            return
+          }
+          if (currentOrder?.res?.status !== 'Returned') {
+            // Hiển thị thông báo nếu đơn hàng đã hoàn trả hoặc đã hoàn tiền
+            notification.error({
+              message: 'Thông báo',
+              description: 'Đơn hàng đã được hoàn trả hoặc hoàn tiền trước đó.',
+              duration: 2 // Thời gian hiển thị thông báo (2 giây)
+            })
+
+            // Reload lại trang sau 1,5 giây
+            setTimeout(() => {
+              window.location.reload()
+            }, 1500)
+            return
+          }
+
+          // Bước 2: Cập nhật trạng thái của đơn hàng thành "Refunded"
+          const response = await instance.put(`/orders/updateStatusOrder/${orderId}`, {
+            ...order, // Giữ lại dữ liệu cũ
+            status: 'Refunded' // Cập nhật trạng thái hoàn trả và hoàn tiền
+          })
+
+          // Hiển thị thông báo thành công
+          Modal.confirm({
+            title: 'Yêu cầu hoàn tiền của đơn hàng',
+            content: `Yêu cầu hoàn tiền của đơn hàng ${response?.data?.res?._id} đã thành công. Số tiền sẽ được hoàn lại trong thời gian sớm nhất. Cảm ơn quý khách đã sử dụng dịch vụ của CozyNest!`,
+            icon: <CheckCircleOutlined style={{ color: 'green', fontSize: '30px' }} />,
+            onOk: () => {
+              window.location.reload()
+            },
+            onCancel: () => {
+              window.location.reload()
+            },
+            onClose: () => {
+              // Tự động reload sau khi tắt modal (OK hoặc Cancel)
+              window.location.reload()
+            }
+          })
+        } catch (error) {
+          console.error('Lỗi khi hoàn trả và hoàn tiền đơn hàng:', error)
+          message.error('Có lỗi xảy ra khi hoàn trả và hoàn tiền đơn hàng')
+        }
+      }
+    })
+  }
+
   if (loading) {
     return <Spin size='large' />
   }
@@ -150,6 +229,7 @@ const OrderDetail = () => {
       </div>
     )
   }
+  console.log(order)
 
   // Định nghĩa các trạng thái đơn hàng
   const statuses = [
@@ -160,20 +240,28 @@ const OrderDetail = () => {
     { label: 'Đang vận chuyển', value: 'Delivering' },
     { label: 'Giao hàng thành công', value: 'Delivered' },
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Tiến hành hoàn trả đơn hàng', value: 'Returning' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
     { label: 'Hoàn trả đơn hàng và hoàn tiền', value: 'Refunded' },
     { label: 'Đã hủy đơn hàng', value: 'Canceled' }
   ]
 
   // Tìm trạng thái hiện tại
-  const currentStatus = order.status
+  const currentStatus = returnOrder?.items?.[0]?.is_confirm == false ? 'Returning' : order?.status
 
   const productColumns = [
     {
       title: 'Hình ảnh',
       dataIndex: 'thumbnail',
       key: 'thumbnail',
-      render: (text, record) => {
+      render: (
+        _text: any,
+        record: {
+          sku_id: any
+          thumbnail: any
+          name: any
+        }
+      ) => {
         // Sử dụng trực tiếp từ `record` đã được map
         const image = record.thumbnail // Lấy hình ảnh từ `record.thumbnail`
 
@@ -211,9 +299,25 @@ const OrderDetail = () => {
 
       {/* Hiển thị hành trình trạng thái */}
       <Card title='Lịch sử trạng thái' className='mb-6'>
+        <div className='mt-4 flex space-x-4'>
+          {order.status_detail.length > 0 &&
+            order.status_detail.map((item: any, index: number) => (
+              <div key={index} className='detail'>
+                <p>{item.status}</p>
+                <p>{new Date(item.created_at).toLocaleString()}</p>
+              </div>
+            ))}
+        </div>
         <div className='mt-4'>
-          <div>Trạng Thái: {order.status}</div>
-          <div>Thời Gian: {new Date(order.updatedAt).toLocaleString()}</div>
+          {/* Hiển thị trạng thái của đơn hàng hiện tại */}
+          <div>
+            <strong>Trạng thái: </strong>
+            {currentStatus}
+          </div>
+          <div>
+            <strong>Thời gian: </strong>
+            {new Date(returnOrder?.items?.[0]?.updatedAt || order?.updatedAt).toLocaleString()}
+          </div>
         </div>
         <div className='flex flex-wrap gap-4 mt-4'>
           {statuses.map((status, index) => {
@@ -243,7 +347,36 @@ const OrderDetail = () => {
           })}
         </div>
       </Card>
-
+      {/* Nếu có thông tin hoàn trả đơn hàng, hiển thị một Cart riêng biệt */}
+      {returnOrder?.items?.length > 0 && (
+        <Card title='Thông Tin Hoàn Trả Đơn Hàng' className='mb-6'>
+          <Title level={3}>Mã đơn hàng hoàn trả: {returnOrder?.items?.[0]?.order_id}</Title>
+          <p>
+            <strong>Ngày tạo yêu cầu hoàn trả:</strong> {new Date(returnOrder?.items?.[0]?.createdAt).toLocaleString()}
+          </p>
+          <p>
+            <strong>Lý do hoàn trả:</strong> {returnOrder?.items?.[0]?.reason}
+          </p>
+          <p>
+            <strong>Trạng thái hoàn trả:</strong>{' '}
+            {returnOrder?.items?.[0]?.is_confirm ? 'Đã xác nhận' : 'Chưa xác nhận'}
+          </p>
+          <p>
+            <strong>Số điện thoại:</strong> {returnOrder?.items?.[0]?.phone_number}
+          </p>
+          <p>
+            <strong>Tên khách hàng:</strong> {returnOrder?.items?.[0]?.customer_name}
+          </p>
+          <div>
+            <strong>Hình ảnh minh chứng:</strong>
+            <div>
+              {returnOrder?.items?.[0]?.images.map((image: string, index: number) => (
+                <img key={index} src={image} alt='Sản phẩm hoàn trả' style={{ width: '100px', margin: '5px' }} />
+              ))}
+            </div>
+          </div>
+        </Card>
+      )}
       <Card title='Thông tin giao hàng' className='mb-6'>
         <p>
           <strong>Tên người nhận:</strong> {order.customer_name}
@@ -262,13 +395,13 @@ const OrderDetail = () => {
       <Card title='Thông tin sản phẩm' className='mb-6'>
         <Table
           columns={productColumns}
-          dataSource={order.order_details.products.map((product: any) => ({
+          dataSource={order?.order_details?.products.map((product: any) => ({
             ...product,
-            name: product.sku_id.name,
-            thumbnail: product.sku_id.image[0],
-            total: product.price * product.quantity
+            name: product?.sku_id?.name,
+            thumbnail: product?.sku_id?.image[0],
+            total: product?.price * product?.quantity
           }))}
-          rowKey={(record) => record.productId}
+          rowKey={(record) => record?.sku_id?._id}
           pagination={false}
           scroll={{ x: 'max-content' }}
         />
@@ -281,7 +414,7 @@ const OrderDetail = () => {
             <div className='flex justify-between'>
               <span>Chi Phí Sản Phẩm</span>
               <span>
-                {order.order_details.products
+                {order?.order_details?.products
                   .reduce((total: any, product: { total_money: any }) => total + product.total_money, 0)
                   .toLocaleString()}
                 ₫
@@ -294,15 +427,15 @@ const OrderDetail = () => {
             </div>
 
             {/* Hiển thị chi phí lắp đặt nếu có */}
-            {order.order_details.installation_fee > 0 && (
+            {order?.order_details?.installation_fee > 0 && (
               <div className='flex justify-between'>
                 <span>Chi Phí lắp đặt tại nhà</span>
-                <span>{order.order_details.installation_fee.toLocaleString()}₫</span>
+                <span>{order?.order_details?.installation_fee.toLocaleString()}₫</span>
               </div>
             )}
 
             {/* Hiển thị mã giảm giá nếu có */}
-            {order.order_details.total > 0 && (
+            {order?.order_details?.total > 0 && (
               <div className='flex justify-between'>
                 <span>Mã Giảm Giá: {order.order_details.coupon}</span>
                 <span className='text-red-600'>- {order.order_details.total.toLocaleString()}₫</span>
@@ -320,7 +453,7 @@ const OrderDetail = () => {
           </p>
           <p>
             <strong>
-              Trạng thái thanh toán: {order.payment_method[0].status === 'unpaid' ? 'Chưa thanh toán' : 'Đã thanh toán'}
+              Trạng thái thanh toán: {order.payment_status === 'Unpaid' ? 'Chưa thanh toán' : 'Đã thanh toán'}
             </strong>
           </p>
         </div>
@@ -330,6 +463,7 @@ const OrderDetail = () => {
         <Button type='primary' className='w-full sm:w-auto'>
           Liên hệ hỗ trợ
         </Button>
+
         <Button
           className='bg-red-400 text-white w-full sm:w-auto'
           onClick={cancelOrder} // Khi nhấn Hủy đơn hàng
@@ -337,16 +471,25 @@ const OrderDetail = () => {
         >
           Hủy đơn hàng
         </Button>
+
         <Button
           className='bg-blue-500 text-white w-full sm:w-auto'
           onClick={confirmOrder} // Khi nhấn Xác nhận đơn hàng
-          disabled={order.status !== 'Delivered'}
+          disabled={order.status !== 'Delivered' || currentStatus === 'Returning'}
         >
           Xác nhận đơn hàng
         </Button>
-        <Button className='bg-yellow-500 text-white w-full sm:w-auto' disabled={order.status !== 'Delivered'}>
-          Hoàn trả đơn hàng
+
+        <ReturnOrderButton order={order} currentStatus={currentStatus} />
+
+        <Button
+          className='bg-yellow-500 text-white w-full sm:w-auto'
+          onClick={handleReturnAndRefund}
+          disabled={order.status !== 'Returned'}
+        >
+          Hoàn trả và hoàn tiền
         </Button>
+
         <Link to='/'>
           <Button className='bg-green-600 text-white w-full sm:w-auto'>Tiếp tục mua hàng</Button>
         </Link>

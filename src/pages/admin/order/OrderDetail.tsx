@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom'
 const AdminOrderDetail = () => {
   const { id } = useParams<{ id: string }>()
   const [currentStatus, setCurrentStatus] = useState<string>('Processing')
-  const [statusHistory, setStatusHistory] = useState<any[]>([]) // Lưu lịch sử trạng thái
   const queryClient = useQueryClient()
   const [user] = useCookie('user', {})
   const username = user?.username
@@ -34,7 +33,7 @@ const AdminOrderDetail = () => {
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
     { label: 'Hoàn trả đơn hàng và hoàn tiền', value: 'Refunded' },
-    { label: 'Đã hủy đơn hàng', value: 'Canceled' }
+    { label: 'Đã hủy đơn hàng', value: 'cancelled' }
   ]
   // Khi dữ liệu đơn hàng đã được lấy xong, cập nhật lại trạng thái
   useEffect(() => {
@@ -54,11 +53,27 @@ const AdminOrderDetail = () => {
           confirmedBy: username // Thêm tên người xác nhận
         })
       }
-      setStatusHistory(history)
     }
   }, [data])
 
   // Mutation để cập nhật trạng thái
+  // API hủy đơn hàng
+  const cancelOrder = async (id: string) => {
+    try {
+      // Gọi API hủy đơn hàng
+      const response = await instance.patch(`/orders/cancel/${id}`)
+
+      if (response.data.res) {
+        console.log('Hủy đơn hàng thành công', response.data.res)
+        setCurrentStatus('cancelled') // Cập nhật trạng thái là "Canceled"
+        queryClient.invalidateQueries({
+          queryKey: ['orderDetail', id]
+        })
+      }
+    } catch (error) {
+      console.error('Có lỗi khi hủy đơn hàng:', error)
+    }
+  }
   const updateOrderStatus = async (id: string, newStatus: string) => {
     try {
       // Cập nhật trạng thái đơn hàng trên server
@@ -80,12 +95,18 @@ const AdminOrderDetail = () => {
     console.log('Order ID:', orderId) // Debugging log
 
     Modal.confirm({
-      title: 'Bạn có chắc chắn muốn cập nhật trạng thái? sau khi cập nhật không thể hoàn tác',
+      title: 'Bạn có chắc chắn muốn cập nhật trạng thái? Sau khi cập nhật không thể hoàn tác.',
       icon: <ExclamationCircleOutlined />,
-      onOk: () => updateOrderStatus(orderId, newStatus)
+      onOk: () => {
+        // Kiểm tra nếu trạng thái là "Hủy đơn hàng", gọi API hủy đơn hàng
+        if (newStatus === 'cancelled') {
+          cancelOrder(orderId) // Gọi hàm hủy đơn hàng
+        } else {
+          updateOrderStatus(orderId, newStatus) // Cập nhật trạng thái cho các trạng thái khác
+        }
+      }
     })
   }
-
   if (isLoading)
     return (
       <div>
@@ -104,49 +125,49 @@ const AdminOrderDetail = () => {
       {/* Lịch sử trạng thái */}
       <div className='mb-6'>
         <h3 className='font-semibold'>Lịch sử trạng thái đơn hàng</h3>
-        <div className='mt-4'>
-          {statusHistory.length > 0 &&
-            statusHistory.map((item, index) => (
-              <div key={index}>
-                <div>Trạng Thái: {item.label}</div>
-                <div>Thời Gian: {item.time}</div>
+        <div className='mt-4 flex space-x-4'>
+          {order.status_detail.length > 0 &&
+            order.status_detail.map((item: any, index: number) => (
+              <div key={index} className='detail'>
+                <p>Trạng thái: {item.status}</p>
+                <p>Thời gian: {new Date(item.created_at).toLocaleString()}</p>
               </div>
             ))}
         </div>
+
         <div className='flex flex-wrap gap-4 mt-10'>
           {statuses.map((status, index) => {
-            // Chắc chắn currentStatus là trạng thái hiện tại của đơn hàng (ví dụ: 'Processing', 'Delivered', ...)
             const isProcessing = currentStatus === 'Processing'
             const isPending = currentStatus === 'Pending'
-            const isDelivered = currentStatus === 'Delivered'
-            const isCompleted = currentStatus === 'Completed'
 
-            // Lấy chỉ mục của trạng thái hiện tại và trạng thái mục tiêu
             const currentIndex = statuses.findIndex((s) => s.value === currentStatus)
             const targetIndex = statuses.findIndex((s) => s.value === status.value)
 
-            // Điều kiện vô hiệu hóa nút
             let isDisabled = true
 
-            if (status.value === 'Canceled') {
-              // "Hủy đơn hàng" chỉ được phép khi đang xử lý hoặc đang chờ
-              isDisabled = !(isProcessing || isPending)
-            } else if (status.value === 'Returned' || status.value === 'Refunded') {
-              // "Hoàn trả đơn hàng" và "Hoàn tiền" chỉ hiển thị khi đã giao hàng, vô hiệu hóa nếu đã hoàn thành
-              isDisabled = !isDelivered || isCompleted
+            // Kiểm tra nếu trạng thái hiện tại là "Canceled", vô hiệu hóa tất cả các nút
+            if (currentStatus === 'cancelled') {
+              isDisabled = true
             } else {
-              // Các trạng thái khác: chỉ cho phép chuyển liền kề
-              isDisabled =
-                targetIndex !== currentIndex + 1 && // Chỉ cho phép trạng thái kế tiếp
-                !(targetIndex === currentIndex - 1 && isProcessing) // Hoặc quay lại nếu đang xử lý
+              if (status.value === 'cancelled') {
+                // "Hủy đơn hàng" chỉ được phép khi đang xử lý hoặc đang chờ
+                isDisabled = !(isProcessing || isPending)
+              } else if (status.value === 'Returned' || status.value === 'Refunded') {
+                // "Hoàn trả đơn hàng" và "Hoàn tiền" luôn bị vô hiệu hóa
+                isDisabled = true
+              } else {
+                // Các trạng thái khác: chỉ cho phép chuyển liền kề
+                isDisabled =
+                  targetIndex !== currentIndex + 1 && // Chỉ cho phép trạng thái kế tiếp
+                  !(targetIndex === currentIndex - 1 && isProcessing) // Hoặc quay lại nếu đang xử lý
+              }
             }
 
-            // Kiểm tra nếu trạng thái là hiện tại thì không vô hiệu hóa
+            // Luôn vô hiệu hóa trạng thái hiện tại (currentStatus)
             if (status.value === currentStatus.trim()) {
               isDisabled = true
             }
 
-            // Kiểm tra và đặt kiểu nút: trạng thái hiện tại là 'primary', còn lại là 'default'
             const btnType = 'default'
 
             return (
@@ -154,11 +175,16 @@ const AdminOrderDetail = () => {
                 key={index}
                 onClick={() => {
                   if (id && !isDisabled) {
-                    handleStatusChange(id, status.value) // Gửi yêu cầu thay đổi trạng thái nếu không bị vô hiệu hóa
+                    // Nếu trạng thái là "Hủy đơn hàng", gọi API cancelOrder
+                    if (status.value === 'cancelled') {
+                      handleStatusChange(id, status.value) // Sử dụng confirm trước khi hủy
+                    } else {
+                      handleStatusChange(id, status.value) // Gửi yêu cầu thay đổi trạng thái cho các trạng thái khác
+                    }
                   }
                 }}
                 className={`px-4 py-2 ${isDisabled ? 'cursor-not-allowed opacity-50' : ''}
-        ${status.value === currentStatus ? 'border border-blue-500 bg-blue-500 text-white' : ''} flex-shrink-0`}
+      ${status.value === currentStatus ? 'border border-blue-500 bg-blue-500 text-white' : ''} flex-shrink-0`}
                 type={btnType}
               >
                 {status.label} {/* Hiển thị tên trạng thái */}

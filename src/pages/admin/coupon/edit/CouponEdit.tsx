@@ -108,7 +108,7 @@ const CouponEdit = () => {
 
           <Form.Item>
             <Button type='primary' htmlType='submit' className='w-full'>
-              Tạo Mã Giảm Giá
+              Sửa Mã Giảm Giá
             </Button>
           </Form.Item>
         </Form>

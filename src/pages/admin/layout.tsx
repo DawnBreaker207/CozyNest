@@ -180,7 +180,7 @@ const LayoutAdmin: React.FC = () => {
     <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
       <div className='flex justify-between h-[60px] items-center'>
         <div>
-          <span className='text-xl text-[#353535] ml-[25px]'>{title}</span>
+          <span className='text-2xl text-[#353535] font-bold ml-[25px]'>{title}</span>
         </div>
         <div className='flex items-center space-x-4 mr-[14px]'>
           {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
@@ -193,16 +193,12 @@ const LayoutAdmin: React.FC = () => {
   }
   //TODO: ???????
   const isAddProductPage = location.pathname === '/admin/products/add'
-  const isEditProductPage = location.pathname === `/admin/products/${id}/edit`
   const isAddCategoryPage = location.pathname === '/admin/categories/add'
   const isEditCategoryPage = location.pathname === `/admin/categories/${id}/edit`
   const isCategoryPage = location.pathname === `/admin/categories`
   const isProductPage = location.pathname === `/admin/products`
-  const isColorPage = location.pathname === `/admin/colors`
-  const isAddColorPage = location.pathname === `/admin/colors/${id}/add`
-  const isEditColorPage = location.pathname === `/admin/colors/${id}/edit`
-  const isDetailColorPage = location.pathname === `/admin/colors/${id}/detail_color`
   const isOrderPage = location.pathname === `/admin/order`
+  const isOrderReturnsPage = location.pathname === `/admin/order_returns`
   const isCustomer = location.pathname === `/admin/customer`
   const isCoupon = location.pathname === `/admin/coupons`
   const isCouponAdd = location.pathname === `/admin/coupons/add`
@@ -210,7 +206,6 @@ const LayoutAdmin: React.FC = () => {
   const isArticles = location.pathname === `/admin/articles`
   const isVariantPage = location.pathname === `/admin/products/${id}/variants`
   const isOptionPage = location.pathname === `/admin/products/${id}/options`
-  const isReviewPage = location.pathname === `/admin/reviews`
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -228,9 +223,14 @@ const LayoutAdmin: React.FC = () => {
               <Menu.Item key='3' icon={<OrderedListOutlined />}>
                 <NavLink to='/admin/categories'>Quản lý danh mục</NavLink>
               </Menu.Item>
-              <Menu.Item key='4' icon={<UploadOutlined />}>
-                <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
-              </Menu.Item>
+              <Menu.SubMenu key='4' icon={<UploadOutlined />} title='Quản lý đơn hàng'>
+                <Menu.Item key='4-1'>
+                  <NavLink to='/admin/order'>Danh sách đơn hàng</NavLink>
+                </Menu.Item>
+                <Menu.Item key='4-2'>
+                  <NavLink to='/admin/order_returns'>Quản lý hoàn trả</NavLink>
+                </Menu.Item>
+              </Menu.SubMenu>
               <Menu.Item key='5' icon={<CalendarOutlined />}>
                 <NavLink to='/admin/articles'>Bài viết</NavLink>
               </Menu.Item>
@@ -262,20 +262,17 @@ const LayoutAdmin: React.FC = () => {
         </Menu>
       </Sider>
       <Layout>
-        {isAddProductPage && renderHeader('Add Product')}
-        {isOrderPage && renderHeader('Order')}
-        {isCustomer && renderHeader('Customer')}
-        {isAddCategoryPage && renderHeader('Add Category')}
-        {isEditProductPage && renderHeader('Edit Product')}
-        {isEditCategoryPage && renderHeader('Edit Category')}
-        {isCoupon && renderHeader('Coupon')}
-        {isCouponAdd && renderHeader('Coupon Add')}
-        {isCouponEdit && renderHeader('Coupon Edit')}
-        {isAddColorPage && renderHeader('Add Color')}
-        {isEditColorPage && renderHeader('Edit Color')}
-        {isDetailColorPage && renderHeader('Detail Color')}
-        {isVariantPage && renderHeader('Variants')}
-        {isOptionPage && renderHeader('Options')}
+        {isAddProductPage && renderHeader('Thêm sản phẩm')}
+        {isOrderPage && renderHeader('Quản lý đơn hàng')}
+        {isCustomer && renderHeader('Quản lý người dùng')}
+        {isAddCategoryPage && renderHeader('Thêm mới danh mục')}
+        {isOrderReturnsPage && renderHeader('Quản lý đơn hàng hoàn')}
+        {isEditCategoryPage && renderHeader('Cập nhật danh mục')}
+        {isCoupon && renderHeader('Quản lý mã giảm giá')}
+        {isCouponAdd && renderHeader('Thêm mới mã giảm giá')}
+        {isCouponEdit && renderHeader('Cập nhật mã giảm giá')}
+        {isVariantPage && renderHeader('Quản lí biến thể')}
+        {isOptionPage && renderHeader('Quản lý Option ')}
         <Content>
           {isCategoryPage && (
             <>
@@ -425,66 +422,6 @@ const LayoutAdmin: React.FC = () => {
                     </Button>
                   </div>
                 </div> */}
-              </div>
-            </>
-          )}
-          {isColorPage && (
-            <>
-              <Header style={{ padding: 0, background: colorBgContainer }} className='border border-black-100'>
-                <div className='flex justify-between h-[60px] items-center'>
-                  <div>
-                    <span className='text-xl text-[#353535] ml-[25px]'>Màu</span>
-                  </div>
-                  <div className='flex items-center space-x-4 mr-[14px]'>
-                    <button className='bg-[#FFCC91] px-4 py-2 rounded-lg h-[32px] flex items-center'>
-                      Nik Shop <DownOutlined className='ml-2' />
-                    </button>
-                    <Badge count={4} className='cursor-pointer'>
-                      <BellOutlined className='text-xl text-blue-500' />
-                    </Badge>
-                    {/* <Avatar size='large' className='rounded-lg' src='https://picsum.photos/200/200' /> */}
-                  </div>
-                </div>
-              </Header>
-              <div className='flex items-center justify-between p-4 bg-white shadow-md'>
-                {/* <Input className='w-3/4' placeholder='Search order...' prefix={<SearchOutlined />} size='large' /> */}
-                <div className='flex items-center space-x-2'>
-                  <Button
-                    icon={<DownloadOutlined />}
-                    size='large'
-                    className='bg-blue-100 border-none text-blue-700 hover:bg-blue-200 '
-                  >
-                    Xuất
-                  </Button>
-                  <Button type='primary' icon={<MdOutlineColorLens className='text-xl' />} size='large'>
-                    Màu
-                  </Button>
-                </div>
-              </div>
-              <div className='flex items-center justify-between bg-white p-4 shadow-md '>
-                <div className='flex items-center space-x-4 border border-black-100 rounded-lg'>
-                  <div className='flex space-x-4'>
-                    <Button type='link' className='text-blue-500'>
-                      Tất cả màu
-                    </Button>
-                    <Button type='link'>Đã bán</Button>
-                    <Button type='link'>Còn ít hàng</Button>
-                    <Button type='link'>Tồn kho </Button>
-                  </div>
-                </div>
-                <div className='flex items-center space-x-4 '>
-                  <Input className='w-64' placeholder='Search product...' prefix={<SearchOutlined />} />
-                  <div className='border border-black-100'>
-                    <Button icon={<CalendarOutlined />} className='border-none shadow-none '>
-                      Chọn ngày
-                    </Button>
-                  </div>
-                  <div className='border border-black-100'>
-                    <Button icon={<FilterOutlined />} className='border-none shadow-none'>
-                      Bộ lọc
-                    </Button>
-                  </div>
-                </div>
               </div>
             </>
           )}

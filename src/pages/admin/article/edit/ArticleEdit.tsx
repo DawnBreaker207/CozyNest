@@ -3,7 +3,7 @@ import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticle } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Form, Input, message, Upload } from 'antd'
+import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 import { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill' // Import ReactQuill
@@ -30,8 +30,8 @@ const ArticleEditPage = () => {
   })
 
   useEffect(() => {
-    if (data?.res?.thumbnail) {
-      setThumbnail(data?.res?.thumbnail)
+    if (data?.thumbnail) {
+      setThumbnail(data.thumbnail)
     }
   }, [data])
 
@@ -119,7 +119,7 @@ const ArticleEditPage = () => {
                 {thumbnail ? (
                   <img src={data?.thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
-                  <img src={data?.thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
+                  <p>No thumbnail uploaded</p>
                 )}
               </div>
             </Form.Item>
@@ -189,13 +189,14 @@ const ArticleEditPage = () => {
                                   </Upload>
                                   <div className='mt-2'>
                                     <img
-                                      src={form.getFieldValue([
-                                        'content',
-                                        field.name,
-                                        'images',
-                                        imageField.name,
-                                        'url'
-                                      ])}
+                                      // src={form.getFieldValue([
+                                      //   'content',
+                                      //   field.name,
+                                      //   'images',
+                                      //   imageField.name,
+                                      //   'url'
+                                      // ])}
+                                      src={data.content[index].images[imageField.name].url}
                                       alt='Uploaded'
                                       className='w-20 h-20 object-cover rounded'
                                     />
@@ -233,6 +234,14 @@ const ArticleEditPage = () => {
               <Input placeholder='Enter author name...' className='w-full bg-[#F9F9FC]' />
             </Form.Item>
           </div>
+          <div className='w-[20%]'>
+              <div>
+                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
+                <Form.Item name='isHidden' valuePropName='checked'>
+                  <Checkbox>hiển thị</Checkbox>
+                </Form.Item>
+              </div>
+            </div>
         </Form>
       </div>
     </>

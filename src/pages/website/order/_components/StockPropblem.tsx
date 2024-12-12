@@ -3,10 +3,12 @@ import { useCartStore } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Spin } from 'antd' // Import spinner
 
 const StockProblem = () => {
   const navigate = useNavigate()
   const [stockIssues, setStockIssues] = useState<any[]>([])
+  const [loading, setLoading] = useState(false) // State cho hiệu ứng loading
   const { products, quantities, setQuantity } = useCartStore()
   const { mutate } = useCart()
 
@@ -21,7 +23,9 @@ const StockProblem = () => {
       navigate('/cart')
     }
   }, [navigate])
+
   const decreaseAll = async () => {
+    setLoading(true) // Bật trạng thái loading
     try {
       // Thực hiện giảm số lượng cho từng sản phẩm trong danh sách
       for (let i = 0; i < stockIssues.length; i++) {
@@ -29,8 +33,8 @@ const StockProblem = () => {
         const difference = stockIssue.quantity - stockIssue.stock
 
         if (difference > 0) {
-          // Gọi mutation để giảm số lượng sản phẩm
-          await mutate({
+          // Gọi mutation để giảm số lượng sản phẩm và đợi trả kết quả
+          mutate({
             action: 'DECREMENT',
             sku_id: products[i].sku_id._id,
             quantity: difference // Truyền số lượng cần giảm
@@ -42,8 +46,13 @@ const StockProblem = () => {
       }
 
       // Xóa danh sách lỗi tồn kho và điều hướng về giỏ hàng
-      setStockIssues([])
-      navigate('/cart')
+
+      // Chuyển hướng về giỏ hàng sau khi hoàn tất
+      setTimeout(() => {
+        navigate(`/cart`) // Chuyển hướng sau khi loading
+        setStockIssues([])
+        localStorage.removeItem('unavailableProducts') // Xóa localStorage
+      }, 2000) // 1 giây delay để hiệu ứng loading kịp hiển thị
     } catch (error) {
       console.error('Error updating cart:', error)
     }
@@ -93,12 +102,6 @@ const StockProblem = () => {
               </div>
               <div className='flex items-center'>
                 <span className='text-orange-300 font-medium'>Vượt tồn kho</span>
-                {/* <button
-                  className='ml-2 text-blue-600 hover:text-red-800'
-                  onClick={() => decrease(index)} // Giảm số lượng
-                >
-                  Giảm
-                </button> */}
               </div>
             </div>
           ))
@@ -113,10 +116,11 @@ const StockProblem = () => {
           <span className='mr-2'>&larr; Quay lại giỏ hàng</span>
         </button>
         <button
-          className='px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700'
+          className={`px-6 py-2 rounded-md text-white ${loading ? 'bg-red-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'}`}
           onClick={decreaseAll} // Giảm tất cả sản phẩm
+          disabled={loading} // Vô hiệu hóa nút khi loading
         >
-          Giảm số lượng sản phẩm vượt tồn kho
+          {loading ? <Spin size='small' /> : <span className='relative z-10'>Giảm số lượng sản phẩm vượt tồn kho</span>}
         </button>
       </div>
     </div>

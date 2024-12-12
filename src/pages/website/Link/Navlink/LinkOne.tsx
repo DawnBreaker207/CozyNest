@@ -106,7 +106,9 @@ const Linkone: React.FC = () => {
 
               {!isOpen && (
                 <>
-                  {articles.map((article, index) => (
+                  {articles
+                  .filter((article) => article.isHidden === true)
+                  .map((article, index) => (
                     <Link to={`/articles/${article._id}`} key={index}>
                       <div className='shadow-shadowUser mt-1 px-5 pb-4'>
                         {/* Các bài viết với kích thước hình ảnh bằng nhau */}

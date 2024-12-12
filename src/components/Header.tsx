@@ -2,7 +2,9 @@ import instance from '@/configs/axios'
 import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
+import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
+import { ICategory } from '@/types/category'
 import {
   DeleteOutlined,
   DownOutlined,
@@ -17,9 +19,7 @@ import {
 import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Modal, Space, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { menu, menu1, menus } from './data/Header'
-import { ICategory } from '@/types/category'
-import { useCookie } from '@/hooks/useStorage'
+import { menu1 } from './data/Header'
 
 const { useToken } = theme
 
@@ -107,7 +107,7 @@ const Header = () => {
   }
 
   const showDrawer = () => {
-    toggleDrawer(true, true)
+    toggleDrawer(true, false)
   }
   const onOpen = () => {
     toggleDrawer(false, true)
@@ -328,7 +328,11 @@ const Header = () => {
                       dataSource={results}
                       renderItem={(item: any) => (
                         <List.Item>
-                          <img src={item.thumbnail} alt={item.name} style={{ width: 50, height: 50, marginRight: 8 }} />
+                          <img
+                            src={item?.images?.[0]?.url}
+                            alt={item.name}
+                            style={{ width: 50, height: 50, marginRight: 8 }}
+                          />
                           <div>
                             <strong>{item.name}</strong>
                             <p className='text-sm text-gray-500'>{item.description}</p>
@@ -391,39 +395,33 @@ const Header = () => {
                 </Button>
               </Link>
             )}
-
             <Button className='md:hidden' shape='circle' icon={<MenuOutlined />} onClick={showDrawer} />
           </div>
           <Drawer title='DANH MỤC' placement='right' onClose={onClose} open={visible} width={320}>
             <NavLink to={'/'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Trang chủ
             </NavLink>
-            <div className='p-2  '>
-              <Dropdown menu={{ items: menu }} trigger={['click']}>
-                <span className='text-secondary hover:text-yellow-600'>
-                  Sản phẩm mới <DownOutlined className='text-xs' />
-                </span>
-              </Dropdown>
-            </div>
+
+            <NavLink to={'/products_page'} className='block  text-black ml-2 hover:text-yellow-600 mb-3 '>
+              Sản phẩm mới
+            </NavLink>
+
             <NavLink to={'/intro'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Giới thiệu
             </NavLink>
-            <Dropdown menu={{ items: menu1 }} trigger={['click']}>
-              <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4'>
-                Dịch vụ <DownOutlined className='text-xs max-w-[10px] w-[100%] h-auto' />
-              </NavLink>
-            </Dropdown>
+
+            <NavLink
+              to={'/policy/chinh-sach-ban-hang'}
+              className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4'
+            >
+              Dịch vụ
+            </NavLink>
+
             {/* <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
               Cẩm nang trang trí
             </NavLink> */}
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
-              Hệ thống cửa hàng
-            </NavLink>
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
-              FAQs
-            </NavLink>
-            <NavLink to={'#'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
-              Landing page
+            <NavLink to={'/articles'} className='block  text-black ml-2 hover:text-yellow-600 mb-6 mt-4 '>
+              Tin tức
             </NavLink>
             <hr />
             <span className='block  text-yellow-600 hover:text-muted-foreground mb-6 mt-4'>BẠN CẦN HỖ TRỢ ?</span>

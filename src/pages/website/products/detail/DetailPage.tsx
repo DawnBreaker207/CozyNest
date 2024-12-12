@@ -4,12 +4,12 @@ import { Variants } from '@/types/product'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import CouponCard from '../../cart/_components/CouponCard'
 import RelatedProduct from '../_components/RelatedProduct'
 import ReviewComponent from './_components/Review'
 import useCart from '@/hooks/useCart'
-import { message, Spin } from 'antd'
+import { Button, message, Spin } from 'antd'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -17,11 +17,10 @@ const ProductDetail = () => {
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null) // State để lưu id màu sắc được chọn
   const [priceVar, setPriceVar] = useState<number | 0>(0) // State để lưu id màu sắc được chọn
   const [hoveredColorId, setHoveredColorId] = useState<string | null>(null)
-  console.log(selectedColorId)
-
+  const navigate = useNavigate()
   const { id } = useParams() // Lấy productId từ URL
   const { data, isLoading, error } = useProduct(id)
-  console.log(data)
+  const [loading, setLoading] = useState(false) // Khai báo trạng thái loading
   const { addToCart } = useCart() // Lấy hàm addToCart từ hook
   // Lấy tất cả các màu sắc từ variants
   const variants = data?.variants || [] // Đảm bảo variants không undefined
@@ -64,6 +63,45 @@ const ProductDetail = () => {
       addToCart(selectedColorId, count) // Sử dụng `addToCart` từ hook để thêm vào giỏ hàng
     } else {
       message.error('Vui lòng chọn số lượng hợp lệ.')
+    }
+  }
+  const handleBuyNow = async () => {
+    setLoading(true) // Hiển thị trạng thái loading ngay khi nhấn nút
+
+    try {
+      if (selectedColorId && count > 0) {
+        const selectedVariant = product.variants?.find((variant) => variant.sku_id._id === selectedColorId)
+
+        if (!selectedVariant) {
+          message.error('Không tìm thấy thông tin sản phẩm.')
+          setLoading(false) // Tắt loading khi có lỗi
+          return
+        }
+
+        if (count > selectedVariant?.sku_id.stock) {
+          message.error('Sản phẩm bạn vừa mua đã vượt quá số lượng tồn kho.')
+          setLoading(false) // Tắt loading khi có lỗi
+          return
+        }
+
+        // Gọi API thêm sản phẩm vào giỏ hàng
+        addToCart(selectedColorId, count) // Thêm await để đảm bảo API hoàn tất trước khi chuyển hướng
+
+        // Hiển thị thông báo
+
+        // Chờ chuyển hướng
+        setTimeout(() => {
+          navigate(`/cart`) // Chuyển hướng
+          setLoading(false) // Tắt loading sau khi chuyển hướng
+        }, 1000) // 1 giây delay
+      } else {
+        message.error('Vui lòng chọn số lượng hợp lệ.')
+        setLoading(false) // Tắt loading khi có lỗi
+      }
+    } catch (error) {
+      message.error('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.')
+      console.error(error)
+      setLoading(false) // Tắt loading khi có lỗi
     }
   }
 
@@ -285,7 +323,7 @@ const ProductDetail = () => {
               </div>
             </div>
             <div className=''>
-              <div className=' flex gap-[12px] mt-[22px]'>
+              <div className='flex gap-[12px] mt-[22px]'>
                 <Link
                   to=''
                   className='bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
@@ -294,14 +332,14 @@ const ProductDetail = () => {
                     <span className='relative z-10 text-[16px]'>Thêm Vào Giỏ</span>
                   </button>
                 </Link>
-                <Link
-                  to='/cart'
-                  className='bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
+                {/* Hiển thị overlay loading bên trong nút */}
+                <button
+                  onClick={handleBuyNow}
+                  disabled={loading} // Disable nút khi đang loading
+                  className={`bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  <button className='w-full'>
-                    <span className='relative z-10'>Mua Ngay</span>
-                  </button>
-                </Link>
+                  {loading ? <Spin size='small' /> : <span className='relative z-10'>Mua Ngay</span>}
+                </button>
               </div>
             </div>
           </div>
@@ -356,7 +394,8 @@ const ProductDetail = () => {
                       </th>
                       <td className=''>{product.name}</td>
                     </tr>
-                    <tr>
+
+                    {/* <tr>
                       <th scope='row' className='btn-th text-left align-top pr-12'>
                         Bộ sưu tập
                       </th>
@@ -373,13 +412,13 @@ const ProductDetail = () => {
                         Màu sắc
                       </th>
                       <td className=''>Màu trắng/ màu đen</td>
-                    </tr>
-                    <tr>
+                    </tr> */}
+                    {/* <tr>
                       <th scope='row' className='btn-th text-left align-top pr-12'>
                         Chất liệu
                       </th>
                       <td className=''>Sứ</td>
-                    </tr>
+                    </tr> */}
                     <tr>
                       <th scope='row' className='btn-th text-left align-top pr-12'>
                         Xuất xứ

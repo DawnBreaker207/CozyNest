@@ -1,116 +1,73 @@
-import instance from '@/configs/axios'
-import { useEffect, useState } from 'react'
+import CustomLoadingPage from '@/components/Loading'
 import Revenue from './component/Revenue'
-import { Table, Tag } from 'antd'
-interface Order {
-  _id: string
-  customer_name: string
-  total_amount: number
-  email: string
-  status: string
-  user_id: string
-  createdAt: string
-  order_details: OrderDetailType[]
-}
-interface OrderDetailType {
-  product_id: string
-  name: string
-  quantity: number
-}
-const DashboardPage: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([])
+import TopProduct from './component/TopProduct'
+import { useQuery } from '@tanstack/react-query'
+import instance from '@/configs/axios'
+import { useState } from 'react'
+import { Select } from 'antd'
+import RecentOrder from './component/RecentOrder'
+import { Link } from 'react-router-dom'
 
-  useEffect(() => {
-    const getAllOrder = async () => {
+const DashboardPage = () => {
+  const [selectedComponent, setSelectedComponent] = useState('TopProduct') // State cho component được chọn
+  const handleComponentChange = (value: string) => {
+    setSelectedComponent(value)
+  }
+  const {
+    data: userData,
+    isLoading: isLoadingUsers,
+    isError: isErrorUsers,
+    error: errorUsers
+  } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
       try {
-        const { data } = await instance.get('/orders')
-        setOrders(Array.isArray(data.res.items) ? data.res.items : [])
-        console.log(data.res.items)
-        const ordersData = data.res.items
-        if (Array.isArray(ordersData)) {
-          setOrders(ordersData)
-          console.log(ordersData)
-        } else {
-          console.error('Dữ liệu không hợp lệ, `items` không phải là mảng')
-        }
+        return await instance.get(`/users`)
       } catch (error) {
-        console.log(error)
+        throw new Error((error as any).message)
       }
     }
-    getAllOrder()
-  }, [])
-
-  //*tổng doanh thu
-  const totalRevenue = orders.reduce((total, order) => total + (Number(order.total_amount) || 0), 0)
-  console.log(totalRevenue)
-
-  //*đơn hàng hoàn thành
-  const completedOrdersCount = orders.filter((order) => order.status === 'Completed').length
-  console.log(completedOrdersCount)
-
-  //*đơn hàng bị hủy
-  const canceledOrdersCount = orders.filter((order) => order.status === 'Canceled').length
-  console.log(canceledOrdersCount)
-  //* số lượng khách hàng đặt hàng
-  const uniqueCustomers = new Set(orders.map((order) => order.customer_name)) // Hoặc sử dụng `user_id`
-  const customerCount = uniqueCustomers.size
-
-  const sortedOrders = orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-
-  //* Lấy 5 đơn hàng gần nhất
-  const latestOrders = sortedOrders.slice(0, 5)
-  console.log(latestOrders)
-  const columns = [
-    {
-      title: 'Mã đơn hàng',
-      dataIndex: '_id',
-      key: '_id'
-    },
-    {
-      title: 'Thời gian đặt hàng',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      render: (text: string) => new Date(text).toLocaleString()
-    },
-    {
-      title: 'Người đặt hàng',
-      dataIndex: 'customer_name',
-      key: 'customer_name'
-    },
-    {
-      title: 'Trạng Thái',
-      dataIndex: 'status',
-      key: 'status',
-      render: (
-        status:
-          | 'Processing'
-          | 'Pending'
-          | 'Confirmed'
-          | 'Pending-Ship'
-          | 'Delivering'
-          | 'Delivered'
-          | 'Canceled'
-          | 'Completed'
-          | 'Returned'
-          | 'Refunded'
-      ) => {
-        // Ánh xạ trạng thái với màu tương ứng
-        const statusColors: { [key in typeof status]: string } = {
-          Processing: 'blue',
-          Pending: 'yellow',
-          Confirmed: 'gold',
-          'Pending-Ship': 'orange',
-          Delivering: 'orange',
-          Delivered: 'green',
-          Canceled: 'red',
-          Completed: 'cyan',
-          Returned: 'magenta',
-          Refunded: 'purple'
-        }
-        return <Tag color={statusColors[status] || 'gray'}>{status.replace('-', ' ')}</Tag>
+  })
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      try {
+        return await instance.get(`/orders`)
+      } catch (error) {
+        throw new Error((error as any).message)
       }
     }
-  ]
+  })
+
+  // Tính tổng doanh thu cho các đơn hàng đã hoàn thành
+  const totalRevenue = data?.data?.res.items
+    ? data.data.res.items
+        .filter((order: any) => {
+          return order.status === 'Completed'
+        }) // Lọc các đơn hàng có trạng thái 'Completed'
+        .reduce((sum: number, order: any) => sum + order.total_amount, 0) // Cộng tổng số tiền
+    : 0
+
+  // Tính số lượng đơn hàng "Completed" và "Canceled"
+  const completedOrders = data?.data?.res.items?.filter((order: any) => order.status === 'Completed').length || 0
+  const canceledOrders = data?.data?.res.items?.filter((order: any) => order.status === 'Canceled').length || 0
+  // Tính số lượng user role member
+  const memberCount = userData?.data?.res.filter((user: any) => user.role === 'member').length || 0
+
+  // Kiểm tra trạng thái loading tổng quát
+  if (isLoadingUsers || isLoading) {
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  }
+
+  // Xử lý lỗi
+  if (isErrorUsers || isError) {
+    return <div>{errorUsers?.message || error?.message}</div>
+  }
+
   return (
     <>
       <h1 className='mb-5 text-2xl font-bold'>Thống kê</h1>
@@ -122,53 +79,52 @@ const DashboardPage: React.FC = () => {
               <p className='font-medium text-lg'>Tổng doanh thu</p>
             </div>
             <span className='text-xl font-semibold'>
-              {totalRevenue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+              {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalRevenue)}
             </span>
           </div>
         </div>
-        <div className='rounded-xl shadow-xl'>
+        <Link to={`/admin/order?status=Completed`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/cart.png' alt='' className='size-8' />
-              <p className='font-medium text-lg'>Đơn hàng hoàn thành</p>
+              <p className='font-medium text-lg text-black'>Đơn hàng hoàn thành</p>
             </div>
-            <span className='text-xl font-semibold'>{completedOrdersCount}</span>
+            <span className='text-xl font-semibold text-black'>{completedOrders}</span>
           </div>
-        </div>
-        <div className='rounded-xl shadow-xl'>
+        </Link>
+        <Link to={`/admin/order?status=Canceled`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/delete.png' alt='' className='size-8' />
-              <p className='font-medium text-lg'>Đơn hàng bị hủy</p>
+              <p className='font-medium text-lg text-black'>Đơn hàng bị hủy</p>
             </div>
-            <span className='text-xl font-semibold'>{canceledOrdersCount}</span>
+            <span className='text-xl font-semibold text-black'>{canceledOrders}</span>
           </div>
-        </div>
-        <div className='rounded-xl shadow-xl'>
+        </Link>
+        <Link to={`/admin/order?status=Canceled`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/user.png' alt='' className='size-8' />
-              <p className='font-medium text-lg'>Khách hàng</p>
+              <p className='font-medium text-lg text-black'>Khách hàng</p>
             </div>
-            <span className='text-xl font-semibold'>{customerCount}</span>
+            <span className='text-xl font-semibold text-black'>{memberCount}</span>
           </div>
-        </div>
+        </Link>
+      </div>
+      <div className='mb-5'>
+        <Select
+          defaultValue='TopProduct'
+          style={{ width: 200 }}
+          onChange={handleComponentChange}
+          options={[
+            { value: 'TopProduct', label: 'Top sản phẩm bán chạy' },
+            { value: 'RecentOrder', label: 'Đơn hàng gần đây' }
+          ]}
+        />
       </div>
       <div className='grid grid-cols-2 gap-x-8 gap-y-10'>
-        <div> 
-          <div className='bg-white p-4 rounded-lg shadow-xl'>
-            <h2 className='text-2xl font-semibold mb-5 text-center'>Đơn hàng gần nhất</h2>
-            <div className='p-4'>
-              {/* <h2 className="text-xl font-semibold mb-4">Top 5 Đơn Hàng Gần Nhất</h2> */}
-              <Table
-                columns={columns}
-                dataSource={latestOrders}
-                rowKey='_id'
-                pagination={false} // Tắt phân trang
-              />
-            </div>
-          </div>
-        </div>
+        {selectedComponent === 'TopProduct' && <TopProduct />}
+        {selectedComponent === 'RecentOrder' && <RecentOrder />}
         <Revenue />
       </div>
     </>
