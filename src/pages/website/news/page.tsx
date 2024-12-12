@@ -14,6 +14,7 @@ interface IArticle {
   content: []
   author: string
   createdAt: string
+  isHidden: boolean
 }
 
 const NewsPage = () => {
@@ -139,7 +140,9 @@ const NewsPage = () => {
             <Content style={{ padding: 20 }}>
               <Row gutter={[16, 16]}>
                 {currentArticles.length > 0 ? (
-                  currentArticles.map((article, index) => (
+                  currentArticles
+                  .filter((article) => article.isHidden === true)
+                  .map((article, index) => (
                     <Col xs={24} sm={12} md={8} key={index}>
                       <Card
                         hoverable
