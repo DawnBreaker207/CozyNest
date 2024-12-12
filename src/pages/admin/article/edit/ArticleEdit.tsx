@@ -3,7 +3,7 @@ import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticle } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Form, Input, message, Upload } from 'antd'
+import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 import { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill' // Import ReactQuill
@@ -234,6 +234,14 @@ const ArticleEditPage = () => {
               <Input placeholder='Enter author name...' className='w-full bg-[#F9F9FC]' />
             </Form.Item>
           </div>
+          <div className='w-[20%]'>
+              <div>
+                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
+                <Form.Item name='isHidden' valuePropName='checked'>
+                  <Checkbox>hiển thị</Checkbox>
+                </Form.Item>
+              </div>
+            </div>
         </Form>
       </div>
     </>

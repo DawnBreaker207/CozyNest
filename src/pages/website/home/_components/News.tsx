@@ -43,7 +43,9 @@ const News = () => {
         </Button>
         <h1 className='text-center text-[25px] sm:text-[45px] mb-2 mx-auto text-[#FCA120]'>Tin tức nổi bật</h1>
         <div ref={scrollContainerRef} className='overflow-hidden scrollbar-hide flex flex-nowrap p-4'>
-          {articles.map((article) => (
+          {articles
+          .filter((article) => article.isHidden === true)
+          .map((article) => (
             <Card
               key={article._id}
               hoverable

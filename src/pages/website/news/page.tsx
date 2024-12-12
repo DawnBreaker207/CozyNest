@@ -97,6 +97,7 @@ const NewsPage = () => {
               </Title>
               <div className='border-t-2 border-orange-500 mb-2 ' />
               {products
+                .filter((product) => !product.is_hidden)
                 .sort(() => Math.random() - 0.5) // Xáo trộn danh sách
                 .slice(0, 2) // Lấy 2 sản phẩm đầu tiên
                 .map((product, index) => (
