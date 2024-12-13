@@ -7,6 +7,7 @@ import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined, Uplo
 import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, InputNumber, message, Select, Upload } from 'antd'
 import { useState } from 'react'
+import ReactQuill from 'react-quill'
 import { Link, useNavigate } from 'react-router-dom'
 
 const ProductAddPage = () => {
@@ -41,7 +42,9 @@ const ProductAddPage = () => {
     console.log(updatedValues) // Kiểm tra giá trị trước khi gửi
     mutate(updatedValues)
   }
-
+  const handleQuillChange = (value: string) => {
+    console.log("Mô tả sản phẩm:", value);
+  };
   return (
     <>
       {contextHolder}
@@ -67,8 +70,25 @@ const ProductAddPage = () => {
               >
                 <Input placeholder='Tên sản phẩm' className='w-full' />
               </Form.Item>
-              <Form.Item label='Mô tả sản phẩm' name='description'>
-                <Input.TextArea rows={4} placeholder='Mô tả' className='w-full' />
+              <Form.Item
+                label='Mô tả sản phẩm'
+                name='description'
+                rules={[{ required: true, message: 'Vui lòng nhập mô tả sản phẩm!' }]}
+              >
+                {/* Sử dụng React Quill  */}
+                <ReactQuill
+                  theme='snow'
+                  placeholder='Mô tả sản phẩm'
+                  onChange={handleQuillChange} // Lắng nghe thay đổi từ React Quill
+                  modules={{
+                    toolbar: [
+                      [{ header: '1' }, { header: '2' }, { font: [] }],
+                      [{ list: 'ordered' }, { list: 'bullet' }],
+                      ['bold', 'italic', 'underline'],
+                      ['link'] 
+                    ]
+                  }}
+                />
               </Form.Item>
             </div>
             <div className='w-[20%]'>

@@ -7,7 +7,9 @@ import { IProduct } from '@/types/product'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, message, Select } from 'antd'
+import ReactQuill from 'react-quill'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import "react-quill/dist/quill.snow.css"; // Import React Quill CSS
 
 const ProductEditPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -92,8 +94,15 @@ const ProductEditPage = () => {
               >
                 <Input placeholder='Tên sản phẩm' className='w-full' />
               </Form.Item>
-              <Form.Item label='Mô tả' name='description'>
-                <Input.TextArea rows={4} placeholder='Mô tả' className='w-full' />
+              <Form.Item
+                label="Mô tả"
+                name="description"
+                rules={[{ required: true, message: "Mô tả là bắt buộc!" }]}
+              >
+                <ReactQuill
+                  theme="snow"
+                  placeholder="Nhập mô tả sản phẩm"
+                />
               </Form.Item>
             </div>
 

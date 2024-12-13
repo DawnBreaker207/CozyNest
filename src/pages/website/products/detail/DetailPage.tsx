@@ -10,6 +10,8 @@ import RelatedProduct from '../_components/RelatedProduct'
 import ReviewComponent from './_components/Review'
 import useCart from '@/hooks/useCart'
 import { Button, message, Spin } from 'antd'
+import 'react-quill/dist/quill.snow.css'
+import ReactQuill from 'react-quill'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -383,7 +385,11 @@ const ProductDetail = () => {
               <div
                 className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
               >
-                <p>{product.description}</p>
+                <ReactQuill
+                  value={product.description}
+                  readOnly
+                  theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
+                />
                 <p>--------------</p>
                 {/* More product description details */}
                 <table className='table-auto w-full border-collapse mt-[10px]'>
