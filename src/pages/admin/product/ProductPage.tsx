@@ -1,7 +1,7 @@
 import CustomLoadingPage from '@/components/Loading'
-import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Import hook để lấy danh mục
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import useProductMutation from '@/hooks/useProductMutation'
-import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
+import { useProductQuery } from '@/hooks/useProductQuery'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
@@ -20,6 +20,7 @@ const AdminProductPage = () => {
     isError: isErrorProducts,
     error: errorProducts
   } = useProductQuery()
+
   // Sử dụng useCategoryQuery để lấy danh sách danh mục
   const {
     data: categoriesData,
@@ -27,19 +28,22 @@ const AdminProductPage = () => {
     isError: isErrorCategories,
     error: errorCategories
   } = useCategoryQuery()
+
   // Mutation để xóa sản phẩm
-  const { mutate: deleteProduct } = useProductMutation({
+  const { mutate, status: mutationStatus } = useProductMutation({
     action: 'DELETE',
     onSuccess: () => {
+      // Sử dụng refetch ngay sau khi xóa
+      queryClient.invalidateQueries({
+        queryKey: ['PRODUCT_KEY']
+      })
       messageApi.open({
         type: 'success',
         content: 'Xóa thành công'
       })
-      queryClient.invalidateQueries({
-        queryKey: ['PRODUCT_KEY']
-      })
     }
   })
+
   // Chuẩn bị dữ liệu cho bảng
   const dataSource = productsData?.res?.map((item: IProduct) => ({
     key: item._id,
@@ -54,9 +58,9 @@ const AdminProductPage = () => {
       dataIndex: 'name'
     },
     {
-      key: 'categoryName', // Sử dụng key là 'categoryName'
+      key: 'categoryName',
       title: 'Tên danh mục',
-      render: (product: IProduct) => <p>{product.category_id.name}</p>
+      render: (product: IProduct) => <p>{product.category_id?.name}</p> // Thêm kiểm tra null cho category_id
     },
     {
       key: 'SKU',
@@ -92,11 +96,15 @@ const AdminProductPage = () => {
           <Popconfirm
             title='Xóa sản phẩm'
             description='Bạn có chắc chắn muốn xóa sản phẩm này?'
-            onConfirm={() => deleteProduct({ _id: product._id } as IProduct)}
+            onConfirm={() => mutate({ _id: product._id } as IProduct)}
             okText='Có'
             cancelText='Không'
           >
-            <Button icon={<DeleteOutlined />} danger />
+            <Button
+              icon={<DeleteOutlined />}
+              danger
+              loading={mutationStatus === 'pending'} // Thay vì 'isLoading', dùng 'status' để kiểm tra trạng thái pending
+            />
           </Popconfirm>
           <Link to={`/admin/products/${product._id}/options`}>
             <Button>Thuộc tính</Button>
@@ -110,12 +118,13 @@ const AdminProductPage = () => {
   ]
 
   // Xử lý trạng thái khi loading hoặc error
-  if (isLoadingProducts || isLoadingCategories)
+  if (isLoadingProducts || isLoadingCategories || mutationStatus === 'pending')
     return (
       <div>
         <CustomLoadingPage />
       </div>
     )
+
   if (isErrorProducts) return <div>{errorProducts.message}</div>
   if (isErrorCategories) return <div>{errorCategories.message}</div>
 

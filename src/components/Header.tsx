@@ -235,6 +235,7 @@ const Header = () => {
     mutate({ action: 'REMOVE', sku_id: products[0].sku_id._id })
     setIsModalVisible(false) // Ẩn modal sau khi xóa
   }
+  const visibleProducts = products.filter((product: any) => !product?.sku_id?.product_id?.is_hidden)
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -391,7 +392,7 @@ const Header = () => {
             {userId ? (
               <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={onOpen}>
                 <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
-                  {data?.res?.products?.length || 0}
+                  {visibleProducts?.length || 0}
                 </span>
               </Button>
             ) : (
@@ -446,10 +447,10 @@ const Header = () => {
           </Drawer>
           {/* giỏ hàng  */}
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
-            {products.length > 0 ? (
+            {visibleProducts.length > 0 ? (
               <div>
-                {products.map((product: any, index: number) => {
-                  // Tìm variant phù hợp với sku_id
+                {visibleProducts.map((product: any, index: number) => {
+                  // Hiển thị sản phẩm khả dụng
                   const currentVariant = product?.sku_id?.product_id?.variants.find(
                     (variant: any) => variant?.sku_id === product?.sku_id?._id
                   )
@@ -465,21 +466,18 @@ const Header = () => {
                         />
                         <div className='ml-2 flex flex-col justify-between'>
                           <p className='font-semibold'>{product.sku_id.product_id.name}</p>
-
-                          {/* Hiển thị giá trị option_value_id của variant hiện tại */}
                           <p>{currentVariant?.option_value_id?.label || 'Không xác định'}</p>
-
                           <div className='flex items-center justify-center mt-2'>
                             <button
-                              onClick={() => decrease(index)} // Truyền index để giảm số lượng
-                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                              onClick={() => decrease(index)}
+                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer'
                             >
                               -
                             </button>
-                            <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
+                            <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>
                             <button
-                              onClick={() => increase(index)} // Truyền index để tăng số lượng
-                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                              onClick={() => increase(index)}
+                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer'
                             >
                               +
                             </button>
@@ -491,7 +489,6 @@ const Header = () => {
                         <button title='Xóa' onClick={() => setIsModalVisible(true)}>
                           <DeleteOutlined />
                         </button>
-
                         <Modal
                           title='Xác nhận xóa'
                           open={isModalVisible}
@@ -511,7 +508,9 @@ const Header = () => {
                 <div className='mt-4'>
                   <div className='flex justify-between font-semibold'>
                     <span>Tổng tiền:</span>
-                    <span className='text-red-500'>{calculateTotal().toLocaleString()}₫</span>
+                    <span className='text-red-500'>
+                      {calculateTotal(visibleProducts, quantities).toLocaleString()}₫
+                    </span>
                   </div>
                   <Link to={`/cart`}>
                     <button

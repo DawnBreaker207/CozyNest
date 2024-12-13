@@ -19,7 +19,6 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
     resolver: zodResolver(ProductZodSchema),
     defaultValues: {
       name: '',
-      thumbnail: '',
       category_id: '',
       description: '',
       price: 0,
@@ -49,6 +48,12 @@ const useProductMutation = ({ action, onSuccess }: useProductMutationProps) => {
       }
     },
     onSuccess: (data) => {
+      if (!data) {
+        onSuccess && onSuccess()
+        queryClient.invalidateQueries({
+          queryKey: ['PRODUCT_KEY']
+        })
+      }
       if (data) {
         onSuccess && onSuccess()
         queryClient.invalidateQueries({

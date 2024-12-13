@@ -1,7 +1,8 @@
 export interface ISku {
   _id: string | number
   product_id: {
-    _id: any
+    is_hidden: boolean
+    _id: string
     thumbnail: string
   }
   name: string

@@ -2,8 +2,10 @@
 /* PaymentMethodPage.tsx */
 
 import instance from '@/configs/axios'
+import { useCartStore } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
 import { useCookie } from '@/hooks/useStorage'
+import { CartProduct } from '@/types/cart'
 import { RightOutlined } from '@ant-design/icons'
 import { Button, Form, notification, Radio } from 'antd'
 import Cookies from 'js-cookie'
@@ -32,6 +34,8 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   const [installationFee, setInstallationFee] = useState(0)
   const navigate = useNavigate()
   const { data } = useCart()
+  const { products } = useCartStore()
+
   const cartId = data?.res?.cart_id
   const handleChange = (e: any) => {
     setSelectedPaymentMethod(e.target.value)
@@ -58,6 +62,10 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   }, [installationFee, onInstallationCostChange])
 
   const handlePayment = async () => {
+    console.log(data?.res?.products)
+
+    const visibleProducts = data?.res?.products?.filter((product) => !product.sku_id.product_id.is_hidden) || []
+    console.log(visibleProducts)
     // TODO: Update this
     const finalOrderData = {
       ...orderData,
@@ -72,7 +80,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       status: 'Processing',
       payment_status: 'Unpaid',
       products:
-        data?.res?.products.map((product: any) => {
+        visibleProducts.map((product: any) => {
           // Tìm variant phù hợp với sku_id của sản phẩm
           const currentVariant = product?.sku_id?.product_id?.variants.find(
             (variant: any) => variant?.sku_id === product?.sku_id?._id
@@ -82,7 +90,6 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
             productId: product.sku_id.product_id._id,
             originName: product.sku_id.product_id.name,
             productName: product.sku_id.product_id.name,
-            thumbnail: product.sku_id.product_id.thumbnail,
             price: product.price * product.quantity,
             quantity: product.quantity,
             sku_id: product.sku_id._id, // Variant ID
@@ -96,9 +103,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       // Tạo đơn hàng trước
       console.log(`Orders: ${finalOrderData.total_amount}`)
       console.log('Products:', finalOrderData.products)
-      console.log('total:', finalOrderData.total)
-      console.log('coupon:', finalOrderData.coupon)
-
+      return
       const orderResponse = await instance.post('/orders', finalOrderData)
       const orderId = orderResponse.data?.res?._id
       // console.log(orderId)

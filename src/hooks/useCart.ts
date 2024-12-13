@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect } from 'react'
+import io from 'socket.io-client'
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 import instance from '@/configs/axios'
 import { CartData } from '@/types/cart'
 import { ResAPI } from '@/types/responseApi'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import { debounce, reduce } from 'lodash'
-import { ChangeEvent, useEffect } from 'react'
 import { useCartStore } from './store/cartStore'
 import { useCookie } from './useStorage'
+import { IProductCart } from '@/types/producrCart'
+import { debounce } from 'lodash'
 
 // Utility: Kiểm tra ObjectId hợp lệ
 const isValidObjectId = (id: string): boolean => /^[0-9a-fA-F]{24}$/.test(id)
@@ -25,7 +26,6 @@ const useCart = () => {
   const { data, refetch, ...restQuery } = useQuery<ResAPI<CartData>>({
     queryKey: ['cart', userId],
     queryFn: async () => {
-      // Kiểm tra userId hợp lệ
       if (!userId || !isValidObjectId(userId)) {
         console.error('Invalid userId format')
         return { res: { products: [], cartId: '' } }
@@ -33,12 +33,24 @@ const useCart = () => {
 
       try {
         const { data: cartData } = await instance.get(`/cart/${userId}`)
+        console.log(cartData)
 
-        return cartData
+        // Lọc các sản phẩm có is_hidden = false
+        const filteredProducts = cartData.res.products.filter(
+          (product: { sku_id: { product_id: { is_hidden: boolean } } }) => !product.sku_id.product_id.is_hidden
+        )
+
+        return {
+          ...cartData,
+          res: {
+            ...cartData.res,
+            products: filteredProducts // Chỉ trả về các sản phẩm không bị ẩn
+          }
+        }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
-          setProducts([])
-          setQuantities([])
+          setProducts([]) // Reset giỏ hàng nếu không tìm thấy
+          setQuantities([]) // Reset số lượng nếu không tìm thấy
           return { res: { products: [], cart_id: '' } }
         }
         throw error
@@ -47,6 +59,23 @@ const useCart = () => {
     refetchOnWindowFocus: false,
     enabled: !!userId // Chỉ gọi API nếu userId tồn tại
   })
+
+  // Lắng nghe sự kiện cập nhật sản phẩm từ Socket.IO
+  useEffect(() => {
+    const socket = io('http://localhost:8888') // Đảm bảo địa chỉ đúng với server của bạn
+
+    socket.on('productUpdated', (data: any) => {
+      // Xử lý khi nhận được sự kiện cập nhật sản phẩm
+      console.log('Product updated:', data)
+      // Cập nhật lại giỏ hàng hoặc trạng thái liên quan đến sản phẩm
+      refetch() // Ví dụ: gọi lại query để lấy dữ liệu giỏ hàng mới
+    })
+
+    // Dọn dẹp khi component unmount
+    return () => {
+      socket.disconnect()
+    }
+  }, [refetch])
 
   // Sử dụng useEffect để cập nhật state khi dữ liệu query thành công
   useEffect(() => {
@@ -58,7 +87,6 @@ const useCart = () => {
 
   // Hàm debounce để cập nhật số lượng sản phẩm trong giỏ hàng
   const updateQuantityDebounce = debounce(async (sku_id: string, quantity: number) => {
-    // Kiểm tra userId hợp lệ
     if (!userId || !isValidObjectId(userId)) {
       console.error('Invalid userId format')
       return
@@ -72,7 +100,7 @@ const useCart = () => {
   }, 300)
 
   // Xử lý sự kiện thay đổi số lượng sản phẩm
-  const handleQuantityChange = (sku_id: string, e: ChangeEvent<HTMLInputElement>) => {
+  const handleQuantityChange = (sku_id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const quantity = parseInt(e.target.value)
     updateQuantityDebounce(sku_id, quantity)
   }
@@ -86,11 +114,10 @@ const useCart = () => {
       cart_id
     }: {
       action: string
-      quantity?: number
+      quantity: number
       sku_id?: string | number
       cart_id?: string
     }) => {
-      // Kiểm tra userId hợp lệ
       if (!userId || !isValidObjectId(userId)) {
         console.error('Invalid userId format')
         return
@@ -132,16 +159,13 @@ const useCart = () => {
   })
 
   // Hàm tính tổng giá trị của giỏ hàng
-  const calculateTotal = () => {
-    if (!products || products.length === 0) return 0
-    return reduce(
-      products,
-      (total, product, index: number) => {
-        const quantity = quantities[index] || product.quantity
-        return total + product.price * quantity
-      },
-      0
-    )
+  const calculateTotal = (visibleProducts: IProductCart[], quantities: number[]) => {
+    if (!visibleProducts || visibleProducts.length === 0) return 0
+
+    return visibleProducts.reduce((total, product, index) => {
+      const quantity = quantities?.[index] ?? product.quantity
+      return total + product.price * quantity
+    }, 0)
   }
 
   // Hàm thêm sản phẩm vào giỏ hàng

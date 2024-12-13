@@ -67,7 +67,8 @@ const CartPage = () => {
       console.error('Không tìm thấy cartId')
     }
   }
-
+  const visibleProducts = products.filter((product) => !product.sku_id.product_id.is_hidden)
+  const total = calculateTotal(visibleProducts, quantities)
   return (
     <div className='mb-32 mt-5 '>
       <div className='container'>
@@ -105,13 +106,13 @@ const CartPage = () => {
 
             <hr />
             <p className='text-[#252A2B] my-3'>
-              Bạn đang có <span className='font-semibold text-[#fca120]'>{products.length} sản phẩm</span> trong giỏ
+              Bạn đang có <span className='font-semibold text-[#fca120]'>{visibleProducts.length} sản phẩm</span> trong giỏ
               hàng
             </p>
             {/* item cart */}
             <div className=' border-gray-300 rounded-xl p-4'>
               <ul className='space-y-6'>
-                {products.map((product, index) => {
+                {visibleProducts.map((product, index) => {
                   // Lấy thông tin variant tương ứng từ variants của sản phẩm
                   const currentVariant = product.sku_id.product_id.variants.find(
                     (variant: any) => variant.sku_id === product.sku_id._id
@@ -144,9 +145,6 @@ const CartPage = () => {
                             <span className='text-red-500 font-semibold'>
                               {product.price.toLocaleString()}₫ {/* Giá thay đổi theo số lượng */}
                             </span>
-                            {/* <span className='font-light line-through text-xs'>
-                              {product.price.toLocaleString()}₫ 
-                            </span> */}
                           </div>
                         </div>
                       </div>
@@ -223,7 +221,7 @@ const CartPage = () => {
               <hr />
               <div className='flex items-center justify-between my-3'>
                 <span className='font-medium'>Tổng tiền:</span>
-                <span className='text-2xl font-semibold text-red-500'>{calculateTotal().toLocaleString()}₫</span>
+                <span className='text-2xl font-semibold text-red-500'>{total.toLocaleString()}₫</span>
               </div>
               <hr />
               <ul className='mt-3 space-y-1'>
@@ -247,7 +245,7 @@ const CartPage = () => {
                 </li>
               </ul>
 
-              {calculateTotal() === 0 ? (
+              {total === 0 ? (
                 <div className='text-center text-red-500'>Không có sản phẩm nào trong giỏ hàng</div>
               ) : (
                 <button
