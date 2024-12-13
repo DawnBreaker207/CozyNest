@@ -386,59 +386,13 @@ const ProductDetail = () => {
                 className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
               >
                 <ReactQuill
+             
                   value={product.description}
                   readOnly
                   theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
                 />
-                <p>--------------</p>
+                <p className='-mt-[10px]'>--------------</p>
                 {/* More product description details */}
-                <table className='table-auto w-full border-collapse mt-[10px]'>
-                  <tbody>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Sản phẩm
-                      </th>
-                      <td className=''>{product.name}</td>
-                    </tr>
-
-                    {/* <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Bộ sưu tập
-                      </th>
-                      <td className=''>{product.brand}</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Kích cỡ
-                      </th>
-                      <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Màu sắc
-                      </th>
-                      <td className=''>Màu trắng/ màu đen</td>
-                    </tr> */}
-                    {/* <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Chất liệu
-                      </th>
-                      <td className=''>Sứ</td>
-                    </tr> */}
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Xuất xứ
-                      </th>
-                      <td className=''>Trung Quốc</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Đơn vị
-                      </th>
-                      <td className=''>SET</td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </div>
             <div className='description-btn flex justify-center mt-[10px]'>
@@ -457,7 +411,7 @@ const ProductDetail = () => {
           className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[350px] `}
         >
           {' '}
-          <div className='review lg:-mt-[180px] xl:mt-[280px] '>
+          <div className='review lg:-mt-[90px] xl:mt-[280px] '>
             <ReviewComponent product={product} />{' '}
           </div>
         </div>
