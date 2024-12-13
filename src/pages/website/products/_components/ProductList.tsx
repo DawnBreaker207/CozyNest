@@ -51,14 +51,14 @@ const ProductList = ({ products = [] }: ProductListProps) => {
   const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: number }>({})
   const [hoveredImages, setHoveredImages] = useState({})
   const [hoveredPrices, setHoveredPrices] = useState({})
-  // useEffect(() => {
-  //   // Mặc định chọn màu đầu tiên cho mỗi sản phẩm khi render
-  //   const defaultVariants = products.reduce((acc, product) => {
-  //     acc[product._id] = 0 // Chọn màu đầu tiên
-  //     return acc
-  //   }, {})
-  //   setSelectedVariants(defaultVariants)
-  // }, [products])
+  useEffect(() => {
+    // Mặc định chọn màu đầu tiên cho mỗi sản phẩm khi render
+    const defaultVariants = products.reduce((acc, product) => {
+      acc[product._id] = 0 // Chọn màu đầu tiên
+      return acc
+    }, {})
+    setSelectedVariants(defaultVariants)
+  }, [products])
   const increase = () => {
     if (quantity < 10) setQuantity(quantity + 1)
   }
