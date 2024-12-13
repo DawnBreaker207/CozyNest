@@ -101,7 +101,7 @@ const DashboardPage = () => {
             <span className='text-xl font-semibold text-black'>{canceledOrders}</span>
           </div>
         </Link>
-        <Link to={`/admin/order?status=Canceled`} className='rounded-xl shadow-xl'>
+        <Link to={`/admin/customer`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/user.png' alt='' className='size-8' />

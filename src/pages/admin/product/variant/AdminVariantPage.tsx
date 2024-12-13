@@ -20,6 +20,7 @@ const AdminVariantPage = () => {
       }
     }
   })
+  console.log('🚀 ~ AdminVariantPage ~ data:', data)
 
   const { mutate } = useMutation({
     mutationFn: async (sku_id: number | string) => {
@@ -74,11 +75,12 @@ const AdminVariantPage = () => {
     mutateVariantAdd()
   }
 
-  const dataSource = data?.data?.res.map((variant: any) => ({
-    key: variant._id,
-    ...variant
-  }))
-  console.log('🚀 ~ dataSource ~ dataSource:', dataSource)
+  const dataSource = data?.data?.res
+    .filter((variant: any) => variant.deleted === false) // Filter out the deleted variants
+    .map((variant: any) => ({
+      key: variant._id,
+      ...variant
+    }))
 
   const columns = [
     {
@@ -96,8 +98,15 @@ const AdminVariantPage = () => {
       dataIndex: 'image',
       key: 'image',
       render: (image: any) => {
-        console.log('🚀 ~ AdminVariantPage ~ image:', image)
-        return <img src={image[0]} alt='' className={`${image[0] ? 'size-28' : ''}`} />
+        if (Array.isArray(image) && image.length > 0) {
+          return (
+            <div className='flex items-center gap-3'>
+              {image.map((url: string, index: number) => (
+                <img key={index} src={url} alt={`image-${index}`} className='size-20' />
+              ))}
+            </div>
+          )
+        }
       }
     },
     {
@@ -129,7 +138,6 @@ const AdminVariantPage = () => {
       title: 'Hành động',
       key: 'action',
       render: (_: any, sku: any) => {
-        console.log('🚀 ~ AdminVariantPage ~ sku:', sku)
         return (
           <Space size='middle'>
             <Link to={`/admin/products/${product_id}/variants/${sku._id}/update`}>
