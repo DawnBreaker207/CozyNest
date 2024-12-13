@@ -72,16 +72,32 @@ const UpdatePasswordForm = ({ userDetail }: ProfilePageProps) => {
           >
             <Input placeholder='Email' disabled />
           </Form.Item>
-          <Form.Item name='currentPassword' rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}>
+          <Form.Item
+            name='currentPassword'
+            rules={[
+              { required: true, message: 'Vui lòng nhập mật khẩu!' },
+              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+              { pattern: /^[^\s]*$/, message: 'Mật khẩu không được chứa dấu cách!' }
+            ]}
+          >
             <Input.Password placeholder='Mật khẩu cũ' className='p-2' />
           </Form.Item>
-          <Form.Item name='password' rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}>
+          <Form.Item
+            name='password'
+            rules={[
+              { required: true, message: 'Vui lòng nhập mật khẩu!' },
+              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+              { pattern: /^[^\s]*$/, message: 'Mật khẩu không được chứa dấu cách!' }
+            ]}
+          >
             <Input.Password placeholder='Mật khẩu mới' className='p-2' />
           </Form.Item>
           <Form.Item
             name='confirmPassword'
             rules={[
-              { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
+              { required: true, message: 'Vui lòng nhập mật khẩu!' },
+              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+              { pattern: /^[^\s]*$/, message: 'Mật khẩu không được chứa dấu cách!' },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password') === value) {
@@ -98,10 +114,10 @@ const UpdatePasswordForm = ({ userDetail }: ProfilePageProps) => {
 
           <div className='flex text-left gap-2'>
             <Button key='cancel' onClick={() => form.resetFields()} className='py-4 px-10'>
-              Cancel
+              Hủy
             </Button>
             <Button type='primary' htmlType='submit' className='py-4 px-10'>
-              Update
+              Cập nhật
             </Button>
           </div>
         </Form>

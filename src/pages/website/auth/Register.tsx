@@ -59,7 +59,14 @@ const Register = () => {
           <Form.Item
             label='Tên đăng nhập'
             name='username'
-            rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập!' }]}
+            rules={[
+              { required: true, message: 'Không được bỏ trống!' },
+              {
+                pattern:
+                  /^(?!\s)(?!.*\s{2})[A-Za-z0-9ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ\s]+$/,
+                message: 'Tên tài khoản chỉ được chứa chữ cái, số và dấu cách, không có ký tự đặc biệt!'
+              }
+            ]}
           >
             <Input className='p-2' />
           </Form.Item>
@@ -82,7 +89,8 @@ const Register = () => {
             name='password'
             rules={[
               { required: true, message: 'Vui lòng nhập mật khẩu!' },
-              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' }
+              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+              { pattern: /^[^\s]*$/, message: 'Mật khẩu không được chứa dấu cách!' }
             ]}
           >
             <Input.Password className='p-2' />
@@ -94,7 +102,9 @@ const Register = () => {
             name='confirmPass'
             dependencies={['password']}
             rules={[
-              { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
+              { required: true, message: 'Vui lòng nhập mật khẩu!' },
+              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+              { pattern: /^[^\s]*$/, message: 'Mật khẩu không được chứa dấu cách!' },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password') === value) {

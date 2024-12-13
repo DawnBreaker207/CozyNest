@@ -94,8 +94,6 @@ const ProfilePage = () => {
     return <div>Error: {error.message}</div>
   }
   const userDetail = userData
-  const totalPoints = 200 // Tổng điểm tối đa
-  const currentPoints = userDetail.points || 20 // Điểm hiện tại
 
   return (
     <>
@@ -126,26 +124,6 @@ const ProfilePage = () => {
                 ) : (
                   <span className='text-[#CC5F5F] text-[12px] bg-customWarning px-2 py-[2px] rounded-md'>Blocked</span>
                 )}
-              </div>
-            </div>
-
-            {/* Phần tích điểm và hạng tài khoản dưới dạng thẻ tín dụng */}
-            <div className='bg-gradient-to-r from-blue-500 to-green-500 p-4 rounded-lg shadow-lg mb-6'>
-              <h2 className='text-white text-xl font-semibold mb-2'>
-                Hạng tài khoản: {userDetail.rank || 'Người dùng mới'}
-              </h2>
-              <div className='flex justify-between text-white text-lg'>
-                <span>
-                  {currentPoints} / {totalPoints} điểm
-                </span>
-              </div>
-              <div className='w-full bg-white rounded-full h-2.5 mt-2'>
-                <div
-                  className='bg-blue-300 h-2.5 rounded-full'
-                  style={{
-                    width: `${(currentPoints / totalPoints) * 100}%`
-                  }}
-                ></div>
               </div>
             </div>
 

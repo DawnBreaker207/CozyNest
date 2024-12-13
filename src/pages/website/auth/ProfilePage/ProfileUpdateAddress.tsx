@@ -63,10 +63,32 @@ const ProfileUpdateAddress: React.FC<ProfileProps> = () => {
     <>
       {contextHolder}
       <Form form={form} layout='vertical' autoComplete='off' onFinish={onFinish} initialValues={{ ...data }}>
-        <Form.Item name='address' label='Địa chỉ chi tiết'>
-          <Input placeholder='Building No., Street Address' />
+        <Form.Item
+          name='address'
+          label='Địa chỉ chi tiết'
+          rules={[
+            {
+              pattern:
+                /^(?!.*\s{2})[A-Za-z0-9ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ,\\/-\s]*$/,
+              message: 'Địa chỉ không được chứa quá 2 dấu cách liên tiếp.'
+            }
+          ]}
+        >
+          <Input placeholder='Số tòa nhà, Địa chỉ đường phố' />
         </Form.Item>
-        <Form.Item name='city' label='Thành phố' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+
+        <Form.Item
+          name='city'
+          label='Thành phố'
+          rules={[
+            { required: true, message: 'Không được bỏ trống!' },
+            {
+              pattern:
+                /^(?!.*\s{2})[A-Za-z0-9ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ,\\/-\s]*$/,
+              message: 'Thành phố không được chứa quá 2 dấu cách liên tiếp.'
+            }
+          ]}
+        >
           <Input placeholder='Thành phố' />
         </Form.Item>
 
@@ -76,11 +98,11 @@ const ProfileUpdateAddress: React.FC<ProfileProps> = () => {
             onClick={handleCancel}
             className='py-2 px-6 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400'
           >
-            Cancel
+            Hủy
           </Button>
           <Form.Item>
             <Button type='primary' htmlType='submit' className='py-4 px-10'>
-              Update
+              Cập nhật
             </Button>
           </Form.Item>
         </div>
