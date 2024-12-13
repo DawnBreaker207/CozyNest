@@ -6,6 +6,7 @@ import useCategoryMutation from '@/hooks/useCategoryMutations'
 import { useState } from 'react'
 import Upload from 'antd/es/upload'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import { vietnameseChars2 } from '@/validations/validate'
 
 const AddCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -75,16 +76,11 @@ const AddCategoryPage = () => {
                   },
                   {
                     validator: (_, value) => {
-                      if (
-                        !value ||
-                        /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(
-                          value
-                        )
-                      ) {
+                      if (!value || vietnameseChars2.test(value)) {
                         return Promise.resolve()
                       }
                       return Promise.reject(
-                        new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                        new Error('Chữ cái đầu tiên phải là chữ và không được có khoảng trắng liên tiếp')
                       )
                     }
                   }

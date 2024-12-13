@@ -1,6 +1,7 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import { vietnameseChars1 } from '@/validations/validate'
 import { BackwardOutlined, UploadOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, Input, message, Upload } from 'antd'
@@ -126,12 +127,7 @@ const UpdateVariant = (props: Props) => {
             },
             {
               validator: (_, value) => {
-                if (
-                  !value ||
-                  /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(
-                    value
-                  )
-                ) {
+                if (!value || vietnameseChars1.test(value)) {
                   return Promise.resolve()
                 }
                 return Promise.reject(new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số'))

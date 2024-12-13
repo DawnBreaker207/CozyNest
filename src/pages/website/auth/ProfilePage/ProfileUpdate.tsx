@@ -7,6 +7,7 @@ import CustomLoadingPage from '@/components/Loading'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
+import { accountNamePattern } from '@/validations/validate'
 
 interface ProfileProps {
   formVisible: boolean
@@ -67,8 +68,7 @@ const ProfilePage: React.FC<ProfileProps> = () => {
             rules={[
               { required: true, message: 'Không được bỏ trống!' },
               {
-                pattern:
-                  /^(?!\s)(?!.*\s{2})[A-Za-z0-9ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ\s]+$/,
+                pattern: accountNamePattern,
                 message: 'Tên tài khoản chỉ được chứa chữ cái, số và dấu cách, không có ký tự đặc biệt!'
               }
             ]}

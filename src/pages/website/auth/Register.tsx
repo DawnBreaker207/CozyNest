@@ -1,4 +1,5 @@
 import instance from '@/configs/axios'
+import { accountNamePattern } from '@/validations/validate'
 import { useMutation } from '@tanstack/react-query'
 import { Form, Input, Button, Checkbox, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -62,8 +63,7 @@ const Register = () => {
             rules={[
               { required: true, message: 'Không được bỏ trống!' },
               {
-                pattern:
-                  /^(?!\s)(?!.*\s{2})[A-Za-z0-9ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ\s]+$/,
+                pattern: accountNamePattern,
                 message: 'Tên tài khoản chỉ được chứa chữ cái, số và dấu cách, không có ký tự đặc biệt!'
               }
             ]}

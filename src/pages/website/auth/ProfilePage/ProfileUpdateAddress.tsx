@@ -5,6 +5,7 @@ import { Button, Form, Input, message } from 'antd'
 import { useEffect, useState } from 'react'
 import CustomLoadingPage from '@/components/Loading'
 import Cookies from 'js-cookie'
+import { accountNamePattern1 } from '@/validations/validate'
 
 interface ProfileProps {
   formVisible: boolean
@@ -68,8 +69,7 @@ const ProfileUpdateAddress: React.FC<ProfileProps> = () => {
           label='Địa chỉ chi tiết'
           rules={[
             {
-              pattern:
-                /^(?!.*\s{2})[A-Za-z0-9ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ,\\/-\s]*$/,
+              pattern: accountNamePattern1,
               message: 'Địa chỉ không được chứa quá 2 dấu cách liên tiếp.'
             }
           ]}
@@ -83,8 +83,7 @@ const ProfileUpdateAddress: React.FC<ProfileProps> = () => {
           rules={[
             { required: true, message: 'Không được bỏ trống!' },
             {
-              pattern:
-                /^(?!.*\s{2})[A-Za-z0-9ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ,\\/-\s]*$/,
+              pattern: accountNamePattern1,
               message: 'Thành phố không được chứa quá 2 dấu cách liên tiếp.'
             }
           ]}

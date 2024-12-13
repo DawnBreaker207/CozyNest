@@ -10,6 +10,7 @@ import { Button, Checkbox, Form, Input, message, Select } from 'antd'
 import ReactQuill from 'react-quill'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import 'react-quill/dist/quill.snow.css' // Import React Quill CSS
+import { vietnameseChars1 } from '@/validations/validate'
 
 const ProductEditPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -106,11 +107,7 @@ const ProductEditPage = () => {
                       }
 
                       // Kiểm tra đầu tiên chữ cái đầu phải là chữ và không phải ký tự đặc biệt hoặc số
-                      if (
-                        !/^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(
-                          value
-                        )
-                      ) {
+                      if (!vietnameseChars1.test(value)) {
                         return Promise.reject(
                           new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
                         )

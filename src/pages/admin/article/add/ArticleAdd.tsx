@@ -7,6 +7,7 @@ import ReactQuill from 'react-quill' // Import ReactQuill
 import 'react-quill/dist/quill.snow.css' // Import Quill styles
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { RcFile } from 'antd/es/upload'
+import { vietnameseChars2 } from '@/validations/validate'
 
 const ArticleAddPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -181,12 +182,7 @@ const ArticleAddPage = () => {
               },
               {
                 validator: (_, value) => {
-                  if (
-                    !value ||
-                    /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(
-                      value
-                    )
-                  ) {
+                  if (!value || vietnameseChars2.test(value)) {
                     return Promise.resolve()
                   }
                   return Promise.reject(

@@ -3,6 +3,7 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useProductMutation from '@/hooks/useProductMutation'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
+import { vietnameseChars1 } from '@/validations/validate'
 import { BackwardOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, message, Select } from 'antd'
@@ -82,11 +83,7 @@ const ProductAddPage = () => {
                       }
 
                       // Kiểm tra đầu tiên chữ cái đầu phải là chữ và không phải ký tự đặc biệt hoặc số
-                      if (
-                        !/^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(
-                          value
-                        )
-                      ) {
+                      if (!vietnameseChars1.test(value)) {
                         return Promise.reject(
                           new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
                         )

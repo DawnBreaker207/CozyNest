@@ -2,6 +2,7 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticle } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
+import { vietnameseChars2 } from '@/validations/validate'
 import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
@@ -257,12 +258,7 @@ const ArticleEditPage = () => {
                 },
                 {
                   validator: (_, value) => {
-                    if (
-                      !value ||
-                      /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎỒỐỔỘÕỜƠỢỚỠỞÙỤŨÚƯỪỬỨỮỰĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏờơởớpỡợồôổốỗộùụũúăđĩưủừứựữửơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(
-                        value
-                      )
-                    ) {
+                    if (!value || vietnameseChars2.test(value)) {
                       return Promise.resolve()
                     }
                     return Promise.reject(
