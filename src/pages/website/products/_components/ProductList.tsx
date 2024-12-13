@@ -414,7 +414,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
                       <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
                         {/* Hiển thị giá thay đổi khi hover */}
                         <span className='text-[#FF0000] font-semibold'>
-                          {(hoveredPrices[product._id] || product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
+                          {(hoveredPrices[product._id] ||price).toLocaleString()}₫
                         </span>
                         {/* {hoveredPrices[product._id] ? (
                         <span className='text-[#878c8f] font-light line-through text-[13px]'>
