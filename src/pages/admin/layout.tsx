@@ -36,7 +36,7 @@ const LayoutAdmin: React.FC = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
 
   useEffect(() => {
-    if (role === 'admin' || role === 'manager' || role === 'shipper') {
+    if (role === 'admin' || role === 'manager') {
       setIsAuthorized(true)
       navigate('/admin') // Điều hướng vào trang admin
     } else {
@@ -44,6 +44,12 @@ const LayoutAdmin: React.FC = () => {
       navigate('/login') // Điều hướng về trang login
     }
   }, [role]) // Chỉ chạy lại khi role thay đổi
+  useEffect(() => {
+    if (role === 'shipper') {
+      setIsAuthorized(true);
+      navigate('/admin/order?status=Delivering');
+    }
+  },[role])
   const handleSearch = async (value: string) => {
     if (!value.trim()) {
       message.warning('Vui lòng nhập từ khóa tìm kiếm!')

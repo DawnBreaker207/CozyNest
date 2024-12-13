@@ -182,14 +182,22 @@ const Header = () => {
           label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
           key: '1'
         },
-        ...(role === 'admin' || role === 'shipper'
+        ...(role === 'admin'
           ? [
               {
-                label: <a href='/admin'>Quản lý</a>, // Liên kết đến trang quản lý
+                label: <a href='/admin'>Quản lý</a>, // Admin: Link đến trang quản lý admin
                 key: '2'
               }
             ]
-          : []), // Nếu không phải admin, không thêm menu này
+          : []),
+        ...(role === 'shipper'
+          ? [
+              {
+                label: <a href='/admin/order'>Quản lý đơn hàng</a>, // Shipper: Link đến trang quản lý đơn hàng
+                key: '2'
+              }
+            ]
+          : []),
         { type: 'divider' }, // Đường kẻ phân cách
         {
           label: (
