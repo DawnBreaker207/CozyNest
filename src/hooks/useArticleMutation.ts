@@ -1,7 +1,7 @@
 import { SubmitHandler } from 'react-hook-form'
 import { message } from 'antd'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addArticle, editArticle, removeArticle } from '@/services/article'
+import { addArticle, editArticle, removeArticle, softDeleteArticle } from '@/services/article'
 import IArticle from '@/types/article'
 import { ArticleZodSchema } from '@/validations/article'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -31,7 +31,7 @@ const useArticleMutation = ({ action, onSuccess }: useArticleMutationProps) => {
         case 'CREATE':
           return await addArticle(article)
         case 'DELETE':
-          return await removeArticle(article)
+          return await softDeleteArticle(article)
         case 'UPDATE':
           return await editArticle(article)
         default:
