@@ -7,6 +7,9 @@ import { Button, Collapse, Empty, Image, message, Popconfirm, Space, Table, Tag,
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import CustomLoadingPage from '@/components/Loading'
+import ReactQuill from 'react-quill'
+import "react-quill/dist/quill.snow.css";
+import { ColumnGroupType, ColumnType } from 'antd/es/table'
 
 const { Paragraph } = Typography
 const { Panel } = Collapse
@@ -33,7 +36,7 @@ const AdminArticlePage = () => {
       ...item
     })) || []
 
-  const columns = [
+    const columns: (ColumnType<IArticle> | ColumnGroupType<IArticle>)[] = [
     {
       title: 'Tiêu đề',
       dataIndex: 'title',
@@ -64,7 +67,15 @@ const AdminArticlePage = () => {
           {record.content && record.content.length > 0 ? (
             record.content.map((section, index: number) => (
               <Panel header={section.heading || `Section ${index + 1}`} key={index}>
-                <Paragraph>{section.paragraph}</Paragraph>
+                {section.paragraph ? (
+            <ReactQuill
+              value={section.paragraph}
+              readOnly
+              theme="bubble" // Sử dụng theme bubble cho chế độ chỉ đọc
+            />
+          ) : (
+            <Paragraph>No paragraph available</Paragraph>
+          )}
                 {section.images && section.images.length > 0 && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                     {section.images.map((image, imgIndex: number) => (
@@ -114,7 +125,7 @@ const AdminArticlePage = () => {
         </Space>
       )
     }
-  ]
+  ].filter(column => column !== undefined);
 
   if (isLoading)
     return (

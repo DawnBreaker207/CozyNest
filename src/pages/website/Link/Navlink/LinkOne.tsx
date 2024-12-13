@@ -2,7 +2,9 @@ import IArticle from '@/types/article'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import ReactQuill from 'react-quill'
 import { Link, useParams } from 'react-router-dom'
+import "react-quill/dist/quill.snow.css"; // Import CSS cho React Quill
 
 const Linkone: React.FC = () => {
   const [articles, setArticles] = useState<IArticle[]>([])
@@ -66,7 +68,19 @@ const Linkone: React.FC = () => {
                 >
                   {section.heading}
                 </h1>
-                <p className='mb-4 text-gray-700 text-[14px]'>{section.paragraph}</p>
+                <p className='mb-4 text-gray-700 text-[14px]'>
+                {section.paragraph ? (
+            <div className="mb-4 text-gray-700 text-[14px]">
+              <ReactQuill
+                value={section.paragraph}
+                readOnly
+                theme="bubble" // Sử dụng theme bubble cho chế độ chỉ đọc
+              />
+            </div>
+          ) : (
+            <p>No paragraph available</p>
+          )}
+                </p>
                 {section.images &&
                   Array.isArray(section.images) &&
                   section.images.map(
