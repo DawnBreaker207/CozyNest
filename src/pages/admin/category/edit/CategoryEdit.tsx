@@ -23,9 +23,17 @@ const EditCategoryPage = () => {
       }, 600)
     }
   })
+  const isValidImageFile = (file: RcFile): boolean => {
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif']
+    if (!validTypes.includes(file.type)) {
+      messageApi.error('Chỉ cho phép tải lên các file ảnh có định dạng .jpg, .png, .gif!')
+      return false
+    }
+    return true
+  }
   useEffect(() => {
-    if (data?.thumbnail) {
-      setThumbnail(data.thumbnail)
+    if (data?.res?.thumbnail) {
+      setThumbnail(data.res.thumbnail)
     }
   }, [data])
 
@@ -33,6 +41,8 @@ const EditCategoryPage = () => {
     return <div>Error: Invalid category ID</div>
   }
   const handleUpload = async (file: RcFile) => {
+    if (!isValidImageFile(file)) return false
+
     try {
       const response = await uploadFileCloudinary(file)
       if (response) {
@@ -58,7 +68,7 @@ const EditCategoryPage = () => {
       thumbnail
     }
 
-    mutate({ ...data, ...updatedValues, _id: id })
+    mutate({ ...data?.res, ...updatedValues, _id: id })
   }
   if (!id) {
     messageApi.error('ID danh mục không hợp lệ')
@@ -72,14 +82,14 @@ const EditCategoryPage = () => {
     <>
       {contextHolder}
       <div className='bg-white rounded-lg'>
-        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data }}>
+        <Form layout='vertical' onFinish={onFinish} initialValues={{ ...data?.res }}>
           <div className='flex justify-between'>
             <div>
-              <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Edit Category</span>
+              <span className='text-[#3A5BFF]'>Danh mục</span> <CaretRightOutlined /> <span>Cập nhật danh mục</span>
             </div>
             <div className='flex items-center space-x-2'>
               <Button icon={<CloseOutlined />} className='text-[#858D9D] border border-gray-400 hover:bg-gray-200'>
-                <Link to={`/admin/categories`}>Cancel</Link>
+                <Link to={`/admin/categories`}>Hủy</Link>
               </Button>
               <Button
                 type='primary'
@@ -87,40 +97,64 @@ const EditCategoryPage = () => {
                 icon={<CheckSquareOutlined />}
                 className='bg-blue-500 hover:bg-blue-600'
               >
-                Edit Category
+                Cập nhật danh mục
               </Button>
             </div>
           </div>
           <div className='flex justify-between mt-5'>
             <div className='w-[75%] pr-4'>
-              <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>General Information</h1>
+              <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Thông tin chung</h1>
               <Form.Item
-                label='Category Name'
+                label='Tên danh mục'
                 name='name'
-                rules={[{ required: true, message: 'Tên danh mục là bắt buộc' }]}
+                rules={[
+                  { required: true, message: 'Tên danh mục là bắt buộc' },
+                  {
+                    min: 6,
+                    message: 'Tên danh mục phải có tối thiểu 6 ký tự'
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (
+                        !value ||
+                        /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(value)
+                      ) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(
+                        new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                      )
+                    }
+                  }
+                ]}
               >
-                <Input placeholder='Type category name here...' className='w-full bg-[#F9F9FC]' />
+                <Input placeholder='Nhập tên danh mục...' className='w-full bg-[#F9F9FC]' />
               </Form.Item>
 
-              <Form.Item label='Thumbnail' name='thumbnail'>
-                <Upload {...{ beforeUpload: handleUpload }}>
-                  <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>
+              <Form.Item label='Ảnh danh mục' name='thumbnail'>
+                <Upload
+                  beforeUpload={handleUpload}
+                  maxCount={1} // Chỉ cho phép tải lên 1 file
+                >
+                  <Button icon={<UploadOutlined />}>Tải lên ảnh danh mục</Button>
                 </Upload>
                 {thumbnail ? (
                   <img src={thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
                 ) : (
-                  <span className='mt-2'>
-                    <img src={data?.thumbnail} alt='thumbnail' />
-                  </span>
+                  data?.res?.thumbnail && (
+                    <span className='mt-2'>
+                      <img src={data.res.thumbnail} alt='thumbnail' />
+                    </span>
+                  )
                 )}
               </Form.Item>
             </div>
 
             <div className='w-[20%]'>
               <div>
-                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
+                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Trạng thái</h1>
                 <Form.Item name='isHidden' valuePropName='checked'>
-                  <Checkbox>Hide Category</Checkbox>
+                  <Checkbox>Ẩn danh mục</Checkbox>
                 </Form.Item>
               </div>
             </div>

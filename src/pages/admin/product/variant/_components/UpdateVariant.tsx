@@ -3,7 +3,7 @@ import instance from '@/configs/axios'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { BackwardOutlined, UploadOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, FormProps, Input, InputNumber, message, Upload } from 'antd'
+import { Button, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -118,7 +118,21 @@ const UpdateVariant = (props: Props) => {
         <Form.Item<FieldType>
           label='Tên biến thể'
           name='name'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Tên biến thể là bắt buộc' },
+            {
+              min: 6,
+              message: 'Tên biến thể phải có tối thiểu 6 ký tự'
+            },
+            {
+              validator: (_, value) => {
+                if (!value || /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(value)) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số'))
+              }
+            }
+          ]}
         >
           <Input disabled />
         </Form.Item>
@@ -162,27 +176,48 @@ const UpdateVariant = (props: Props) => {
         <Form.Item<FieldType>
           label='Số lượng'
           name='stock'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Số lượng không được bỏ trống!' },
+            {
+              pattern: /^[0-9]+$/,
+              message: 'Số lượng phải là số và không được chứa ký tự khác'
+            },
+            {
+              validator: (_, value) => (value < 0 ? Promise.reject('Số lượng không được là số âm!') : Promise.resolve())
+            }
+          ]}
         >
-          <InputNumber />
+          <Input style={{ width: '30%' }} />
         </Form.Item>
         <Form.Item<FieldType>
           label='Giá'
           name='price'
           rules={[
-            { required: true, message: 'Không được bỏ trống!' },
-            { type: 'number', min: 0, message: 'Giá phải lớn hơn 0' }
+            { required: true, message: 'Giá không được bỏ trống!' },
+            {
+              pattern: /^[0-9]+$/,
+              message: 'Giá phải là số và không được chứa ký tự khác'
+            },
+            {
+              validator: (_, value) => (value < 0 ? Promise.reject('Giá không được là số âm!') : Promise.resolve())
+            }
           ]}
         >
-          <InputNumber />
+          <Input style={{ width: '30%' }} />
         </Form.Item>
 
         <Form.Item<FieldType>
           label='Giá cũ'
           name='price_before_discount'
           rules={[
-            { required: true, message: 'Không được bỏ trống!' },
-            { type: 'number', min: 0, message: 'Giá phải lớn hơn 0' },
+            { required: true, message: 'Giá không được bỏ trống!' },
+            {
+              pattern: /^[0-9]+$/,
+              message: 'Giá phải là số và không được chứa ký tự khác'
+            },
+            {
+              validator: (_, value) => (value < 0 ? Promise.reject('Giá không được là số âm!') : Promise.resolve())
+            },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 const price = getFieldValue('price')
@@ -194,11 +229,30 @@ const UpdateVariant = (props: Props) => {
             })
           ]}
         >
-          <InputNumber />
+          <Input style={{ width: '30%' }} />
         </Form.Item>
-        <Form.Item<FieldType> label='Giảm giá' name='price_discount_percent'>
-          <Input />
+        <Form.Item
+          label='Giảm giá'
+          name='price_discount_percent'
+          rules={[
+            {
+              validator: (_, value) => {
+                if (value && (!/^[0-9]+(\.[0-9]+)?$/.test(value) || parseFloat(value) < 0)) {
+                  return Promise.reject(
+                    new Error('Giảm giá phải là số lớn hơn 0 và không được chứa chữ hoặc ký tự đặc biệt')
+                  )
+                }
+                if (value && parseFloat(value) > 100) {
+                  return Promise.reject(new Error('Giảm giá không được vượt quá 100'))
+                }
+                return Promise.resolve()
+              }
+            }
+          ]}
+        >
+          <Input style={{ width: '30%' }} />
         </Form.Item>
+
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>
             Cập nhật

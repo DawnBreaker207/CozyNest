@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ICategory } from '@/types/category'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
 import { useState } from 'react'
-import Upload, { RcFile } from 'antd/es/upload'
+import Upload from 'antd/es/upload'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 
 const AddCategoryPage = () => {
@@ -33,7 +33,7 @@ const AddCategoryPage = () => {
 
       mutate(categoryData)
     } catch (error) {
-      messageApi.error('Failed to upload the image. Please try again!')
+      messageApi.error('Không tải được hình ảnh lên. Vui lòng thử lại!')
       console.error(error)
     }
   }
@@ -45,11 +45,11 @@ const AddCategoryPage = () => {
         <Form layout='vertical' onFinish={onFinish}>
           <div className='flex justify-between'>
             <div>
-              <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Add Category</span>
+              <span className='text-[#3A5BFF]'>Danh mục</span> <CaretRightOutlined /> <span>Thêm danh mục</span>
             </div>
             <div className='flex items-center space-x-2'>
               <Button icon={<CloseOutlined />} className='text-[#858D9D] border border-gray-400 hover:bg-gray-200'>
-                <Link to={`/admin/categories`}>Cancel</Link>
+                <Link to={`/admin/categories`}>Hủy</Link>
               </Button>
               <Button
                 type='primary'
@@ -57,32 +57,51 @@ const AddCategoryPage = () => {
                 icon={<PlusOutlined />}
                 className='bg-blue-500 hover:bg-blue-600'
               >
-                Add Category
+                Thêm danh mục
               </Button>
             </div>
           </div>
           <div className='flex justify-between mt-5'>
             <div className='w-[75%] pr-4'>
-              <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>General Information</h1>
+              <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Thông tin chung</h1>
               <Form.Item
-                label='Category Name'
+                label='Tên danh mục'
                 name='name'
-                rules={[{ required: true, message: 'Tên danh mục là bắt buộc' }]}
+                rules={[
+                  { required: true, message: 'Tên danh mục là bắt buộc' },
+                  {
+                    min: 6,
+                    message: 'Tên danh mục phải có tối thiểu 6 ký tự'
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (
+                        !value ||
+                        /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(value)
+                      ) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(
+                        new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                      )
+                    }
+                  }
+                ]}
               >
-                <Input placeholder='Type category name here...' className='w-full bg-[#F9F9FC]' />
+                <Input placeholder='Nhập tên danh mục...' className='w-full bg-[#F9F9FC]' />
               </Form.Item>
-              <Form.Item label='Thumbnail'>
+              <Form.Item label='Ảnh danh mục'>
                 <Upload
                   beforeUpload={(file) => {
                     const isImage = file.type.startsWith('image/')
                     const isLt2M = file.size / 1024 / 1024 < 2
 
                     if (!isImage) {
-                      message.error('You can only upload image files!')
+                      message.error('Bạn chỉ có thể tải lên các tập tin hình ảnh!')
                       return false
                     }
                     if (!isLt2M) {
-                      message.error('Image must smaller than 2MB!')
+                      message.error('Hình ảnh phải nhỏ hơn 2MB!')
                       return false
                     }
 
@@ -91,7 +110,7 @@ const AddCategoryPage = () => {
                   }}
                   showUploadList={false}
                 >
-                  <Button icon={<UploadOutlined />}>Upload Thumbnail</Button>
+                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
                 </Upload>
                 <div className='mt-2'>
                   {thumbnail && (
@@ -109,21 +128,21 @@ const AddCategoryPage = () => {
               </Form.Item>
 
               <Form.Item
-                label='Category Type'
+                label='Loại danh mục'
                 name='type'
                 rules={[{ required: true, message: 'Loại danh mục là bắt buộc' }]}
               >
                 <Select placeholder='Select category type' className='w-full'>
-                  <Option value='normal'>Normal</Option>
-                  <Option value='default'>Default</Option>
+                  <Option value='normal'>Bình thường</Option>
+                  <Option value='default'>Mặc định</Option>
                 </Select>
               </Form.Item>
             </div>
             <div className='w-[20%]'>
               <div>
-                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
+                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Trạng thái</h1>
                 <Form.Item name='isHidden' valuePropName='checked'>
-                  <Checkbox>Hide Category</Checkbox>
+                  <Checkbox>Ẩn danh mục</Checkbox>
                 </Form.Item>
               </div>
             </div>

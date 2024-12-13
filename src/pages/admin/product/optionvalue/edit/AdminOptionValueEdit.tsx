@@ -87,14 +87,28 @@ const AdminOptionValueEdit = (props: Props) => {
         <Form.Item<FieldType>
           label='Tiêu đề'
           name='label'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Tiêu đề không được bỏ trống!' },
+            {
+              pattern:
+                /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+([a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ\s]*[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+)$/,
+              message: 'Tiêu đề không được chứa ký tự đặc biệt và phải bắt đầu bằng chữ!'
+            }
+          ]}
         >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
           label='Giá trị'
           name='value'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Giá trị không được bỏ trống!' },
+            {
+              pattern:
+                /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+([a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ\s]*[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+)$/,
+              message: 'Giá trị không được chứa ký tự đặc biệt và phải bắt đầu bằng chữ!'
+            }
+          ]}
         >
           <Input />
         </Form.Item>

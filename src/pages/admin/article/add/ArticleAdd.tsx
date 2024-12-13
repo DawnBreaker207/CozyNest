@@ -59,11 +59,11 @@ const ArticleAddPage = () => {
         <Form layout='vertical' onFinish={onFinish}>
           <div className='flex justify-between'>
             <div>
-              <span className='text-[#3A5BFF]'>Article</span> <CaretRightOutlined /> <span>Add Article</span>
+              <span className='text-[#3A5BFF]'>Bài viết</span> <CaretRightOutlined /> <span>Thêm bài viết</span>
             </div>
             <div className='flex items-center space-x-2'>
               <Button icon={<CloseOutlined />} className='text-[#858D9D] border border-gray-400 hover:bg-gray-200'>
-                <Link to={`/admin/articles`}>Cancel</Link>
+                <Link to={`/admin/articles`}>Hủy</Link>
               </Button>
               <Button
                 type='primary'
@@ -71,15 +71,15 @@ const ArticleAddPage = () => {
                 icon={<PlusOutlined />}
                 className='bg-blue-500 hover:bg-blue-600'
               >
-                Add Article
+                Thêm bài viết
               </Button>
             </div>
           </div>
-          <Form.Item label='Title' name='title' rules={[{ required: true, message: 'Title is required' }]}>
-            <Input placeholder='Type article title here...' className='w-full bg-[#F9F9FC]' />
+          <Form.Item label='Tiêu đề' name='title' rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}>
+            <Input placeholder='Nhập tiêu đề...' className='w-full bg-[#F9F9FC]' />
           </Form.Item>
 
-          <Form.Item label='Thumbnail' rules={[{ required: true, message: 'Thumbnail is required' }]}>
+          <Form.Item label='Hình ảnh' rules={[{ required: true, message: 'Ảnh không được bỏ trống' }]}>
             <Upload
               beforeUpload={(file) => {
                 setThumbnail(file)
@@ -87,7 +87,7 @@ const ArticleAddPage = () => {
               }}
               showUploadList={false}
             >
-              <Button icon={<UploadOutlined />}>Upload Thumbnail</Button>
+              <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
             </Upload>
             <div className='mt-2'>
               {thumbnail && (
@@ -106,20 +106,23 @@ const ArticleAddPage = () => {
 
           {content.map((section, index) => (
             <div key={index} className='mb-6'>
-              <Form.Item label={`Heading ${index + 1}`} rules={[{ required: true, message: 'Heading is required' }]}>
+              <Form.Item
+                label={`Tiêu đề ${index + 1}`}
+                rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
+              >
                 <Input
                   value={section.heading}
                   onChange={(e) =>
                     setContent(content.map((s, i) => (i === index ? { ...s, heading: e.target.value } : s)))
                   }
-                  placeholder='Type heading here...'
+                  placeholder='Nhập tiêu đề...'
                   className='w-full bg-[#F9F9FC]'
                 />
               </Form.Item>
 
               <Form.Item
-                label={`Paragraph ${index + 1}`}
-                rules={[{ required: true, message: 'Paragraph is required' }]}
+                label={`Nội dung ${index + 1}`}
+                rules={[{ required: true, message: 'Nội dung không được để trống' }]}
               >
                 <ReactQuill
                   value={section.paragraph}
@@ -131,13 +134,13 @@ const ArticleAddPage = () => {
                       [{ header: '1' }, { header: '2' }, { font: [] }],
                       [{ list: 'ordered' }, { list: 'bullet' }],
                       ['bold', 'italic', 'underline'],
-                      ['link'] // Thêm icon chèn ảnh
+                      ['link']
                     ]
                   }}
                 />
               </Form.Item>
 
-              <Form.Item label='Images'>
+              <Form.Item label='Ảnh'>
                 <Upload
                   beforeUpload={(file) => {
                     setContent(content.map((s, i) => (i === index ? { ...s, images: [...s.images, file] } : s)))
@@ -145,7 +148,7 @@ const ArticleAddPage = () => {
                   }}
                   showUploadList={false}
                 >
-                  <Button icon={<UploadOutlined />}>Upload Image</Button>
+                  <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
                 </Upload>
                 <div className='mt-2'>
                   {section.images.map((img, imgIndex) => (
@@ -164,21 +167,41 @@ const ArticleAddPage = () => {
           ))}
 
           <Button onClick={handleAddContent} icon={<PlusOutlined />} style={{ marginBottom: '20px' }}>
-            Add Section
+            Thêm nội dung
           </Button>
 
-          <Form.Item label='Author' name='author' rules={[{ required: true, message: 'Author is required' }]}>
-            <Input placeholder='Type author name here...' className='w-full bg-[#F9F9FC]' />
+          <Form.Item
+            label='Tác giả'
+            name='author'
+            rules={[
+              { required: true, message: 'Tên tác giả là bắt buộc' },
+              {
+                min: 6,
+                message: 'Tên tác giả phải có tối thiểu 6 ký tự'
+              },
+              {
+                validator: (_, value) => {
+                  if (!value || /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(value)) {
+                    return Promise.resolve()
+                  }
+                  return Promise.reject(
+                    new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                  )
+                }
+              }
+            ]}
+          >
+            <Input placeholder='Nhập tên tác giả...' className='w-full bg-[#F9F9FC]' />
           </Form.Item>
         </Form>
         <div className='w-[20%]'>
-              <div>
-                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
-                <Form.Item name='isHidden' valuePropName='checked'>
-                  <Checkbox>hiển thị</Checkbox>
-                </Form.Item>
-              </div>
-            </div>
+          <div>
+            <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Trạng thái</h1>
+            <Form.Item name='isHidden' valuePropName='checked'>
+              <Checkbox>Hiển thị</Checkbox>
+            </Form.Item>
+          </div>
+        </div>
       </div>
     </>
   )

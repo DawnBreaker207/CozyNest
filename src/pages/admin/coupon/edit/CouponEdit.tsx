@@ -84,7 +84,16 @@ const CouponEdit = () => {
           <Form.Item
             label='Giá trị'
             name='couponValue'
-            rules={[{ required: true, message: 'Vui lòng nhập giá trị coupon!' }]}
+            rules={[
+              { required: true, message: 'Không được bỏ trống!' },
+              {
+                pattern: /^[0-9]+$/,
+                message: 'Vị trí phải là số và không được chứa ký tự khác'
+              },
+              {
+                validator: (_, value) => (value < 0 ? Promise.reject('Vị trí không được là số âm!') : Promise.resolve())
+              }
+            ]}
           >
             <InputNumber
               placeholder='Nhập giá trị coupon'

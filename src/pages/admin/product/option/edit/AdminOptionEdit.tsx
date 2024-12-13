@@ -2,7 +2,7 @@ import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
+import { Button, Form, FormProps, Input, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 type Props = {}
 type FieldType = {
@@ -84,15 +84,43 @@ const AdminOptionEdit = (props: Props) => {
         // onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item<FieldType> label='Name' name='name' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+        <Form.Item<FieldType>
+          label='Tên'
+          name='name'
+          rules={[
+            { required: true, message: 'Tên thuộc tính là bắt buộc' },
+            {
+              validator: (_, value) => {
+                if (
+                  !value ||
+                  /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+([a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ\s]*[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+)$/.test(
+                    value
+                  )
+                ) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số'))
+              }
+            }
+          ]}
+        >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
           label='Vị trí'
           name='position'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Không được bỏ trống!' },
+            {
+              pattern: /^[0-9]+$/,
+              message: 'Vị trí phải là số và không được chứa ký tự khác'
+            },
+            {
+              validator: (_, value) => (value < 0 ? Promise.reject('Vị trí không được là số âm!') : Promise.resolve())
+            }
+          ]}
         >
-          <InputNumber />
+          <Input style={{ width: '20%' }} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

@@ -2,9 +2,8 @@ import CustomLoadingPage from '@/components/Loading'
 import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Import hook để lấy danh mục
 import useProductMutation from '@/hooks/useProductMutation'
 import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
-import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'

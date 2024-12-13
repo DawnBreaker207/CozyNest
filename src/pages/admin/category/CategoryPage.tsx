@@ -45,7 +45,7 @@ const CategoryPage = () => {
         <Space size='middle'>
           <div>
             <div>{name}</div>
-            <div style={{ color: 'gray' }}>{record.products.length} Products</div>
+            <div style={{ color: 'gray' }}>{record.products.length} sản phẩm</div>
           </div>
         </Space>
       )

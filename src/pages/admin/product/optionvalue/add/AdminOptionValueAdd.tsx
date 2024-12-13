@@ -1,7 +1,7 @@
 import instance from '@/configs/axios'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
+import { Button, Form, FormProps, Input, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 type Props = {}
 type FieldType = {
@@ -68,14 +68,28 @@ const AdminOptionValueAdd = (props: Props) => {
         <Form.Item<FieldType>
           label='Tiêu đề'
           name='label'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Tiêu đề không được bỏ trống!' },
+            {
+              pattern:
+                /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+([a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ\s]*[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+)$/,
+              message: 'Tiêu đề không được chứa ký tự đặc biệt và phải bắt đầu bằng chữ!'
+            }
+          ]}
         >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
           label='Giá trị'
           name='value'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Giá trị không được bỏ trống!' },
+            {
+              pattern:
+                /^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+([a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ\s]*[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]+)$/,
+              message: 'Giá trị không được chứa ký tự đặc biệt và phải bắt đầu bằng chữ!'
+            }
+          ]}
         >
           <Input />
         </Form.Item>

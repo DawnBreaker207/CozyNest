@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, message, Select } from 'antd'
 import ReactQuill from 'react-quill'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import "react-quill/dist/quill.snow.css"; // Import React Quill CSS
+import 'react-quill/dist/quill.snow.css' // Import React Quill CSS
 
 const ProductEditPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -90,19 +90,56 @@ const ProductEditPage = () => {
               <Form.Item
                 label='Tên sản phẩm'
                 name='name'
-                rules={[{ required: true, message: 'Tên sản phẩm là bắt buộc' }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Tên sản phẩm là bắt buộc'
+                  },
+                  {
+                    min: 6,
+                    message: 'Tên sản phẩm phải có tối thiểu 6 ký tự'
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(new Error('Tên sản phẩm không được bỏ trống'))
+                      }
+
+                      // Kiểm tra đầu tiên chữ cái đầu phải là chữ và không phải ký tự đặc biệt hoặc số
+                      if (
+                        !/^[a-zA-ZÀÁÂÃẢẠẮẶẲẨẦẬẪẤÈÉẺẸÊỀỆẾỂỄÌÍÒÓÔÕỎÙỤŨÚĂĐĨŨƠàáảạâãắằặẳẩầậấèéêềếểệễìíòóôõỏùụũúăđĩũơƯĂÂÊÔƠưăâêôơỲÝỴỶỸỳýỵỷỹ]/.test(
+                          value
+                        )
+                      ) {
+                        return Promise.reject(
+                          new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                        )
+                      }
+
+                      // Kiểm tra khoảng cách không quá 2 lần liên tiếp
+                      if (/\s{2,}/.test(value)) {
+                        return Promise.reject(new Error('Tên sản phẩm không được có quá 2 khoảng cách liên tiếp'))
+                      }
+
+                      return Promise.resolve()
+                    }
+                  }
+                ]}
               >
                 <Input placeholder='Tên sản phẩm' className='w-full' />
               </Form.Item>
               <Form.Item
-                label="Mô tả"
-                name="description"
-                rules={[{ required: true, message: "Mô tả là bắt buộc!" }]}
+                label='Mô tả'
+                name='description'
+                rules={[
+                  { required: true, message: 'Mô tả là bắt buộc!' },
+                  {
+                    min: 6,
+                    message: 'Mô tả sản phẩm phải có tối thiểu 6 ký tự!'
+                  }
+                ]}
               >
-                <ReactQuill
-                  theme="snow"
-                  placeholder="Nhập mô tả sản phẩm"
-                />
+                <ReactQuill theme='snow' placeholder='Nhập mô tả sản phẩm' />
               </Form.Item>
             </div>
 
@@ -125,7 +162,13 @@ const ProductEditPage = () => {
               <Form.Item
                 label='Mã sản phẩm'
                 name='SKU'
-                rules={[{ required: true, message: 'Mã sản phẩm là bắt buộc!' }]}
+                rules={[
+                  { required: true, message: 'Mã sản phẩm là bắt buộc!' },
+                  {
+                    min: 6,
+                    message: 'Mã sản phẩm phải có tối thiểu 6 ký tự!'
+                  }
+                ]}
               >
                 <Input placeholder='Mã sản phẩm' className='w-full' />
               </Form.Item>
