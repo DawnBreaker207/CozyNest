@@ -131,21 +131,12 @@ const AdminOrderPage = () => {
   return (
     <div className='container mx-auto  px-6'>
       <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-2xl font-bold'>Danh Sách Đơn Hàng</h1>
+        <h1 className='text-2xl font-bold'>Danh sách đơn hàng</h1>
       </div>
 
       {/* Filters */}
-      <div className='bg-white p-4 rounded shadow mb-4'>
+      <div className='mb-4'>
         <div className='flex justify-between items-center'>
-          <Button
-            type='dashed'
-            onClick={() => {
-              setStatusFilter('')
-              setDateFilter(null)
-            }}
-          >
-            Tất cả đơn hàng
-          </Button>
           {/* <DatePicker placeholder='Chọn ngày' value={dateFilter} onChange={setDateFilter} format='DD/MM/YYYY' /> */}
           <Select
             value={statusFilter}

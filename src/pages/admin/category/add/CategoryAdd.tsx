@@ -1,11 +1,11 @@
-import { Form, Input, Button, Checkbox, message, Select } from 'antd'
-import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
-import { Link, useNavigate } from 'react-router-dom'
-import { ICategory } from '@/types/category'
-import useCategoryMutation from '@/hooks/useCategoryMutations'
-import { useState } from 'react'
-import Upload, { RcFile } from 'antd/es/upload'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import useCategoryMutation from '@/hooks/useCategoryMutations'
+import { ICategory } from '@/types/category'
+import { BackwardOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Form, Input, message, Select } from 'antd'
+import Upload from 'antd/es/upload'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 const AddCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -41,37 +41,27 @@ const AddCategoryPage = () => {
   return (
     <>
       {contextHolder}
-      <div className='bg-white rounded-lg'>
+      <div className='mb-5 flex items-center justify-between'>
+        <h1 className='text-2xl font-bold'>Thêm mới danh mục</h1>
+        <div className='flex items-center space-x-2'>
+          <Button>
+            <BackwardOutlined />
+            <Link to={`/admin/categories`}>Quay lại</Link>
+          </Button>
+        </div>
+      </div>
+      <div className='rounded-lg'>
         <Form layout='vertical' onFinish={onFinish}>
-          <div className='flex justify-between'>
-            <div>
-              <span className='text-[#3A5BFF]'>Category</span> <CaretRightOutlined /> <span>Add Category</span>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <Button icon={<CloseOutlined />} className='text-[#858D9D] border border-gray-400 hover:bg-gray-200'>
-                <Link to={`/admin/categories`}>Cancel</Link>
-              </Button>
-              <Button
-                type='primary'
-                htmlType='submit'
-                icon={<PlusOutlined />}
-                className='bg-blue-500 hover:bg-blue-600'
-              >
-                Add Category
-              </Button>
-            </div>
-          </div>
           <div className='flex justify-between mt-5'>
             <div className='w-[75%] pr-4'>
-              <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>General Information</h1>
               <Form.Item
-                label='Category Name'
+                label='Tên danh mục'
                 name='name'
                 rules={[{ required: true, message: 'Tên danh mục là bắt buộc' }]}
               >
-                <Input placeholder='Type category name here...' className='w-full bg-[#F9F9FC]' />
+                <Input placeholder='Tên danh mục' className='w-full ' />
               </Form.Item>
-              <Form.Item label='Thumbnail'>
+              <Form.Item label='Ảnh danh mục'>
                 <Upload
                   beforeUpload={(file) => {
                     const isImage = file.type.startsWith('image/')
@@ -91,7 +81,7 @@ const AddCategoryPage = () => {
                   }}
                   showUploadList={false}
                 >
-                  <Button icon={<UploadOutlined />}>Upload Thumbnail</Button>
+                  <Button icon={<UploadOutlined />}>Tải ảnh</Button>
                 </Upload>
                 <div className='mt-2'>
                   {thumbnail && (
@@ -109,21 +99,24 @@ const AddCategoryPage = () => {
               </Form.Item>
 
               <Form.Item
-                label='Category Type'
+                label='Loại danh mục'
                 name='type'
                 rules={[{ required: true, message: 'Loại danh mục là bắt buộc' }]}
+                className='w-[20%]'
               >
-                <Select placeholder='Select category type' className='w-full'>
+                <Select placeholder='Chọn loại danh mục'>
                   <Option value='normal'>Normal</Option>
                   <Option value='default'>Default</Option>
                 </Select>
               </Form.Item>
+              <Button type='primary' htmlType='submit'>
+                Thêm danh mục
+              </Button>
             </div>
             <div className='w-[20%]'>
               <div>
-                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
                 <Form.Item name='isHidden' valuePropName='checked'>
-                  <Checkbox>Hide Category</Checkbox>
+                  <Checkbox>Ẩn danh mục</Checkbox>
                 </Form.Item>
               </div>
             </div>

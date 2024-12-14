@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { BackwardOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Col, Modal, Row, Spin, Table, Tag } from 'antd'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const AdminOrderDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -119,8 +119,16 @@ const AdminOrderDetail = () => {
 
   // Danh sách các trạng thái
   return (
-    <div className='container mx-auto mt-10 px-6'>
-      <h1 className='text-2xl font-bold mb-6'>Chi tiết đơn hàng</h1>
+    <div className='container mx-auto px-6'>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-2xl font-bold mb-6'>Chi tiết đơn hàng</h1>
+        <div className='flex items-center space-x-2'>
+          <Button>
+            <BackwardOutlined />
+            <Link to={`/admin/order`}>Quay lại</Link>
+          </Button>
+        </div>
+      </div>
 
       {/* Lịch sử trạng thái */}
       <div className='mb-6'>

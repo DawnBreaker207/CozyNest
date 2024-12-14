@@ -1,9 +1,9 @@
 import useCouponMutation from '@/hooks/useCouponMutation'
 import { useCouponQuery } from '@/hooks/useCouponQuery'
 import { ICoupon } from '@/types/coupon'
-import { CaretRightOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
+import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Form, Input, InputNumber, message, Switch } from 'antd'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const CouponEdit = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -40,34 +40,21 @@ const CouponEdit = () => {
   return (
     <>
       {contextHolder}
-      <div className='bg-white rounded-lg'>
+      <div className='rounded-lg'>
+        <div className='flex item-center justify-between mb-5'>
+          <h1 className='text-2xl font-bold'>Cập nhật mã giảm giá</h1>
+          <Link to={`/admin/coupons`}>
+            <Button>
+              <BackwardOutlined />
+              Quay lại
+            </Button>
+          </Link>
+        </div>
         <Form layout='vertical' onFinish={onFinish} initialValues={data?.res || {}}>
-          <div className='flex justify-between'>
-            <div>
-              <span className='text-[#3A5BFF]'>Coupon</span> <CaretRightOutlined /> <span>Edit Coupon</span>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <Button
-                icon={<CloseOutlined />}
-                className='text-[#858D9D] border border-gray-400 hover:bg-gray-200'
-                onClick={() => navigate(`/admin/coupons`)}
-              >
-                Cancel
-              </Button>
-              <Button
-                type='primary'
-                htmlType='submit'
-                icon={<PlusOutlined />}
-                className='bg-blue-500 hover:bg-blue-600'
-              >
-                Edit Coupon
-              </Button>
-            </div>
-          </div>
-
           <Form.Item
             label='Tên Mã Giảm Giá'
             name='name'
+            className='w-1/2'
             rules={[{ required: true, message: 'Vui lòng nhập tên mã giảm giá!' }]}
           >
             <Input placeholder='Nhập tên mã giảm giá' />
@@ -76,6 +63,7 @@ const CouponEdit = () => {
           <Form.Item
             label='Mã Coupon'
             name='couponCode'
+            className='w-1/2'
             rules={[{ required: true, message: 'Vui lòng nhập mã coupon!' }]}
           >
             <Input placeholder='Nhập mã coupon' />
@@ -84,6 +72,7 @@ const CouponEdit = () => {
           <Form.Item
             label='Giá trị'
             name='couponValue'
+            className='w-1/2'
             rules={[{ required: true, message: 'Vui lòng nhập giá trị coupon!' }]}
           >
             <InputNumber
@@ -97,6 +86,7 @@ const CouponEdit = () => {
           <Form.Item
             label='Số lượng'
             name='couponQuantity'
+            className='w-1/2'
             rules={[{ required: true, message: 'Vui lòng nhập số lượng coupon!' }]}
           >
             <InputNumber min={0} className='w-full' />
@@ -106,11 +96,9 @@ const CouponEdit = () => {
             <Switch checkedChildren='Hoạt động' unCheckedChildren='Không hoạt động' />
           </Form.Item>
 
-          <Form.Item>
-            <Button type='primary' htmlType='submit' className='w-full'>
-              Sửa Mã Giảm Giá
-            </Button>
-          </Form.Item>
+          <Button type='primary' htmlType='submit'>
+            Cập nhật mã giảm giá
+          </Button>
         </Form>
       </div>
     </>

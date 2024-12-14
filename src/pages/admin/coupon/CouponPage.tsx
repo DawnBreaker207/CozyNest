@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
+import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Popconfirm, Space, Table, Tag, message, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import { useCouponQuery } from '@/hooks/useCouponQuery'
@@ -13,6 +13,7 @@ const CouponPage = () => {
   const queryClient = useQueryClient()
 
   const { data, isLoading, isError, error } = useCouponQuery()
+  console.log('🚀 ~ CouponPage ~ data:', data)
   const { mutate: removeCoupon } = useCouponMutation({
     action: 'DELETE',
     onSuccess: () => {
@@ -75,7 +76,6 @@ const CouponPage = () => {
           <Link to={`/admin/coupons/${coupon._id}/edit`}>
             <Button icon={<EditOutlined />} />
           </Link>
-          <Button icon={<EyeOutlined />} />
           <Popconfirm
             title='Xóa mã giảm giá'
             description='Bạn có chắc chắn muốn xóa mã giảm giá này?'
@@ -83,7 +83,7 @@ const CouponPage = () => {
             okText='Có'
             cancelText='Không'
           >
-            <Button icon={<DeleteOutlined />} />
+            <Button icon={<DeleteOutlined />} danger />
           </Popconfirm>
         </Space>
       )
@@ -96,8 +96,9 @@ const CouponPage = () => {
   }
 
   return (
-    <div className='p-4'>
+    <div>
       {contextHolder}
+      <h1 className='text-2xl font-bold mb-5'>Quản lý mã giảm giá</h1>
 
       {isLoading ? (
         <Spin tip='Đang tải dữ liệu...' />

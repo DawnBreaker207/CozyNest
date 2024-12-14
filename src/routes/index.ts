@@ -7,7 +7,6 @@ import EditCategoryPage from '@/pages/admin/category/edit/CategoryEdit'
 import CouponPage from '@/pages/admin/coupon/CouponPage'
 import CouponAdd from '@/pages/admin/coupon/add/CouponAdd'
 import CouponEdit from '@/pages/admin/coupon/edit/CouponEdit'
-import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import AdminCustomerPage from '@/pages/admin/customer/page'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
@@ -169,12 +168,13 @@ function App() {
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },
 
-        // Customer
+        // Coupon
         { path: 'coupons', Component: CouponPage },
         { path: 'coupons/add', Component: CouponAdd },
         { path: 'coupons/:id/edit', Component: CouponEdit },
-        { path: 'customer', Component: AdminCustomerPage },
-        { path: 'customer/:id', Component: AdminCustomerDetailPage }
+
+        // Customer
+        { path: 'customer', Component: AdminCustomerPage }
       ]
     }
   ])

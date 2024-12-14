@@ -48,7 +48,7 @@ const ProductAddPage = () => {
   return (
     <>
       {contextHolder}
-      <div className='bg-white rounded-lg'>
+      <div className=' rounded-lg'>
         <Form layout='vertical' onFinish={onFinish}>
           <div className='flex justify-between'>
             <div>

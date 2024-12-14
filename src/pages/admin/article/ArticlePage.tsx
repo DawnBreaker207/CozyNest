@@ -1,14 +1,14 @@
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticleQuery } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Collapse, Empty, Image, message, Popconfirm, Space, Table, Tag, Tooltip, Typography } from 'antd'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import CustomLoadingPage from '@/components/Loading'
 import ReactQuill from 'react-quill'
-import "react-quill/dist/quill.snow.css";
+import 'react-quill/dist/quill.snow.css'
 import { ColumnGroupType, ColumnType } from 'antd/es/table'
 
 const { Paragraph } = Typography
@@ -36,7 +36,7 @@ const AdminArticlePage = () => {
       ...item
     })) || []
 
-    const columns: (ColumnType<IArticle> | ColumnGroupType<IArticle>)[] = [
+  const columns: (ColumnType<IArticle> | ColumnGroupType<IArticle>)[] = [
     {
       title: 'Tiêu đề',
       dataIndex: 'title',
@@ -68,14 +68,14 @@ const AdminArticlePage = () => {
             record.content.map((section, index: number) => (
               <Panel header={section.heading || `Section ${index + 1}`} key={index}>
                 {section.paragraph ? (
-            <ReactQuill
-              value={section.paragraph}
-              readOnly
-              theme="bubble" // Sử dụng theme bubble cho chế độ chỉ đọc
-            />
-          ) : (
-            <Paragraph>No paragraph available</Paragraph>
-          )}
+                  <ReactQuill
+                    value={section.paragraph}
+                    readOnly
+                    theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
+                  />
+                ) : (
+                  <Paragraph>No paragraph available</Paragraph>
+                )}
                 {section.images && section.images.length > 0 && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                     {section.images.map((image, imgIndex: number) => (
@@ -125,7 +125,7 @@ const AdminArticlePage = () => {
         </Space>
       )
     }
-  ].filter(column => column !== undefined);
+  ].filter((column) => column !== undefined)
 
   if (isLoading)
     return (
@@ -138,6 +138,15 @@ const AdminArticlePage = () => {
   return (
     <>
       {contextHolder}
+      <div className='mb-5'>
+        <h1 className='text-2xl font-bold mb-4'>Quản lý bài viết</h1>
+        <Link to={`/admin/articles/add`}>
+          <Button type='primary'>
+            <PlusOutlined />
+            Thêm mới bài viết
+          </Button>
+        </Link>
+      </div>
       {data.length > 0 ? (
         <Table
           dataSource={data.slice((currentPage - 1) * articlesPerPage, currentPage * articlesPerPage)}

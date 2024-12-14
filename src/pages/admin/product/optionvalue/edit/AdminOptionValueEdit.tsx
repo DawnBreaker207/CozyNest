@@ -31,7 +31,7 @@ const AdminOptionValueEdit = (props: Props) => {
       try {
         return instance.put(`/optionValue/${product_id}/options/${option_id}/values/${value_id}`, formData)
       } catch (error) {
-        throw new Error('Cập nhật trị thuộc tính thất bại')
+        throw new Error('Cập nhật giá trị thuộc tính thất bại')
       }
     },
     onSuccess: () => {
@@ -64,7 +64,7 @@ const AdminOptionValueEdit = (props: Props) => {
   return (
     <div>
       {contextHolder}
-      <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
+      <div className='flex item-center justify-between mb-5'>
         <h1 className='text-2xl font-bold'>Cập nhật giá trị thuộc tính</h1>
         <Link to={`/admin/products/${product_id}/options_value/${option_id}`}>
           <Button>
@@ -76,9 +76,7 @@ const AdminOptionValueEdit = (props: Props) => {
       <Form
         form={form}
         name='basic'
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        layout='vertical'
         initialValues={{ ...data?.data?.res }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
@@ -87,6 +85,7 @@ const AdminOptionValueEdit = (props: Props) => {
         <Form.Item<FieldType>
           label='Tiêu đề'
           name='label'
+          className='w-1/2'
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
           <Input />
@@ -94,11 +93,12 @@ const AdminOptionValueEdit = (props: Props) => {
         <Form.Item<FieldType>
           label='Giá trị'
           name='value'
+          className='w-1/2'
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item>
           <Button type='primary' htmlType='submit'>
             Cập nhật
           </Button>

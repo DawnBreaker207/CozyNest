@@ -110,7 +110,14 @@ const ReturnOrdersAdmin = () => {
   if (isLoading) return <div>Đang tải dữ liệu...</div>
   if (isError) return <div>Đã có lỗi xảy ra khi tải dữ liệu</div>
 
-  return <Table columns={columns} dataSource={data} rowKey={(record: any) => record?._id} />
+  return (
+    <div>
+      <div className='mb-5'>
+        <h1 className='text-2xl font-bold mb-4'>Quản lý hoàn trả</h1>
+      </div>
+      <Table columns={columns} dataSource={data} rowKey={(record: any) => record?._id} />
+    </div>
+  )
 }
 
 export default ReturnOrdersAdmin

@@ -64,7 +64,7 @@ const AdminOptionEdit = (props: Props) => {
   return (
     <div>
       {contextHolder}
-      <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
+      <div className='flex item-center justify-between mb-5'>
         <h1 className='text-2xl font-bold'>Cập nhật thuộc tính</h1>
         <Link to={`/admin/products/${product_id}/options`}>
           <Button>
@@ -76,15 +76,18 @@ const AdminOptionEdit = (props: Props) => {
       <Form
         form={form}
         name='basic'
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        layout='vertical'
         initialValues={{ ...data?.data?.res }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item<FieldType> label='Name' name='name' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+        <Form.Item<FieldType>
+          label='Name'
+          className='w-1/2'
+          name='name'
+          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
@@ -95,7 +98,7 @@ const AdminOptionEdit = (props: Props) => {
           <InputNumber />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item>
           <Button type='primary' htmlType='submit'>
             Cập nhật
           </Button>

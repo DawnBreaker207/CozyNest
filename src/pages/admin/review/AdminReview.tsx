@@ -124,15 +124,7 @@ const AdminReview = (props: Props) => {
   return (
     <>
       {contextHolder}
-      <div className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold mb-4'>Quản lý đánh giá sản phẩm</h1>
-        <Link to={`/admin/reviews`}>
-          <Button>
-            <BackwardOutlined />
-            Quay lại
-          </Button>
-        </Link>
-      </div>
+      <h1 className='text-2xl font-bold mb-4'>Quản lý đánh giá sản phẩm</h1>
       <Table dataSource={dataSource} columns={columns} />
     </>
   )

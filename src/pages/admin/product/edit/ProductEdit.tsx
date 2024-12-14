@@ -74,7 +74,7 @@ const ProductEditPage = () => {
   return (
     <>
       {contextHolder}
-      <div className='bg-white rounded-lg'>
+      <div className='rounded-lg'>
         {/* Hiển thị spinner khi loading là true */}
         {loading ? (
           <div className='flex justify-center items-center'>

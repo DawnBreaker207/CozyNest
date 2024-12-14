@@ -1,49 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { download, search } from '@/components/icons'
-// import CustomLoadingPage from '@/components/Loading'
-// import instance from '@/configs/axios'
+import CustomLoadingPage from '@/components/Loading'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
-import { message, Pagination, Switch } from 'antd'
+import { message, Popconfirm, Switch, Table, Select, Input } from 'antd'
 import { useState } from 'react'
-import { FaUsersCog } from 'react-icons/fa'
-import 'react-phone-input-2/lib/style.css'
-import { Link } from 'react-router-dom'
 
 const AdminCustomerPage = () => {
-  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
-  const [pageSize] = useState(15) // Số lượng mục trên mỗi trang
-  const { data, isLoading, error, refetch } = useAdminUsersQuery() // refetch data after mutation
-  const users = Array.isArray(data?.res) ? data.res : []
+  const { data, isLoading, error, isError, refetch } = useAdminUsersQuery() // refetch data after mutation
   const [messageApi, contextHolder] = message.useMessage()
+  const [filterRole, setFilterRole] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState<string>('')
 
   const { mutate } = useAdminUsersMutations({
     action: 'UPDATE',
     onSuccess: () => {
-      messageApi.success('Cập nhật thành công')
+      messageApi.success('Cập nhật trạng thái tài khoản thành công')
       refetch()
     }
   })
 
-  if (isLoading) {
-    return <div></div>
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>
-  }
-
-  // Tính toán danh sách người dùng cho trang hiện tại
-  const startIndex = (currentPage - 1) * pageSize
-  const endIndex = startIndex + pageSize
-  const currentUsers = users.slice(startIndex, endIndex)
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
-
+  // Hàm để thay đổi trạng thái tài khoản
   const handleStatusChange = (userId: string, checked: boolean) => {
-    const user = users.find((u) => u._id === userId)
+    const user = data?.res.find((u) => u._id === userId)
     if (user) {
       // Kiểm tra nếu người dùng có vai trò là admin
       if (user.role === 'admin') {
@@ -57,89 +35,136 @@ const AdminCustomerPage = () => {
     }
   }
 
+  // Bộ lọc theo vai trò
+  const handleRoleFilterChange = (value: string) => {
+    setFilterRole(value) // Cập nhật giá trị bộ lọc khi người dùng thay đổi
+  }
+
+  // Cập nhật từ khóa tìm kiếm
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value) // Cập nhật từ khóa tìm kiếm
+  }
+
+  // Dữ liệu sau khi lọc theo vai trò và tìm kiếm
+  const dataSource = data?.res
+    .filter((user: any) => {
+      // Lọc theo role
+      if (filterRole && user.role !== filterRole) {
+        return false
+      }
+
+      // Lọc theo từ khóa tìm kiếm (tìm trong email và tên người dùng)
+      if (
+        searchTerm &&
+        !user.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      ) {
+        return false
+      }
+
+      return true
+    })
+    .map((user: any) => {
+      return {
+        key: user._id,
+        ...user
+      }
+    })
+
+  // Các cột của bảng
+  const columns = [
+    {
+      title: 'Tên người dùng',
+      dataIndex: 'username',
+      key: 'username'
+    },
+    {
+      title: 'Vai trò',
+      dataIndex: 'role',
+      key: 'role'
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email'
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber'
+    },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'createdAt',
+      render: (createdAt: any) => <span>{new Date(createdAt).toLocaleDateString()}</span>
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      render: (status: boolean, user: any) => {
+        // Nếu là tài khoản admin, không hiển thị Popconfirm, và hiển thị cảnh báo thay đổi trạng thái
+        if (user.role === 'admin') {
+          return (
+            <Switch
+              checked={status}
+              onChange={(checked) => handleStatusChange(user._id, checked)}
+              checkedChildren='Hoạt động'
+              unCheckedChildren='Khóa'
+            />
+          )
+        }
+
+        // Nếu không phải tài khoản admin, hiển thị Popconfirm để xác nhận
+        return (
+          <Popconfirm
+            title='Khóa tài khoản'
+            description='Bạn có chắc muốn khóa tài khoản này không?'
+            onConfirm={() => handleStatusChange(user._id, !status)} // Chỉ thay đổi khi xác nhận
+            okText='Có'
+            cancelText='Không'
+          >
+            <Switch checked={status} onChange={(checked) => {}} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
+          </Popconfirm>
+        )
+      }
+    }
+  ]
+
+  // Hiển thị trang loading hoặc lỗi
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>{error.message}</div>
+
   return (
     <>
       {contextHolder}
-      <div className='font-poppin'>
-        <div className='flex space-x-5 justify-between'>
-          <div className='flex-1 relative'>
-            <div className='flex items-center gap-1'>
-              <img src={search} alt='' className='absolute w-[30px] pl-[14px]' />
-              <input
-                type='text'
-                placeholder='Tìm kiếm. . .'
-                className='w-full px-4 py-2 rounded-lg border border-[#E0E2E7] pl-10'
-              />
-            </div>
-          </div>
-          <div className='flex items-center gap-[18px]'>
-            {/* <button className='px-[14px] py-[10px] flex items-center gap-[6px] text-[#3A5BFF] rounded-lg bg-customBlue text-sm'>
-              <img src={download} alt='' />
-              <span>Export</span>
-            </button> */}
-            <button className='px-[14px] py-[10px] flex items-center gap-[6px] text-white rounded-lg bg-[#3A5BFF] text-sm'>
-              <FaUsersCog className='text-xl' />
-              Quản lý người dùng
-            </button>
-          </div>
+      <div>
+        <h1 className='text-2xl font-bold mb-5'>Quản lý người dùng</h1>
+        <div className='flex items-center justify-between '>
+          <Input
+            placeholder='Tìm kiếm người dùng theo tên hoặc email'
+            style={{ width: 300, marginBottom: 16 }}
+            onChange={handleSearchChange}
+            value={searchTerm}
+          />
+          <Select
+            placeholder='Chọn vai trò'
+            style={{ width: 160, marginBottom: 16 }}
+            onChange={handleRoleFilterChange}
+            value={filterRole}
+          >
+            <Select.Option value=''>Tất cả người dùng</Select.Option>
+            <Select.Option value='admin'>Admin</Select.Option>
+            <Select.Option value='member'>Member</Select.Option>
+            <Select.Option value='shipper'>Shipper</Select.Option>
+          </Select>
         </div>
-        <section className='mt-6'>
-          <table className='w-full border-collapse border border-gray-200'>
-            <thead>
-              <tr className='bg-gray-100 text-left'>
-                <th className='px-4 py-2 border border-gray-200'>STT</th>
-                <th className='px-4 py-2 border border-gray-200'>Họ tên</th>
-                <th className='px-4 py-2 border border-gray-200'>Email</th>
-                <th className='px-4 py-2 border border-gray-200'>Vai trò</th>
-                <th className='px-4 py-2 border border-gray-200'>Ngày tạo</th>
-                <th className='px-4 py-2 border border-gray-200 text-center'>Hành động</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentUsers.map((user: any, index: number) => (
-                <tr key={user._id} className='hover:bg-gray-50'>
-                  {/* STT */}
-                  <td className='px-4 py-2 border border-gray-200'>{index + 1 + (currentPage - 1) * pageSize}</td>
 
-                  {/* Họ tên */}
-                  <td className='px-4 py-2 border border-gray-200'>
-                    <Link to={`/admin/customer/${user._id}`} className='text-blue-500'>
-                      {user.username}
-                    </Link>
-                  </td>
-
-                  {/* Email */}
-                  <td className='px-4 py-2 border border-gray-200'>{user.email}</td>
-
-                  {/* Vai trò */}
-                  <td className='px-4 py-2 border border-gray-200'>{user.role}</td>
-
-                  {/* Ngày tạo */}
-                  <td className='px-4 py-2 border border-gray-200'>{new Date(user.createdAt).toLocaleDateString()}</td>
-
-                  {/* Hành động */}
-                  <td className='px-4 py-2 border border-gray-200 text-center'>
-                    <Switch
-                      checked={user.status} // Lấy trạng thái từ cơ sở dữ liệu (status)
-                      onChange={(checked) => handleStatusChange(user._id, checked)}
-                      checkedChildren='Bật'
-                      unCheckedChildren='Tắt'
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className='flex justify-end mt-4'>
-            <Pagination
-              current={currentPage}
-              pageSize={pageSize}
-              total={users.length}
-              onChange={handlePageChange}
-              showSizeChanger={false}
-            />
-          </div>
-        </section>
+        <Table dataSource={dataSource} columns={columns} rowKey='key' />
       </div>
     </>
   )

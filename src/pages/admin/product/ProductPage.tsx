@@ -4,7 +4,7 @@ import useProductMutation from '@/hooks/useProductMutation'
 import { useProductQuery } from '@/hooks/useProductQuery'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
@@ -129,10 +129,19 @@ const AdminProductPage = () => {
   if (isErrorCategories) return <div>{errorCategories.message}</div>
 
   return (
-    <>
+    <div className='bg-white'>
       {contextHolder}
+      <div className='mb-5'>
+        <h1 className='text-2xl font-bold mb-4'>Quản lý sản phẩm</h1>
+        <Link to={`/admin/products/add`}>
+          <Button type='primary'>
+            <PlusOutlined />
+            Thêm mới sản phẩm
+          </Button>
+        </Link>
+      </div>
       <Table dataSource={dataSource} columns={columns} />
-    </>
+    </div>
   )
 }
 
