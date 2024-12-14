@@ -155,6 +155,7 @@ const ProductsPage = () => {
               <img
                 src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg'
                 alt='Products'
+                className=' h-[482px] md:h-[450px] sm:h-[300px] h-[240px] sm:h-[200px] object-cover'
               />
             </div>
             <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
@@ -169,6 +170,7 @@ const ProductsPage = () => {
               <img
                 src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg'
                 alt='Products'
+                className=' h-[482px] md:h-[450px] sm:h-[300px] h-[240px] sm:h-[200px] object-cover'
               />
             </div>
             <div className='w-[100%] h-[80px] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
@@ -239,7 +241,6 @@ const ProductsPage = () => {
               {categories?.res?.map((category: ICategory) => (
                 <div key={category._id}>
                   {' '}
-                  {/* Thêm key để tránh lỗi React */}
                   <Link className='text-black hover:text-yellow-500' to={`/products_page/${category._id}`}>
                     {category.name}
                   </Link>

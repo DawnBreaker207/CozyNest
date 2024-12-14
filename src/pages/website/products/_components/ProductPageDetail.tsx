@@ -215,7 +215,11 @@ const ProductsPageDetail = () => {
         <div className='wrapper-collection-header banner-header mt-8'>
           <div className='flex my-auto d-flex flex-wrap'>
             <div className='w-[50%] collection-banner col-lg-6 col-12 pl-0 pr-0'>
-              <img src='//theme.hstatic.net/200000748041/1001116292/14/collection_banner.jpg?v=31' alt='Products' />
+              <img
+                src={data?.res?.thumbnail}
+                alt='Products'
+                className=' h-[482px] md:h-[450px] sm:h-[300px] h-[240px] sm:h-[200px] object-cover'
+              />
             </div>
             <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
               <h1 className='text-[#FFCC00] ml-10 text-5xl font-medium'>{data?.res?.name}</h1>
@@ -226,7 +230,11 @@ const ProductsPageDetail = () => {
         <div className='wrapper-collection-header banner-header mt-8'>
           <div className='my-auto d-flex flex-wrap'>
             <div className='w-[100%] collection-banner col-lg-6 col-12 pl-0 pr-0'>
-              <img src='//theme.hstatic.net/200000748041/1001116292/14/collection_banner.jpg?v=31' alt='Products' />
+              <img
+                src={data?.res?.thumbnail}
+                alt='Products'
+                className=' h-[482px] md:h-[450px] sm:h-[300px] h-[240px] sm:h-[200px] object-cover'
+              />
             </div>
             <div className='w-[100%] h-[80px] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
               <h1 className='text-[#FFCC00] ml-5 text-3xl font-medium'>{data?.res?.name}</h1>

@@ -64,19 +64,19 @@ const CategoryProductsPage = () => {
 
   return (
     <div className='mx-auto'>
-        <div className='w-full  mx-auto relative '>
+      <div className='w-full  mx-auto relative '>
         {/* Image */}
         {categories.find((category) => category._id === categoryId)?.thumbnail && (
-           <img
-           src={categories.find((category) => category._id === categoryId)?.thumbnail}
-           alt='Banner'
-           className='w-full h-full object-cover object-center md:object-[center_top]  overflow-hidden shadow-lg'
-         />
+          <img
+            src={categories.find((category) => category._id === categoryId)?.thumbnail}
+            alt='Banner'
+            className='w-full h-full object-cover object-center md:object-[center_top]  overflow-hidden shadow-lg'
+          />
         )}
       </div>
       {categories.find((category) => category._id === categoryId)?.name && (
         <h2 className='text-center text-[25px] sm:text-[45px] mb-8 mt-10 md:mt-20 text-[#FCA120]'>
-         Danh sách sản phẩm {categories.find((category) => category._id === categoryId)?.name}
+          Danh sách sản phẩm {categories.find((category) => category._id === categoryId)?.name}
         </h2>
       )}
       {currentProducts.length > 0 ? (
