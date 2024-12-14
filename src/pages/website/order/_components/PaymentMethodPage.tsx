@@ -103,7 +103,6 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       // Tạo đơn hàng trước
       console.log(`Orders: ${finalOrderData.total_amount}`)
       console.log('Products:', finalOrderData.products)
-      return
       const orderResponse = await instance.post('/orders', finalOrderData)
       const orderId = orderResponse.data?.res?._id
       // console.log(orderId)
