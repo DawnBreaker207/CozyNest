@@ -1,5 +1,6 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
+import { vietnameseTitlePattern } from '@/validations/validate'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
@@ -83,10 +84,23 @@ const AdminOptionEdit = (props: Props) => {
         autoComplete='off'
       >
         <Form.Item<FieldType>
-          label='Name'
+          label='Tên thuộc tính'
           className='w-1/2'
           name='name'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            {
+              required: true,
+              message: 'Tên thuộc tính là bắt buộc'
+            },
+            {
+              validator: (_, value) => {
+                if (!value || vietnameseTitlePattern.test(value)) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số'))
+              }
+            }
+          ]}
         >
           <Input />
         </Form.Item>

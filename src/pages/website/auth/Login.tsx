@@ -74,7 +74,15 @@ const Login = () => {
           </Form.Item>
 
           {/* Trường Mật khẩu */}
-          <Form.Item label='Mật khẩu' name='password' rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}>
+          <Form.Item
+            label='Mật khẩu'
+            name='password'
+            rules={[
+              { required: true, message: 'Vui lòng nhập mật khẩu!' },
+              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+              { pattern: /^[^\s]*$/, message: 'Mật khẩu không được chứa dấu cách!' }
+            ]}
+          >
             <Input.Password className='p-2' />
           </Form.Item>
 

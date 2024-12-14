@@ -2,6 +2,7 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
 import { useCategory } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
+import { vietnameseChars2 } from '@/validations/validate'
 import { BackwardOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Select, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
@@ -88,7 +89,23 @@ const EditCategoryPage = () => {
               <Form.Item
                 label='Tên danh mục'
                 name='name'
-                rules={[{ required: true, message: 'Tên danh mục là bắt buộc' }]}
+                rules={[
+                  { required: true, message: 'Tên danh mục là bắt buộc' },
+                  {
+                    min: 6,
+                    message: 'Tên danh mục phải có tối thiểu 6 ký tự'
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (!value || vietnameseChars2.test(value)) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(
+                        new Error('Chữ cái đầu tiên phải là chữ và không được có khoảng trắng liên tiếp')
+                      )
+                    }
+                  }
+                ]}
               >
                 <Input placeholder='Tên danh mục' className='w-full' />
               </Form.Item>

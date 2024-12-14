@@ -1,5 +1,6 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
+import { vietnameseTitlePattern } from '@/validations/validate'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, message } from 'antd'
@@ -86,7 +87,13 @@ const AdminOptionValueEdit = (props: Props) => {
           label='Tiêu đề'
           name='label'
           className='w-1/2'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Tiêu đề không được bỏ trống!' },
+            {
+              pattern: vietnameseTitlePattern,
+              message: 'Tiêu đề không được chứa ký tự đặc biệt và phải bắt đầu bằng chữ!'
+            }
+          ]}
         >
           <Input />
         </Form.Item>
@@ -94,7 +101,13 @@ const AdminOptionValueEdit = (props: Props) => {
           label='Giá trị'
           name='value'
           className='w-1/2'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          rules={[
+            { required: true, message: 'Giá trị không được bỏ trống!' },
+            {
+              pattern: vietnameseTitlePattern,
+              message: 'Giá trị không được chứa ký tự đặc biệt và phải bắt đầu bằng chữ!'
+            }
+          ]}
         >
           <Input />
         </Form.Item>

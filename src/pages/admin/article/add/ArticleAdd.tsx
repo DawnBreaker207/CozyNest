@@ -7,6 +7,7 @@ import ReactQuill from 'react-quill' // Import ReactQuill
 import 'react-quill/dist/quill.snow.css' // Import Quill styles
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { RcFile } from 'antd/es/upload'
+import { vietnameseChars2 } from '@/validations/validate'
 
 const ArticleAddPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -261,7 +262,27 @@ const ArticleAddPage = () => {
               <Button onClick={handleAddContent} icon={<PlusOutlined />} style={{ marginBottom: '20px' }}>
                 Thêm phần mới
               </Button>
-              <Form.Item label='Người viết' name='author' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+              <Form.Item
+                label='Người viết'
+                name='author'
+                rules={[
+                  { required: true, message: 'Người viết là bắt buộc' },
+                  {
+                    min: 6,
+                    message: 'Người viết phải có tối thiểu 6 ký tự'
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (!value || vietnameseChars2.test(value)) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(
+                        new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                      )
+                    }
+                  }
+                ]}
+              >
                 <Input placeholder='Người viết' className='w-full ' />
               </Form.Item>
             </div>

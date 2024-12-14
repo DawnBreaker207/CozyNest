@@ -2,6 +2,7 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticle } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
+import { vietnameseChars2 } from '@/validations/validate'
 import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
@@ -229,7 +230,23 @@ const ArticleEditPage = () => {
                 label='Người viết'
                 className='mt-3'
                 name='author'
-                rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                rules={[
+                  { required: true, message: 'Người viết là bắt buộc' },
+                  {
+                    min: 6,
+                    message: 'Người viết phải có tối thiểu 6 ký tự'
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (!value || vietnameseChars2.test(value)) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(
+                        new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                      )
+                    }
+                  }
+                ]}
               >
                 <Input placeholder='Người viết' className='w-full' />
               </Form.Item>
