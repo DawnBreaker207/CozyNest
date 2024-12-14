@@ -279,7 +279,7 @@ const Header = () => {
                     {categories.map((category) => (
                       <>
                         <li key={category._id} className='hover:bg-gray-100'>
-                          <Link to={`/category/${category._id}`} className='block px-4 py-2 text-gray-700'>
+                          <Link to={`/products_page/${category._id}`} className='block px-4 py-2 text-gray-700'>
                             {category.name}
                           </Link>
                         </li>
