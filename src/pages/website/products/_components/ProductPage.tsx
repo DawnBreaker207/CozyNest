@@ -48,39 +48,44 @@ const ProductsPage = () => {
     setOpen(false)
   }
   const handleMenuClick = (key: string) => {
-    let sortedProducts = [...products]; // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
-  
+    let sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
+
     switch (key) {
       case '1': // Giá: Thấp đến Cao
         sortedProducts.sort((a, b) => {
-          const priceA = a?.variants?.[0]?.sku_id?.price || 0;
-          const priceB = b?.variants?.[0]?.sku_id?.price || 0;
-          return priceA - priceB;
-        });
-        break;
+          const priceA = a?.variants?.[0]?.sku_id?.price || 0
+          const priceB = b?.variants?.[0]?.sku_id?.price || 0
+          return priceA - priceB
+        })
+        break
       case '2': // Giá: Cao đến Thấp
         sortedProducts.sort((a, b) => {
-          const priceA = a?.variants?.[0]?.sku_id?.price || 0;
-          const priceB = b?.variants?.[0]?.sku_id?.price || 0;
-          return priceB - priceA;
-        });
-        break;
+          const priceA = a?.variants?.[0]?.sku_id?.price || 0
+          const priceB = b?.variants?.[0]?.sku_id?.price || 0
+          return priceB - priceA
+        })
+        break
       case '3': // Từ A - Z
-        sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+        sortedProducts.sort((a, b) => a.name.localeCompare(b.name))
+        break
       case '4': // Từ Z - A
-        sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
-        break;
+        sortedProducts.sort((a, b) => b.name.localeCompare(a.name))
+        break
       case '5': // Sản phẩm bán chạy (tuỳ chỉnh logic nếu cần)
-        sortedProducts.sort((a, b) => b.sold - a.sold); // Giả sử có trường "sold" biểu thị số lượng bán
-        break;
+        sortedProducts.sort((a, b) => {
+          // Sắp xếp theo số lượng sold giảm dần
+          const soldA = a?.variants?.[0]?.sku_id.sold || 0
+          const soldB = b?.variants?.[0]?.sku_id.sold || 0
+          return soldB - soldA
+        }) // Giả sử có trường "sold" biểu thị số lượng bán
+        break
       default:
-        break;
+        break
     }
-  
-    setProducts(sortedProducts);
-    setSelectedKey(key);
-  };
+
+    setProducts(sortedProducts)
+    setSelectedKey(key)
+  }
 
   const handlePriceRangeChange = (priceRange: string) => {
     setSelectedPriceRanges((prev) =>
