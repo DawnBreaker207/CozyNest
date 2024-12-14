@@ -116,7 +116,7 @@ const OrderPage = () => {
                 style={{ scrollMarginTop: '100px' }} // Đặt khoảng cách khi cuộn tới
               >
                 <Title level={3} className='mt-2'>
-                  Mã đơn hàng: {order._id}{' '}
+                  Mã đơn hàng: {order._id}
                 </Title>
                 <div className='border-b py-4'>
                   <Text className='font-bold'>Thông tin sản phẩm</Text>
@@ -127,22 +127,26 @@ const OrderPage = () => {
                         orderDetail.products &&
                         Array.isArray(orderDetail.products) &&
                         orderDetail.products.map((product: any) => (
-                          <div key={product.sku_id} className='flex items-center mt-2'>
-                            {/* Sử dụng ảnh từ product (nếu có) hoặc fallback sang orderDetail.image */}
+                          <div key={product.sku_id._id} className='flex items-center mt-2'>
+                            {/* Hiển thị ảnh đầu tiên của sản phẩm */}
                             <img
                               src={
-                                product.image ||
-                                (Array.isArray(orderDetail.image) && orderDetail.image.length > 0
-                                  ? orderDetail.image[0]
-                                  : '/path/to/default-image.jpg')
+                                Array.isArray(product.sku_id.image) && product.sku_id.image.length > 0
+                                  ? product.sku_id.image[0]
+                                  : '/path/to/default-image.jpg'
                               }
-                              alt={product.name || orderDetail.name}
+                              alt={product.sku_id.name || 'Sản phẩm'}
                               className='w-16 h-16 object-cover mr-4'
                             />
                             {/* Hiển thị tên sản phẩm */}
-                            <span className='font-bold'>{product.name || orderDetail.name}</span>
+                            <span className='font-bold'>
+                              {product.sku_id.name}
+                              <br />
+                              <span className='ml-auto font-bold'>{formatCurrency(product.price)}</span>
+                            </span>
+
                             {/* Hiển thị số lượng */}
-                            <span className='ml-2'>x{product.quantity}</span>
+                            <span className='ml-2 mt-[-25px]'>x{product.quantity}</span>
                             {/* Hiển thị giá */}
                             <span className='ml-auto font-bold'>{formatCurrency(product.total_money)}</span>
                           </div>
@@ -175,7 +179,7 @@ const OrderPage = () => {
                       <Text>Phương thức thanh toán:</Text>
                       <Text className='font-bold'>{order.payment_method[0]?.orderInfo || 'Chưa xác định'}</Text>
                     </div>
-                    {/* Tính tổng giá sản phẩm */}
+                    {/* Hiển thị tổng chi phí sản phẩm */}
                     <div className='flex justify-between mt-4'>
                       <Text>Chi phí sản phẩm:</Text>
                       <Text className='font-bold'>
