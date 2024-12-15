@@ -12,6 +12,7 @@ import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
 import AdminOrderDetail from '@/pages/admin/order/OrderDetail'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
+import RefundOrdersAdmin from '@/pages/admin/order/OrderRefunds'
 import ReturnOrdersAdmin from '@/pages/admin/order/OrderReturns'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import ProductAddPage from '@/pages/admin/product/add/ProductAdd'
@@ -124,6 +125,7 @@ function App() {
         { path: 'order', Component: AdminOrderPage },
         { path: 'orderDetail/:id', Component: AdminOrderDetail },
         { path: 'order_returns', Component: ReturnOrdersAdmin },
+        { path: 'order_refunds', Component: RefundOrdersAdmin },
 
         // Variant
         {

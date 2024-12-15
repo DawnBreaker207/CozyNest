@@ -67,8 +67,7 @@ const CartPage = () => {
       console.error('Không tìm thấy cartId')
     }
   }
-  const visibleProducts = products.filter((product) => !product.sku_id.product_id.is_hidden)
-  const total = calculateTotal(visibleProducts, quantities)
+  const total = calculateTotal()
   return (
     <div className='mb-32 mt-5 '>
       <div className='container'>
@@ -106,13 +105,13 @@ const CartPage = () => {
 
             <hr />
             <p className='text-[#252A2B] my-3'>
-              Bạn đang có <span className='font-semibold text-[#fca120]'>{visibleProducts.length} sản phẩm</span> trong giỏ
+              Bạn đang có <span className='font-semibold text-[#fca120]'>{products.length} sản phẩm</span> trong giỏ
               hàng
             </p>
             {/* item cart */}
             <div className=' border-gray-300 rounded-xl p-4'>
               <ul className='space-y-6'>
-                {visibleProducts.map((product, index) => {
+                {products.map((product, index) => {
                   // Lấy thông tin variant tương ứng từ variants của sản phẩm
                   const currentVariant = product.sku_id.product_id.variants.find(
                     (variant: any) => variant.sku_id === product.sku_id._id
@@ -256,33 +255,6 @@ const CartPage = () => {
                 </button>
               )}
             </div>
-
-            {/* <div className='mt-6'>
-              <CouponCard
-                couponCode={couponCode2}
-                imageUrl='./src/assets/images/coupon/coupon_1_img.webp'
-                expirationDate='10/10/2024'
-                title='Giảm 100k'
-                description='Đơn hàng từ 500k'
-                condition='Dành cho đơn hàng từ 500k'
-              />
-              <CouponCard
-                couponCode={couponCode1}
-                imageUrl='./src/assets/images/coupon/coupon_2_img.webp'
-                expirationDate='10/10/2024'
-                title='Miễn phí vận chuyển'
-                description='Đơn hàng từ 300k'
-                condition='Dành cho đơn hàng từ 300k'
-              />
-              <CouponCard
-                couponCode={couponCode3}
-                imageUrl='./src/assets/images/coupon/coupon_3_img.webp'
-                expirationDate='10/10/2024'
-                title='Giảm 10%'
-                description='Đơn hàng từ 100k'
-                condition='Dành cho đơn hàng từ 100k'
-              />
-            </div> */}
           </div>
         </div>
       </div>

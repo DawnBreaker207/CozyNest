@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react'
 import instance from '@/configs/axios'
-import { useNavigate } from 'react-router-dom'
 import useCart from '@/hooks/useCart'
-import ShippingAddressPage from './_components/ShippingAddressPage'
-import PaymentMethodPage from './_components/PaymentMethodPage'
-import { Button } from 'antd'
 import { useLocalStorage } from '@/hooks/useStorage'
 import { CloseOutlined } from '@ant-design/icons'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import PaymentMethodPage from './_components/PaymentMethodPage'
+import ShippingAddressPage from './_components/ShippingAddressPage'
 
 const CheckoutPage = () => {
   const navigate = useNavigate()
@@ -58,35 +57,17 @@ const CheckoutPage = () => {
     }
   }
 
-  const handleApplyCoupon = async () => {
-    try {
-      const response = await instance.get('/coupon/couponValue', {
-        headers: { Authorization: accessToken },
-        params: { coupon_code: couponCode }
-      })
-      const nameCoupon = response?.data?.name
-      setCouponName(nameCoupon)
-      const discountValue = response?.data?.couponValue || 0
-      setCouponValue(discountValue)
-    } catch (error) {
-      console.error('Mã giảm giá không hợp lệ:', error)
-      setCouponValue(0)
-    }
-  }
-
   const handleSelectCoupon = (coupon: any) => {
+    console.log('Coupon selected:', coupon)
+    setCouponCode(coupon.couponCode)
     setCouponName(coupon.name)
-    setCouponCode(coupon.code)
     setCouponValue(coupon.couponValue)
   }
 
-  const quantities = visibleProducts.map((product: any) => product.quantity)
-  let totalAfterDiscount = calculateTotal(visibleProducts, quantities) + 50000 + installationFee - couponValue
+  let totalAfterDiscount = calculateTotal() + 50000 + installationFee - couponValue
   if (totalAfterDiscount < 0) {
     totalAfterDiscount = 0
   }
-  const isEligibleForDiscount = totalAfterDiscount >= 500000
-
   return (
     <div className='flex flex-col md:flex-row p-6 bg-background lg:px-28'>
       <div className='w-full md:w-2/3 pr-0 md:pr-6 px-4'>
@@ -141,23 +122,15 @@ const CheckoutPage = () => {
 
           <hr className='my-5 border-t border-gray-200' />
 
-          <div className='mb-4'>
-            <input
-              type='text'
-              placeholder='Nhập mã giảm giá'
-              value={couponCode}
-              onChange={(e) => setCouponCode(e.target.value)}
-              className='w-full border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary'
-            />
-          </div>
-
           <div className='mt-4'>
             <div className='flex flex-wrap gap-2'>
               {coupons.map((coupon) => (
                 <div
                   key={coupon._id}
-                  onClick={() => handleSelectCoupon(coupon)}
-                  className={`cursor-pointer p-3 rounded-lg border ${coupon.code === couponCode ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-300'}`}
+                  onClick={() => handleSelectCoupon(coupon)} // Gọi hàm chọn coupon
+                  className={`cursor-pointer p-3 rounded-lg border ${
+                    coupon.couponCode === couponCode ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-300'
+                  }`}
                 >
                   <span className='font-medium text-sm'>{coupon.name}</span>
                   <br />
@@ -165,26 +138,10 @@ const CheckoutPage = () => {
               ))}
             </div>
           </div>
-
-          <div className='text-center mt-6'>
-            <Button
-              type='primary'
-              onClick={handleApplyCoupon}
-              className='bg-primary text-white px-5 py-3 rounded-lg w-full'
-            >
-              Áp dụng
-            </Button>
-          </div>
-
-          {!isEligibleForDiscount && couponCode && (
-            <div className='text-center text-red-500 mt-3'>
-              Tổng đơn hàng cần tối thiểu 500.000₫ để áp dụng mã giảm giá
-            </div>
-          )}
           <div className='mt-4'>
             <div className='mb-2 flex justify-between'>
               <span className='font-medium'>Tạm tính:</span>
-              <span className='font-semibold'>{calculateTotal(visibleProducts, quantities).toLocaleString()} ₫</span>
+              <span className='font-semibold'>{calculateTotal().toLocaleString()} ₫</span>
             </div>
             <div className='mb-2 flex justify-between'>
               <span className='font-medium'>Chi phí vận chuyển:</span>
@@ -216,6 +173,7 @@ const CheckoutPage = () => {
                 <span className='float-right text-red-500'>-{couponValue.toLocaleString()} ₫</span>
               </div>
             )}
+            <hr className='my-5 border-t border-gray-200' />
 
             <div className='mb-2 flex justify-between'>
               <span className='font-medium'>Tổng cộng:</span>

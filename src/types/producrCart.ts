@@ -1,6 +1,9 @@
 export interface ISku {
+  image: any
   _id: string | number
   product_id: {
+    name: string | undefined
+    variants: any
     is_hidden: boolean
     _id: string
     thumbnail: string

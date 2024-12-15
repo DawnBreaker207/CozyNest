@@ -2,10 +2,8 @@
 /* PaymentMethodPage.tsx */
 
 import instance from '@/configs/axios'
-import { useCartStore } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
 import { useCookie } from '@/hooks/useStorage'
-import { CartProduct } from '@/types/cart'
 import { RightOutlined } from '@ant-design/icons'
 import { Button, Form, notification, Radio } from 'antd'
 import Cookies from 'js-cookie'
@@ -34,7 +32,6 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   const [installationFee, setInstallationFee] = useState(0)
   const navigate = useNavigate()
   const { data } = useCart()
-  const { products } = useCartStore()
 
   const cartId = data?.res?.cart_id
   const handleChange = (e: any) => {
@@ -62,10 +59,6 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   }, [installationFee, onInstallationCostChange])
 
   const handlePayment = async () => {
-    console.log(data?.res?.products)
-
-    const visibleProducts = data?.res?.products?.filter((product) => !product.sku_id.product_id.is_hidden) || []
-    console.log(visibleProducts)
     // TODO: Update this
     const finalOrderData = {
       ...orderData,
@@ -80,7 +73,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
       status: 'Processing',
       payment_status: 'Unpaid',
       products:
-        visibleProducts.map((product: any) => {
+        data?.res?.products.map((product: any) => {
           // Tìm variant phù hợp với sku_id của sản phẩm
           const currentVariant = product?.sku_id?.product_id?.variants.find(
             (variant: any) => variant?.sku_id === product?.sku_id?._id
