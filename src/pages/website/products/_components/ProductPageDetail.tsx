@@ -53,48 +53,47 @@ const ProductsPageDetail = () => {
       setProducts(data.res.productss)
     }
   }, [data])
-  const sortPriceAsc = (products: IProduct[]) => {
-    return products.sort((a, b) => a.price - b.price)
-  }
-
-  const sortPriceDesc = (products: IProduct[]) => {
-    return products.sort((a, b) => b.price - a.price)
-  }
-
-  const sortNameAsc = (products: IProduct[]) => {
-    return products.sort((a, b) => a.name.localeCompare(b.name))
-  }
-
-  const sortNameDesc = (products: IProduct[]) => {
-    return products.sort((a, b) => b.name.localeCompare(a.name))
-  }
 
   const [selectedKey, setSelectedKey] = useState('')
   const handleMenuClick = (key: string) => {
-    let sortedProducts: IProduct[] = []
+    let sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
+
     switch (key) {
-      case '1':
-        sortedProducts = sortPriceAsc([...product])
+      case '1': // Giá: Thấp đến Cao
+        sortedProducts.sort((a, b) => {
+          const priceA = a?.variants?.[0]?.sku_id?.price || 0
+          const priceB = b?.variants?.[0]?.sku_id?.price || 0
+          return priceA - priceB
+        })
         break
-      case '2':
-        sortedProducts = sortPriceDesc([...product])
+      case '2': // Giá: Cao đến Thấp
+        sortedProducts.sort((a, b) => {
+          const priceA = a?.variants?.[0]?.sku_id?.price || 0
+          const priceB = b?.variants?.[0]?.sku_id?.price || 0
+          return priceB - priceA
+        })
         break
-      case '3':
-        sortedProducts = sortNameAsc([...product])
+      case '3': // Từ A - Z
+        sortedProducts.sort((a, b) => a.name.localeCompare(b.name))
         break
-      case '4':
-        sortedProducts = sortNameDesc([...product])
+      case '4': // Từ Z - A
+        sortedProducts.sort((a, b) => b.name.localeCompare(a.name))
         break
-      case '5':
-        sortedProducts = [...product]
+      case '5': // Sản phẩm bán chạy (tuỳ chỉnh logic nếu cần)
+        sortedProducts.sort((a, b) => {
+          // Sắp xếp theo số lượng sold giảm dần
+          const soldA = a?.variants?.[0]?.sku_id.sold || 0
+          const soldB = b?.variants?.[0]?.sku_id.sold || 0
+          return soldB - soldA
+        }) // Giả sử có trường "sold" biểu thị số lượng bán
         break
       default:
-        return
+        break
     }
-    setProducts([...sortedProducts])
+
+    setProducts(sortedProducts)
     setSelectedKey(key)
   }
-
   const menuItems: MenuProps['items'] = [
     {
       key: '1',
