@@ -238,7 +238,11 @@ const Header = () => {
     mutate({ action: 'REMOVE', sku_id: products[0].sku_id._id })
     setIsModalVisible(false) // Ẩn modal sau khi xóa
   }
-  const visibleProducts = products.filter((product: any) => !product?.sku_id?.product_id?.is_hidden)
+  const unavailableProducts = products.filter((product) => product.sku_id.product_id.is_hidden)
+
+  // Tính tổng tiền sau khi loại bỏ sản phẩm không khả dụng
+  const total =
+    calculateTotal() - unavailableProducts.reduce((acc, product) => acc + product.price * product.quantity, 0)
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -401,7 +405,7 @@ const Header = () => {
             {userId ? (
               <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={onOpen}>
                 <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
-                  {visibleProducts?.length || 0}
+                  {products?.length || 0}
                 </span>
               </Button>
             ) : (
@@ -456,16 +460,19 @@ const Header = () => {
           </Drawer>
           {/* giỏ hàng  */}
           <Drawer width={320} title='GIỎ HÀNG' onClose={onClose} open={open}>
-            {visibleProducts.length > 0 ? (
+            {products.length > 0 ? (
               <div>
-                {visibleProducts.map((product: any, index: number) => {
+                {products.map((product: any, index: number) => {
                   // Hiển thị sản phẩm khả dụng
                   const currentVariant = product?.sku_id?.product_id?.variants.find(
                     (variant: any) => variant?.sku_id === product?.sku_id?._id
                   )
-
+                  const isHidden = product.sku_id.product_id.is_hidden
                   return (
-                    <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                    <div
+                      key={product.sku_id._id}
+                      className={`flex justify-between items-center mb-4 border-b pb-4 ${isHidden ? 'opacity-50' : ''}`}
+                    >
                       {/* Hình ảnh và thông tin sản phẩm */}
                       <div className='flex items-center'>
                         <img
@@ -475,6 +482,7 @@ const Header = () => {
                         />
                         <div className='ml-2 flex flex-col justify-between'>
                           <p className='font-semibold'>{product.sku_id.product_id.name}</p>
+                          {isHidden && <div className=' text-xs lg:text-base ml-1 text-red-500'>Không khả dụng</div>}
                           <p>{currentVariant?.option_value_id?.label || 'Không xác định'}</p>
                           <div className='flex items-center justify-center mt-2'>
                             <button
@@ -517,9 +525,7 @@ const Header = () => {
                 <div className='mt-4'>
                   <div className='flex justify-between font-semibold'>
                     <span>Tổng tiền:</span>
-                    <span className='text-red-500'>
-                      {calculateTotal(visibleProducts, quantities).toLocaleString()}₫
-                    </span>
+                    <span className='text-red-500'>{total.toLocaleString()}₫</span>
                   </div>
                   <Link to={`/cart`}>
                     <button
