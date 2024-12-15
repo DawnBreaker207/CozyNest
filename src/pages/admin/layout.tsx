@@ -101,6 +101,9 @@ const LayoutAdmin: React.FC = () => {
                 <Menu.Item key='4-2'>
                   <NavLink to='/admin/order_returns'>Quản lý hoàn trả</NavLink>
                 </Menu.Item>
+                <Menu.Item key='4-3'>
+                  <NavLink to='/admin/order_refunds'>Quản lý hoàn tiền</NavLink>
+                </Menu.Item>
               </Menu.SubMenu>
               <Menu.Item key='5' icon={<CalendarOutlined />}>
                 <NavLink to='/admin/articles'>Bài viết</NavLink>

@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
-import { Button, Card, message, Modal, notification, Spin, Table, Typography } from 'antd'
+import { Button, Card, Col, message, Modal, notification, Row, Spin, Table, Tag, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import RefundOrderButton from './RefundOrderButton'
 import ReturnOrderButton from './ReturnOrderButton '
-import { CheckCircleOutlined } from '@ant-design/icons'
+import { StatusType } from '@/types/status'
 
 const { Title } = Typography
 
 const OrderDetail = () => {
   const [order, setOrder] = useState<any>(null)
   const [returnOrder, setReturnOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
+  const [refundOrder, setRefundOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [loading, setLoading] = useState<boolean>(true)
   const [isOrderNotFound, setIsOrderNotFound] = useState<boolean>(false) // Trạng thái để kiểm tra đơn hàng không tồn tại
   const params = new URLSearchParams(location.search)
@@ -56,7 +58,24 @@ const OrderDetail = () => {
     }
   }, [orderId])
   console.log(returnOrder)
-
+  useEffect(() => {
+    if (orderId) {
+      instance
+        .get(`/orders/refund?search=${orderId}`)
+        .then((response) => {
+          if (response?.data?.res) {
+            setRefundOrder(response?.data?.res)
+          } else {
+            setRefundOrder(null)
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching return order:', error)
+          message.error('Có lỗi xảy ra khi lấy thông tin đơn hàng hoàn trả.')
+        })
+    }
+  }, [orderId])
+  console.log(refundOrder)
   useEffect(() => {
     if (isOrderNotFound) {
       const timer = setTimeout(() => {
@@ -97,7 +116,7 @@ const OrderDetail = () => {
           //* Update: Sửa lại api hủy đơn
           const response = await instance.patch(`/orders/cancel/${orderId}`, {
             ...order, // Giữ lại dữ liệu cũ
-            status: 'Canceled' // Cập nhật trạng thái hủy
+            status: 'cancelled' // Cập nhật trạng thái hủy
           })
 
           // Hiển thị thông báo thành công
@@ -157,63 +176,6 @@ const OrderDetail = () => {
       }
     })
   }
-  const handleReturnAndRefund = () => {
-    // Hiển thị Modal xác nhận
-    Modal.confirm({
-      title: 'Bạn có chắc chắn muốn hoàn trả và hoàn tiền cho đơn hàng này?',
-      content: 'Hãy chắc chắn khi thực sự muốn hoàn trả sản phẩm và yêu cầu hoàn tiền',
-      onOk: async () => {
-        try {
-          const { data: currentOrder } = await instance.get(`/orders/${orderId}`)
-          if (!currentOrder) {
-            console.error('Đơn hàng không tồn tại')
-            return
-          }
-          if (currentOrder?.res?.status !== 'Returned') {
-            // Hiển thị thông báo nếu đơn hàng đã hoàn trả hoặc đã hoàn tiền
-            notification.error({
-              message: 'Thông báo',
-              description: 'Đơn hàng đã được hoàn trả hoặc hoàn tiền trước đó.',
-              duration: 2 // Thời gian hiển thị thông báo (2 giây)
-            })
-
-            // Reload lại trang sau 1,5 giây
-            setTimeout(() => {
-              window.location.reload()
-            }, 1500)
-            return
-          }
-
-          // Bước 2: Cập nhật trạng thái của đơn hàng thành "Refunded"
-          const response = await instance.put(`/orders/updateStatusOrder/${orderId}`, {
-            ...order, // Giữ lại dữ liệu cũ
-            status: 'Refunded' // Cập nhật trạng thái hoàn trả và hoàn tiền
-          })
-
-          // Hiển thị thông báo thành công
-          Modal.confirm({
-            title: 'Yêu cầu hoàn tiền của đơn hàng',
-            content: `Yêu cầu hoàn tiền của đơn hàng ${response?.data?.res?._id} đã thành công. Số tiền sẽ được hoàn lại trong thời gian sớm nhất. Cảm ơn quý khách đã sử dụng dịch vụ của CozyNest!`,
-            icon: <CheckCircleOutlined style={{ color: 'green', fontSize: '30px' }} />,
-            onOk: () => {
-              window.location.reload()
-            },
-            onCancel: () => {
-              window.location.reload()
-            },
-            onClose: () => {
-              // Tự động reload sau khi tắt modal (OK hoặc Cancel)
-              window.location.reload()
-            }
-          })
-        } catch (error) {
-          console.error('Lỗi khi hoàn trả và hoàn tiền đơn hàng:', error)
-          message.error('Có lỗi xảy ra khi hoàn trả và hoàn tiền đơn hàng')
-        }
-      }
-    })
-  }
-
   if (loading) {
     return <Spin size='large' />
   }
@@ -242,12 +204,18 @@ const OrderDetail = () => {
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
     { label: 'Tiến hành hoàn trả đơn hàng', value: 'Returning' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
-    { label: 'Hoàn trả đơn hàng và hoàn tiền', value: 'Refunded' },
-    { label: 'Đã hủy đơn hàng', value: 'Canceled' }
+    { label: 'Tiến hành hoàn Tiền', value: 'Refunding' },
+    { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
+    { label: 'Đã hủy đơn hàng', value: 'cancelled' }
   ]
 
   // Tìm trạng thái hiện tại
-  const currentStatus = returnOrder?.items?.[0]?.is_confirm == false ? 'Returning' : order?.status
+  const currentStatus =
+    returnOrder?.items?.[0]?.is_confirm === false
+      ? 'Returning'
+      : refundOrder?.items?.[0]?.is_confirm === false
+        ? 'Refunding'
+        : order?.status
 
   const productColumns = [
     {
@@ -283,7 +251,18 @@ const OrderDetail = () => {
       render: (record: any) => `${(record.price * record.quantity).toLocaleString()}₫`
     }
   ]
-
+  const statusColors = {
+    Processing: 'blue',
+    Pending: 'orange',
+    Confirmed: 'green',
+    'Pending-Ship': 'cyan',
+    Delivering: 'purple',
+    Delivered: 'green',
+    Completed: 'gold',
+    Returned: 'red',
+    Refunded: 'red',
+    cancelled: 'gray'
+  }
   return (
     <div className='lg:px-32 p-10'>
       <Card className='mb-6'>
@@ -292,8 +271,8 @@ const OrderDetail = () => {
           <strong>Ngày đặt hàng:</strong> {new Date(order.createdAt).toLocaleString()}
         </p>
         <p>
-          <strong>Trạng thái đơn hàng:</strong>{' '}
-          {statuses.find((s) => s.value === currentStatus)?.label || currentStatus}
+          <strong>Trạng thái đơn hàng hiện tại:</strong>{' '}
+          <Tag color='green'>{statuses.find((s) => s.value === currentStatus)?.label || currentStatus}</Tag>
         </p>
       </Card>
 
@@ -303,7 +282,11 @@ const OrderDetail = () => {
           {order.status_detail.length > 0 &&
             order.status_detail.map((item: any, index: number) => (
               <div key={index} className='detail'>
-                <p>{item.status}</p>
+                <p>
+                  <Tag color={statusColors[item.status as StatusType] || 'default'}>
+                    {statuses.find((status) => status.value === item.status)?.label || 'Không xác định'}
+                  </Tag>
+                </p>
                 <p>{new Date(item.created_at).toLocaleString()}</p>
               </div>
             ))}
@@ -312,7 +295,9 @@ const OrderDetail = () => {
           {/* Hiển thị trạng thái của đơn hàng hiện tại */}
           <div>
             <strong>Trạng thái: </strong>
-            {currentStatus}
+            <Tag color='green'>
+              {statuses.find((status) => status.value === currentStatus)?.label || 'Không xác định'}
+            </Tag>
           </div>
           <div>
             <strong>Thời gian: </strong>
@@ -348,34 +333,79 @@ const OrderDetail = () => {
         </div>
       </Card>
       {/* Nếu có thông tin hoàn trả đơn hàng, hiển thị một Cart riêng biệt */}
-      {returnOrder?.items?.length > 0 && (
-        <Card title='Thông Tin Hoàn Trả Đơn Hàng' className='mb-6'>
-          <Title level={3}>Mã đơn hàng hoàn trả: {returnOrder?.items?.[0]?.order_id}</Title>
-          <p>
-            <strong>Ngày tạo yêu cầu hoàn trả:</strong> {new Date(returnOrder?.items?.[0]?.createdAt).toLocaleString()}
-          </p>
-          <p>
-            <strong>Lý do hoàn trả:</strong> {returnOrder?.items?.[0]?.reason}
-          </p>
-          <p>
-            <strong>Trạng thái hoàn trả:</strong>{' '}
-            {returnOrder?.items?.[0]?.is_confirm ? 'Đã xác nhận' : 'Chưa xác nhận'}
-          </p>
-          <p>
-            <strong>Số điện thoại:</strong> {returnOrder?.items?.[0]?.phone_number}
-          </p>
-          <p>
-            <strong>Tên khách hàng:</strong> {returnOrder?.items?.[0]?.customer_name}
-          </p>
-          <div>
-            <strong>Hình ảnh minh chứng:</strong>
-            <div>
-              {returnOrder?.items?.[0]?.images.map((image: string, index: number) => (
-                <img key={index} src={image} alt='Sản phẩm hoàn trả' style={{ width: '100px', margin: '5px' }} />
-              ))}
-            </div>
-          </div>
-        </Card>
+      {(returnOrder?.items?.length > 0 || refundOrder?.items?.length > 0) && (
+        <Row gutter={16}>
+          {/* Cột 1: Thông tin hoàn trả */}
+          {returnOrder?.items?.length > 0 && (
+            <Col xs={24} md={12}>
+              <Card title='Thông Tin Hoàn Trả Đơn Hàng' className='mb-6'>
+                <Title level={3}>Mã đơn hàng hoàn trả: {returnOrder?.items?.[0]?.order_id}</Title>
+                <p>
+                  <strong>Ngày tạo yêu cầu hoàn trả:</strong>{' '}
+                  {new Date(returnOrder?.items?.[0]?.createdAt).toLocaleString()}
+                </p>
+                <p>
+                  <strong>Lý do hoàn trả:</strong> {returnOrder?.items?.[0]?.reason}
+                </p>
+                <p>
+                  <strong>Trạng thái hoàn trả:</strong>{' '}
+                  {returnOrder?.items?.[0]?.is_confirm ? 'Đã xác nhận' : 'Chưa xác nhận'}
+                </p>
+                <p>
+                  <strong>Số điện thoại:</strong> {returnOrder?.items?.[0]?.phone_number}
+                </p>
+                <p>
+                  <strong>Tên khách hàng:</strong> {returnOrder?.items?.[0]?.customer_name}
+                </p>
+                <div>
+                  <strong>Hình ảnh minh chứng:</strong>
+                  <div>
+                    {returnOrder?.items?.[0]?.images.map((image: string, index: number) => (
+                      <img key={index} src={image} alt='Sản phẩm hoàn trả' style={{ width: '100px', margin: '5px' }} />
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          )}
+
+          {/* Cột 2: Thông tin hoàn tiền */}
+          {refundOrder?.items?.length > 0 && (
+            <Col xs={24} md={12}>
+              <Card title='Thông Tin Hoàn Tiền Đơn Hàng' className='mb-6'>
+                <Title level={3}>Mã đơn hàng hoàn tiền: {refundOrder?.items?.[0]?.order_id}</Title>
+                <p>
+                  <strong>Ngày tạo yêu cầu hoàn tiền:</strong>{' '}
+                  {new Date(refundOrder?.items?.[0]?.createdAt).toLocaleString()}
+                </p>
+                <p>
+                  <strong>Số tài khoản ngân hàng:</strong> {refundOrder?.items?.[0]?.bank_number}
+                </p>
+                <p>
+                  <strong>Tên ngân hàng thụ hưởng:</strong> {refundOrder?.items?.[0]?.bank_name}
+                </p>
+                <p>
+                  <strong>Trạng thái hoàn tiền:</strong>{' '}
+                  {refundOrder?.items?.[0]?.is_confirm ? 'Đã hoàn tiền' : 'Chưa hoàn tiền'}
+                </p>
+                <p>
+                  <strong>Tên khách hàng:</strong> {refundOrder?.items?.[0]?.customer_name}
+                </p>
+                <p>
+                  <strong>Số điện thoại:</strong> {refundOrder?.items?.[0]?.phone_number}
+                </p>
+                <div>
+                  <strong>Hình ảnh QR ngân hàng:</strong>
+                  <div>
+                    {refundOrder?.items?.[0]?.images.map((image: string, index: number) => (
+                      <img key={index} src={image} alt='Sản phẩm hoàn trả' style={{ width: '100px', margin: '5px' }} />
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          )}
+        </Row>
       )}
       <Card title='Thông tin giao hàng' className='mb-6'>
         <p>
@@ -482,13 +512,7 @@ const OrderDetail = () => {
 
         <ReturnOrderButton order={order} currentStatus={currentStatus} />
 
-        <Button
-          className='bg-yellow-500 text-white w-full sm:w-auto'
-          onClick={handleReturnAndRefund}
-          disabled={order.status !== 'Returned'}
-        >
-          Hoàn trả và hoàn tiền
-        </Button>
+        <RefundOrderButton order={order} currentStatus={currentStatus} />
 
         <Link to='/'>
           <Button className='bg-green-600 text-white w-full sm:w-auto'>Tiếp tục mua hàng</Button>

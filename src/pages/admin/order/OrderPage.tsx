@@ -30,7 +30,18 @@ const AdminOrderPage = () => {
       }
     }
   })
-
+  const statuses = [
+    { label: 'Đang xử lý', value: 'Processing' },
+    { label: 'Chờ xác nhận', value: 'Pending' },
+    { label: 'Đã xác nhận', value: 'Confirmed' },
+    { label: 'Đang chờ bên vận chuyển', value: 'Pending-Ship' },
+    { label: 'Đang vận chuyển', value: 'Delivering' },
+    { label: 'Giao hàng thành công', value: 'Delivered' },
+    { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Hoàn trả đơn hàng', value: 'Returned' },
+    { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
+    { label: 'Đã hủy đơn hàng', value: 'cancelled' }
+  ]
   const dataSource =
     data?.data?.res?.items
       .map((order: any, index: number) => ({
@@ -104,7 +115,11 @@ const AdminOrderPage = () => {
           Returned: 'magenta',
           Refunded: 'purple'
         }
-        return <Tag color={statusColors[status] || 'gray'}>{status.replace('-', ' ')}</Tag>
+
+        // Tìm trạng thái trong mảng statuses và lấy label tiếng Việt
+        const statusLabel = statuses.find((s) => s.value === status)?.label || status
+
+        return <Tag color={statusColors[status] || 'gray'}>{statusLabel}</Tag>
       }
     },
     {
@@ -145,23 +160,23 @@ const AdminOrderPage = () => {
             style={{ width: 200 }}
           >
             <Select.Option value=''>Tất cả trạng thái</Select.Option>
-            <Select.Option value='Processing'>Processing</Select.Option>
-            <Select.Option value='Pending'>Pending</Select.Option>
-            <Select.Option value='Confirmed'>Confirmed</Select.Option>
-            <Select.Option value='Pending-Ship'>Pending-Ship</Select.Option>
-            <Select.Option value='Delivering'>Delivering</Select.Option>
-            <Select.Option value='Delivered'>Delivered</Select.Option>
-            <Select.Option value='Canceled'>Canceled</Select.Option>
-            <Select.Option value='Completed'>Completed</Select.Option>
-            <Select.Option value='Returned'>Returned</Select.Option>
-            <Select.Option value='Refunded'>Refunded</Select.Option>
+            <Select.Option value='Processing'>Đang xử lý</Select.Option>
+            <Select.Option value='Pending'>Chờ xác nhận</Select.Option>
+            <Select.Option value='Confirmed'>Đã xác nhận</Select.Option>
+            <Select.Option value='Pending-Ship'>Đang chờ bên vận chuyển</Select.Option>
+            <Select.Option value='Delivering'>Đang vận chuyển</Select.Option>
+            <Select.Option value='Delivered'>Giao hàng thành công</Select.Option>
+            <Select.Option value='Completed'>Đơn hàng hoàn thành</Select.Option>
+            <Select.Option value='Canceled'>Đã hủy đơn hàng</Select.Option>
+            <Select.Option value='Returned'>Hoàn trả đơn hàng</Select.Option>
+            <Select.Option value='Refunded'>Hoàn tiền đơn hàng</Select.Option>
           </Select>
         </div>
       </div>
 
       {/* Table */}
       <div className='bg-white p-6 rounded shadow'>
-        <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 10 }} />
+        <Table dataSource={dataSource} columns={columns} />
       </div>
     </div>
   )

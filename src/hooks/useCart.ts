@@ -7,8 +7,7 @@ import { CartData } from '@/types/cart'
 import { ResAPI } from '@/types/responseApi'
 import { useCartStore } from './store/cartStore'
 import { useCookie } from './useStorage'
-import { IProductCart } from '@/types/producrCart'
-import { debounce } from 'lodash'
+import { debounce, reduce } from 'lodash'
 
 // Utility: Kiểm tra ObjectId hợp lệ
 const isValidObjectId = (id: string): boolean => /^[0-9a-fA-F]{24}$/.test(id)
@@ -114,7 +113,7 @@ const useCart = () => {
       cart_id
     }: {
       action: string
-      quantity: number
+      quantity?: number
       sku_id?: string | number
       cart_id?: string
     }) => {
@@ -159,13 +158,16 @@ const useCart = () => {
   })
 
   // Hàm tính tổng giá trị của giỏ hàng
-  const calculateTotal = (visibleProducts: IProductCart[], quantities: number[]) => {
-    if (!visibleProducts || visibleProducts.length === 0) return 0
-
-    return visibleProducts.reduce((total, product, index) => {
-      const quantity = quantities?.[index] ?? product.quantity
-      return total + product.price * quantity
-    }, 0)
+  const calculateTotal = () => {
+    if (!products || products.length === 0) return 0
+    return reduce(
+      products,
+      (total, product, index: number) => {
+        const quantity = quantities[index] || product.quantity
+        return total + product.price * quantity
+      },
+      0
+    )
   }
 
   // Hàm thêm sản phẩm vào giỏ hàng

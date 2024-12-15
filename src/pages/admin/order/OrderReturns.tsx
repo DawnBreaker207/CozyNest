@@ -77,7 +77,7 @@ const ReturnOrdersAdmin = () => {
           <img
             src={images[0]}
             alt='Product'
-            style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+            style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px' }}
           />
         ) : (
           'Không có ảnh'
