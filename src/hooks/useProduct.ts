@@ -15,8 +15,8 @@ export const useFilterProducts = (products: IProduct[]) => {
         console.log(variant)
 
         const price = variant.sku_id.price // Lấy giá từ sku_id, bỏ qua giảm giá nếu không có dữ liệu
-        console.log(price);
-        
+        console.log(price)
+
         if (priceRanges.includes('Dưới 1.000.000₫') && price < 1000000) return true
         if (priceRanges.includes('1.000.000₫ - 2.000.000₫') && price >= 1000000 && price <= 2000000) return true
         if (priceRanges.includes('2.000.000₫ - 3.000.000₫') && price >= 2000000 && price <= 3000000) return true

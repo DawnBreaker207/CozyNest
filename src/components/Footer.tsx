@@ -122,8 +122,8 @@ const CustomFooter = () => {
             <div className='hidden md:block'>
               <h4 className='text-lg font-semibold mb-4'>Về CozyNet</h4>
               <p className='text-sm'>
-                CozyNest – Đem đến sự kết hợp hoàn hảo giữa thẩm mỹ và tiện nghi.
-                Hãy để CozyNest đồng hành cùng bạn trên hành trình tạo nên phong cách riêng.
+                CozyNest – Đem đến sự kết hợp hoàn hảo giữa thẩm mỹ và tiện nghi. Hãy để CozyNest đồng hành cùng bạn
+                trên hành trình tạo nên phong cách riêng.
               </p>
               <p className='mt-4 text-sm'>
                 <EnvironmentOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
@@ -165,15 +165,18 @@ const CustomFooter = () => {
                       <img
                         src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/momo_iroppc.svg'
                         alt='MOMO'
-                        className='h-8' />
+                        className='h-8'
+                      />
                       <img
                         src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/vnpay_new_lzopgz.svg'
                         alt='Ahamove'
-                        className='h-8' />
+                        className='h-8'
+                      />
                       <img
                         src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/zalopay_qazloz.svg'
                         alt='J&T Express'
-                        className='h-8' />
+                        className='h-8'
+                      />
                     </div>
                   </>
                 </>
@@ -192,22 +195,25 @@ const CustomFooter = () => {
                 </Link>
               </ul>
               <>
-                    <h4 className='text-lg font-semibold mt-6'>Phương thức thanh toán</h4>
-                    <div className='flex mr-[160px] mt-4'>
-                      <img
-                        src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/momo_iroppc.svg'
-                        alt='MOMO'
-                        className='h-8' />
-                      <img
-                        src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/vnpay_new_lzopgz.svg'
-                        alt='Ahamove'
-                        className='h-8' />
-                      <img
-                        src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/zalopay_qazloz.svg'
-                        alt='J&T Express'
-                        className='h-8' />
-                    </div>
-                  </>
+                <h4 className='text-lg font-semibold mt-6'>Phương thức thanh toán</h4>
+                <div className='flex mr-[160px] mt-4'>
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/momo_iroppc.svg'
+                    alt='MOMO'
+                    className='h-8'
+                  />
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/vnpay_new_lzopgz.svg'
+                    alt='Ahamove'
+                    className='h-8'
+                  />
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/zalopay_qazloz.svg'
+                    alt='J&T Express'
+                    className='h-8'
+                  />
+                </div>
+              </>
             </div>
           </Col>
 

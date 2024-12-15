@@ -27,18 +27,18 @@ const CouponPage = () => {
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Xóa mã giảm giá thành công',
+        content: 'Xóa mã giảm giá thành công'
       })
       queryClient.invalidateQueries({
-        queryKey: ['COUPON_KEY'],
+        queryKey: ['COUPON_KEY']
       })
     },
     onError: (error) => {
       messageApi.open({
         type: 'error',
-        content: error.message,
+        content: error.message
       })
-    },
+    }
   })
 
   // Hàm sắp xếp dữ liệu theo couponValue
@@ -58,30 +58,30 @@ const CouponPage = () => {
     })
     .map((coupon: any) => ({
       key: coupon._id,
-      ...coupon,
+      ...coupon
     }))
 
   const columns = [
     {
       title: 'Tên mã giảm giá',
       dataIndex: 'name',
-      key: 'name',
+      key: 'name'
     },
     {
       title: 'Mã code',
       dataIndex: 'couponCode',
-      key: 'couponCode',
+      key: 'couponCode'
     },
     {
       title: 'Giá trị',
       dataIndex: 'couponValue',
       key: 'couponValue',
-      render: (value: any) => `${value} ₫`,
+      render: (value: any) => `${value} ₫`
     },
     {
       title: 'Số lượng',
       dataIndex: 'couponQuantity',
-      key: 'couponQuantity',
+      key: 'couponQuantity'
     },
     {
       title: 'Thời gian áp dụng',
@@ -90,38 +90,36 @@ const CouponPage = () => {
         const startDate = record.couponStartDate ? new Date(record.couponStartDate).toLocaleDateString() : 'N/A'
         const endDate = record.couponEndDate ? new Date(record.couponEndDate).toLocaleDateString() : 'N/A'
         return `${startDate} - ${endDate}`
-      },
+      }
     },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
-      render: (status: any) => (
-        <Tag color={status ? 'green' : 'red'}>{status ? 'Hoạt động' : 'Không hoạt động'}</Tag>
-      ),
+      render: (status: any) => <Tag color={status ? 'green' : 'red'}>{status ? 'Hoạt động' : 'Không hoạt động'}</Tag>
     },
     {
       title: 'Action',
       key: 'action',
       render: (coupon: any) => {
         return (
-          <Space size="middle">
+          <Space size='middle'>
             <Link to={`/admin/coupons/${coupon._id}/edit`}>
               <Button icon={<EditOutlined />} />
             </Link>
             <Popconfirm
-              title="Xóa mã giảm giá"
-              description="Bạn có chắc chắn muốn xóa mã giảm giá này?"
+              title='Xóa mã giảm giá'
+              description='Bạn có chắc chắn muốn xóa mã giảm giá này?'
               onConfirm={() => mutate(coupon._id)}
-              okText="Có"
-              cancelText="Không"
+              okText='Có'
+              cancelText='Không'
             >
               <Button icon={<DeleteOutlined />} danger />
             </Popconfirm>
           </Space>
         )
-      },
-    },
+      }
+    }
   ]
 
   if (isLoading) return <CustomLoadingPage />
@@ -130,24 +128,20 @@ const CouponPage = () => {
   return (
     <div>
       {contextHolder}
-      <h1 className="text-2xl font-bold mb-5">Quản lý mã giảm giá</h1>
-      <div className="mb-5">
-        <Link to="/admin/coupons/add">
-          <Button type="primary">
+      <h1 className='text-2xl font-bold mb-5'>Quản lý mã giảm giá</h1>
+      <div className='mb-5'>
+        <Link to='/admin/coupons/add'>
+          <Button type='primary'>
             <PlusOutlined />
             Thêm mới mã giảm giá
           </Button>
         </Link>
       </div>
 
-      <div className="mb-5">
-        <Select
-          defaultValue="ascend"
-          style={{ width: 200 }}
-          onChange={handleSortChange}
-        >
-          <Option value="ascend">Giá trị thấp đến cao</Option>
-          <Option value="descend">Giá trị cao đến thấp</Option>
+      <div className='mb-5'>
+        <Select defaultValue='ascend' style={{ width: 200 }} onChange={handleSortChange}>
+          <Option value='ascend'>Giá trị thấp đến cao</Option>
+          <Option value='descend'>Giá trị cao đến thấp</Option>
         </Select>
       </div>
 

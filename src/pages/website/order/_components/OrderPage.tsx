@@ -129,14 +129,14 @@ const OrderPage = () => {
             <div className='space-y-6'>
               {currentOrders.map((order: any) => (
                 <div
-                  key={order._id}
+                  key={order?._id}
                   className='border border-gray-200 rounded-lg p-4 shadow-sm'
                   ref={(el) => (orderRefs.current[order._id] = el)}
                   style={{ scrollMarginTop: '100px' }}
                 >
                   {/* Mã đơn hàng */}
                   <Title level={4} className='text-blue-600 mb-4'>
-                    Mã đơn hàng: {order._id}
+                    Mã đơn hàng: {order?._id}
                   </Title>
 
                   {/* Thông tin sản phẩm */}
@@ -153,23 +153,23 @@ const OrderPage = () => {
                       </thead>
                       <tbody>
                         {order.order_details?.map((orderDetail: any) =>
-                          orderDetail.products?.map((product: any) => (
-                            <tr key={product.sku_id._id} className='hover:bg-gray-50'>
+                          orderDetail?.products?.map((product: any) => (
+                            <tr key={product?.sku_id?._id} className='hover:bg-gray-50'>
                               <td className='border border-gray-200 px-4 py-2'>
                                 <img
                                   src={
-                                    Array.isArray(product.sku_id.image) && product.sku_id.image.length > 0
-                                      ? product.sku_id.image[0]
+                                    Array.isArray(product?.sku_id?.image) && product?.sku_id?.image?.length > 0
+                                      ? product?.sku_id?.image[0]
                                       : '/path/to/default-image.jpg'
                                   }
-                                  alt={product.sku_id.name || 'Sản phẩm'}
+                                  alt={product?.sku_id?.name || 'Sản phẩm'}
                                   className='w-16 h-16 object-cover'
                                 />
                               </td>
-                              <td className='border border-gray-200 px-4 py-2'>{product.sku_id.name}</td>
-                              <td className='border border-gray-200 px-4 py-2 text-right'>x{product.quantity}</td>
+                              <td className='border border-gray-200 px-4 py-2'>{product?.sku_id?.name}</td>
+                              <td className='border border-gray-200 px-4 py-2 text-right'>x{product?.quantity}</td>
                               <td className='border border-gray-200 px-4 py-2 text-right'>
-                                {formatCurrency(product.price)}
+                                {formatCurrency(product?.price)}
                               </td>
                             </tr>
                           ))
@@ -183,29 +183,29 @@ const OrderPage = () => {
                     <Text className='block text-lg font-bold text-gray-800'>Thông tin người nhận</Text>
                     <div className='flex justify-between'>
                       <Text>Ngày đặt hàng:</Text>
-                      <Text className='font-bold'>{new Date(order.createdAt).toLocaleString('vi-VN')}</Text>
+                      <Text className='font-bold'>{new Date(order?.createdAt).toLocaleString('vi-VN')}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Tên người nhận:</Text>
-                      <Text className='font-bold'>{order.customer_name}</Text>
+                      <Text className='font-bold'>{order?.customer_name}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>SĐT người nhận:</Text>
-                      <Text className='font-bold'>{order.phone_number}</Text>
+                      <Text className='font-bold'>{order?.phone_number}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Địa chỉ giao hàng:</Text>
-                      <Text className='font-bold'>{order.address}</Text>
+                      <Text className='font-bold'>{order?.address}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Trạng thái:</Text>
-                      <Text className={`p-2 font-bold rounded-full ${getStatusClass(order.status)}`}>
-                        {orderStatusMap[order.status] || 'Chưa xác định'}
+                      <Text className={`p-2 font-bold rounded-full ${getStatusClass(order?.status)}`}>
+                        {orderStatusMap[order?.status] || 'Chưa xác định'}
                       </Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Phương thức thanh toán:</Text>
-                      <Text className='font-bold'>{order.payment_method[0]?.orderInfo || 'Chưa xác định'}</Text>
+                      <Text className='font-bold'>{order?.payment_method[0]?.orderInfo || 'Chưa xác định'}</Text>
                     </div>
                   </div>
 
@@ -214,33 +214,35 @@ const OrderPage = () => {
                     <Text className='block text-lg font-bold text-gray-800'>Chi phí</Text>
                     <div className='flex justify-between'>
                       <Text>Chi phí sản phẩm:</Text>
-                      <Text className='font-bold text-black'>{formatCurrency(order.total_amount)}</Text>
+                      <Text className='font-bold text-black'>{formatCurrency(order?.total_amount)}</Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Chi phí lắp đặt tại nhà:</Text>
                       <Text className='font-bold text-black'>
-                        {formatCurrency(order.order_details[0].installation_fee)}
+                        {formatCurrency(order?.order_details[0]?.installation_fee)}
                       </Text>
                     </div>
                     <div className='flex justify-between'>
                       <Text>Chi phí vận chuyển:</Text>
                       <Text className='font-bold text-black'>{formatCurrency(50000)}</Text>
                     </div>
-                    {order.order_details[0].coupon && (
+                    {order?.order_details[0]?.coupon && (
                       <div className='flex justify-between text-red-600'>
                         <Text>Mã giảm giá:</Text>
-                        <Text className='font-bold text-red-500'>-{formatCurrency(order.order_details[0].total)}</Text>
+                        <Text className='font-bold text-red-500'>
+                          -{formatCurrency(order?.order_details[0]?.total)}
+                        </Text>
                       </div>
                     )}
                     <div className='flex justify-between border-t border-gray-300 pt-2'>
                       <Text className='font-bold text-xl'>Tổng cộng:</Text>
-                      <Text className='font-bold text-xl text-red-600'>{formatCurrency(order.total_amount)}</Text>
+                      <Text className='font-bold text-xl text-red-600'>{formatCurrency(order?.total_amount)}</Text>
                     </div>
                   </div>
 
                   <Button
                     type='primary'
-                    href={`/orders/orderdetail/?orderId=${order._id}`}
+                    href={`/orders/orderdetail/?orderId=${order?._id}`}
                     className='mt-6 w-full bg-blue-600 hover:bg-blue-700'
                   >
                     Xem tình trạng đơn hàng
@@ -268,39 +270,39 @@ const OrderPage = () => {
             </Title>
             <div className='mt-4'>
               {currentOrders.map((order: any) => (
-                <div key={order._id} className='mb-6 p-4 bg-white rounded-lg shadow-md border border-gray-300'>
+                <div key={order?._id} className='mb-6 p-4 bg-white rounded-lg shadow-md border border-gray-300'>
                   <div className='flex justify-between mb-2'>
                     <Text
                       className='font-bold cursor-pointer text-blue-600 hover:text-blue-800'
-                      onClick={() => handleOrderClick(order._id)} // Thêm sự kiện nhấn
+                      onClick={() => handleOrderClick(order?._id)} // Thêm sự kiện nhấn
                     >
-                      Mã đơn hàng: {order._id}
+                      Mã đơn hàng: {order?._id}
                     </Text>
                   </div>
 
                   <div className='flex justify-between'>
                     <Text>Ngày:</Text>
-                    <Text className='font-bold'>{new Date(order.createdAt).toLocaleString('vi-VN')}</Text>
+                    <Text className='font-bold'>{new Date(order?.createdAt).toLocaleString('vi-VN')}</Text>
                   </div>
 
                   <div className='flex justify-between mt-2'>
                     <Text>Tên người nhận:</Text>
-                    <Text className='font-bold'>{order.customer_name}</Text>
+                    <Text className='font-bold'>{order?.customer_name}</Text>
                   </div>
 
                   <div className='flex justify-between mt-2'>
                     <Text>SĐT người nhận:</Text>
-                    <Text className='font-bold'>{order.phone_number}</Text>
+                    <Text className='font-bold'>{order?.phone_number}</Text>
                   </div>
 
                   <div className='flex justify-between mt-2'>
                     <Text>Địa chỉ giao hàng:</Text>
-                    <Text className='font-bold'>{order.address}</Text>
+                    <Text className='font-bold'>{order?.address}</Text>
                   </div>
 
                   <div className='flex justify-between mt-2'>
                     <Text>Tổng cộng:</Text>
-                    <Text className='font-bold text-red-600'>{formatCurrency(order.total_amount)} VNĐ</Text>
+                    <Text className='font-bold text-red-600'>{formatCurrency(order?.total_amount)} VNĐ</Text>
                   </div>
                 </div>
               ))}
