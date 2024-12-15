@@ -48,13 +48,18 @@ const ProductsPageDetail = () => {
   }
 
   // Sắp xếp
+  const [selectedKey, setSelectedKey] = useState('')
   useEffect(() => {
-    if (data?.res?.productss) {
-      setProducts(data.res.productss)
+    if (selectedKey) {
+      handleMenuClick(selectedKey) // Gọi hàm sắp xếp khi selectedKey thay đổi
+    }
+  }, [selectedKey])
+
+  useEffect(() => {
+    if (data?.res?.products) {
+      setProducts(data.res.products) // Cập nhật dữ liệu
     }
   }, [data])
-
-  const [selectedKey, setSelectedKey] = useState('')
   const handleMenuClick = (key: string) => {
     let sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
 
@@ -93,6 +98,7 @@ const ProductsPageDetail = () => {
 
     setProducts(sortedProducts)
     setSelectedKey(key)
+    console.log(selectedKey)
   }
   const menuItems: MenuProps['items'] = [
     {
@@ -193,7 +199,7 @@ const ProductsPageDetail = () => {
   const endIndex = startIndex + productsPerPage
   const currentProducts = filteredProducts?.slice(startIndex, endIndex)
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
-  console.log(currentProducts)
+  // console.log(currentProducts)
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
