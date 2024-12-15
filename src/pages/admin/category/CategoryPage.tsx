@@ -3,7 +3,7 @@ import instance from '@/configs/axios'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
@@ -112,7 +112,7 @@ const CategoryPage = () => {
               okText='Có'
               cancelText='Không'
             >
-              <Button icon={<DeleteOutlined />} danger />
+              <Button icon={<EyeInvisibleOutlined />} danger />
             </Popconfirm>
           </Space>
         )

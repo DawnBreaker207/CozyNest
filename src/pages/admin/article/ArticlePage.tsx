@@ -1,7 +1,7 @@
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticleQuery } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Collapse, Empty, Image, message, Popconfirm, Space, Table, Tag, Tooltip, Typography } from 'antd'
 import { useState } from 'react'
@@ -120,7 +120,7 @@ const AdminArticlePage = () => {
             okText='Yes'
             cancelText='No'
           >
-            <Button danger icon={<DeleteOutlined />} />
+            <Button danger icon={<EyeInvisibleOutlined />} />
           </Popconfirm>
         </Space>
       )

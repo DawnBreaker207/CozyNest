@@ -4,7 +4,7 @@ import useProductMutation from '@/hooks/useProductMutation'
 import { useProductQuery } from '@/hooks/useProductQuery'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
@@ -101,7 +101,7 @@ const AdminProductPage = () => {
             cancelText='Không'
           >
             <Button
-              icon={<DeleteOutlined />}
+              icon={<EyeInvisibleOutlined />}
               danger
               loading={mutationStatus === 'pending'} // Thay vì 'isLoading', dùng 'status' để kiểm tra trạng thái pending
             />
