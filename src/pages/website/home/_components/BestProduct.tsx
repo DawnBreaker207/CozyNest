@@ -33,7 +33,7 @@ const BestProduct = (props: Props) => {
     }
     fetchProducts()
   }, [])
-  console.log(products)
+  console.log(products);
   if (isLoading) return <CustomLoadingPage />
   if (isError) return <div>{error?.message}</div>
   return (
@@ -93,7 +93,7 @@ const BestProduct = (props: Props) => {
                       <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
                         {/* Hiển thị giá thay đổi khi hover */}
                         <span className='text-[#FF0000] font-semibold'>
-                          {(product?.variants?.[0]?.sku_id?.price).toLocaleString()}₫
+                          {(price).toLocaleString()}₫
                         </span>
                         {/* {hoveredPrices[product._id] ? (
                         <span className='text-[#878c8f] font-light line-through text-[13px]'>

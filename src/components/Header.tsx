@@ -20,6 +20,9 @@ import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, me
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu1 } from './data/Header'
+import 'react-quill/dist/quill.snow.css'
+import ReactQuill from 'react-quill'
+import { IProduct } from '@/types/product'
 
 const { useToken } = theme
 
@@ -83,6 +86,7 @@ const Header = () => {
       // Gọi API với query từ người dùng
       const response = await instance.get('http://localhost:8888/api/v1/search', {
         params: { query: value }
+        
       })
 
       setResults(response.data) // Lưu kết quả vào state
@@ -335,21 +339,26 @@ const Header = () => {
                       size='small'
                       bordered
                       dataSource={results}
-                      renderItem={(item: any) => (
+                      renderItem={(item: IProduct) => (
                         <List.Item>
                           <img
-                            src={item?.images?.[0]?.url}
+                            src={item?.variants[0]?.sku_id?.image[0]}
                             alt={item.name}
                             style={{ width: 50, height: 50, marginRight: 8 }}
                           />
-                          <div>
-                            <strong>{item.name}</strong>
-                            <p className='text-sm text-gray-500'>{item.description}</p>
-                            {/* Link tới trang chi tiết sản phẩm */}
-                            <Link to={`/detail/${item._id}`} className='text-blue-500 hover:underline'>
+                          <div className='flex flex-col mt-2 ml-2'>
+                            <strong className='-mt-2'>{item.name}</strong>
+                            <ReactQuill
+                              value={item.description.substring(0, 80)}
+                              readOnly
+                              theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
+                            />
+                           
+                          </div>
+                           {/* Link tới trang chi tiết sản phẩm */}
+                           <Link to={`/detail/${item._id}`} className='text-blue-500 hover:underline'>
                               Xem chi tiết
                             </Link>
-                          </div>
                         </List.Item>
                       )}
                     />
