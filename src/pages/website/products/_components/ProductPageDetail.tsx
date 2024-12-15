@@ -98,7 +98,6 @@ const ProductsPageDetail = () => {
 
     setProducts(sortedProducts)
     setSelectedKey(key)
-    console.log(selectedKey)
   }
   const menuItems: MenuProps['items'] = [
     {
