@@ -4,11 +4,16 @@ import TopProduct from './component/TopProduct'
 import { useQuery } from '@tanstack/react-query'
 import instance from '@/configs/axios'
 import { useState } from 'react'
-import { Select } from 'antd'
+import { Button, Dropdown, MenuProps, Select, Space } from 'antd'
 import RecentOrder from './component/RecentOrder'
 import { Link } from 'react-router-dom'
+import { useUser } from '@/hooks/useUser'
+import { BellOutlined } from '@ant-design/icons'
+import HeaderAdmin from '../header/page'
 
 const DashboardPage = () => {
+  const { Logout } = useUser()
+  const [isVisible, setIsVisible] = useState(false)
   const [selectedComponent, setSelectedComponent] = useState('TopProduct') // State cho component được chọn
   const handleComponentChange = (value: string) => {
     setSelectedComponent(value)
@@ -67,11 +72,24 @@ const DashboardPage = () => {
   if (isErrorUsers || isError) {
     return <div>{errorUsers?.message || error?.message}</div>
   }
-
+  const users: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <Link to='/'>Trang chủ</Link>
+    },
+    {
+      label: (
+        <a href='/' onClick={Logout}>
+          Đăng xuất
+        </a>
+      ),
+      key: '3'
+    }
+  ]
   return (
     <>
-      <h1 className='mb-5 text-2xl font-bold'>Thống kê</h1>
-      <div className='grid grid-cols-4 px-5 mb-10 gap-10'>
+      <HeaderAdmin/>
+      <div className='grid grid-cols-4 px-5 mb-10 gap-10 mt-4'>
         <div className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>

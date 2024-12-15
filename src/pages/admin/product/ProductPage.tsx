@@ -8,6 +8,7 @@ import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, EyeOutlined, PlusOu
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
+import HeaderAdmin from '../header/page'
 
 const AdminProductPage = () => {
   const queryClient = useQueryClient()
@@ -129,7 +130,9 @@ const AdminProductPage = () => {
   if (isErrorCategories) return <div>{errorCategories.message}</div>
 
   return (
-    <div className='bg-white'>
+    <>
+     <HeaderAdmin/>
+     <div className='bg-white mt-4'>
       {contextHolder}
       <div className='mb-5'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý sản phẩm</h1>
@@ -142,6 +145,8 @@ const AdminProductPage = () => {
       </div>
       <Table dataSource={dataSource} columns={columns} />
     </div>
+    </>
+   
   )
 }
 

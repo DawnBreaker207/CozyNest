@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Select, Space, Spin, Table, Tag } from 'antd'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import HeaderAdmin from '../header/page'
 
 const AdminOrderPage = () => {
   const location = useLocation()
@@ -129,7 +130,9 @@ const AdminOrderPage = () => {
   if (isError) return <div>{error.message}</div>
 
   return (
-    <div className='container mx-auto  px-6'>
+    <>
+    <HeaderAdmin/>
+     <div className='container mx-auto  px-6 mt-4'>
       <div className='flex justify-between items-center mb-6'>
         <h1 className='text-2xl font-bold'>Danh sách đơn hàng</h1>
       </div>
@@ -164,6 +167,8 @@ const AdminOrderPage = () => {
         <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 10 }} />
       </div>
     </div>
+    </>
+   
   )
 }
 

@@ -123,13 +123,6 @@ const LayoutAdmin: React.FC = () => {
               <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
             </Menu.Item>
           )}
-
-          {/* Menu đăng xuất */}
-          <Menu.Item key='9' icon={<LogoutOutlined />}>
-            <NavLink to='#' onClick={handleLogout}>
-              Đăng xuất
-            </NavLink>
-          </Menu.Item>
         </Menu>
       </Sider>
       <Layout>

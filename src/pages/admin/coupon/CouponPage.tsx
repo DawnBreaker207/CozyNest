@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Spin, Table, Tag } from 'antd'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import HeaderAdmin from '../header/page'
 
 const CouponPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -119,7 +120,8 @@ const CouponPage = () => {
   return (
     <div>
       {contextHolder}
-      <h1 className='text-2xl font-bold mb-5'>Quản lý mã giảm giá</h1>
+      <HeaderAdmin/>
+      <h1 className='text-2xl font-bold mb-5 mt-4'>Quản lý mã giảm giá</h1>
       <div className='mb-5'>
         <Link to='/admin/coupons/add'>
           <Button type='primary'>

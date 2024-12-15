@@ -7,6 +7,7 @@ import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
+import HeaderAdmin from '../header/page'
 
 const CategoryPage = () => {
   const queryClient = useQueryClient()
@@ -132,7 +133,8 @@ const CategoryPage = () => {
   return (
     <>
       {contextHolder}
-      <div className='mb-5'>
+      <HeaderAdmin/>
+      <div className='mb-5 mt-4'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý danh mục</h1>
         <Link to={`/admin/categories/add`}>
           <Button type='primary'>

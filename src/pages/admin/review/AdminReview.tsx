@@ -4,6 +4,7 @@ import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlin
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Rate, Space, Table } from 'antd'
 import { Link, useParams } from 'react-router-dom'
+import HeaderAdmin from '../header/page'
 
 type Props = {}
 
@@ -124,7 +125,8 @@ const AdminReview = (props: Props) => {
   return (
     <>
       {contextHolder}
-      <h1 className='text-2xl font-bold mb-4'>Quản lý đánh giá sản phẩm</h1>
+      <HeaderAdmin/>
+      <h1 className='text-2xl font-bold mb-4 mt-4'>Quản lý đánh giá sản phẩm</h1>
       <Table dataSource={dataSource} columns={columns} />
     </>
   )

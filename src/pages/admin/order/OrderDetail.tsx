@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Col, Modal, Row, Spin, Table, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import HeaderAdmin from '../header/page'
 
 const AdminOrderDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -119,7 +120,9 @@ const AdminOrderDetail = () => {
 
   // Danh sách các trạng thái
   return (
-    <div className='container mx-auto px-6'>
+    <>
+    <HeaderAdmin/>
+     <div className='container mx-auto px-6 mt-4'>
       <div className='flex items-center justify-between'>
         <h1 className='text-2xl font-bold mb-6'>Chi tiết đơn hàng</h1>
         <div className='flex items-center space-x-2'>
@@ -362,6 +365,8 @@ const AdminOrderDetail = () => {
         </div>
       </div>
     </div>
+    </>
+   
   )
 }
 

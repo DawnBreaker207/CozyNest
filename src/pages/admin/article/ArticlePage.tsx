@@ -10,6 +10,7 @@ import CustomLoadingPage from '@/components/Loading'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { ColumnGroupType, ColumnType } from 'antd/es/table'
+import HeaderAdmin from '../header/page'
 
 const { Paragraph } = Typography
 const { Panel } = Collapse
@@ -138,7 +139,8 @@ const AdminArticlePage = () => {
   return (
     <>
       {contextHolder}
-      <div className='mb-5'>
+      <HeaderAdmin/>
+      <div className='mb-5 mt-4'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý bài viết</h1>
         <Link to={`/admin/articles/add`}>
           <Button type='primary'>

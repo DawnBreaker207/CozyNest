@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Table, Button, Popconfirm, message } from 'antd'
 import instance from '@/configs/axios'
+import HeaderAdmin from '../header/page'
 
 const ReturnOrdersAdmin = () => {
   const queryClient = useQueryClient() // Lấy queryClient từ React Query
@@ -112,7 +113,8 @@ const ReturnOrdersAdmin = () => {
 
   return (
     <div>
-      <div className='mb-5'>
+      <HeaderAdmin/>
+      <div className='mb-5 mt-4'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý hoàn trả</h1>
       </div>
       <Table columns={columns} dataSource={data} rowKey={(record: any) => record?._id} />
