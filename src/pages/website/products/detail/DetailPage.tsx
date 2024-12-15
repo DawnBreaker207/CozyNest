@@ -2,7 +2,6 @@ import { Cart } from '@/components/icons/index'
 import { useProduct } from '@/hooks/useProductQuery'
 import { Variants } from '@/types/product'
 import { useEffect, useState } from 'react'
-import { FaRegEye } from 'react-icons/fa'
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import CouponCard from '../../cart/_components/CouponCard'
@@ -12,6 +11,7 @@ import useCart from '@/hooks/useCart'
 import { Button, message, Spin } from 'antd'
 import 'react-quill/dist/quill.snow.css'
 import ReactQuill from 'react-quill'
+import Cookies from 'js-cookie'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -44,11 +44,24 @@ const ProductDetail = () => {
       setPriceVar(colors[0].price) // Cập nhật giá của màu sắc đầu tiên
     }
   }, [colors, selectedColorId]) // Chạy lại khi colors thay đổi
+
   const handleAddToCart = () => {
+    // Lấy thông tin user từ cookie
+    const user = Cookies.get('user')
+
+    // Kiểm tra trạng thái đăng nhập
+    if (!user || Object.keys(JSON.parse(user)).length === 0) {
+      message.error('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.')
+      setTimeout(() => {
+        navigate('/login')
+      }, 3500)
+      return
+    }
+
     if (selectedColorId && count > 0) {
       // Lấy thông tin sản phẩm và SKU dựa trên `selectedColorId`
       const selectedVariant = product.variants?.find((variant) => variant.sku_id._id === selectedColorId)
-      console.log(selectedVariant)
+
       if (!selectedVariant) {
         message.error('Không tìm thấy thông tin sản phẩm.')
         return
@@ -62,11 +75,12 @@ const ProductDetail = () => {
 
       // Thêm vào giỏ hàng nếu đủ tồn kho
       message.success('Thêm vào giỏ hàng thành công')
-      addToCart(selectedColorId, count) // Sử dụng `addToCart` từ hook để thêm vào giỏ hàng
+      addToCart(selectedColorId, count) // Gọi hàm thêm sản phẩm vào giỏ hàng
     } else {
       message.error('Vui lòng chọn số lượng hợp lệ.')
     }
   }
+
   const handleBuyNow = async () => {
     setLoading(true) // Hiển thị trạng thái loading ngay khi nhấn nút
 
@@ -386,7 +400,6 @@ const ProductDetail = () => {
                 className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
               >
                 <ReactQuill
-             
                   value={product.description}
                   readOnly
                   theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
