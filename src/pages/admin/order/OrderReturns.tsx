@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Table, Button, Popconfirm, message } from 'antd'
+import { Table, Button, Popconfirm, message, Select } from 'antd'
 import instance from '@/configs/axios'
+import { useState } from 'react'
 
 const ReturnOrdersAdmin = () => {
   const queryClient = useQueryClient() // Lấy queryClient từ React Query
@@ -45,6 +46,15 @@ const ReturnOrdersAdmin = () => {
       console.log('Error rejecting return: ', error)
       message.error('Có lỗi xảy ra khi từ chối yêu cầu hoàn trả')
     }
+  })
+
+  const [statusFilter, setStatusFilter] = useState<'all' | 'confirmed' | 'unconfirmed'>('all')
+
+  const filteredData = data?.filter((order: any) => {
+    if (statusFilter === 'all') return true
+    if (statusFilter === 'confirmed') return order.is_confirm
+    if (statusFilter === 'unconfirmed') return !order.is_confirm
+    return true
   })
 
   const columns = [
@@ -114,8 +124,23 @@ const ReturnOrdersAdmin = () => {
     <div>
       <div className='mb-5'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý hoàn trả</h1>
+
+        {/* Add Select dropdown for filtering by return status */}
+        <Select
+          value={statusFilter}
+          style={{ width: 200 }}
+          onChange={(value) => setStatusFilter(value)}
+          placeholder='Chọn trạng thái'
+          className='mb-4'
+        >
+          <Select.Option value='all'>Tất cả trạng thái</Select.Option>
+          <Select.Option value='confirmed'>Đã xác nhận</Select.Option>
+          <Select.Option value='unconfirmed'>Chưa xác nhận</Select.Option>
+        </Select>
       </div>
-      <Table columns={columns} dataSource={data} rowKey={(record: any) => record?._id} />
+
+      {/* Table displaying the filtered data */}
+      <Table columns={columns} dataSource={filteredData} rowKey={(record: any) => record?._id} />
     </div>
   )
 }

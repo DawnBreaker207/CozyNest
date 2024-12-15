@@ -280,7 +280,7 @@ const Header = () => {
                       <hr />
                     </li>
                     {/* Danh sách các danh mục */}
-                    {categories.map((category) => (
+                    {categories.filter((category) => category.isHidden === false).map((category) => (
                       <>
                         <li key={category._id} className='hover:bg-gray-100'>
                           <Link to={`/products_page/${category._id}`} className='block px-4 py-2 text-gray-700'>

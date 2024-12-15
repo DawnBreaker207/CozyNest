@@ -109,7 +109,7 @@ const LayoutAdmin: React.FC = () => {
                 <NavLink to='/admin/articles'>Bài viết</NavLink>
               </Menu.Item>
               <Menu.Item key='6' icon={<CommentOutlined />}>
-                <NavLink to='/admin/reviews'>Bình luận</NavLink>
+                <NavLink to='/admin/reviews'>Đánh giá</NavLink>
               </Menu.Item>
               <Menu.Item key='7' icon={<UserOutlined />}>
                 <NavLink to='/admin/customer'>Quản lý khách hàng</NavLink>

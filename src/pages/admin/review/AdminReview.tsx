@@ -1,15 +1,15 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Rate, Space, Table } from 'antd'
-import { Link, useParams } from 'react-router-dom'
+import { message, Rate, Table, Select } from 'antd'
+import { useState } from 'react'
 
 type Props = {}
 
 const AdminReview = (props: Props) => {
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['reviews'],
     queryFn: async () => {
@@ -46,14 +46,16 @@ const AdminReview = (props: Props) => {
     }
   })
 
-  const dataSource = data?.data?.data.map((review: any) => {
-    return {
+  const [ratingFilter, setRatingFilter] = useState<number | null>(null) // State for filtering by rating
+
+  const dataSource = data?.data?.data
+    .filter((review: any) => (ratingFilter ? review.rating === ratingFilter : true)) // Apply rating filter
+    .map((review: any) => ({
       key: review._id,
       username: review.user_id ? review.user_id.username : '',
       product_name: review.product_id ? review.product_id.name : 'Sản phẩm không tồn tại',
       ...review
-    }
-  })
+    }))
 
   const columns = [
     {
@@ -94,26 +96,8 @@ const AdminReview = (props: Props) => {
         )
       }
     }
-    // {
-    //   title: 'Hành động',
-    //   key: 'action',
-    //   render: (_: any, review: any) => {
-    //     return (
-    //       <Space size='middle'>
-    //         <Popconfirm
-    //           title='Xóa đánh giá'
-    //           description='Bạn có chắc chắn muốn xóa đánh giá này?'
-    //           onConfirm={() => mutate(review._id!)}
-    //           okText='Có'
-    //           cancelText='Không'
-    //         >
-    //           <Button icon={<DeleteOutlined />} danger />
-    //         </Popconfirm>
-    //       </Space>
-    //     )
-    //   }
-    // }
   ]
+
   if (isLoading)
     return (
       <div>
@@ -121,10 +105,40 @@ const AdminReview = (props: Props) => {
       </div>
     )
   if (isError) return <div>{error.message}</div>
+
   return (
     <>
       {contextHolder}
       <h1 className='text-2xl font-bold mb-4'>Quản lý đánh giá sản phẩm</h1>
+
+      {/* Add Select above the table for filtering */}
+      <div className='mb-4'>
+        <Select
+          value={ratingFilter ?? undefined}
+          style={{ width: 150 }}
+          placeholder='Lọc theo số sao'
+          onChange={(value) => setRatingFilter(value)}
+        >
+          <Select.Option value={null}>Tất cả</Select.Option>
+          <Select.Option value={1}>
+            <Rate disabled allowHalf value={1} className='text-sm' />
+          </Select.Option>
+          <Select.Option value={2}>
+            <Rate disabled allowHalf value={2} className='text-sm' />
+          </Select.Option>
+          <Select.Option value={3}>
+            <Rate disabled allowHalf value={3} className='text-sm' />
+          </Select.Option>
+          <Select.Option value={4}>
+            <Rate disabled allowHalf value={4} className='text-sm' />
+          </Select.Option>
+          <Select.Option value={5}>
+            <Rate disabled allowHalf value={5} className='text-sm' />
+          </Select.Option>
+        </Select>
+      </div>
+
+      {/* Table displaying the reviews */}
       <Table dataSource={dataSource} columns={columns} />
     </>
   )

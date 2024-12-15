@@ -1,22 +1,33 @@
+import CustomLoadingPage from '@/components/Loading'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
+import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
 import { vietnameseChars2 } from '@/validations/validate'
 import { BackwardOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Select } from 'antd'
 import Upload from 'antd/es/upload'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const AddCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const [thumbnail, setThumbnail] = useState<{ file: File; name: string } | null>(null)
+  const [isDefaultCategoryExists, setIsDefaultCategoryExists] = useState(false)
   const { mutate } = useCategoryMutation({
     action: 'CREATE',
     onSuccess: () => {
       messageApi.success('Thêm danh mục thành công')
     }
   })
+  const { data, isLoading, isError, error } = useCategoryQuery()
+  useEffect(() => {
+    if (data?.res) {
+      // Kiểm tra xem có danh mục với type 'default' không
+      const defaultCategory = data?.res.find((category) => category.type === 'default')
+      setIsDefaultCategoryExists(!!defaultCategory)
+    }
+  }, [data?.res])
   const { Option } = Select
   const onFinish = async (values: ICategory) => {
     try {
@@ -34,7 +45,13 @@ const AddCategoryPage = () => {
       console.error(error)
     }
   }
-
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>{error?.message}</div>
   return (
     <>
       {contextHolder}
@@ -111,17 +128,19 @@ const AddCategoryPage = () => {
                 </div>
               </Form.Item>
 
-              <Form.Item
-                label='Loại danh mục'
-                name='type'
-                rules={[{ required: true, message: 'Loại danh mục là bắt buộc' }]}
-                className='w-[20%]'
-              >
-                <Select placeholder='Chọn loại danh mục'>
-                  <Option value='normal'>Normal</Option>
-                  <Option value='default'>Default</Option>
-                </Select>
-              </Form.Item>
+              {!isDefaultCategoryExists && (
+                <Form.Item
+                  label='Loại danh mục'
+                  name='type'
+                  rules={[{ required: true, message: 'Loại danh mục là bắt buộc' }]}
+                  className='w-[20%]'
+                >
+                  <Select placeholder='Chọn loại danh mục'>
+                    <Option value='normal'>Normal</Option>
+                    <Option value='default'>Default</Option>
+                  </Select>
+                </Form.Item>
+              )}
               <Button type='primary' htmlType='submit'>
                 Thêm danh mục
               </Button>
