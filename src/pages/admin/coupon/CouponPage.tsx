@@ -1,35 +1,53 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
-import { Button, Popconfirm, Space, Table, Tag, message, Spin } from 'antd'
-import { Link } from 'react-router-dom'
-import { useCouponQuery } from '@/hooks/useCouponQuery'
-import { useState } from 'react'
+import CustomLoadingPage from '@/components/Loading'
+import instance from '@/configs/axios'
 import useCouponMutation from '@/hooks/useCouponMutation'
+import { useCouponQuery } from '@/hooks/useCouponQuery'
 import { ICoupon } from '@/types/coupon'
-import { useQueryClient } from '@tanstack/react-query'
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Button, message, Popconfirm, Space, Spin, Table, Tag } from 'antd'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const CouponPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const queryClient = useQueryClient()
-
   const { data, isLoading, isError, error } = useCouponQuery()
-  console.log('🚀 ~ CouponPage ~ data:', data)
-  const { mutate: removeCoupon } = useCouponMutation({
-    action: 'DELETE',
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: async (coupon_id: any) => {
+      try {
+        return await instance.delete(`/coupon/${coupon_id}`)
+      } catch (error) {
+        throw new Error((error as any).message)
+      }
+    },
     onSuccess: () => {
-      messageApi.success('Xóa mã giảm giá thành công')
-      // Refresh coupon list after deletion
+      messageApi.open({
+        type: 'success',
+        content: 'Xóa mã giảm giá thành công'
+      })
       queryClient.invalidateQueries({
-        queryKey: ['PRODUCT_KEY']
+        queryKey: ['COUPON_KEY']
+      })
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: 'error',
+        content: error.message
       })
     }
   })
 
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-    total: 0
-  })
+  const dataSource = data?.res?.docs
+    .filter((coupon: any) => coupon.deleted === false)
+    .map((coupon: any) => {
+      return {
+        key: coupon._id,
+        ...coupon
+      }
+    })
+  console.log('🚀 ~ dataSource ~ dataSource:', dataSource)
 
   const columns = [
     {
@@ -71,60 +89,47 @@ const CouponPage = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (coupon: any) => (
-        <Space size='middle'>
-          <Link to={`/admin/coupons/${coupon._id}/edit`}>
-            <Button icon={<EditOutlined />} />
-          </Link>
-          <Popconfirm
-            title='Xóa mã giảm giá'
-            description='Bạn có chắc chắn muốn xóa mã giảm giá này?'
-            onConfirm={() => removeCoupon({ _id: coupon._id } as ICoupon)}
-            okText='Có'
-            cancelText='Không'
-          >
-            <Button icon={<DeleteOutlined />} danger />
-          </Popconfirm>
-        </Space>
-      )
+      render: (coupon: any) => {
+        return (
+          <Space size='middle'>
+            <Link to={`/admin/coupons/${coupon._id}/edit`}>
+              <Button icon={<EditOutlined />} />
+            </Link>
+            <Popconfirm
+              title='Xóa mã giảm giá'
+              description='Bạn có chắc chắn muốn xóa mã giảm giá này?'
+              onConfirm={() => mutate(coupon._id)}
+              okText='Có'
+              cancelText='Không'
+            >
+              <Button icon={<DeleteOutlined />} danger />
+            </Popconfirm>
+          </Space>
+        )
+      }
     }
   ]
-
-  const handleTableChange = (pagination: any) => {
-    // Không cần thêm fetchCoupons nữa vì dùng hook đã tự động cập nhật
-    setPagination(pagination)
-  }
-
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>{error.message}</div>
   return (
     <div>
       {contextHolder}
       <h1 className='text-2xl font-bold mb-5'>Quản lý mã giảm giá</h1>
+      <div className='mb-5'>
+        <Link to='/admin/coupons/add'>
+          <Button type='primary'>
+            <PlusOutlined />
+            Thêm mới mã giảm giá
+          </Button>
+        </Link>
+      </div>
 
-      {isLoading ? (
-        <Spin tip='Đang tải dữ liệu...' />
-      ) : isError ? (
-        <div style={{ color: 'red' }}>Có lỗi xảy ra: {error.message}</div>
-      ) : (
-        <>
-          <div className='mb-5'>
-            <Link to='/admin/coupons/add'>
-              <Button type='primary'>
-                <PlusOutlined />
-                Thêm mới mã giảm giá
-              </Button>
-            </Link>
-          </div>
-
-          <Table
-            columns={columns}
-            dataSource={data?.res?.docs || []}
-            rowKey={(record: any) => record._id}
-            loading={isLoading}
-            pagination={pagination}
-            onChange={handleTableChange}
-          />
-        </>
-      )}
+      <Table dataSource={dataSource} columns={columns} />
     </div>
   )
 }

@@ -10,14 +10,8 @@ import { Link } from 'react-router-dom'
 
 const DashboardPage = () => {
   const [selectedComponent, setSelectedComponent] = useState('TopProduct') // State cho component được chọn
-  const [selectedRole, setSelectedRole] = useState<string>('all') // State để lưu vai trò đã chọn
-
   const handleComponentChange = (value: string) => {
     setSelectedComponent(value)
-  }
-
-  const handleRoleChange = (value: string) => {
-    setSelectedRole(value) // Cập nhật vai trò đã chọn
   }
   const {
     data: userData,
@@ -57,13 +51,8 @@ const DashboardPage = () => {
   // Tính số lượng đơn hàng "Completed" và "Canceled"
   const completedOrders = data?.data?.res.items?.filter((order: any) => order.status === 'Completed').length || 0
   const canceledOrders = data?.data?.res.items?.filter((order: any) => order.status === 'Canceled').length || 0
-  // Tính số lượng user theo role
-  const filteredUsers =
-    selectedRole === 'all' ? userData?.data?.res : userData?.data?.res.filter((user: any) => user.role === selectedRole)
-
-  const memberCount = filteredUsers?.filter((user: any) => user.role === 'member').length || 0
-  const adminCount = filteredUsers?.filter((user: any) => user.role === 'admin').length || 0
-  const shipperCount = filteredUsers?.filter((user: any) => user.role === 'shipper').length || 0
+  // Tính số lượng user role member
+  const memberCount = userData?.data?.res.filter((user: any) => user.role === 'member').length || 0
 
   // Kiểm tra trạng thái loading tổng quát
   if (isLoadingUsers || isLoading) {
@@ -112,35 +101,15 @@ const DashboardPage = () => {
             <span className='text-xl font-semibold text-black'>{canceledOrders}</span>
           </div>
         </Link>
-        <div className='rounded-xl shadow-xl'>
+        <Link to={`/admin/customer?role=member`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/user.png' alt='' className='size-8' />
-              {/* <p className='font-medium text-lg text-black'>Khách hàng</p> */}
-              <Select
-                defaultValue='all'
-                style={{ width: 160 }}
-                className='!outline-none !border-none !shadow-none'
-                onChange={handleRoleChange}
-                options={[
-                  { value: 'all', label: 'Tất cả người dùng' },
-                  { value: 'admin', label: 'Admin' },
-                  { value: 'member', label: 'Khách hàng' },
-                  { value: 'shipper', label: 'Shipper' }
-                ]}
-              />
+              <p className='font-medium text-lg text-black'>Khách hàng</p>
             </div>
-            <span className='text-xl font-semibold text-black'>
-              {selectedRole === 'all'
-                ? userData?.data?.res.length
-                : selectedRole === 'admin'
-                  ? adminCount
-                  : selectedRole === 'shipper'
-                    ? shipperCount
-                    : memberCount}
-            </span>
+            <span className='text-xl font-semibold text-black'>{memberCount}</span>
           </div>
-        </div>
+        </Link>
       </div>
       <div className='mb-5'>
         <Select

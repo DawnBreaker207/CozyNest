@@ -36,7 +36,7 @@ const AdminOrderPage = () => {
       .map((order: any, index: number) => ({
         key: index + 1,
         orderId: order._id || order.invoiceId,
-        product: `${order.products.length} Product` || 'N/A',
+        product: `${order.products.length}` || 'N/A',
         date: new Date(order.createdAt).toLocaleDateString(), // Định dạng lại ngày
         customer: order.customer_name,
         total: `${order.total_amount.toLocaleString()} VNĐ`,

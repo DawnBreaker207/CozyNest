@@ -1,40 +1,62 @@
+import moment from 'moment'
+import CustomLoadingPage from '@/components/Loading'
 import useCouponMutation from '@/hooks/useCouponMutation'
 import { useCouponQuery } from '@/hooks/useCouponQuery'
 import { ICoupon } from '@/types/coupon'
-import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
-import { Button, Form, Input, InputNumber, message, Switch } from 'antd'
+import { BackwardOutlined } from '@ant-design/icons'
+import { Button, DatePicker, Form, Input, InputNumber, message, Switch } from 'antd'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import instance from '@/configs/axios'
 
 const CouponEdit = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { id } = useParams()
+  const [form] = Form.useForm()
 
   // Lấy dữ liệu coupon
   const { data, isLoading, isError, error } = useCouponQuery({ id })
 
   // Mutation để cập nhật coupon
-  const { mutate } = useCouponMutation({
-    action: 'UPDATE',
+  const { mutate } = useMutation({
+    mutationFn: async (formData: any) => {
+      try {
+        return instance.put(`/coupon/${id}`, formData)
+      } catch (error) {
+        throw new Error('Cập nhật mã giảm giá thất bại')
+      }
+    },
     onSuccess: () => {
-      messageApi.success('Cập nhật mã giảm giá thành công')
-      setTimeout(() => {
-        navigate(`/admin/coupons`)
-      }, 900)
+      messageApi.open({
+        type: 'success',
+        content: 'Cập nhật mã giảm giá thành công'
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['COUPON_KEY']
+      })
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: 'error',
+        content: error.message
+      })
     }
   })
-
+  const getFormattedDate = (date: string | null) => {
+    return date ? moment(date) : null
+  }
   // Hàm xử lý khi form submit
   const onFinish = (values: ICoupon) => {
-    console.log('Form Values:', values)
-    if (data) {
-      mutate({ ...data, ...values })
-    } else {
-      console.error('Data not available')
-    }
+    mutate(values)
   }
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
   if (isError) return <div>{error.message}</div>
 
   return (
@@ -50,7 +72,17 @@ const CouponEdit = () => {
             </Button>
           </Link>
         </div>
-        <Form layout='vertical' onFinish={onFinish} initialValues={data?.res || {}}>
+        <Form
+          form={form}
+          layout='vertical'
+          onFinish={onFinish}
+          initialValues={{
+            ...data?.res,
+            couponStartDate: getFormattedDate(data?.res?.couponStartDate),
+            couponEndDate: getFormattedDate(data?.res?.couponEndDate),
+            status: data?.res?.status || false
+          }}
+        >
           <Form.Item
             label='Tên Mã Giảm Giá'
             name='name'
@@ -90,6 +122,24 @@ const CouponEdit = () => {
             rules={[{ required: true, message: 'Vui lòng nhập số lượng coupon!' }]}
           >
             <InputNumber min={0} className='w-full' />
+          </Form.Item>
+
+          <Form.Item
+            label='Ngày bắt đầu'
+            name='couponStartDate'
+            className='w-1/2'
+            rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu!' }]}
+          >
+            <DatePicker className='w-full' format='YYYY-MM-DD' />
+          </Form.Item>
+
+          <Form.Item
+            label='Ngày kết thúc'
+            name='couponEndDate'
+            className='w-1/2'
+            rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}
+          >
+            <DatePicker className='w-full' format='YYYY-MM-DD' />
           </Form.Item>
 
           <Form.Item label='Trạng thái' name='status' valuePropName='checked'>

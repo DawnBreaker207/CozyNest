@@ -4,18 +4,17 @@ import useProductMutation from '@/hooks/useProductMutation'
 import { useProduct } from '@/hooks/useProductQuery'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
+import { vietnameseChars1 } from '@/validations/validate'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Form, Input, message, Select, Spin, Switch } from 'antd'
+import { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import 'react-quill/dist/quill.snow.css' // Import React Quill CSS
-import { useState, useEffect } from 'react'
-import { vietnameseChars1 } from '@/validations/validate'
+import 'react-quill/dist/quill.snow.css'; // Import React Quill CSS
+import { Link, useParams } from 'react-router-dom'
 
 const ProductEditPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const navigate = useNavigate()
   const { id } = useParams()
   const [loading, setLoading] = useState(false)
 
@@ -32,9 +31,6 @@ const ProductEditPage = () => {
     onSuccess: () => {
       messageApi.success('Cập nhật sản phẩm thành công')
       setLoading(false) // Tắt loading khi cập nhật thành công
-      setTimeout(() => {
-        navigate(`/admin/products`)
-      }, 900)
     }
   })
 
@@ -53,7 +49,6 @@ const ProductEditPage = () => {
       _id: data!._id
     }
 
-    setLoading(true) // Bật loading khi bắt đầu cập nhật
     // Gửi dữ liệu sản phẩm đã được cập nhật
     mutate(updatedProduct)
   }
@@ -104,10 +99,6 @@ const ProductEditPage = () => {
                   label='Tên sản phẩm'
                   name='name'
                   rules={[
-                    {
-                      required: true,
-                      message: 'Tên sản phẩm là bắt buộc'
-                    },
                     {
                       min: 6,
                       message: 'Tên sản phẩm phải có tối thiểu 6 ký tự'

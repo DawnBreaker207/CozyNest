@@ -4,12 +4,17 @@ import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { message, Popconfirm, Switch, Table, Select, Input } from 'antd'
 import { useState } from 'react'
-
+import { useLocation } from 'react-router-dom'
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search)
+}
 const AdminCustomerPage = () => {
   const { data, isLoading, error, isError, refetch } = useAdminUsersQuery() // refetch data after mutation
   const [messageApi, contextHolder] = message.useMessage()
-  const [filterRole, setFilterRole] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState<string>('')
+  const query = useQuery()
+  const roleFilter = query.get('role') || ''
+  const [filterRole, setFilterRole] = useState<string>(roleFilter)
 
   const { mutate } = useAdminUsersMutations({
     action: 'UPDATE',

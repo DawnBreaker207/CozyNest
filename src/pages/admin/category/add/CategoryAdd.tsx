@@ -2,23 +2,19 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
 import { ICategory } from '@/types/category'
 import { vietnameseChars2 } from '@/validations/validate'
-import { BackwardOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { BackwardOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Select } from 'antd'
 import Upload from 'antd/es/upload'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const AddCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const navigate = useNavigate()
   const [thumbnail, setThumbnail] = useState<{ file: File; name: string } | null>(null)
   const { mutate } = useCategoryMutation({
     action: 'CREATE',
     onSuccess: () => {
-      messageApi.success('Thêm thành công')
-      setTimeout(() => {
-        navigate(`/admin/categories`)
-      }, 600)
+      messageApi.success('Thêm danh mục thành công')
     }
   })
   const { Option } = Select
@@ -61,8 +57,8 @@ const AddCategoryPage = () => {
                 rules={[
                   { required: true, message: 'Tên danh mục là bắt buộc' },
                   {
-                    min: 6,
-                    message: 'Tên danh mục phải có tối thiểu 6 ký tự'
+                    min: 2,
+                    message: 'Tên danh mục phải có tối thiểu 2 ký tự'
                   },
                   {
                     validator: (_, value) => {

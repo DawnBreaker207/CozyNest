@@ -70,7 +70,7 @@ const Revenue = () => {
         orders.forEach((order: any) => {
           if (order.status === 'Completed') {
             // Chỉ tính các đơn hàng có trạng thái "Completed"
-            const orderDate = new Date(order.createdAt)
+            const orderDate = new Date(order.updatedAt)
             const month = orderDate.getMonth() + 1 // Tháng (1-12)
             const year = orderDate.getFullYear() // Năm (2024, 2025, ...)
 
@@ -144,7 +144,7 @@ const Revenue = () => {
     )
   if (isError) return <div>{error.message}</div>
   return (
-    <div className='bg-white p-6 rounded-lg mb-6 shadow-xl'>
+    <div className='bg-white p-5 rounded-lg mb-6 shadow-xl'>
       <h3 className='text-2xl font-semibold text-center mb-4'>Thống kê doanh thu</h3>
 
       <div className='mb-4 flex justify-center'>
@@ -162,11 +162,21 @@ const Revenue = () => {
       <ResponsiveContainer width='100%' height={300}>
         <BarChart
           data={selectedPeriod === 'weekly' ? data.weekly : selectedPeriod === 'yearly' ? data.yearly : data.monthly}
+          margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
         >
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis dataKey='time' />
-          <YAxis />
-          <Tooltip formatter={(value) => new Intl.NumberFormat().format(Number(value)) + ' VND'} />
+          <YAxis
+            tickFormatter={(value) =>
+              new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(Number(value))
+            }
+            tick={{ fontSize: 13 }}
+          />
+          <Tooltip
+            formatter={(value) =>
+              new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(Number(value))
+            }
+          />
           <Legend />
           <Bar dataKey='Doanh thu' fill='#60a5fa' barSize={30} />
         </BarChart>

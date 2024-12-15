@@ -44,8 +44,8 @@ const ProductAddPage = () => {
     mutate(updatedValues)
   }
   const handleQuillChange = (value: string) => {
-    console.log("Mô tả sản phẩm:", value);
-  };
+    console.log('Mô tả sản phẩm:', value)
+  }
   return (
     <>
       {contextHolder}
@@ -68,10 +68,6 @@ const ProductAddPage = () => {
                 label='Tên sản phẩm'
                 name='name'
                 rules={[
-                  {
-                    required: true,
-                    message: 'Tên sản phẩm là bắt buộc'
-                  },
                   {
                     min: 6,
                     message: 'Tên sản phẩm phải có tối thiểu 6 ký tự'

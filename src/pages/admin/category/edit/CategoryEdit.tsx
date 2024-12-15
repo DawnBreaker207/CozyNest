@@ -1,28 +1,25 @@
+import CustomLoadingPage from '@/components/Loading'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
 import { useCategory } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
 import { vietnameseChars2 } from '@/validations/validate'
-import { BackwardOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { BackwardOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Select, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const EditCategoryPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const [thumbnail, setThumbnail] = useState<string | null>(null)
-  const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const { data, isLoading, isError, error } = useCategory(id)
   const { Option } = Select
   const { mutate } = useCategoryMutation({
     action: 'UPDATE',
     onSuccess: () => {
-      messageApi.success('Cập nhật thành công')
-      setTimeout(() => {
-        navigate(`/admin/categories`)
-      }, 600)
+      messageApi.success('Cập nhật danh mục thành công')
     }
   })
   useEffect(() => {
@@ -67,7 +64,7 @@ const EditCategoryPage = () => {
     return
   }
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <CustomLoadingPage />
   if (isError) return <div>{error.message}</div>
 
   return (
@@ -92,8 +89,8 @@ const EditCategoryPage = () => {
                 rules={[
                   { required: true, message: 'Tên danh mục là bắt buộc' },
                   {
-                    min: 6,
-                    message: 'Tên danh mục phải có tối thiểu 6 ký tự'
+                    min: 2,
+                    message: 'Tên danh mục phải có tối thiểu 2 ký tự'
                   },
                   {
                     validator: (_, value) => {

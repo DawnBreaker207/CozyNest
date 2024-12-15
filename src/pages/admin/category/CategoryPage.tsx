@@ -1,9 +1,10 @@
 import CustomLoadingPage from '@/components/Loading'
+import instance from '@/configs/axios'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
 
@@ -14,16 +15,27 @@ const CategoryPage = () => {
   // Fetch data categories using custom hook
   const { data, isLoading, isError, error } = useCategoryQuery()
 
-  // Sử dụng hook cho xóa danh mục
-  const { mutate: deleteCategory } = useCategoryMutation({
-    action: 'DELETE',
+  const { mutate } = useMutation({
+    mutationFn: async (cate_id: any) => {
+      try {
+        return await instance.delete(`/categories/${cate_id}`)
+      } catch (error) {
+        throw new Error((error as any).message)
+      }
+    },
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Xóa thành công'
+        content: 'Xóa danh mục thành công'
       })
       queryClient.invalidateQueries({
         queryKey: ['CATEGORY_KEY']
+      })
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: 'error',
+        content: error.message
       })
     }
   })
@@ -45,7 +57,7 @@ const CategoryPage = () => {
         <Space size='middle'>
           <div>
             <div>{name}</div>
-            <div style={{ color: 'gray' }}>{record.products.length} Products</div>
+            <div style={{ color: 'gray' }}>{record.products.length} Sản phẩm</div>
           </div>
         </Space>
       )
@@ -77,22 +89,34 @@ const CategoryPage = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (category: ICategory) => (
-        <Space size='middle'>
-          <Link to={`/admin/categories/${category._id}/edit`}>
-            <Button icon={<EditOutlined />} />
-          </Link>
-          <Popconfirm
-            title='Xóa danh mục'
-            description='Bạn có chắc chắn muốn xóa danh mục này không?'
-            onConfirm={() => deleteCategory({ _id: category._id } as ICategory)}
-            okText='Có'
-            cancelText='Không'
-          >
-            <Button icon={<DeleteOutlined />} danger />
-          </Popconfirm>
-        </Space>
-      )
+      render: (category: ICategory) => {
+        console.log('🚀 ~ CategoryPage ~ category:', category)
+        return (
+          <Space size='middle'>
+            <Link to={`/admin/categories/${category._id}/edit`}>
+              <Button icon={<EditOutlined />} />
+            </Link>
+            <Popconfirm
+              title='Xóa danh mục'
+              description='Bạn có chắc chắn muốn xóa danh mục này không?'
+              onConfirm={() => {
+                if (category.type === 'default') {
+                  messageApi.open({
+                    type: 'error',
+                    content: 'Danh mục mặc định không thể xóa!'
+                  })
+                } else {
+                  mutate(category._id)
+                }
+              }}
+              okText='Có'
+              cancelText='Không'
+            >
+              <Button icon={<DeleteOutlined />} danger />
+            </Popconfirm>
+          </Space>
+        )
+      }
     }
   ]
 
