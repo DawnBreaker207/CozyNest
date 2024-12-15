@@ -143,7 +143,7 @@ const ProductAddPage = () => {
               </Form.Item>
               <div>
                 <Form.Item label='Trạng thái hiển thị' name='is_hidden' valuePropName='checked'>
-                  <Checkbox>Hiển thị</Checkbox>
+                  <Checkbox>Ẩn sản phẩm</Checkbox>
                 </Form.Item>
               </div>
             </div>

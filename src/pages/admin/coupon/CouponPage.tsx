@@ -1,20 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import useCouponMutation from '@/hooks/useCouponMutation'
 import { useCouponQuery } from '@/hooks/useCouponQuery'
-import { ICoupon } from '@/types/coupon'
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Space, Spin, Table, Tag } from 'antd'
-import { useState } from 'react'
+import { Button, message, Popconfirm, Space, Table, Tag, Select } from 'antd'
 import { Link } from 'react-router-dom'
+
 import HeaderAdmin from '../header/page'
+
+import { useState } from 'react'
+
+const { Option } = Select
+
 
 const CouponPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const { data, isLoading, isError, error } = useCouponQuery()
   const queryClient = useQueryClient()
+  const [sortOrder, setSortOrder] = useState<'ascend' | 'descend'>('ascend') // Trạng thái để lưu trữ lựa chọn sắp xếp
+
   const { mutate } = useMutation({
     mutationFn: async (coupon_id: any) => {
       try {
@@ -40,15 +45,25 @@ const CouponPage = () => {
     }
   })
 
-  const dataSource = data?.res?.docs
+  // Hàm sắp xếp dữ liệu theo couponValue
+  const handleSortChange = (value: 'ascend' | 'descend') => {
+    setSortOrder(value)
+  }
+
+  // Sắp xếp dữ liệu khi sortOrder thay đổi
+  const sortedData = data?.res?.docs
     .filter((coupon: any) => coupon.deleted === false)
-    .map((coupon: any) => {
-      return {
-        key: coupon._id,
-        ...coupon
+    .sort((a: any, b: any) => {
+      if (sortOrder === 'ascend') {
+        return a.couponValue - b.couponValue
+      } else {
+        return b.couponValue - a.couponValue
       }
     })
-  console.log('🚀 ~ dataSource ~ dataSource:', dataSource)
+    .map((coupon: any) => ({
+      key: coupon._id,
+      ...coupon
+    }))
 
   const columns = [
     {
@@ -110,13 +125,10 @@ const CouponPage = () => {
       }
     }
   ]
-  if (isLoading)
-    return (
-      <div>
-        <CustomLoadingPage />
-      </div>
-    )
+
+  if (isLoading) return <CustomLoadingPage />
   if (isError) return <div>{error.message}</div>
+
   return (
     <div>
       {contextHolder}
@@ -131,7 +143,15 @@ const CouponPage = () => {
         </Link>
       </div>
 
-      <Table dataSource={dataSource} columns={columns} />
+      <div className='mb-5'>
+        <Select defaultValue='ascend' style={{ width: 200 }} onChange={handleSortChange}>
+          <Option value='ascend'>Giá trị thấp đến cao</Option>
+          <Option value='descend'>Giá trị cao đến thấp</Option>
+        </Select>
+      </div>
+
+      {/* Hiển thị bảng với dữ liệu đã sắp xếp */}
+      <Table dataSource={sortedData} columns={columns} />
     </div>
   )
 }

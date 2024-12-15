@@ -1,7 +1,7 @@
 import CustomLoadingPage from '@/components/Loading'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
-import { useCategory } from '@/hooks/useCategoryQuery'
+import { useCategory, useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
 import { vietnameseChars2 } from '@/validations/validate'
 import { BackwardOutlined, UploadOutlined } from '@ant-design/icons'
@@ -16,6 +16,15 @@ const EditCategoryPage = () => {
   const { id } = useParams<{ id: string }>()
   const { data, isLoading, isError, error } = useCategory(id)
   const { Option } = Select
+  const [isDefaultCategoryExists, setIsDefaultCategoryExists] = useState(false)
+  const { data: dataCate, isLoading: isLoadingCate, isError: isErrorCate, error: errorCate } = useCategoryQuery()
+
+  useEffect(() => {
+    if (dataCate?.res) {
+      const defaultCategory = dataCate?.res.find((category: any) => category.type === 'default')
+      setIsDefaultCategoryExists(!!defaultCategory)
+    }
+  }, [dataCate?.res])
   const { mutate } = useCategoryMutation({
     action: 'UPDATE',
     onSuccess: () => {
@@ -64,8 +73,9 @@ const EditCategoryPage = () => {
     return
   }
 
-  if (isLoading) return <CustomLoadingPage />
+  if (isLoading || isLoadingCate) return <CustomLoadingPage />
   if (isError) return <div>{error.message}</div>
+  if (isErrorCate) return <div>{errorCate.message}</div>
 
   return (
     <>
@@ -119,17 +129,19 @@ const EditCategoryPage = () => {
                   </span>
                 )}
               </Form.Item>
-              <Form.Item
-                label='Loại danh mục'
-                name='type'
-                rules={[{ required: true, message: 'Loại danh mục là bắt buộc' }]}
-                className='w-[20%]'
-              >
-                <Select placeholder='Chọn loại danh mục'>
-                  <Option value='normal'>Normal</Option>
-                  <Option value='default'>Default</Option>
-                </Select>
-              </Form.Item>
+              {!isDefaultCategoryExists && (
+                <Form.Item
+                  label='Loại danh mục'
+                  name='type'
+                  rules={[{ required: true, message: 'Loại danh mục là bắt buộc' }]}
+                  className='w-[20%]'
+                >
+                  <Select placeholder='Chọn loại danh mục'>
+                    <Option value='normal'>Normal</Option>
+                    <Option value='default'>Default</Option>
+                  </Select>
+                </Form.Item>
+              )}
               <Button type='primary' htmlType='submit'>
                 Cập nhật danh mục
               </Button>

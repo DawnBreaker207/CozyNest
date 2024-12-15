@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Form, Input, message, Select, Spin, Switch } from 'antd'
 import { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'; // Import React Quill CSS
+import 'react-quill/dist/quill.snow.css' // Import React Quill CSS
 import { Link, useParams } from 'react-router-dom'
 
 const ProductEditPage = () => {

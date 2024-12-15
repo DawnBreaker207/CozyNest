@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import useCategoryMutation from '@/hooks/useCategoryMutations'
@@ -5,13 +6,21 @@ import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
 import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
+import { Button, message, Popconfirm, Space, Table, Tag, Input, Select } from 'antd'
 import { Link } from 'react-router-dom'
 import HeaderAdmin from '../header/page'
+
+// Hàm loại bỏ dấu (Accents) trong chuỗi
+const removeAccents = (str: string) => {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+}
 
 const CategoryPage = () => {
   const queryClient = useQueryClient()
   const [messageApi, contextHolder] = message.useMessage()
+
+  const [search, setSearch] = useState('') // Trạng thái tìm kiếm
+  const [sortOrder, setSortOrder] = useState('newest') // Trạng thái lọc theo ngày
 
   // Fetch data categories using custom hook
   const { data, isLoading, isError, error } = useCategoryQuery()
@@ -41,12 +50,36 @@ const CategoryPage = () => {
     }
   })
 
+  // Hàm lọc danh mục theo tên và ngày
+  const filterCategories = () => {
+    let filteredCategories = data?.res || []
+
+    // Lọc theo tên (không phân biệt dấu)
+    if (search) {
+      filteredCategories = filteredCategories.filter((category: ICategory) =>
+        removeAccents(category.name.toLowerCase()).includes(removeAccents(search.toLowerCase()))
+      )
+    }
+
+    // Lọc theo ngày
+    if (sortOrder === 'newest') {
+      filteredCategories = filteredCategories.sort(
+        (a: ICategory, b: ICategory) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    } else if (sortOrder === 'oldest') {
+      filteredCategories = filteredCategories.sort(
+        (a: ICategory, b: ICategory) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      )
+    }
+
+    return filteredCategories
+  }
+
   // Chuẩn bị dữ liệu cho bảng
-  const dataSource =
-    data?.res?.map((item: ICategory) => ({
-      key: item._id,
-      ...item
-    })) || []
+  const dataSource = filterCategories().map((item: ICategory) => ({
+    key: item._id,
+    ...item
+  }))
 
   // Cấu trúc các cột của bảng
   const columns = [
@@ -91,7 +124,6 @@ const CategoryPage = () => {
       title: 'Action',
       key: 'action',
       render: (category: ICategory) => {
-        console.log('🚀 ~ CategoryPage ~ category:', category)
         return (
           <Space size='middle'>
             <Link to={`/admin/categories/${category._id}/edit`}>
@@ -143,6 +175,26 @@ const CategoryPage = () => {
           </Button>
         </Link>
       </div>
+
+      {/* Tìm kiếm và lọc theo ngày */}
+      <div className='mb-5 flex items-center justify-between'>
+        <Input
+          placeholder='Tìm kiếm theo tên danh mục'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 500 }}
+        />
+        <Select
+          value={sortOrder}
+          onChange={(value) => setSortOrder(value)}
+          style={{ width: 150 }}
+          options={[
+            { label: 'Mới nhất', value: 'newest' },
+            { label: 'Cũ nhất', value: 'oldest' }
+          ]}
+        />
+      </div>
+
       <Table dataSource={dataSource} columns={columns} />
     </>
   )

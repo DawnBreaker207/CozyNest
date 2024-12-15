@@ -44,35 +44,38 @@ const News = () => {
         <h1 className='text-center text-[25px] sm:text-[45px] mb-2 mx-auto text-[#FCA120]'>Tin tức nổi bật</h1>
         <div ref={scrollContainerRef} className='overflow-hidden scrollbar-hide flex flex-nowrap p-4'>
           {articles
-          .filter((article) => article.isHidden === true)
-          .map((article) => (
-            <Card
-              key={article._id}
-              hoverable
-              className='flex-shrink-0 w-1/3 m-4 rounded-lg shadow-lg overflow-hidden relative bg-white'
-              cover={
-                <img
-                  alt={article.title}
-                  src={article.thumbnail}
-                  className='rounded-t-lg w-full h-[270px] object-cover'
+            .filter((article) => article.isHidden === true)
+            .map((article) => (
+              <Card
+                key={article._id}
+                hoverable
+                className='flex-shrink-0 w-1/3 m-4 rounded-lg shadow-lg overflow-hidden relative bg-white'
+                cover={
+                  <img
+                    alt={article.title}
+                    src={article.thumbnail}
+                    className='rounded-t-lg w-full h-[270px] object-cover'
+                  />
+                }
+              >
+                <div className='absolute top-0 left-0 bg-white text-gray-500 px-2 py-1 rounded-br-lg'>
+                  {article.created_at}
+                </div>
+                <Meta
+                  title={<span className='text-[#FCA120]'>{article.title}</span>}
+                  description={article.title.substring(0, 20)}
                 />
-              }
-            >
-              <div className='absolute top-0 left-0 bg-white text-gray-500 px-2 py-1 rounded-br-lg'>
-                {article.created_at}
-              </div>
-              <Meta
-                title={<span className='text-[#FCA120]'>{article.title}</span>}
-                description={article.title.substring(0, 20)}
-              />
-              <Link to={`/articles/${article._id}`} className='text-black hover:text-orange-600 flex items-center mt-4'>
-                Xem thêm
-                <svg className='w-4 h-4 ml-1 mt-0.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 5l7 7-7 7' />
-                </svg>
-              </Link>
-            </Card>
-          ))}
+                <Link
+                  to={`/articles/${article._id}`}
+                  className='text-black hover:text-orange-600 flex items-center mt-4'
+                >
+                  Xem thêm
+                  <svg className='w-4 h-4 ml-1 mt-0.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 5l7 7-7 7' />
+                  </svg>
+                </Link>
+              </Card>
+            ))}
         </div>
         <Button
           onClick={scrollRight}

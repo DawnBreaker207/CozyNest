@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from 'react'
 import io from 'socket.io-client'
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
@@ -7,8 +8,8 @@ import { CartData } from '@/types/cart'
 import { ResAPI } from '@/types/responseApi'
 import { useCartStore } from './store/cartStore'
 import { useCookie } from './useStorage'
-import { IProductCart } from '@/types/producrCart'
-import { debounce } from 'lodash'
+import { debounce, reduce } from 'lodash'
+import { useNavigate } from 'react-router-dom'
 
 // Utility: Kiểm tra ObjectId hợp lệ
 const isValidObjectId = (id: string): boolean => /^[0-9a-fA-F]{24}$/.test(id)
@@ -17,7 +18,7 @@ const useCart = () => {
   const queryClient = useQueryClient()
   const [user] = useCookie('user', {})
   const userId = user?._id
-
+  const navigate = useNavigate()
   const setProducts = useCartStore((state) => state.setProducts)
   const setQuantities = useCartStore((state) => state.setQuantities)
   const { products, quantities } = useCartStore((state) => state)
@@ -35,18 +36,8 @@ const useCart = () => {
         const { data: cartData } = await instance.get(`/cart/${userId}`)
         console.log(cartData)
 
-        // Lọc các sản phẩm có is_hidden = false
-        const filteredProducts = cartData.res.products.filter(
-          (product: { sku_id: { product_id: { is_hidden: boolean } } }) => !product.sku_id.product_id.is_hidden
-        )
-
-        return {
-          ...cartData,
-          res: {
-            ...cartData.res,
-            products: filteredProducts // Chỉ trả về các sản phẩm không bị ẩn
-          }
-        }
+        // Không lọc sản phẩm, chỉ làm mờ các sản phẩm có is_hidden = true
+        return cartData
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
           setProducts([]) // Reset giỏ hàng nếu không tìm thấy
@@ -65,10 +56,31 @@ const useCart = () => {
     const socket = io('http://localhost:8888') // Đảm bảo địa chỉ đúng với server của bạn
 
     socket.on('productUpdated', (data: any) => {
-      // Xử lý khi nhận được sự kiện cập nhật sản phẩm
-      console.log('Product updated:', data)
-      // Cập nhật lại giỏ hàng hoặc trạng thái liên quan đến sản phẩm
-      refetch() // Ví dụ: gọi lại query để lấy dữ liệu giỏ hàng mới
+      if (!data || !data.productId || !data.updatedData) {
+        console.error('Invalid data received from productUpdated:', data)
+        return // Ngừng xử lý nếu dữ liệu không hợp lệ
+      }
+
+      const { productId, updatedData } = data
+
+      console.log(`Product with ID ${productId} has been updated:`, updatedData)
+
+      // Kiểm tra nếu sản phẩm đã cập nhật nằm trong giỏ hàng
+      const isProductInCart = products.some((product) => product.sku_id.product_id._id === productId)
+
+      if (isProductInCart) {
+        console.log(`Product in cart has been updated, refreshing cart...`)
+
+        // Nếu đang ở trang checkout, điều hướng về trang giỏ hàng
+        if (window.location.pathname === '/check_out') {
+          navigate('/cart')
+        }
+
+        // Làm mới dữ liệu giỏ hàng
+        refetch() // Lấy lại dữ liệu giỏ hàng mới
+      } else {
+        console.log(`Updated product not in cart, no action taken.`)
+      }
     })
 
     // Dọn dẹp khi component unmount
@@ -114,7 +126,7 @@ const useCart = () => {
       cart_id
     }: {
       action: string
-      quantity: number
+      quantity?: number
       sku_id?: string | number
       cart_id?: string
     }) => {
@@ -159,13 +171,16 @@ const useCart = () => {
   })
 
   // Hàm tính tổng giá trị của giỏ hàng
-  const calculateTotal = (visibleProducts: IProductCart[], quantities: number[]) => {
-    if (!visibleProducts || visibleProducts.length === 0) return 0
-
-    return visibleProducts.reduce((total, product, index) => {
-      const quantity = quantities?.[index] ?? product.quantity
-      return total + product.price * quantity
-    }, 0)
+  const calculateTotal = () => {
+    if (!products || products.length === 0) return 0
+    return reduce(
+      products,
+      (total, product, index: number) => {
+        const quantity = quantities[index] || product.quantity
+        return total + product.price * quantity
+      },
+      0
+    )
   }
 
   // Hàm thêm sản phẩm vào giỏ hàng

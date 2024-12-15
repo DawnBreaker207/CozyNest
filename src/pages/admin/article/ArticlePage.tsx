@@ -1,16 +1,32 @@
+import CustomLoadingPage from '@/components/Loading'
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticleQuery } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
-import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
+import { EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button, Collapse, Empty, Image, message, Popconfirm, Space, Table, Tag, Tooltip, Typography } from 'antd'
+import {
+  Button,
+  Collapse,
+  Empty,
+  Image,
+  message,
+  Popconfirm,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  Typography
+} from 'antd'
+import { ColumnGroupType, ColumnType } from 'antd/es/table'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import CustomLoadingPage from '@/components/Loading'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { ColumnGroupType, ColumnType } from 'antd/es/table'
+
 import HeaderAdmin from '../header/page'
+
+import { Link } from 'react-router-dom'
+
 
 const { Paragraph } = Typography
 const { Panel } = Collapse
@@ -19,7 +35,7 @@ const AdminArticlePage = () => {
   const queryClient = useQueryClient()
   const [currentPage, setCurrentPage] = useState(1)
   const [messageApi, contextHolder] = message.useMessage()
-
+  const [sortOrder, setSortOrder] = useState('newest')
   const { data: articleData, isLoading, isError } = useArticleQuery()
   const { mutate: deleteArticle } = useArticleMutation({
     action: 'DELETE',
@@ -30,9 +46,24 @@ const AdminArticlePage = () => {
   })
 
   const articlesPerPage = 5
+  const filterCategories = () => {
+    let filteredCategories = articleData?.res || []
 
+    // Lọc theo ngày
+    if (sortOrder === 'newest') {
+      filteredCategories = filteredCategories.sort(
+        (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    } else if (sortOrder === 'oldest') {
+      filteredCategories = filteredCategories.sort(
+        (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      )
+    }
+
+    return filteredCategories
+  }
   const data =
-    articleData?.res?.map((item: IArticle) => ({
+    filterCategories().map((item: IArticle) => ({
       key: item._id,
       ...item
     })) || []
@@ -148,6 +179,17 @@ const AdminArticlePage = () => {
             Thêm mới bài viết
           </Button>
         </Link>
+      </div>
+      <div className='mb-5'>
+        <Select
+          value={sortOrder}
+          onChange={(value) => setSortOrder(value)}
+          style={{ width: 150 }}
+          options={[
+            { label: 'Mới nhất', value: 'newest' },
+            { label: 'Cũ nhất', value: 'oldest' }
+          ]}
+        />
       </div>
       {data.length > 0 ? (
         <Table

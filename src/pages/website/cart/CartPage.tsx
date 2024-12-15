@@ -5,13 +5,17 @@ import useCart from '@/hooks/useCart'
 import instance from '@/configs/axios'
 import { message, Modal } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import CouponCard from './_components/CouponCard'
 
 const CartPage = () => {
   const { products, quantities, setQuantity } = useCartStore()
   const { data, calculateTotal, mutate, deleteCart } = useCart()
 
   const navigate = useNavigate()
+  const unavailableProducts = products.filter((product) => product.sku_id.product_id.is_hidden)
+
+  // Tính tổng tiền sau khi loại bỏ sản phẩm không khả dụng
+  const total =
+    calculateTotal() - unavailableProducts.reduce((acc, product) => acc + product.price * product.quantity, 0)
   const handleCheckout = async () => {
     const cartItems = products.map((product, index) => {
       return {
@@ -67,8 +71,6 @@ const CartPage = () => {
       console.error('Không tìm thấy cartId')
     }
   }
-  const visibleProducts = products.filter((product) => !product.sku_id.product_id.is_hidden)
-  const total = calculateTotal(visibleProducts, quantities)
   return (
     <div className='mb-32 mt-5 '>
       <div className='container'>
@@ -106,13 +108,13 @@ const CartPage = () => {
 
             <hr />
             <p className='text-[#252A2B] my-3'>
-              Bạn đang có <span className='font-semibold text-[#fca120]'>{visibleProducts.length} sản phẩm</span> trong giỏ
+              Bạn đang có <span className='font-semibold text-[#fca120]'>{products.length} sản phẩm</span> trong giỏ
               hàng
             </p>
             {/* item cart */}
             <div className=' border-gray-300 rounded-xl p-4'>
               <ul className='space-y-6'>
-                {visibleProducts.map((product, index) => {
+                {products.map((product, index) => {
                   // Lấy thông tin variant tương ứng từ variants của sản phẩm
                   const currentVariant = product.sku_id.product_id.variants.find(
                     (variant: any) => variant.sku_id === product.sku_id._id
@@ -121,8 +123,14 @@ const CartPage = () => {
                   // Lấy option_value_id từ variant
                   const optionValue = currentVariant?.option_value_id
 
+                  // Kiểm tra xem sản phẩm có bị ẩn hay không
+                  const isHidden = product.sku_id.product_id.is_hidden
+
                   return (
-                    <li key={product.sku_id._id} className='flex items-center justify-between cursor-pointer'>
+                    <li
+                      key={product.sku_id._id}
+                      className={`flex items-center justify-between cursor-pointer ${isHidden ? 'opacity-50' : ''}`}
+                    >
                       <div className='flex items-center gap-4'>
                         <div>
                           <img
@@ -132,13 +140,17 @@ const CartPage = () => {
                           />
                         </div>
                         <div className='flex flex-col gap-2'>
-                          <h3 className='text-base truncate sm:w-full w-40'>
+                          <h3 className='text-xs lg:text-base truncate sm:w-full w-40'>
                             {product.sku_id.product_id.name} {/* Tên sản phẩm */}
                           </h3>
+
                           {/* Hiển thị option_value_id (ví dụ: màu sắc, kích thước) */}
                           {optionValue && (
-                            <p className='text-sm text-gray-600'>
+                            <p className='text-sm lg:flex text-gray-600'>
                               {optionValue.label} {/* Tên của biến thể (ví dụ: màu sắc) */}
+                              {isHidden && (
+                                <div className=' text-xs lg:text-base ml-1 text-red-500'>- Sản phẩm không khả dụng</div>
+                              )}
                             </p>
                           )}
                           <div className='flex items-center gap-[10px]'>
@@ -200,6 +212,7 @@ const CartPage = () => {
                       >
                         <img src='./src/assets/icon/delete.svg' alt='' className='size-5 min-h-5 min-w-5' />
                       </button>
+                      {/* Hiển thị thông báo sản phẩm không khả dụng nếu bị ẩn */}
                     </li>
                   )
                 })}
@@ -245,44 +258,26 @@ const CartPage = () => {
                 </li>
               </ul>
 
-              {total === 0 ? (
+              {total === 0 && unavailableProducts.length === 0 ? (
                 <div className='text-center text-red-500'>Không có sản phẩm nào trong giỏ hàng</div>
               ) : (
                 <button
-                  className='bg-[#fca120] text-white w-full py-[10px] mt-3 border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
-                  onClick={handleCheckout}
+                  className={`bg-[#fca120] text-white w-full py-[10px] mt-3 border border-transparent ${
+                    unavailableProducts.length > 0
+                      ? 'cursor-not-allowed opacity-70'
+                      : 'hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
+                  }`}
+                  onClick={() =>
+                    unavailableProducts.length > 0
+                      ? message.error('Vui lòng xóa sản phẩm không khả dụng để tiếp tục')
+                      : handleCheckout()
+                  }
+                  disabled={unavailableProducts.length > 0}
                 >
-                  Thanh toán
+                  {unavailableProducts.length > 0 ? 'Vui lòng xóa sản phẩm không khả dụng' : 'Thanh toán'}
                 </button>
               )}
             </div>
-
-            {/* <div className='mt-6'>
-              <CouponCard
-                couponCode={couponCode2}
-                imageUrl='./src/assets/images/coupon/coupon_1_img.webp'
-                expirationDate='10/10/2024'
-                title='Giảm 100k'
-                description='Đơn hàng từ 500k'
-                condition='Dành cho đơn hàng từ 500k'
-              />
-              <CouponCard
-                couponCode={couponCode1}
-                imageUrl='./src/assets/images/coupon/coupon_2_img.webp'
-                expirationDate='10/10/2024'
-                title='Miễn phí vận chuyển'
-                description='Đơn hàng từ 300k'
-                condition='Dành cho đơn hàng từ 300k'
-              />
-              <CouponCard
-                couponCode={couponCode3}
-                imageUrl='./src/assets/images/coupon/coupon_3_img.webp'
-                expirationDate='10/10/2024'
-                title='Giảm 10%'
-                description='Đơn hàng từ 100k'
-                condition='Dành cho đơn hàng từ 100k'
-              />
-            </div> */}
           </div>
         </div>
       </div>

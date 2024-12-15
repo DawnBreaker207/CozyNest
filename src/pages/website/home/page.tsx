@@ -20,7 +20,7 @@ const HomePage = () => {
       <Category />
       <ProductList products={products} />
       <BannerSection />
-      <BestProduct/>
+      <BestProduct />
       <News />
       <AboutUs />
       <Service />
