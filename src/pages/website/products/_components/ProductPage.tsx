@@ -424,7 +424,13 @@ const ProductsPage = () => {
               )
             })}
         </div>
+
+        {/* Nếu không có sản phẩm nào, hiển thị thông báo */}
+        {currentProducts.filter((product) => !product.is_hidden).length === 0 && (
+          <div className='text-center text-2xl text-gray-600 mt-4'>Không có sản phẩm nào đúng theo yêu cầu!</div>
+        )}
       </div>
+
       <div className='flex justify-center w-[22%] items-center my-4 gap-8 max-w-screen-lg mx-auto'>
         <button
           title='Previous'
