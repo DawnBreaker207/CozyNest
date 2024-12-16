@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Select, Table } from 'antd'
@@ -7,7 +8,7 @@ import { useState } from 'react'
 const ReturnOrdersAdmin = () => {
   const queryClient = useQueryClient() // Lấy queryClient từ React Query
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['returnOrders'],
     queryFn: async () => {
       const res = await instance.get('/orders/return?_sort=createdAt')
@@ -117,8 +118,13 @@ const ReturnOrdersAdmin = () => {
     }
   ]
 
-  if (isLoading) return <div>Đang tải dữ liệu...</div>
-  if (isError) return <div>Đã có lỗi xảy ra khi tải dữ liệu</div>
+  if (isLoading)
+    return (
+      <div>
+       <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>{error.message}</div>
 
   return (
     <div>
