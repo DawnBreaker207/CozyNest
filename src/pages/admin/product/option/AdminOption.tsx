@@ -67,12 +67,13 @@ const AdminOption = (props: Props) => {
       render: (_: any, option: any) => {
         return (
           <Space size='middle'>
+            <Link to={`/admin/products/${product_id}/options_value/${option.option_id}`}>
+              <Button>Chi tiết thuộc tính</Button>
+            </Link>
             <Link to={`/admin/products/${product_id}/options/${option.option_id}/edit`}>
               <Button icon={<EditOutlined />} />
             </Link>
-            <Link to={`/admin/products/${product_id}/options_value/${option.option_id}`}>
-              <Button icon={<EyeOutlined />} />
-            </Link>
+
             <Popconfirm
               title='Xóa thuộc tính'
               description='Bạn có chắc chắn muốn xóa thuộc tính này?'
