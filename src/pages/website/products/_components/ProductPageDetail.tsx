@@ -1,8 +1,6 @@
-import { Cart } from '@/components/icons'
-import useCart from '@/hooks/useCart'
 import { IProduct } from '@/types/product'
-import { CheckOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Drawer, Dropdown, MenuProps, message } from 'antd'
+import { CheckOutlined, DownOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Dropdown, MenuProps } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import { Link, useParams } from 'react-router-dom'
@@ -29,23 +27,6 @@ const ProductsPageDetail = () => {
   const [products, setProducts] = useState<IProduct[]>(data?.res?.products || [])
 
   const product = products.length > 0 ? products : data?.res?.products || []
-
-  const { addToCart } = useCart()
-  const [messageApi, contextHolder] = message.useMessage()
-  const handleAddToCart = (productId: string) => {
-    addToCart(productId)
-    messageApi.success('Thêm vào giỏ hàng thành công!')
-  }
-
-  const [, setVisible] = useState(false)
-  const [open, setOpen] = useState(false)
-  const show = () => {
-    setOpen(true)
-  }
-  const onClose = () => {
-    setVisible(false)
-    setOpen(false)
-  }
 
   // Sắp xếp
   const [selectedKey, setSelectedKey] = useState('')
@@ -214,59 +195,126 @@ const ProductsPageDetail = () => {
 
   return (
     <>
-      {contextHolder}
-      {window.innerWidth > 800 ? (
-        <div className='wrapper-collection-header banner-header mt-8'>
-          <div className='flex my-auto d-flex flex-wrap'>
-            <div className='w-[50%] collection-banner col-lg-6 col-12 pl-0 pr-0'>
-              <img
-                src={data?.res?.thumbnail}
-                alt='Products'
-                className=' h-[482px] md:h-[450px] sm:h-[300px] h-[240px] sm:h-[200px] object-cover'
-              />
-            </div>
-            <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
-              <h1 className='text-[#FFCC00] ml-10 text-5xl font-medium'>{data?.res?.name}</h1>
-            </div>
+      <div className='wrapper-collection-header banner-header'>
+        <div className='flex flex-col my-auto'>
+          <div className='w-full collection-banner'>
+            <img
+              src={data?.res?.thumbnail}
+              alt='Products'
+              className='w-full h-[200px] sm:h-[300px] md:h-[450px] lg:h-[482px] object-cover'
+            />
+          </div>
+          <div className='w-full place-content-center collection-heading mt-[30px]'>
+            <h1 className='text-[#FFCC00] w-[85%] mb-[1%] mx-auto text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium'>
+              {data?.res?.name}
+            </h1>
           </div>
         </div>
-      ) : (
-        <div className='wrapper-collection-header banner-header mt-8'>
-          <div className='flex my-auto d-flex flex-wrap'>
-            <div className='w-[50%] collection-banner col-lg-6 col-12 pl-0 pr-0'>
-              <img
-                src={data?.res?.thumbnail}
-                alt='Products'
-                className=' h-[482px] md:h-[450px] sm:h-[300px] h-[240px] sm:h-[200px] object-cover'
-              />
-            </div>
-            <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
-              <h1 className='text-[#FFCC00] ml-10 text-5xl font-medium'>{data?.res?.name}</h1>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className='flex flex-row justify-between items-center my-4 px-8 space-x-2 md:space-x-4'>
-        {/* Nút Bộ lọc */}
-        <Button icon={<FilterOutlined />} onClick={show} className='flex items-center text-sm md:text-base'>
-          Bộ lọc
-        </Button>
-
-        {/* Dropdown Sắp xếp */}
-        <Dropdown
-          className=''
-          menu={{
-            items: menuItems,
-            onClick: (e) => handleMenuClick(e.key)
-          }}
-        >
-          <Button icon={<SortAscendingOutlined />}>Sắp xếp</Button>
-        </Dropdown>
       </div>
-      <hr className='my-4 ' />
+
+      <div className='flex flex-row justify-between items-center my-4 px-8'>
+        {/* Bộ lọc và Sắp xếp */}
+        <div className='flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-12 w-full'>
+          {/* Bộ lọc */}
+          <div className='flex items-center ml-20'>
+            <Button icon={<FilterOutlined />} className='text-sm md:text-base pr-4'>
+              Bộ lọc
+            </Button>
+            {/* <div className='h-8 border-r-2 border-gray-300 ml-12 md:block invisible md:visible' /> */}
+          </div>
+
+          {/* Danh mục sản phẩm */}
+          <Dropdown
+            overlay={
+              <div className='p-4 bg-white shadow-lg rounded-lg'>
+                <Link className='text-black hover:text-yellow-500' to={`/products_page`}>
+                  Tất cả sản phẩm
+                </Link>
+                <br />
+
+                {categories?.data?.res?.map((category: ICategory) => (
+                  <div key={category._id}>
+                    {' '}
+                    {/* Thêm key để tránh lỗi React */}
+                    <a href={`/products_page/${category._id}`} className='text-black hover:text-yellow-500'>
+                      {category.name}
+                    </a>
+                    <br />
+                  </div>
+                ))}
+              </div>
+            }
+          >
+            <Button className='text-sm md:text-base min-w-[200px] flex items-center'>
+              Danh mục sản phẩm
+              <DownOutlined className='mr-2' />
+            </Button>
+          </Dropdown>
+
+          {/* Lọc giá */}
+          <Dropdown
+            overlay={
+              <div className='p-4 bg-white shadow-lg rounded-lg'>
+                <Checkbox
+                  checked={selectedPriceRanges.includes('Dưới 1.000.000₫')}
+                  onChange={() => handlePriceRangeChange('Dưới 1.000.000₫')}
+                >
+                  Dưới 1.000.000₫
+                </Checkbox>
+                <br />
+                <Checkbox
+                  checked={selectedPriceRanges.includes('1.000.000₫ - 2.000.000₫')}
+                  onChange={() => handlePriceRangeChange('1.000.000₫ - 2.000.000₫')}
+                >
+                  1.000.000₫ - 2.000.000₫
+                </Checkbox>
+                <br />
+                <Checkbox
+                  checked={selectedPriceRanges.includes('2.000.000₫ - 3.000.000₫')}
+                  onChange={() => handlePriceRangeChange('2.000.000₫ - 3.000.000₫')}
+                >
+                  2.000.000₫ - 3.000.000₫
+                </Checkbox>
+                <br />
+                <Checkbox
+                  checked={selectedPriceRanges.includes('3.000.000₫ - 4.000.000₫')}
+                  onChange={() => handlePriceRangeChange('3.000.000₫ - 4.000.000₫')}
+                >
+                  3.000.000₫ - 4.000.000₫
+                </Checkbox>
+                <br />
+                <Checkbox
+                  checked={selectedPriceRanges.includes('Trên 4.000.000₫')}
+                  onChange={() => handlePriceRangeChange('Trên 4.000.000₫')}
+                >
+                  Trên 4.000.000₫
+                </Checkbox>
+              </div>
+            }
+          >
+            <Button className='text-sm md:text-base min-w-[200px] flex items-center'>
+              Giá sản phẩm
+              <DownOutlined className='mr-2' />
+            </Button>
+          </Dropdown>
+        </div>
+
+        {/* Sắp xếp (đẩy sang bên phải) */}
+        <div className='ml-auto mr-20 mb-24 sm:mb-0'>
+          <Dropdown
+            className='w-full sm:w-auto'
+            menu={{
+              items: menuItems,
+              onClick: (e) => handleMenuClick(e.key)
+            }}
+          >
+            <Button icon={<SortAscendingOutlined />}>Sắp xếp</Button>
+          </Dropdown>
+        </div>
+      </div>
+
       {window.innerWidth >= 600 ? (
-        <div className='flex flex-row justify-left my-4 px-8 space-x-2 md:space-x-4'>
+        <div className='flex flex-row justify-left my-4 ml-20 px-8 space-x-2 md:space-x-4'>
           {selectedPriceRanges?.map((item) => (
             <div
               key={item}
@@ -294,82 +342,6 @@ const ProductsPageDetail = () => {
           ))}
         </div>
       )}
-
-      <Drawer width={280} title='BỘ LỌC' onClose={onClose} open={open} placement='left'>
-        <div>
-          <div className='p-2'>
-            {/* Product Categories */}
-            <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Danh mục sản phẩm</h4>
-
-              <Link className='text-black hover:text-yellow-500' to={`/products_page`}>
-                Tất cả sản phẩm
-              </Link>
-              <br />
-
-              {categories?.data?.res?.map((category: ICategory) => (
-                <div key={category._id}>
-                  {' '}
-                  {/* Thêm key để tránh lỗi React */}
-                  <a href={`/products_page/${category._id}`} className='text-black hover:text-yellow-500'>
-                    {category.name}
-                  </a>
-                  <br />
-                </div>
-              ))}
-            </div>
-
-            <hr />
-            {/* Supplier */}
-            {/* <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Nhà cung cấp</h4>
-              <Checkbox>Khác</Checkbox>
-            </div> */}
-            {/* <hr /> */}
-            {/* Price Filter */}
-            <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Lọc giá</h4>
-              <Checkbox
-                checked={selectedPriceRanges.includes('Dưới 1.000.000₫')}
-                onChange={() => handlePriceRangeChange('Dưới 1.000.000₫')}
-              >
-                Dưới 1.000.000₫
-              </Checkbox>
-              <br />
-              <Checkbox
-                className=''
-                checked={selectedPriceRanges.includes('1.000.000₫ - 2.000.000₫')}
-                onChange={() => handlePriceRangeChange('1.000.000₫ - 2.000.000₫')}
-              >
-                1.000.000₫ - 2.000.000₫
-              </Checkbox>
-              <br />
-              <Checkbox
-                checked={selectedPriceRanges.includes('2.000.000₫ - 3.000.000₫')}
-                onChange={() => handlePriceRangeChange('2.000.000₫ - 3.000.000₫')}
-              >
-                2.000.000₫ - 3.000.000₫
-              </Checkbox>
-              <br />
-              <Checkbox
-                checked={selectedPriceRanges.includes('3.000.000₫ - 4.000.000₫')}
-                onChange={() => handlePriceRangeChange('3.000.000₫ - 4.000.000₫')}
-              >
-                3.000.000₫ - 4.000.000₫
-              </Checkbox>
-              <br />
-              <Checkbox
-                checked={selectedPriceRanges.includes('Trên 4.000.000₫')}
-                onChange={() => handlePriceRangeChange('Trên 4.000.000₫')}
-              >
-                Trên 4.000.000₫
-              </Checkbox>
-            </div>
-
-            <hr />
-          </div>
-        </div>
-      </Drawer>
       {/* sản phẩm  */}
       <div className='grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 items-center gap-8 mx-8 mb-4'>
         {currentProducts?.length === 0 ? (

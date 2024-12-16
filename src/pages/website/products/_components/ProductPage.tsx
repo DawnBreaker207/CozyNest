@@ -1,11 +1,10 @@
-import useCart from '@/hooks/useCart'
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
-import { useFilterProducts, usePaginate, useSortProducts } from '@/hooks/useProduct'
+import { useFilterProducts, usePaginate } from '@/hooks/useProduct'
 import { useProductQuery } from '@/hooks/useProductQuery'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
-import { CheckOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Drawer, Dropdown, MenuProps, message } from 'antd'
+import { CheckOutlined, DownOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Dropdown, MenuProps } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import { GrNext } from 'react-icons/gr'
@@ -13,21 +12,52 @@ import { MdOutlineArrowBackIos } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 
 const ProductsPage = () => {
-  const [messageApi, contextHolder] = message.useMessage()
   const { data: categories } = useCategoryQuery()
   const { data } = useProductQuery()
   const [products, setProducts] = useState<IProduct[]>(data?.res || [])
   const [selectedKey, setSelectedKey] = useState('')
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([])
-  const { addToCart } = useCart() // Sử dụng hook useCart
-  const [, setVisible] = useState(false)
-  const [open, setOpen] = useState(false)
-  const { sortProducts } = useSortProducts(products)
   const { filterProductsByPrice } = useFilterProducts(products)
   const filteredProducts = filterProductsByPrice(selectedPriceRanges)
   const [hoveredImages, setHoveredImages] = useState({})
   const [hoveredPrices, setHoveredPrices] = useState({})
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+
   console.log(data)
+  const filteredProductsByCategoryAndPrice = filteredProducts.filter((product) => {
+    const isInCategory = selectedCategories.length
+      ? product.category_id && selectedCategories.includes(String(product.category_id._id))
+      : true
+
+    const isInPriceRange = selectedPriceRanges.length
+      ? selectedPriceRanges.some((priceRange) => {
+          // Kiểm tra sự tồn tại của giá trị SKU và giá trước khi truy cập
+          const productPrice = product?.variants?.[0]?.sku_id?.price
+          if (productPrice === undefined) return false
+
+          switch (priceRange) {
+            case 'Dưới 1.000.000₫':
+              return productPrice < 1000000
+            case '1.000.000₫ - 2.000.000₫':
+              return productPrice >= 1000000 && productPrice <= 2000000
+            case '2.000.000₫ - 3.000.000₫':
+              return productPrice >= 2000000 && productPrice <= 3000000
+            case '3.000.000₫ - 4.000.000₫':
+              return productPrice >= 3000000 && productPrice <= 4000000
+            case 'Trên 4.000.000₫':
+              return productPrice > 4000000
+            default:
+              return true
+          }
+        })
+      : true
+
+    return isInCategory && isInPriceRange
+  })
+
+  // const filteredProductsByCategory = selectedCategories.length
+  //   ? products.filter((product) => product.category_id && selectedCategories.includes(String(product.category_id._id)))
+  //   : products
 
   const {
     currentPage,
@@ -35,18 +65,10 @@ const ProductsPage = () => {
     currentItems: currentProducts,
     handleNextPage,
     handlePrevPage
-  } = usePaginate(filteredProducts, 15) // Sử dụng các sản phẩm đã lọc cho phân trang
+  } = usePaginate(filteredProductsByCategoryAndPrice, 15)
   useEffect(() => {
     if (data) setProducts(data.res)
   }, [data])
-  const show = () => {
-    // setVisible(true)
-    setOpen(true)
-  }
-  const onClose = () => {
-    setVisible(false)
-    setOpen(false)
-  }
   const handleMenuClick = (key: string) => {
     let sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
 
@@ -97,6 +119,9 @@ const ProductsPage = () => {
   const removeFilter = (itemToRemove: string) => {
     setSelectedPriceRanges((prev) => prev.filter((item) => item !== itemToRemove))
   }
+  const removeCategoryFilter = (category: string) => {
+    setSelectedCategories((prevCategories) => prevCategories.filter((cat) => cat !== category))
+  }
 
   const menuItems: MenuProps['items'] = [
     {
@@ -145,60 +170,140 @@ const ProductsPage = () => {
       )
     }
   ]
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategories(
+      (prev) =>
+        prev.includes(categoryId)
+          ? prev.filter((id) => id !== categoryId) // Nếu đã có -> bỏ chọn
+          : [...prev, categoryId] // Nếu chưa có -> thêm vào
+    )
+  }
+
   return (
     <>
-      {contextHolder}
-      {window.innerWidth > 800 ? (
-        <div className='wrapper-collection-header banner-header '>
-          <div className='flex my-auto d-flex flex-wrap'>
-            <div className='w-[50%] collection-banner  col-lg-6 col-12 pl-0 pr-0'>
-              <img
-                src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg'
-                alt='Products'
-                className=' h-[482px] md:h-[450px] sm:h-[300px] h-[240px] sm:h-[200px] object-cover'
-              />
-            </div>
-            <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
-              <h1 className='text-[#FFCC00] w-[80%] ml-12 text-5xl font-medium'>Tất cả sản phẩm</h1>
-            </div>
+      <div className='wrapper-collection-header banner-header'>
+        <div className='flex flex-col my-auto'>
+          <div className='w-full collection-banner'>
+            <img
+              src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg'
+              alt='Products'
+              className='w-full h-[200px] sm:h-[300px] md:h-[450px] lg:h-[482px] object-cover'
+            />
+          </div>
+          <div className='w-full place-content-center collection-heading mt-[30px]'>
+            <h1 className='text-[#FFCC00] w-[85%] mb-[1%] mx-auto text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium'>
+              Tất cả sản phẩm
+            </h1>
           </div>
         </div>
-      ) : (
-        <div className='wrapper-collection-header banner-header '>
-          <div className='flex my-auto d-flex flex-wrap'>
-            <div className='w-[50%] collection-banner  col-lg-6 col-12 pl-0 pr-0'>
-              <img
-                src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg'
-                alt='Products'
-                className=' h-[482px] md:h-[450px] sm:h-[300px] h-[240px] sm:h-[200px] object-cover'
-              />
-            </div>
-            <div className='w-[50%] place-content-center bg-gray-100 collection-heading col-lg-6 col-12 '>
-              <h1 className='text-[#FFCC00] w-[80%] ml-12 text-5xl font-medium'>Tất cả sản phẩm</h1>
-            </div>
-          </div>
-        </div>
-      )}
-      <div className='flex flex-row justify-between items-center my-4 px-8 space-x-2 md:space-x-4'>
-        {/* Nút Bộ lọc */}
-        <Button icon={<FilterOutlined />} onClick={show} className='flex items-center text-sm md:text-base'>
-          Bộ lọc
-        </Button>
-
-        {/* Dropdown Sắp xếp */}
-        <Dropdown
-          className=''
-          menu={{
-            items: menuItems,
-            onClick: (e) => handleMenuClick(e.key)
-          }}
-        >
-          <Button icon={<SortAscendingOutlined />}>Sắp xếp</Button>
-        </Dropdown>
       </div>
-      <hr className='my-4 ' />
+
+      <div className='flex flex-row justify-between items-center my-4 px-8'>
+        {/* Bộ lọc và Sắp xếp */}
+        <div className='flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-12 w-full'>
+          {/* Bộ lọc */}
+          <div className='flex items-center ml-20'>
+            <Button icon={<FilterOutlined />} className='text-sm md:text-base pr-4'>
+              Bộ lọc
+            </Button>
+            {/* <div className='h-8 border-r-2 border-gray-300 ml-12 md:block invisible md:visible' /> */}
+          </div>
+
+          {/* Danh mục sản phẩm */}
+          <Dropdown
+            overlay={
+              <div className='p-4 bg-white shadow-lg rounded-lg'>
+                <Checkbox
+                  checked={selectedCategories.length === 0} // Không chọn danh mục nào
+                  onChange={() => setSelectedCategories([])} // Reset danh mục
+                >
+                  Tất cả sản phẩm
+                </Checkbox>
+                <br />
+                {categories?.res?.map((category: ICategory) => (
+                  <div key={category._id}>
+                    <Checkbox
+                      checked={selectedCategories.includes(String(category._id))}
+                      onChange={() => handleCategorySelect(String(category._id))}
+                    >
+                      {category.name}
+                    </Checkbox>
+                  </div>
+                ))}
+              </div>
+            }
+          >
+            <Button className='text-sm md:text-base min-w-[200px] flex items-center'>
+              Danh mục sản phẩm
+              <DownOutlined className='mr-2' />
+            </Button>
+          </Dropdown>
+
+          {/* Lọc giá */}
+          <Dropdown
+            overlay={
+              <div className='p-4 bg-white shadow-lg rounded-lg'>
+                <Checkbox
+                  checked={selectedPriceRanges.includes('Dưới 1.000.000₫')}
+                  onChange={() => handlePriceRangeChange('Dưới 1.000.000₫')}
+                >
+                  Dưới 1.000.000₫
+                </Checkbox>
+                <br />
+                <Checkbox
+                  checked={selectedPriceRanges.includes('1.000.000₫ - 2.000.000₫')}
+                  onChange={() => handlePriceRangeChange('1.000.000₫ - 2.000.000₫')}
+                >
+                  1.000.000₫ - 2.000.000₫
+                </Checkbox>
+                <br />
+                <Checkbox
+                  checked={selectedPriceRanges.includes('2.000.000₫ - 3.000.000₫')}
+                  onChange={() => handlePriceRangeChange('2.000.000₫ - 3.000.000₫')}
+                >
+                  2.000.000₫ - 3.000.000₫
+                </Checkbox>
+                <br />
+                <Checkbox
+                  checked={selectedPriceRanges.includes('3.000.000₫ - 4.000.000₫')}
+                  onChange={() => handlePriceRangeChange('3.000.000₫ - 4.000.000₫')}
+                >
+                  3.000.000₫ - 4.000.000₫
+                </Checkbox>
+                <br />
+                <Checkbox
+                  checked={selectedPriceRanges.includes('Trên 4.000.000₫')}
+                  onChange={() => handlePriceRangeChange('Trên 4.000.000₫')}
+                >
+                  Trên 4.000.000₫
+                </Checkbox>
+              </div>
+            }
+          >
+            <Button className='text-sm md:text-base min-w-[200px] flex items-center'>
+              Giá sản phẩm
+              <DownOutlined className='mr-2' />
+            </Button>
+          </Dropdown>
+        </div>
+
+        {/* Sắp xếp (đẩy sang bên phải) */}
+        <div className='ml-auto mr-20 mb-24 sm:mb-0'>
+          <Dropdown
+            className='w-full sm:w-auto'
+            menu={{
+              items: menuItems,
+              onClick: (e) => handleMenuClick(e.key)
+            }}
+          >
+            <Button icon={<SortAscendingOutlined />}>Sắp xếp</Button>
+          </Dropdown>
+        </div>
+      </div>
+
       {window.innerWidth >= 600 ? (
-        <div className='flex flex-row justify-left my-4 px-8 space-x-2 md:space-x-4'>
+        <div className='flex flex-row justify-left ml-20 my-4 px-8 space-x-2 md:space-x-4'>
+          {/* Hiển thị selectedPriceRanges */}
           {selectedPriceRanges?.map((item) => (
             <div
               key={item}
@@ -210,9 +315,29 @@ const ProductsPage = () => {
               </button>
             </div>
           ))}
+
+          {/* Hiển thị selectedCategories */}
+          {selectedCategories?.map((categoryId) => {
+            // Tìm danh mục có ID khớp với categoryId trong danh sách categories
+            const category = categories?.res?.find((cat) => cat._id === categoryId)
+            return (
+              category && (
+                <div
+                  key={categoryId}
+                  className='flex items-center justify-between border border-gray-300 rounded-lg px-3 py-1 bg-gray-50'
+                >
+                  <p className='mr-2'>{category.name}</p>
+                  <button onClick={() => removeCategoryFilter(categoryId)} className='text-red-500 hover:text-red-700'>
+                    &times;
+                  </button>
+                </div>
+              )
+            )
+          })}
         </div>
       ) : (
         <div className='grid grid-cols-2 gap-2 my-4 px-5 sm:gap-4'>
+          {/* Hiển thị selectedPriceRanges */}
           {selectedPriceRanges?.map((item) => (
             <div
               key={item}
@@ -224,116 +349,30 @@ const ProductsPage = () => {
               </button>
             </div>
           ))}
+
+          {/* Hiển thị selectedCategories */}
+          {selectedCategories?.map((categoryId) => {
+            // Tìm danh mục có ID khớp với categoryId trong danh sách categories
+            const category = categories?.res?.find((cat) => cat._id === categoryId)
+            return (
+              category && (
+                <div
+                  key={categoryId}
+                  className='flex items-center justify-between border border-gray-300 rounded-lg px-3 py-1 bg-gray-50'
+                >
+                  <p className='mr-2'>{category.name}</p>
+                  <button onClick={() => removeCategoryFilter(categoryId)} className='text-red-500 hover:text-red-700'>
+                    &times;
+                  </button>
+                </div>
+              )
+            )
+          })}
         </div>
       )}
-      <Drawer width={280} title='BỘ LỌC' onClose={onClose} open={open} placement='left'>
-        <div>
-          <div className='p-2'>
-            {/* Product Categories */}
-            <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Danh mục sản phẩm</h4>
 
-              <Link className='text-black hover:text-yellow-500' to={`/products_page`}>
-                Tất cả sản phẩm
-              </Link>
-              <br />
-
-              {categories?.res?.map((category: ICategory) => (
-                <div key={category._id}>
-                  {' '}
-                  {/* Thêm key để tránh lỗi React */}
-                  <Link className='text-black hover:text-yellow-500' to={`/products_page/${category._id}`}>
-                    {category.name}
-                  </Link>
-                  <br />
-                </div>
-              ))}
-            </div>
-
-            <hr />
-            {/* Supplier */}
-            {/* <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Nhà cung cấp</h4>
-              <Checkbox>Khác</Checkbox>
-            </div> */}
-            {/* <hr /> */}
-            {/* Price Filter */}
-            <div className='my-4'>
-              <h4 className='mb-2 text-lg'>Lọc giá</h4>
-              <Checkbox
-                checked={selectedPriceRanges.includes('Dưới 1.000.000₫')}
-                onChange={() => handlePriceRangeChange('Dưới 1.000.000₫')}
-              >
-                Dưới 1.000.000₫
-              </Checkbox>
-              <br />
-              <Checkbox
-                className=''
-                checked={selectedPriceRanges.includes('1.000.000₫ - 2.000.000₫')}
-                onChange={() => handlePriceRangeChange('1.000.000₫ - 2.000.000₫')}
-              >
-                1.000.000₫ - 2.000.000₫
-              </Checkbox>
-              <br />
-              <Checkbox
-                checked={selectedPriceRanges.includes('2.000.000₫ - 3.000.000₫')}
-                onChange={() => handlePriceRangeChange('2.000.000₫ - 3.000.000₫')}
-              >
-                2.000.000₫ - 3.000.000₫
-              </Checkbox>
-              <br />
-              <Checkbox
-                checked={selectedPriceRanges.includes('3.000.000₫ - 4.000.000₫')}
-                onChange={() => handlePriceRangeChange('3.000.000₫ - 4.000.000₫')}
-              >
-                3.000.000₫ - 4.000.000₫
-              </Checkbox>
-              <br />
-              <Checkbox
-                checked={selectedPriceRanges.includes('Trên 4.000.000₫')}
-                onChange={() => handlePriceRangeChange('Trên 4.000.000₫')}
-              >
-                Trên 4.000.000₫
-              </Checkbox>
-            </div>
-
-            <hr />
-            {/* Color Filter */}
-            {/* <div className='my-4'>
-              <h4 className='mb-2'>Màu sắc</h4>
-              <div className='flex flex-wrap gap-2'>
-                {[
-                  'bg-pink-500',
-                  'bg-orange-500',
-                  'bg-red-500',
-                  'bg-gray-400',
-                  'bg-white',
-                  'bg-black',
-                  'bg-green-500',
-                  'bg-yellow-500',
-                  'bg-blue-500'
-                ].map((colorClass, index) => (
-                  <div key={index} className={`w-6 h-6 border rounded cursor-pointer ${colorClass}`} />
-                ))}
-              </div>
-            </div> */}
-          </div>
-        </div>
-      </Drawer>
       {/* sản phẩm  */}
-      <div className='mx-auto container mt-20'>
-        <h2 className='text-center text-[25px] sm:text-[45px] mb-8 mt-10 md:mt-20 text-[#FCA120]'>
-          Sản phẩm mới ra mắt
-          {/* <button
-                    className='flex items-center justify-center gap-1 border border-white hover:border-[#FCA120] rounded-full pl-2 mx-auto'
-                    onClick={() => handleAddToCart(String(product._id))}
-                  >
-                    <span className='text-[12px] uppercase font-semibold text-ellipsis '>Thêm vào giỏ</span>
-                    <div className='p-[6px] bg-[#FCA120] rounded-full'>
-                      <Cart />
-                    </div>
-                  </button> */}
-        </h2>
+      <div className='mx-auto container mt-12'>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
           {currentProducts
             .filter((product) => !product.is_hidden)
@@ -377,55 +416,7 @@ const ProductsPage = () => {
                         <span className='text-[#FF0000] font-semibold'>
                           {(hoveredPrices[product._id] || price).toLocaleString()}₫
                         </span>
-                        {/* {hoveredPrices[product._id] ? (
-                        <span className='text-[#878c8f] font-light line-through text-[13px]'>
-                          {product?.variants?.[0]?.sku_id?.price.toLocaleString()}₫
-                        </span>
-                      ) : null} */}
                       </div>
-                      {/* <div className='flex space-x-4'>
-                      {product.variants.map((variant, idx) => {
-                        const value = variant.option_value_id.value
-                        const bgColor =
-                          value === 'Nâu' ? 'bg-[#A0522D]' : value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
-
-                        const isSelected = hoveredImages[product._id]
-                          ? hoveredImages[product._id] === variant.sku_id.image?.[0]
-                          : idx === 0 // Mặc định chọn màu đầu nếu chưa hover
-
-                        return (
-                          <div
-                            key={idx}
-                            className={`w-6 h-6 rounded-full ${bgColor} cursor-pointer`}
-                            title={value}
-                            style={{
-                              outline: isSelected ? '2px solid black' : 'none', // Hiển thị viền nếu được chọn
-                              outlineOffset: '3px'
-                            }}
-                            onMouseEnter={() => {
-                              setHoveredImages((prev) => ({
-                                ...prev,
-                                [product._id]: variant.sku_id.image?.[0] || '' // Cập nhật ảnh khi hover
-                              }))
-                              setHoveredPrices((prev) => ({
-                                ...prev,
-                                [product._id]: variant.sku_id.price || null // Cập nhật giá khi hover
-                              }))
-                            }}
-                            onClick={() => {
-                              setHoveredImages((prev) => ({
-                                ...prev,
-                                [product._id]: variant.sku_id.image?.[0] // Duy trì trạng thái hover sau khi click
-                              }))
-                              setHoveredPrices((prev) => ({
-                                ...prev,
-                                [product._id]: variant.sku_id.price // Duy trì giá sau khi click
-                              }))
-                            }}
-                          />
-                        )
-                      })}
-                    </div> */}
                       <Button>xem chi tiết</Button>
                     </div>
                   </Link>
