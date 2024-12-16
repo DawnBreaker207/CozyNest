@@ -49,7 +49,7 @@ const RelatedProduct = ({ id }: Props) => {
                         title='Xem nhanh'
                       />
                       <div className='mx-2 text-center space-y-2 mt-3'>
-                        <h3>{firstVariant?.sku_id?.name}</h3>
+                        <h3 className='line-clamp-2'>{firstVariant?.sku_id?.name}</h3>
                         <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
                           {/* Hiển thị giá thay đổi khi hover */}
                           <span className='text-[#FF0000] font-semibold'>
