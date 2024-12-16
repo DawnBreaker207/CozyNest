@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import instance from '@/configs/axios'
 import Cookies from 'js-cookie'
 import { Button, Spin } from 'antd'
+import CustomLoadingPage from '@/components/Loading'
 
 const PaymentResultPage = () => {
   const location = useLocation()
@@ -85,11 +86,7 @@ const PaymentResultPage = () => {
     <div className='min-h-screen flex items-center justify-center bg-gray-100 py-10 px-5'>
       <div className='bg-white shadow-lg rounded-lg p-8 max-w-md w-full'>
         {loading ? (
-          <div className='text-center text-blue-600'>
-            <p className='text-xl'>
-              Đang xử lý... <Spin size='large' />
-            </p>
-          </div>
+          <CustomLoadingPage />
         ) : (
           <div className='text-center'>
             <p

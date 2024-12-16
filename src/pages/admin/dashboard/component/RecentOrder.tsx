@@ -1,3 +1,4 @@
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { ResAPI } from '@/types/responseApi'
 import { useQuery } from '@tanstack/react-query'
@@ -99,7 +100,7 @@ const RecentOrder = () => {
     <>
       {contextHolder}
       {isLoading ? (
-        <Spin size='large' className='w-full flex justify-center mt-10' />
+        <CustomLoadingPage />
       ) : isError ? (
         <Empty description='Không thể tải dữ liệu' className='mt-10' />
       ) : latestOrders.length === 0 ? (

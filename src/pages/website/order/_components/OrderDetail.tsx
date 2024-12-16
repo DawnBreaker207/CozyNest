@@ -28,6 +28,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import RefundOrderButton from './RefundOrderButton'
 import ReturnOrderButton from './ReturnOrderButton '
+import CustomLoadingPage from '@/components/Loading'
 const { Title } = Typography
 const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
@@ -118,9 +119,9 @@ const OrderDetail = () => {
     }
     mutate(reviewData, {
       onSuccess: () => {
-        form.resetFields()  
-        setImage(null)  
-        setSelectedProduct(null)  
+        form.resetFields()
+        setImage(null)
+        setSelectedProduct(null)
       }
     })
   }
@@ -280,7 +281,7 @@ const OrderDetail = () => {
     })
   }
   if (loading) {
-    return <Spin size='large' />
+    return <CustomLoadingPage />
   }
 
   if (isOrderNotFound) {
@@ -380,8 +381,8 @@ const OrderDetail = () => {
       </div>
 
       {/* Hiển thị hành trình trạng thái */}
-      <Card title='Lịch sử trạng thái' className='mb-6'>
-        <div className='mt-4 flex space-x-4'>
+      <Card title='Lịch sử trạng thái' className='mb-3'>
+        <div className='flex space-x-4'>
           {order.status_detail.length > 0 &&
             order.status_detail.map((item: any, index: number) => (
               <div key={index} className='detail'>

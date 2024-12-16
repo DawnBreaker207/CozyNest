@@ -12,6 +12,7 @@ import { Button, message, Spin } from 'antd'
 import 'react-quill/dist/quill.snow.css'
 import ReactQuill from 'react-quill'
 import Cookies from 'js-cookie'
+import CustomLoadingPage from '@/components/Loading'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -127,7 +128,7 @@ const ProductDetail = () => {
   }
   const selectedVariant = variants.find((variant: any) => variant.sku_id._id === selectedColorId)
   //Kiểm tra dữ liệu product
-  if (!data || !data) return <Spin size='large' />
+  if (!data || !data) return <CustomLoadingPage />
   const product = data
   console.log(product)
 
@@ -149,7 +150,7 @@ const ProductDetail = () => {
   if (isLoading) {
     return (
       <div>
-        <Spin size='large' />
+        <CustomLoadingPage />
       </div>
     )
   }

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { EyeOutlined } from '@ant-design/icons'
@@ -30,6 +31,8 @@ const AdminOrderPage = () => {
       }
     }
   })
+  console.log('da6', data?.data?.res?.items[0].products[0].products.length)
+
   const statuses = [
     { label: 'Đang xử lý', value: 'Processing' },
     { label: 'Chờ xác nhận', value: 'Pending' },
@@ -47,7 +50,7 @@ const AdminOrderPage = () => {
       .map((order: any, index: number) => ({
         key: index + 1,
         orderId: order._id || order.invoiceId,
-        product: `${order.products.length}` || 'N/A',
+        product: `${order?.products[0]?.products?.length}`,
         date: new Date(order.createdAt).toLocaleDateString(), // Định dạng lại ngày
         customer: order.customer_name,
         total: `${order.total_amount.toLocaleString()} VNĐ`,
@@ -61,8 +64,6 @@ const AdminOrderPage = () => {
         const isDateMatch = dateFilter
           ? new Date(order.date).toLocaleDateString() === dateFilter.format('DD/MM/YYYY')
           : true
-        console.log(isStatusMatch)
-        console.log(isDateMatch)
 
         return isStatusMatch && isDateMatch
       }) || []
@@ -138,7 +139,7 @@ const AdminOrderPage = () => {
   if (isLoading)
     return (
       <div>
-        <Spin size='large' />
+       <CustomLoadingPage />
       </div>
     )
   if (isError) return <div>{error.message}</div>

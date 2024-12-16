@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import useCart from '@/hooks/useCart'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
@@ -53,7 +54,7 @@ const CheckOutOrder = () => {
     }
   }, [isError, navigate])
 
-  if (isLoading) return <Spin size='large' />
+  if (isLoading) return  <CustomLoadingPage />
   if (isError)
     return (
       <div className='text-center mb-10 mt-20'>

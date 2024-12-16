@@ -6,6 +6,7 @@ import { Button, Card, Col, Pagination, Row, Spin, Typography } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatCurrency } from '../../../../utils/formatCurrency'
+import CustomLoadingPage from '@/components/Loading'
 
 // Đối tượng ánh xạ trạng thái
 const orderStatusMap: { [key: string]: string } = {
@@ -85,7 +86,7 @@ const OrderPage = () => {
   }
 
   if (isLoading) {
-    return <Spin size='large' />
+    return <CustomLoadingPage />
   }
 
   if (isError) {
