@@ -31,7 +31,6 @@ const AdminOrderPage = () => {
       }
     }
   })
-  console.log('da6', data?.data?.res?.items[0].products[0].products.length)
 
   const statuses = [
     { label: 'Đang xử lý', value: 'Processing' },

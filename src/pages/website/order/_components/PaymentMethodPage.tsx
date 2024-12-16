@@ -2,10 +2,11 @@
 /* PaymentMethodPage.tsx */
 
 import instance from '@/configs/axios'
+import { useCartStore } from '@/hooks/store/cartStore'
 import useCart from '@/hooks/useCart'
 import { useCookie } from '@/hooks/useStorage'
 import { RightOutlined } from '@ant-design/icons'
-import { Button, Form, notification, Radio } from 'antd'
+import { Button, Form, message, notification, Radio } from 'antd'
 import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -32,7 +33,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   const [installationFee, setInstallationFee] = useState(0)
   const navigate = useNavigate()
   const { data } = useCart()
-
+  const { products, quantities } = useCartStore()
   const cartId = data?.res?.cart_id
   const handleChange = (e: any) => {
     setSelectedPaymentMethod(e.target.value)
@@ -57,8 +58,37 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
   useEffect(() => {
     onInstallationCostChange(installationFee)
   }, [installationFee, onInstallationCostChange])
-
   const handlePayment = async () => {
+    const cartItems = products.map((product, index) => {
+      return {
+        productId: product.sku_id.product_id._id, // Đảm bảo _id là một thuộc tính hợp lệ
+        skuId: product.sku_id._id, // Đảm bảo sku_id._id là hợp lệ
+        quantity: quantities[index] // Kiểm tra số lượng
+      }
+    })
+    try {
+      // Gọi API kiểm tra tồn kho
+      const response = await instance.post('/stock/checkStock', { cartItems })
+
+      if (response.status === 200) {
+        // Nếu tồn kho đủ, chuyển hướng đến trang thanh toán
+        navigate('/check_out')
+      }
+    } catch (error: any) {
+      // Nếu có lỗi, tức là có sản phẩm vượt quá số lượng tồn kho
+      if (error.response && error.response.status === 400) {
+        const unavailableProducts = error.response.data.res
+        // Lưu dữ liệu sản phẩm không đủ số lượng vào localStorage
+        localStorage.setItem('unavailableProducts', JSON.stringify(unavailableProducts))
+
+        // Chuyển hướng sang trang vấn đề tồn kho
+        navigate('/stock_propblem')
+        return
+      } else {
+        // Hiển thị thông báo lỗi khác
+        message.error('Đã có lỗi xảy ra khi kiểm tra tồn kho')
+      }
+    }
     // TODO: Update this
     const finalOrderData = {
       ...orderData,
