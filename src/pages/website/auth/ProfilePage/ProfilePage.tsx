@@ -150,15 +150,6 @@ const ProfilePage = () => {
                 </div>
               </Link>
               <Link
-                to='#orders'
-                className='block px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-blue-400 hover:text-black focus:bg-blue-400 focus:text-black transition duration-200'
-              >
-                <div className='flex items-center space-x-2'>
-                  <MdOutlineEditCalendar className='text-xl' />
-                  <span>Đơn hàng</span>
-                </div>
-              </Link>
-              <Link
                 to='#updatePassword'
                 className={`block px-4 py-2 bg-white text-gray-700 font-medium rounded-lg hover:bg-blue-400 hover:text-black focus:bg-blue-400 focus:text-black transition duration-200 ${activeTab === 'password' ? 'bg-blue-400 text-black' : ''}`}
                 onClick={() => setActiveTab('password')}

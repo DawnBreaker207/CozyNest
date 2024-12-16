@@ -139,7 +139,7 @@ const AdminOrderDetail = () => {
   return (
     <div>
       {/* Overlay loading */}
-      {loading && <CustomLoadingPage />}
+      {loading && <Spin size='large' className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2' />}
       <div className='container mx-auto px-6'>
         <div className='flex items-center justify-between'>
           <h1 className='text-2xl font-bold mb-5'>Chi tiết đơn hàng</h1>
