@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import instance from '@/configs/axios'
 import Cookies from 'js-cookie'
-import { Button, Spin } from 'antd'
+import { Button, notification, Spin } from 'antd'
+import CustomLoadingPage from '@/components/Loading'
 
 const PaymentResultPage = () => {
   const location = useLocation()
@@ -75,21 +76,45 @@ const PaymentResultPage = () => {
   }, [location.search, navigate])
 
   // Xử lý thanh toán lại
-  const handleRetryPayment = () => {
-    const orderId = Cookies.get('orderId')
-    alert(orderId)
-    navigate(`/paymentRetry/${orderId}`)
+  const handleRetryPayment = async () => {
+    try {
+      const orderId = Cookies.get('orderId')
+      // Lấy dữ liệu đơn hàng từ backend
+      const { data: currentOrder } = await instance.get(`/orders/${orderId}`)
+      console.log(currentOrder)
+
+      // Kiểm tra nếu trạng thái thanh toán là "Unpaid", chuyển hướng đến payment_url
+      if (currentOrder?.res?.payment_status === 'Unpaid') {
+        const paymentUrl = currentOrder?.res?.payment_url
+        if (paymentUrl) {
+          // Chuyển hướng đến trang thanh toán
+          window.location.href = paymentUrl
+        } else {
+          notification.error({
+            message: 'Lỗi thanh toán',
+            description: 'Không tìm thấy đường dẫn thanh toán.'
+          })
+        }
+      } else {
+        notification.info({
+          message: 'Thanh toán đã hoàn tất',
+          description: 'Đơn hàng đã thanh toán thành công.'
+        })
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      notification.error({
+        message: 'Lỗi',
+        description: 'Thanh toán không thành công. Vui lòng thử lại!'
+      })
+    }
   }
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-gray-100 py-10 px-5'>
       <div className='bg-white shadow-lg rounded-lg p-8 max-w-md w-full'>
         {loading ? (
-          <div className='text-center text-blue-600'>
-            <p className='text-xl'>
-              Đang xử lý... <Spin size='large' />
-            </p>
-          </div>
+          <CustomLoadingPage />
         ) : (
           <div className='text-center'>
             <p

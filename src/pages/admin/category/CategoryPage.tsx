@@ -1,39 +1,83 @@
 import CustomLoadingPage from '@/components/Loading'
-import useCategoryMutation from '@/hooks/useCategoryMutations'
+import instance from '@/configs/axios'
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
+import { EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Button, Input, message, Popconfirm, Select, Space, Table, Tag } from 'antd'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+
+// Hàm loại bỏ dấu (Accents) trong chuỗi
+const removeAccents = (str: string) => {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+}
 
 const CategoryPage = () => {
   const queryClient = useQueryClient()
   const [messageApi, contextHolder] = message.useMessage()
 
+  const [search, setSearch] = useState('') // Trạng thái tìm kiếm
+  const [sortOrder, setSortOrder] = useState('newest') // Trạng thái lọc theo ngày
+
   // Fetch data categories using custom hook
   const { data, isLoading, isError, error } = useCategoryQuery()
 
-  // Sử dụng hook cho xóa danh mục
-  const { mutate: deleteCategory } = useCategoryMutation({
-    action: 'DELETE',
+  const { mutate } = useMutation({
+    mutationFn: async (cate_id: any) => {
+      try {
+        return await instance.delete(`/categories/${cate_id}`)
+      } catch (error) {
+        throw new Error((error as any).message)
+      }
+    },
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Xóa thành công'
+        content: 'Xóa danh mục thành công'
       })
       queryClient.invalidateQueries({
         queryKey: ['CATEGORY_KEY']
       })
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: 'error',
+        content: error.message
+      })
     }
   })
 
+  // Hàm lọc danh mục theo tên và ngày
+  const filterCategories = () => {
+    let filteredCategories = data?.res || []
+
+    // Lọc theo tên (không phân biệt dấu)
+    if (search) {
+      filteredCategories = filteredCategories.filter((category: ICategory) =>
+        removeAccents(category.name.toLowerCase()).includes(removeAccents(search.toLowerCase()))
+      )
+    }
+
+    // Lọc theo ngày
+    if (sortOrder === 'newest') {
+      filteredCategories = filteredCategories.sort(
+        (a: ICategory, b: ICategory) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    } else if (sortOrder === 'oldest') {
+      filteredCategories = filteredCategories.sort(
+        (a: ICategory, b: ICategory) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      )
+    }
+
+    return filteredCategories
+  }
+
   // Chuẩn bị dữ liệu cho bảng
-  const dataSource =
-    data?.res?.map((item: ICategory) => ({
-      key: item._id,
-      ...item
-    })) || []
+  const dataSource = filterCategories().map((item: ICategory) => ({
+    key: item._id,
+    ...item
+  }))
 
   // Cấu trúc các cột của bảng
   const columns = [
@@ -45,7 +89,7 @@ const CategoryPage = () => {
         <Space size='middle'>
           <div>
             <div>{name}</div>
-            <div style={{ color: 'gray' }}>{record.products.length} Products</div>
+            <div style={{ color: 'gray' }}>{record.products.length} Sản phẩm</div>
           </div>
         </Space>
       )
@@ -77,22 +121,33 @@ const CategoryPage = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (category: ICategory) => (
-        <Space size='middle'>
-          <Link to={`/admin/categories/${category._id}/edit`}>
-            <Button icon={<EditOutlined />} />
-          </Link>
-          <Popconfirm
-            title='Xóa danh mục'
-            description='Bạn có chắc chắn muốn xóa danh mục này không?'
-            onConfirm={() => deleteCategory({ _id: category._id } as ICategory)}
-            okText='Có'
-            cancelText='Không'
-          >
-            <Button icon={<DeleteOutlined />} danger />
-          </Popconfirm>
-        </Space>
-      )
+      render: (category: ICategory) => {
+        return (
+          <Space size='middle'>
+            <Link to={`/admin/categories/${category._id}/edit`}>
+              <Button icon={<EditOutlined />} />
+            </Link>
+            <Popconfirm
+              title='Xóa danh mục'
+              description='Bạn có chắc chắn muốn xóa danh mục này không?'
+              onConfirm={() => {
+                if (category.type === 'default') {
+                  messageApi.open({
+                    type: 'error',
+                    content: 'Danh mục mặc định không thể xóa!'
+                  })
+                } else {
+                  mutate(category._id)
+                }
+              }}
+              okText='Có'
+              cancelText='Không'
+            >
+              <Button icon={<EyeInvisibleOutlined />} danger />
+            </Popconfirm>
+          </Space>
+        )
+      }
     }
   ]
 
@@ -108,6 +163,35 @@ const CategoryPage = () => {
   return (
     <>
       {contextHolder}
+      <div className='mb-5 flex items-center justify-between'>
+        <h1 className='text-2xl font-bold mb-4'>Quản lý danh mục</h1>
+        <Link to={`/admin/categories/add`}>
+          <Button type='primary'>
+            <PlusOutlined />
+            Thêm mới danh mục
+          </Button>
+        </Link>
+      </div>
+
+      {/* Tìm kiếm và lọc theo ngày */}
+      <div className='mb-5 flex items-center justify-between'>
+        <Input
+          placeholder='Tìm kiếm theo tên danh mục'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 500 }}
+        />
+        <Select
+          value={sortOrder}
+          onChange={(value) => setSortOrder(value)}
+          style={{ width: 150 }}
+          options={[
+            { label: 'Mới nhất', value: 'newest' },
+            { label: 'Cũ nhất', value: 'oldest' }
+          ]}
+        />
+      </div>
+
       <Table dataSource={dataSource} columns={columns} />
     </>
   )

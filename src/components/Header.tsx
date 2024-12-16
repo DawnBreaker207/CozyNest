@@ -20,6 +20,9 @@ import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, me
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { menu1 } from './data/Header'
+import 'react-quill/dist/quill.snow.css'
+import ReactQuill from 'react-quill'
+import { IProduct } from '@/types/product'
 
 const { useToken } = theme
 
@@ -182,14 +185,22 @@ const Header = () => {
           label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
           key: '1'
         },
-        ...(role === 'admin' || role === 'shipper'
+        ...(role === 'admin'
           ? [
               {
-                label: <a href='/admin'>Quản lý</a>, // Liên kết đến trang quản lý
+                label: <a href='/admin'>Quản lý</a>, // Admin: Link đến trang quản lý admin
                 key: '2'
               }
             ]
-          : []), // Nếu không phải admin, không thêm menu này
+          : []),
+        ...(role === 'shipper'
+          ? [
+              {
+                label: <a href='/admin/order'>Quản lý đơn hàng</a>, // Shipper: Link đến trang quản lý đơn hàng
+                key: '2'
+              }
+            ]
+          : []),
         { type: 'divider' }, // Đường kẻ phân cách
         {
           label: (
@@ -227,6 +238,11 @@ const Header = () => {
     mutate({ action: 'REMOVE', sku_id: products[0].sku_id._id })
     setIsModalVisible(false) // Ẩn modal sau khi xóa
   }
+  const unavailableProducts = products.filter((product) => product.sku_id.product_id.is_hidden)
+
+  // Tính tổng tiền sau khi loại bỏ sản phẩm không khả dụng
+  const total =
+    calculateTotal() - unavailableProducts.reduce((acc, product) => acc + product.price * product.quantity, 0)
   return (
     <div className='sticky bg-white bg-while z-50 w-full top-0'>
       {contextHolder}
@@ -262,21 +278,23 @@ const Header = () => {
                     <hr />
                     <li className='hover:bg-gray-100'>
                       <Link to='/products_page' className='block px-4 py-2 text-gray-700'>
-                        Sản phẩm mới
+                        Tất cả sản phẩm
                       </Link>
                       <hr />
                     </li>
                     {/* Danh sách các danh mục */}
-                    {categories.map((category) => (
-                      <>
-                        <li key={category._id} className='hover:bg-gray-100'>
-                          <Link to={`/category/${category._id}`} className='block px-4 py-2 text-gray-700'>
-                            {category.name}
-                          </Link>
-                        </li>
-                        <hr />
-                      </>
-                    ))}
+                    {categories
+                      .filter((category) => category.isHidden === false)
+                      .map((category) => (
+                        <>
+                          <li key={category._id} className='hover:bg-gray-100'>
+                            <Link to={`/categorie/${category._id}`} className='block px-4 py-2 text-gray-700'>
+                              {category.name}
+                            </Link>
+                          </li>
+                          <hr />
+                        </>
+                      ))}
                   </ul>
                 </div>
               )}
@@ -326,21 +344,25 @@ const Header = () => {
                       size='small'
                       bordered
                       dataSource={results}
-                      renderItem={(item: any) => (
+                      renderItem={(item: IProduct) => (
                         <List.Item>
                           <img
-                            src={item?.images?.[0]?.url}
+                            src={item?.variants[0]?.sku_id?.image[0]}
                             alt={item.name}
                             style={{ width: 50, height: 50, marginRight: 8 }}
                           />
-                          <div>
-                            <strong>{item.name}</strong>
-                            <p className='text-sm text-gray-500'>{item.description}</p>
-                            {/* Link tới trang chi tiết sản phẩm */}
-                            <Link to={`/detail/${item._id}`} className='text-blue-500 hover:underline'>
-                              Xem chi tiết
-                            </Link>
+                          <div className='flex flex-col mt-2 ml-2'>
+                            <strong className='-mt-2'>{item.name}</strong>
+                            <ReactQuill
+                              value={item.description.substring(0, 80)}
+                              readOnly
+                              theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
+                            />
                           </div>
+                          {/* Link tới trang chi tiết sản phẩm */}
+                          <Link to={`/detail/${item._id}`} className='text-blue-500 hover:underline'>
+                            Xem chi tiết
+                          </Link>
                         </List.Item>
                       )}
                     />
@@ -383,7 +405,7 @@ const Header = () => {
             {userId ? (
               <Button shape='circle' icon={<ShoppingCartOutlined />} className='relative ' onClick={onOpen}>
                 <span className='absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs'>
-                  {data?.res?.products?.length || 0}
+                  {products?.length || 0}
                 </span>
               </Button>
             ) : (
@@ -441,13 +463,16 @@ const Header = () => {
             {products.length > 0 ? (
               <div>
                 {products.map((product: any, index: number) => {
-                  // Tìm variant phù hợp với sku_id
+                  // Hiển thị sản phẩm khả dụng
                   const currentVariant = product?.sku_id?.product_id?.variants.find(
                     (variant: any) => variant?.sku_id === product?.sku_id?._id
                   )
-
+                  const isHidden = product.sku_id.product_id.is_hidden
                   return (
-                    <div key={product.sku_id._id} className='flex justify-between items-center mb-4 border-b pb-4'>
+                    <div
+                      key={product.sku_id._id}
+                      className={`flex justify-between items-center mb-4 border-b pb-4 ${isHidden ? 'opacity-50' : ''}`}
+                    >
                       {/* Hình ảnh và thông tin sản phẩm */}
                       <div className='flex items-center'>
                         <img
@@ -457,21 +482,19 @@ const Header = () => {
                         />
                         <div className='ml-2 flex flex-col justify-between'>
                           <p className='font-semibold'>{product.sku_id.product_id.name}</p>
-
-                          {/* Hiển thị giá trị option_value_id của variant hiện tại */}
+                          {isHidden && <div className=' text-xs lg:text-base ml-1 text-red-500'>Không khả dụng</div>}
                           <p>{currentVariant?.option_value_id?.label || 'Không xác định'}</p>
-
                           <div className='flex items-center justify-center mt-2'>
                             <button
-                              onClick={() => decrease(index)} // Truyền index để giảm số lượng
-                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                              onClick={() => decrease(index)}
+                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer'
                             >
                               -
                             </button>
-                            <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>{' '}
+                            <span className='mx-3 text-[#252A2B]'>{quantities[index]}</span>
                             <button
-                              onClick={() => increase(index)} // Truyền index để tăng số lượng
-                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer size-6 flex items-center justify-center'
+                              onClick={() => increase(index)}
+                              className='bg-gray-200 px-2 py-1 rounded-md cursor-pointer'
                             >
                               +
                             </button>
@@ -483,7 +506,6 @@ const Header = () => {
                         <button title='Xóa' onClick={() => setIsModalVisible(true)}>
                           <DeleteOutlined />
                         </button>
-
                         <Modal
                           title='Xác nhận xóa'
                           open={isModalVisible}
@@ -503,7 +525,7 @@ const Header = () => {
                 <div className='mt-4'>
                   <div className='flex justify-between font-semibold'>
                     <span>Tổng tiền:</span>
-                    <span className='text-red-500'>{calculateTotal().toLocaleString()}₫</span>
+                    <span className='text-red-500'>{total.toLocaleString()}₫</span>
                   </div>
                   <Link to={`/cart`}>
                     <button

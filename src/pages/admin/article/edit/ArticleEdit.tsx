@@ -2,7 +2,8 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticle } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
-import { CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { vietnameseChars2 } from '@/validations/validate'
+import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 import { useEffect, useState } from 'react'
@@ -77,7 +78,16 @@ const ArticleEditPage = () => {
   return (
     <>
       {contextHolder}
-      <div className='bg-white rounded-lg'>
+      <div className='rounded-lg'>
+        <div className='mb-5 flex items-center justify-between'>
+          <h1 className='text-2xl font-bold'>Cập nhật bài viết</h1>
+          <div className='flex items-center space-x-2'>
+            <Button>
+              <BackwardOutlined />
+              <Link to={`/admin/articles`}>Quay lại</Link>
+            </Button>
+          </div>
+        </div>
         <Form
           layout='vertical'
           onFinish={onFinish}
@@ -86,162 +96,172 @@ const ArticleEditPage = () => {
           }}
         >
           <div className='flex justify-between'>
-            <div>
-              <span className='text-[#3A5BFF]'>Article</span> <CaretRightOutlined /> <span>Edit Article</span>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <Button icon={<CloseOutlined />} className='text-[#858D9D] border border-gray-400 hover:bg-gray-200'>
-                <Link to={`/admin/articles`}>Cancel</Link>
-              </Button>
-              <Button
-                type='primary'
-                htmlType='submit'
-                icon={<PlusOutlined />}
-                className='bg-blue-500 hover:bg-blue-600'
+            <div className='w-[75%] pr-4'>
+              <Form.Item
+                label='Tiêu đề bài viết'
+                name='title'
+                rules={[{ required: true, message: 'Không được bỏ trống!' }]}
               >
-                Edit Article
-              </Button>
-            </div>
-          </div>
+                <Input placeholder='Tiêu đề bài viết' className='w-full' />
+              </Form.Item>
 
-          <div className='mt-5'>
-            <Form.Item label='Title' name='title' rules={[{ required: true, message: 'Title is required' }]}>
-              <Input placeholder='Enter article title...' className='w-full bg-[#F9F9FC]' />
-            </Form.Item>
-
-            <Form.Item label='Thumbnail'>
-              <Upload beforeUpload={handleUpload} showUploadList={false}>
-                <Button icon={<UploadOutlined />} disabled={uploading}>
-                  {uploading ? 'Uploading...' : 'Upload Thumbnail'}
-                </Button>
-              </Upload>
-              <div className='mt-2'>
-                {thumbnail ? (
-                  <img src={data?.thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
-                ) : (
-                  <p>No thumbnail uploaded</p>
-                )}
-              </div>
-            </Form.Item>
-
-            <Form.List name='content'>
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map((field, index) => (
-                    <div key={field.key} className='border p-4 mb-4 rounded-lg bg-gray-50'>
-                      <Form.Item
-                        label={`Heading ${index + 1}`}
-                        name={[field.name, 'heading']}
-                        rules={[{ required: true, message: 'Heading is required' }]}
-                      >
-                        <Input placeholder='Enter heading...' />
-                      </Form.Item>
-
-                      {/* Sử dụng ReactQuill cho paragraph */}
-                      <Form.Item
-                        label='Paragraph'
-                        name={[field.name, 'paragraph']}
-                        rules={[{ required: true, message: 'Paragraph is required' }]}
-                      >
-                        <ReactQuill
-                          value={form.getFieldValue(['content', field.name, 'paragraph'])}
-                          onChange={(value) => form.setFieldValue(['content', field.name, 'paragraph'], value)}
-                          modules={{
-                            toolbar: [
-                              [{ header: '1' }, { header: '2' }, { font: [] }],
-                              [{ list: 'ordered' }, { list: 'bullet' }],
-                              ['bold', 'italic', 'underline'],
-                              ['link'] // Thêm chức năng chèn ảnh
-                            ]
-                          }}
-                        />
-                      </Form.Item>
-
-                      <Form.List name={[field.name, 'images']}>
-                        {(imageFields, { add: addImage, remove: removeImage }) => (
-                          <>
-                            {imageFields.map((imageField) => (
-                              <div key={imageField.key} className='mb-2'>
-                                <Form.Item
-                                  label='Image'
-                                  name={[imageField.name, 'url']}
-                                  rules={[{ required: true, message: 'Image is required' }]}
-                                >
-                                  <Upload
-                                    beforeUpload={async (file) => {
-                                      try {
-                                        const response = await uploadFileCloudinary(file)
-                                        if (response) {
-                                          form.setFieldValue(
-                                            ['content', field.name, 'images', imageField.name, 'url'],
-                                            response
-                                          )
-                                          messageApi.success('Image uploaded successfully')
-                                        }
-                                      } catch (err) {
-                                        messageApi.error('Image upload failed')
-                                      }
-                                      return false
-                                    }}
-                                    showUploadList={false}
-                                  >
-                                    <Button icon={<UploadOutlined />}>Upload Image</Button>
-                                  </Upload>
-                                  <div className='mt-2'>
-                                    <img
-                                      // src={form.getFieldValue([
-                                      //   'content',
-                                      //   field.name,
-                                      //   'images',
-                                      //   imageField.name,
-                                      //   'url'
-                                      // ])}
-                                      src={data.content[index].images[imageField.name].url}
-                                      alt='Uploaded'
-                                      className='w-20 h-20 object-cover rounded'
-                                    />
-                                  </div>
-                                </Form.Item>
-
-                                <Form.Item label='Image Caption' name={[imageField.name, 'caption']}>
-                                  <Input placeholder='Enter image caption...' />
-                                </Form.Item>
-                                <Button type='dashed' onClick={() => removeImage(imageField.name)}>
-                                  Remove Image
-                                </Button>
-                              </div>
-                            ))}
-                            <Button type='dashed' onClick={() => addImage()}>
-                              Add Image
-                            </Button>
-                          </>
-                        )}
-                      </Form.List>
-
-                      <Button type='dashed' onClick={() => remove(field.name)}>
-                        Remove Section
-                      </Button>
-                    </div>
-                  ))}
-                  <Button type='dashed' onClick={() => add()}>
-                    Add Section
+              <Form.Item label='Ảnh'>
+                <Upload beforeUpload={handleUpload} showUploadList={false}>
+                  <Button icon={<UploadOutlined />} disabled={uploading}>
+                    {uploading ? 'Uploading...' : 'Tải ảnh'}
                   </Button>
-                </>
-              )}
-            </Form.List>
+                </Upload>
+                <div className='mt-2'>
+                  {thumbnail ? (
+                    <img src={data?.thumbnail} alt='Thumbnail' className='w-40 h-40 object-cover rounded' />
+                  ) : (
+                    <p>No thumbnail uploaded</p>
+                  )}
+                </div>
+              </Form.Item>
 
-            <Form.Item label='Author' name='author' rules={[{ required: true, message: 'Author is required' }]}>
-              <Input placeholder='Enter author name...' className='w-full bg-[#F9F9FC]' />
-            </Form.Item>
-          </div>
-          <div className='w-[20%]'>
+              <Form.List name='content'>
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map((field, index) => (
+                      <div key={field.key} className='border p-4 mb-4 rounded-lg bg-gray-50'>
+                        <Form.Item
+                          label={`Tiêu đề ${index + 1}`}
+                          name={[field.name, 'heading']}
+                          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                        >
+                          <Input placeholder='Enter heading...' />
+                        </Form.Item>
+
+                        {/* Sử dụng ReactQuill cho paragraph */}
+                        <Form.Item
+                          label='Nội dung'
+                          name={[field.name, 'paragraph']}
+                          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                        >
+                          <ReactQuill
+                            value={form.getFieldValue(['content', field.name, 'paragraph'])}
+                            onChange={(value) => form.setFieldValue(['content', field.name, 'paragraph'], value)}
+                            modules={{
+                              toolbar: [
+                                [{ header: '1' }, { header: '2' }, { font: [] }],
+                                [{ list: 'ordered' }, { list: 'bullet' }],
+                                ['bold', 'italic', 'underline'],
+                                ['link'] // Thêm chức năng chèn ảnh
+                              ]
+                            }}
+                          />
+                        </Form.Item>
+
+                        <Form.List name={[field.name, 'images']}>
+                          {(imageFields, { add: addImage, remove: removeImage }) => (
+                            <>
+                              {imageFields.map((imageField) => (
+                                <div key={imageField.key} className='mb-2'>
+                                  <Form.Item
+                                    label='Ảnh'
+                                    name={[imageField.name, 'url']}
+                                    rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+                                  >
+                                    <Upload
+                                      beforeUpload={async (file) => {
+                                        try {
+                                          const response = await uploadFileCloudinary(file)
+                                          if (response) {
+                                            form.setFieldValue(
+                                              ['content', field.name, 'images', imageField.name, 'url'],
+                                              response
+                                            )
+                                            messageApi.success('Image uploaded successfully')
+                                          }
+                                        } catch (err) {
+                                          messageApi.error('Image upload failed')
+                                        }
+                                        return false
+                                      }}
+                                      showUploadList={false}
+                                    >
+                                      <Button icon={<UploadOutlined />}>Tải ảnh</Button>
+                                    </Upload>
+                                    <div className='mt-2'>
+                                      <img
+                                        // src={form.getFieldValue([
+                                        //   'content',
+                                        //   field.name,
+                                        //   'images',
+                                        //   imageField.name,
+                                        //   'url'
+                                        // ])}
+                                        src={data.content[index].images[imageField.name].url}
+                                        alt='Uploaded'
+                                        className='w-20 h-20 object-cover rounded'
+                                      />
+                                    </div>
+                                  </Form.Item>
+
+                                  <Form.Item label='Tên ảnh' name={[imageField.name, 'caption']}>
+                                    <Input placeholder='Tên ảnh' />
+                                  </Form.Item>
+                                  <Button type='dashed' onClick={() => removeImage(imageField.name)}>
+                                    Xóa ảnh
+                                  </Button>
+                                </div>
+                              ))}
+                              <Button type='dashed' onClick={() => addImage()}>
+                                Thêm ảnh
+                              </Button>
+                            </>
+                          )}
+                        </Form.List>
+
+                        <Button type='dashed' onClick={() => remove(field.name)}>
+                          Thêm phần mới
+                        </Button>
+                      </div>
+                    ))}
+                    <Button type='dashed' onClick={() => add()}>
+                      Thêm phần mới
+                    </Button>
+                  </>
+                )}
+              </Form.List>
+
+              <Form.Item
+                label='Người viết'
+                className='mt-3'
+                name='author'
+                rules={[
+                  { required: true, message: 'Người viết là bắt buộc' },
+                  {
+                    min: 6,
+                    message: 'Người viết phải có tối thiểu 6 ký tự'
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (!value || vietnameseChars2.test(value)) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(
+                        new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                      )
+                    }
+                  }
+                ]}
+              >
+                <Input placeholder='Người viết' className='w-full' />
+              </Form.Item>
+            </div>
+            <div className='w-[20%]'>
               <div>
-                <h1 className='text-[18px] text-[#353535] font-semibold mb-6'>Status</h1>
                 <Form.Item name='isHidden' valuePropName='checked'>
-                  <Checkbox>hiển thị</Checkbox>
+                  <Checkbox>Hiển thị</Checkbox>
                 </Form.Item>
               </div>
             </div>
+          </div>
+          <Button type='primary' htmlType='submit'>
+            Cập nhật bài viết
+          </Button>
         </Form>
       </div>
     </>

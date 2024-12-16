@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect } from 'react'
+import io from 'socket.io-client'
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 import instance from '@/configs/axios'
 import { CartData } from '@/types/cart'
 import { ResAPI } from '@/types/responseApi'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import { debounce, reduce } from 'lodash'
-import { ChangeEvent, useEffect } from 'react'
 import { useCartStore } from './store/cartStore'
 import { useCookie } from './useStorage'
+import { debounce, reduce } from 'lodash'
+import { useNavigate } from 'react-router-dom'
 
 // Utility: Kiểm tra ObjectId hợp lệ
 const isValidObjectId = (id: string): boolean => /^[0-9a-fA-F]{24}$/.test(id)
@@ -16,7 +18,7 @@ const useCart = () => {
   const queryClient = useQueryClient()
   const [user] = useCookie('user', {})
   const userId = user?._id
-
+  const navigate = useNavigate()
   const setProducts = useCartStore((state) => state.setProducts)
   const setQuantities = useCartStore((state) => state.setQuantities)
   const { products, quantities } = useCartStore((state) => state)
@@ -25,7 +27,6 @@ const useCart = () => {
   const { data, refetch, ...restQuery } = useQuery<ResAPI<CartData>>({
     queryKey: ['cart', userId],
     queryFn: async () => {
-      // Kiểm tra userId hợp lệ
       if (!userId || !isValidObjectId(userId)) {
         console.error('Invalid userId format')
         return { res: { products: [], cartId: '' } }
@@ -33,12 +34,14 @@ const useCart = () => {
 
       try {
         const { data: cartData } = await instance.get(`/cart/${userId}`)
+        console.log(cartData)
 
+        // Không lọc sản phẩm, chỉ làm mờ các sản phẩm có is_hidden = true
         return cartData
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
-          setProducts([])
-          setQuantities([])
+          setProducts([]) // Reset giỏ hàng nếu không tìm thấy
+          setQuantities([]) // Reset số lượng nếu không tìm thấy
           return { res: { products: [], cart_id: '' } }
         }
         throw error
@@ -47,6 +50,44 @@ const useCart = () => {
     refetchOnWindowFocus: false,
     enabled: !!userId // Chỉ gọi API nếu userId tồn tại
   })
+
+  // Lắng nghe sự kiện cập nhật sản phẩm từ Socket.IO
+  useEffect(() => {
+    const socket = io('http://localhost:8888') // Đảm bảo địa chỉ đúng với server của bạn
+
+    socket.on('productUpdated', (data: any) => {
+      if (!data || !data.productId || !data.updatedData) {
+        console.error('Invalid data received from productUpdated:', data)
+        return // Ngừng xử lý nếu dữ liệu không hợp lệ
+      }
+
+      const { productId, updatedData } = data
+
+      console.log(`Product with ID ${productId} has been updated:`, updatedData)
+
+      // Kiểm tra nếu sản phẩm đã cập nhật nằm trong giỏ hàng
+      const isProductInCart = products.some((product) => product.sku_id.product_id._id === productId)
+
+      if (isProductInCart) {
+        console.log(`Product in cart has been updated, refreshing cart...`)
+
+        // Nếu đang ở trang checkout, điều hướng về trang giỏ hàng
+        if (window.location.pathname === '/check_out') {
+          navigate('/cart')
+        }
+
+        // Làm mới dữ liệu giỏ hàng
+        refetch() // Lấy lại dữ liệu giỏ hàng mới
+      } else {
+        console.log(`Updated product not in cart, no action taken.`)
+      }
+    })
+
+    // Dọn dẹp khi component unmount
+    return () => {
+      socket.disconnect()
+    }
+  }, [refetch])
 
   // Sử dụng useEffect để cập nhật state khi dữ liệu query thành công
   useEffect(() => {
@@ -58,7 +99,6 @@ const useCart = () => {
 
   // Hàm debounce để cập nhật số lượng sản phẩm trong giỏ hàng
   const updateQuantityDebounce = debounce(async (sku_id: string, quantity: number) => {
-    // Kiểm tra userId hợp lệ
     if (!userId || !isValidObjectId(userId)) {
       console.error('Invalid userId format')
       return
@@ -72,7 +112,7 @@ const useCart = () => {
   }, 300)
 
   // Xử lý sự kiện thay đổi số lượng sản phẩm
-  const handleQuantityChange = (sku_id: string, e: ChangeEvent<HTMLInputElement>) => {
+  const handleQuantityChange = (sku_id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const quantity = parseInt(e.target.value)
     updateQuantityDebounce(sku_id, quantity)
   }
@@ -90,7 +130,6 @@ const useCart = () => {
       sku_id?: string | number
       cart_id?: string
     }) => {
-      // Kiểm tra userId hợp lệ
       if (!userId || !isValidObjectId(userId)) {
         console.error('Invalid userId format')
         return

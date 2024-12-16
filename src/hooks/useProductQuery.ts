@@ -14,7 +14,7 @@ export const useProductQuery = (options?: Partial<IQuery>) => {
 
 export const useProduct = (id: string | undefined) => {
   const { data, ...rest } = useQuery<IProduct>({
-    queryKey: ['PRODUCT_DETAIL', id],
+    queryKey: ['PRODUCT_KEY', id],
     queryFn: async () => await getProductById(id)
   })
 

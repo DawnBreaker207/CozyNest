@@ -1,6 +1,8 @@
 import instance from '@/configs/axios'
+import { BackwardOutlined } from '@ant-design/icons'
 import { Button, DatePicker, Form, Input, InputNumber, message, Switch } from 'antd'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const CouponAdd = () => {
   const [form] = Form.useForm()
@@ -33,7 +35,16 @@ const CouponAdd = () => {
   }
 
   return (
-    <div className='p-4 max-w-3xl '>
+    <div>
+      <div className='flex item-center justify-between mb-5'>
+        <h1 className='text-2xl font-bold'>Thêm mới mã giảm giá</h1>
+        <Link to={`/admin/coupons`}>
+          <Button>
+            <BackwardOutlined />
+            Quay lại
+          </Button>
+        </Link>
+      </div>
       <Form
         form={form}
         onFinish={onFinish}
@@ -46,6 +57,7 @@ const CouponAdd = () => {
         <Form.Item
           label='Tên Mã Giảm Giá'
           name='name'
+          className='w-1/2'
           rules={[{ required: true, message: 'Vui lòng nhập tên mã giảm giá!' }]}
         >
           <Input placeholder='Nhập tên mã giảm giá' />
@@ -54,6 +66,7 @@ const CouponAdd = () => {
         <Form.Item
           label='Mã Coupon'
           name='couponCode'
+          className='w-1/2'
           rules={[{ required: true, message: 'Vui lòng nhập mã coupon!' }]}
         >
           <Input placeholder='Nhập mã coupon' />
@@ -62,6 +75,7 @@ const CouponAdd = () => {
         <Form.Item
           label='Giá trị'
           name='couponValue'
+          className='w-1/2'
           rules={[{ required: true, message: 'Vui lòng nhập giá trị coupon!' }]}
         >
           <InputNumber
@@ -75,6 +89,7 @@ const CouponAdd = () => {
         <Form.Item
           label='Số lượng'
           name='couponQuantity'
+          className='w-1/2'
           rules={[{ required: true, message: 'Vui lòng nhập số lượng coupon!' }]}
         >
           <InputNumber min={0} className='w-full' />
@@ -83,6 +98,7 @@ const CouponAdd = () => {
         <Form.Item
           label='Ngày bắt đầu'
           name='couponStartDate'
+          className='w-1/2'
           rules={[{ required: true, message: 'Vui lòng chọn ngày bắt đầu!' }]}
         >
           <DatePicker className='w-full' format='YYYY-MM-DD' />
@@ -91,6 +107,7 @@ const CouponAdd = () => {
         <Form.Item
           label='Ngày kết thúc'
           name='couponEndDate'
+          className='w-1/2'
           rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}
         >
           <DatePicker className='w-full' format='YYYY-MM-DD' />
@@ -100,11 +117,9 @@ const CouponAdd = () => {
           <Switch checkedChildren='Hoạt động' unCheckedChildren='Không hoạt động' />
         </Form.Item>
 
-        <Form.Item>
-          <Button type='primary' htmlType='submit' loading={loading} className='w-full'>
-            Tạo Mã Giảm Giá
-          </Button>
-        </Form.Item>
+        <Button type='primary' htmlType='submit' loading={loading}>
+          Tạo mã giảm giá
+        </Button>
       </Form>
     </div>
   )

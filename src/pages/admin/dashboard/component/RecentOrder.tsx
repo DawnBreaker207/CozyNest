@@ -1,10 +1,10 @@
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { ResAPI } from '@/types/responseApi'
 import { useQuery } from '@tanstack/react-query'
 import { Empty, message, Spin, Table, Tag } from 'antd'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
-interface Order {
+export interface Order {
   _id: string
   customer_name: string
   total_amount: number
@@ -29,11 +29,7 @@ const RecentOrder = () => {
     return data.data.res.items
   }
 
-  const {
-    data,
-    isLoading,
-    isError
-  } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['orders'],
     queryFn: async () => {
       return await getAllOrder()
@@ -74,7 +70,7 @@ const RecentOrder = () => {
             | 'Pending-Ship'
             | 'Delivering'
             | 'Delivered'
-            | 'Canceled'
+            | 'Cancelled'
             | 'Completed'
             | 'Returned'
             | 'Refunded'
@@ -87,7 +83,7 @@ const RecentOrder = () => {
             'Pending-Ship': 'orange',
             Delivering: 'orange',
             Delivered: 'green',
-            Canceled: 'red',
+            Cancelled: 'red',
             Completed: 'cyan',
             Returned: 'magenta',
             Refunded: 'purple'
@@ -102,20 +98,23 @@ const RecentOrder = () => {
   return (
     <>
       {contextHolder}
-
       {isLoading ? (
-        <Spin size='large' className='w-full flex justify-center mt-10' />
+        <CustomLoadingPage />
       ) : isError ? (
         <Empty description='Không thể tải dữ liệu' className='mt-10' />
       ) : latestOrders.length === 0 ? (
         <Empty description='Không có đơn hàng nào gần đây' className='mt-10' />
       ) : (
-        <Table
-          columns={columns}
-          dataSource={latestOrders}
-          rowKey='_id'
-          pagination={false} // Tắt phân trang
-        />
+        <div className='flex flex-col'>
+          <h2 className='text-2xl font-semibold mb-5 text-center'>Đơn hàng gần đây</h2>
+
+          <Table
+            columns={columns}
+            dataSource={latestOrders}
+            rowKey='_id'
+            pagination={false} // Tắt phân trang
+          />
+        </div>
       )}
     </>
   )

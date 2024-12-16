@@ -2,7 +2,9 @@ import IArticle from '@/types/article'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import ReactQuill from 'react-quill'
 import { Link, useParams } from 'react-router-dom'
+import 'react-quill/dist/quill.snow.css' // Import CSS cho React Quill
 
 const Linkone: React.FC = () => {
   const [articles, setArticles] = useState<IArticle[]>([])
@@ -66,7 +68,19 @@ const Linkone: React.FC = () => {
                 >
                   {section.heading}
                 </h1>
-                <p className='mb-4 text-gray-700 text-[14px]'>{section.paragraph}</p>
+                <p className='mb-4 text-gray-700 text-[14px]'>
+                  {section.paragraph ? (
+                    <div className='mb-4 text-gray-700 text-[14px]'>
+                      <ReactQuill
+                        value={section.paragraph}
+                        readOnly
+                        theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
+                      />
+                    </div>
+                  ) : (
+                    <p>No paragraph available</p>
+                  )}
+                </p>
                 {section.images &&
                   Array.isArray(section.images) &&
                   section.images.map(
@@ -107,32 +121,32 @@ const Linkone: React.FC = () => {
               {!isOpen && (
                 <>
                   {articles
-                  .filter((article) => article.isHidden === true)
-                  .map((article, index) => (
-                    <Link to={`/articles/${article._id}`} key={index}>
-                      <div className='shadow-shadowUser mt-1 px-5 pb-4'>
-                        {/* Các bài viết với kích thước hình ảnh bằng nhau */}
-                        <div className='flex items-center  mb-4'>
-                          <div className='relative w-auto'>
-                            <img
-                              title='img'
-                              src={article.thumbnail}
-                              className='w-40 h-14 object-cover' // Chiều rộng và chiều cao bằng nhau
-                              // Lấy URL hình ảnh từ mảng
-                            />
-                            <span className='absolute top-1/4 left-[-16px] border-2 border-white h-[28px] w-[28px] leading-[26px] text-center rounded-full bg-[#fca120] text-[#fff] text-xs z-10'></span>
-                          </div>
-                          <div className='ml-4 '>
-                            <div className='mb-1'>
-                              <p className='font-medium text-[13px] text-gray-800'>{article.title}</p>{' '}
-                              {/* Tiêu đề bài viết */}
+                    .filter((article) => article.isHidden === true)
+                    .map((article, index) => (
+                      <Link to={`/articles/${article._id}`} key={index}>
+                        <div className='shadow-shadowUser mt-1 px-5 pb-4'>
+                          {/* Các bài viết với kích thước hình ảnh bằng nhau */}
+                          <div className='flex items-center  mb-4'>
+                            <div className='relative w-auto'>
+                              <img
+                                title='img'
+                                src={article.thumbnail}
+                                className='w-40 h-14 object-cover' // Chiều rộng và chiều cao bằng nhau
+                                // Lấy URL hình ảnh từ mảng
+                              />
+                              <span className='absolute top-1/4 left-[-16px] border-2 border-white h-[28px] w-[28px] leading-[26px] text-center rounded-full bg-[#fca120] text-[#fff] text-xs z-10'></span>
                             </div>
-                            <p className='text-sm text-gray-500'>{article.created_at}</p> {/* Ngày bài viết */}
+                            <div className='ml-4 '>
+                              <div className='mb-1'>
+                                <p className='font-medium text-[13px] text-gray-800'>{article.title}</p>{' '}
+                                {/* Tiêu đề bài viết */}
+                              </div>
+                              <p className='text-sm text-gray-500'>{article.created_at}</p> {/* Ngày bài viết */}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    ))}
                 </>
               )}
             </div>

@@ -14,7 +14,7 @@ export const useCategoryQuery = (options?: Partial<IQuery>) => {
 
 export const useCategory = (id: string | undefined) => {
   const { data, ...rest } = useQuery({
-    queryKey: ['CATEGORY_DETAIL', id],
+    queryKey: ['CATEGORY_KEY', id],
     queryFn: async () => getCategoryById(id)
   })
 

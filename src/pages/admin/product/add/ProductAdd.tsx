@@ -3,10 +3,12 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useProductMutation from '@/hooks/useProductMutation'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
+import { vietnameseChars1 } from '@/validations/validate'
 import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Form, Input, InputNumber, message, Select, Upload } from 'antd'
 import { useState } from 'react'
+import ReactQuill from 'react-quill'
 import { Link, useNavigate } from 'react-router-dom'
 
 const ProductAddPage = () => {
@@ -41,11 +43,13 @@ const ProductAddPage = () => {
     console.log(updatedValues) // Kiểm tra giá trị trước khi gửi
     mutate(updatedValues)
   }
-
+  const handleQuillChange = (value: string) => {
+    console.log('Mô tả sản phẩm:', value)
+  }
   return (
     <>
       {contextHolder}
-      <div className='bg-white rounded-lg'>
+      <div className=' rounded-lg'>
         <Form layout='vertical' onFinish={onFinish}>
           <div className='flex justify-between'>
             <div>
@@ -63,12 +67,55 @@ const ProductAddPage = () => {
               <Form.Item
                 label='Tên sản phẩm'
                 name='name'
-                rules={[{ required: true, message: 'Tên sản phẩm là bắt buộc' }]}
+                rules={[
+                  {
+                    min: 6,
+                    message: 'Tên sản phẩm phải có tối thiểu 6 ký tự'
+                  },
+                  {
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject(new Error('Tên sản phẩm không được bỏ trống'))
+                      }
+
+                      // Kiểm tra đầu tiên chữ cái đầu phải là chữ và không phải ký tự đặc biệt hoặc số
+                      if (!vietnameseChars1.test(value)) {
+                        return Promise.reject(
+                          new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số')
+                        )
+                      }
+
+                      // Kiểm tra khoảng cách không quá 2 lần liên tiếp
+                      if (/\s{2,}/.test(value)) {
+                        return Promise.reject(new Error('Tên sản phẩm không được có quá 2 khoảng cách liên tiếp'))
+                      }
+
+                      return Promise.resolve()
+                    }
+                  }
+                ]}
               >
                 <Input placeholder='Tên sản phẩm' className='w-full' />
               </Form.Item>
-              <Form.Item label='Mô tả sản phẩm' name='description'>
-                <Input.TextArea rows={4} placeholder='Mô tả' className='w-full' />
+              <Form.Item
+                label='Mô tả sản phẩm'
+                name='description'
+                rules={[{ required: true, message: 'Vui lòng nhập mô tả sản phẩm!' }]}
+              >
+                {/* Sử dụng React Quill  */}
+                <ReactQuill
+                  theme='snow'
+                  placeholder='Mô tả sản phẩm'
+                  onChange={handleQuillChange} // Lắng nghe thay đổi từ React Quill
+                  modules={{
+                    toolbar: [
+                      [{ header: '1' }, { header: '2' }, { font: [] }],
+                      [{ list: 'ordered' }, { list: 'bullet' }],
+                      ['bold', 'italic', 'underline'],
+                      ['link']
+                    ]
+                  }}
+                />
               </Form.Item>
             </div>
             <div className='w-[20%]'>
@@ -96,7 +143,7 @@ const ProductAddPage = () => {
               </Form.Item>
               <div>
                 <Form.Item label='Trạng thái hiển thị' name='is_hidden' valuePropName='checked'>
-                  <Checkbox>Hiển thị</Checkbox>
+                  <Checkbox>Ẩn sản phẩm</Checkbox>
                 </Form.Item>
               </div>
             </div>

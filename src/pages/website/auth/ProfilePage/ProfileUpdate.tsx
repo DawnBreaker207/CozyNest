@@ -7,6 +7,7 @@ import CustomLoadingPage from '@/components/Loading'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
 import { IUsers } from '@/types/user'
+import { accountNamePattern } from '@/validations/validate'
 
 interface ProfileProps {
   formVisible: boolean
@@ -63,14 +64,21 @@ const ProfilePage: React.FC<ProfileProps> = () => {
         <Form form={form} layout='vertical' autoComplete='off' onFinish={onFinish} initialValues={{ ...data }}>
           <Form.Item
             name='username'
-            label='Tên khách hàng'
-            rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+            label='Tên tài khoản'
+            rules={[
+              { required: true, message: 'Không được bỏ trống!' },
+              {
+                pattern: accountNamePattern,
+                message: 'Tên tài khoản chỉ được chứa chữ cái, số và dấu cách, không có ký tự đặc biệt!'
+              }
+            ]}
           >
             <Input
               className='w-full py-3 px-4 border border-gray-300 rounded-md text-sm'
               placeholder='Tên khách hàng'
             />
           </Form.Item>
+
           <Form.Item
             name='email'
             label='Email khách hàng'

@@ -135,7 +135,7 @@ const Category = () => {
           <Slider {...settings}>
             {/* Item 1 */}
             {categories.map((category) => (
-              <Link to={`/category/${category._id}`} key={category._id} className='block  py-2 text-gray-700'>
+              <Link to={`/categorie/${category._id}`} key={category._id} className='block  py-2 text-gray-700'>
                 <div className='item-category p-3'>
                   {' '}
                   <div className='media-category effect-image'>

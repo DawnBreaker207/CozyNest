@@ -7,12 +7,12 @@ import EditCategoryPage from '@/pages/admin/category/edit/CategoryEdit'
 import CouponPage from '@/pages/admin/coupon/CouponPage'
 import CouponAdd from '@/pages/admin/coupon/add/CouponAdd'
 import CouponEdit from '@/pages/admin/coupon/edit/CouponEdit'
-import AdminCustomerDetailPage from '@/pages/admin/customer/[id]/CustomerDeTail'
 import AdminCustomerPage from '@/pages/admin/customer/page'
 import DashboardPage from '@/pages/admin/dashboard/page'
 import LayoutAdmin from '@/pages/admin/layout'
 import AdminOrderDetail from '@/pages/admin/order/OrderDetail'
 import AdminOrderPage from '@/pages/admin/order/OrderPage'
+import RefundOrdersAdmin from '@/pages/admin/order/OrderRefunds'
 import ReturnOrdersAdmin from '@/pages/admin/order/OrderReturns'
 import AdminProductPage from '@/pages/admin/product/ProductPage'
 import ProductAddPage from '@/pages/admin/product/add/ProductAdd'
@@ -48,7 +48,6 @@ import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 import OrderDetail from '@/pages/website/order/_components/OrderDetail'
 import OrderPage from '@/pages/website/order/_components/OrderPage'
 import PaymentResultPage from '@/pages/website/order/_components/PaymentResultPage '
-import PaymentPage from '@/pages/website/order/_components/RetryPayment'
 import StockPropblem from '@/pages/website/order/_components/StockPropblem'
 import CheckoutPage from '@/pages/website/order/page'
 import ProductsPage from '@/pages/website/products/_components/ProductPage'
@@ -69,7 +68,7 @@ function App() {
         { path: 'products_page', Component: ProductsPage },
         // Cart
 
-        { path: 'products_page/:id', Component: ProductsPageDetail },
+        { path: 'categorie/:id', Component: ProductsPageDetail },
 
         { path: 'category/:id', Component: CategoryProductsPage }, // Route path="/products_page?category=:categoryId" element={<ProductsPage />} /> {/* Trang sản phẩm của danh mục */}
 
@@ -77,7 +76,6 @@ function App() {
         { path: 'check_out', Component: CheckoutPage },
         { path: 'paymentresult', Component: PaymentResultPage },
         { path: 'orders/orderdetail', Component: OrderDetail },
-        { path: 'paymentRetry/:id', Component: PaymentPage },
         { path: 'stock_propblem', Component: StockPropblem },
         { path: 'intro', Component: Introduction },
         { path: 'orders', Component: OrderPage },
@@ -125,6 +123,7 @@ function App() {
         { path: 'order', Component: AdminOrderPage },
         { path: 'orderDetail/:id', Component: AdminOrderDetail },
         { path: 'order_returns', Component: ReturnOrdersAdmin },
+        { path: 'order_refunds', Component: RefundOrdersAdmin },
 
         // Variant
         {
@@ -169,12 +168,13 @@ function App() {
         { path: 'articles/add', Component: ArticleAddPage },
         { path: 'articles/:id', Component: ArticleEditPage },
 
-        // Customer
+        // Coupon
         { path: 'coupons', Component: CouponPage },
         { path: 'coupons/add', Component: CouponAdd },
         { path: 'coupons/:id/edit', Component: CouponEdit },
-        { path: 'customer', Component: AdminCustomerPage },
-        { path: 'customer/:id', Component: AdminCustomerDetailPage }
+
+        // Customer
+        { path: 'customer', Component: AdminCustomerPage }
       ]
     }
   ])

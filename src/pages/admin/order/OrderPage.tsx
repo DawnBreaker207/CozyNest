@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Select, Space, Spin, Table, Tag } from 'antd'
+import { Button, Select, Space, Table, Tag } from 'antd'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -31,12 +32,24 @@ const AdminOrderPage = () => {
     }
   })
 
+  const statuses = [
+    { label: 'Đang xử lý', value: 'Processing' },
+    { label: 'Chờ xác nhận', value: 'Pending' },
+    { label: 'Đã xác nhận', value: 'Confirmed' },
+    { label: 'Đang chờ bên vận chuyển', value: 'Pending-Ship' },
+    { label: 'Đang vận chuyển', value: 'Delivering' },
+    { label: 'Giao hàng thành công', value: 'Delivered' },
+    { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Hoàn trả đơn hàng', value: 'Returned' },
+    { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
+    { label: 'Đã hủy đơn hàng', value: 'Cancelled' }
+  ]
   const dataSource =
     data?.data?.res?.items
       .map((order: any, index: number) => ({
         key: index + 1,
         orderId: order._id || order.invoiceId,
-        product: `${order.products.length} Product` || 'N/A',
+        product: `${order?.products[0]?.products?.length}`,
         date: new Date(order.createdAt).toLocaleDateString(), // Định dạng lại ngày
         customer: order.customer_name,
         total: `${order.total_amount.toLocaleString()} VNĐ`,
@@ -50,8 +63,6 @@ const AdminOrderPage = () => {
         const isDateMatch = dateFilter
           ? new Date(order.date).toLocaleDateString() === dateFilter.format('DD/MM/YYYY')
           : true
-        console.log(isStatusMatch)
-        console.log(isDateMatch)
 
         return isStatusMatch && isDateMatch
       }) || []
@@ -99,12 +110,16 @@ const AdminOrderPage = () => {
           'Pending-Ship': 'orange',
           Delivering: 'orange',
           Delivered: 'green',
-          Canceled: 'red',
+          Cancelled: 'red',
           Completed: 'cyan',
           Returned: 'magenta',
           Refunded: 'purple'
         }
-        return <Tag color={statusColors[status] || 'gray'}>{status.replace('-', ' ')}</Tag>
+
+        // Tìm trạng thái trong mảng statuses và lấy label tiếng Việt
+        const statusLabel = statuses.find((s) => s.value === status)?.label || status
+
+        return <Tag color={statusColors[status] || 'gray'}>{statusLabel}</Tag>
       }
     },
     {
@@ -123,56 +138,49 @@ const AdminOrderPage = () => {
   if (isLoading)
     return (
       <div>
-        <Spin size='large' />
+        <CustomLoadingPage />
       </div>
     )
   if (isError) return <div>{error.message}</div>
 
   return (
-    <div className='container mx-auto  px-6'>
-      <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-2xl font-bold'>Danh Sách Đơn Hàng</h1>
-      </div>
+    <>
+      <div className='container mx-auto  px-6'>
+        <div className='flex justify-between items-center mb-5'>
+          <h1 className='text-2xl font-bold'>Danh sách đơn hàng</h1>
+        </div>
 
-      {/* Filters */}
-      <div className='bg-white p-4 rounded shadow mb-4'>
-        <div className='flex justify-between items-center'>
-          <Button
-            type='dashed'
-            onClick={() => {
-              setStatusFilter('')
-              setDateFilter(null)
-            }}
-          >
-            Tất cả đơn hàng
-          </Button>
-          {/* <DatePicker placeholder='Chọn ngày' value={dateFilter} onChange={setDateFilter} format='DD/MM/YYYY' /> */}
-          <Select
-            value={statusFilter}
-            onChange={(value) => setStatusFilter(value)}
-            placeholder='Chọn trạng thái'
-            style={{ width: 200 }}
-          >
-            <Select.Option value=''>Tất cả trạng thái</Select.Option>
-            <Select.Option value='Processing'>Processing</Select.Option>
-            <Select.Option value='Pending'>Pending</Select.Option>
-            <Select.Option value='Confirmed'>Confirmed</Select.Option>
-            <Select.Option value='Pending-Ship'>Pending-Ship</Select.Option>
-            <Select.Option value='Delivering'>Delivering</Select.Option>
-            <Select.Option value='Delivered'>Delivered</Select.Option>
-            <Select.Option value='Canceled'>Canceled</Select.Option>
-            <Select.Option value='Completed'>Completed</Select.Option>
-            <Select.Option value='Returned'>Returned</Select.Option>
-            <Select.Option value='Refunded'>Refunded</Select.Option>
-          </Select>
+        {/* Filters */}
+        <div className='mb-4'>
+          <div className='flex justify-between items-center'>
+            {/* <DatePicker placeholder='Chọn ngày' value={dateFilter} onChange={setDateFilter} format='DD/MM/YYYY' /> */}
+            <Select
+              value={statusFilter}
+              onChange={(value) => setStatusFilter(value)}
+              placeholder='Chọn trạng thái'
+              style={{ width: 200 }}
+            >
+              <Select.Option value=''>Tất cả trạng thái</Select.Option>
+              <Select.Option value='Processing'>Đang xử lý</Select.Option>
+              <Select.Option value='Pending'>Chờ xác nhận</Select.Option>
+              <Select.Option value='Confirmed'>Đã xác nhận</Select.Option>
+              <Select.Option value='Pending-Ship'>Đang chờ bên vận chuyển</Select.Option>
+              <Select.Option value='Delivering'>Đang vận chuyển</Select.Option>
+              <Select.Option value='Delivered'>Giao hàng thành công</Select.Option>
+              <Select.Option value='Completed'>Đơn hàng hoàn thành</Select.Option>
+              <Select.Option value='Cancelled'>Đã hủy đơn hàng</Select.Option>
+              <Select.Option value='Returned'>Hoàn trả đơn hàng</Select.Option>
+              <Select.Option value='Refunded'>Hoàn tiền đơn hàng</Select.Option>
+            </Select>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className='bg-white p-6 rounded shadow'>
+          <Table dataSource={dataSource} columns={columns} />
         </div>
       </div>
-
-      {/* Table */}
-      <div className='bg-white p-6 rounded shadow'>
-        <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 10 }} />
-      </div>
-    </div>
+    </>
   )
 }
 

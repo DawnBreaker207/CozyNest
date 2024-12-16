@@ -92,8 +92,9 @@ const CustomFooter = () => {
               {activeSection === 'about' && (
                 <div>
                   <p className='text-sm'>
-                    Với các giải pháp công nghệ tốt nhất, Haravan là tất cả những gì bạn cần để xây dựng thương hiệu
-                    online, thành công trong bán lẻ và marketing đột phá.
+                    CozyNest – Đem đến sự kết hợp hoàn hảo giữa thẩm mỹ và tiện nghi. Mỗi sản phẩm là một tác phẩm nghệ
+                    thuật, nâng tầm không gian sống của bạn. Chúng tôi không chỉ bán nội thất, mà còn xây dựng tổ ấm mơ
+                    ước. Hãy để CozyNest đồng hành cùng bạn trên hành trình tạo nên phong cách riêng
                   </p>
                   <p className='mt-4 text-sm'>
                     <EnvironmentOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
@@ -121,8 +122,8 @@ const CustomFooter = () => {
             <div className='hidden md:block'>
               <h4 className='text-lg font-semibold mb-4'>Về CozyNet</h4>
               <p className='text-sm'>
-                Với các giải pháp công nghệ tốt nhất, Haravan là tất cả những gì bạn cần để xây dựng thương hiệu online,
-                thành công trong bán lẻ và marketing đột phá.
+                CozyNest – Đem đến sự kết hợp hoàn hảo giữa thẩm mỹ và tiện nghi. Hãy để CozyNest đồng hành cùng bạn
+                trên hành trình tạo nên phong cách riêng.
               </p>
               <p className='mt-4 text-sm'>
                 <EnvironmentOutlined style={{ fontSize: '16px', marginRight: '8px' }} />
@@ -158,6 +159,26 @@ const CustomFooter = () => {
                       <li className='text-sm text-white'>Tất cả sản phẩm</li>
                     </NavLink>
                   </ul>
+                  <>
+                    <h4 className='text-lg font-semibold mt-6'>Phương thức thanh toán</h4>
+                    <div className='flex mr-[200px] mt-4'>
+                      <img
+                        src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/momo_iroppc.svg'
+                        alt='MOMO'
+                        className='h-8'
+                      />
+                      <img
+                        src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/vnpay_new_lzopgz.svg'
+                        alt='Ahamove'
+                        className='h-8'
+                      />
+                      <img
+                        src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/zalopay_qazloz.svg'
+                        alt='J&T Express'
+                        className='h-8'
+                      />
+                    </div>
+                  </>
                 </>
               )}
               <hr className='my-4 border-t border-gray-600 ' />
@@ -173,6 +194,26 @@ const CustomFooter = () => {
                   <li className='text-sm text-white'>Tất cả sản phẩm</li>
                 </Link>
               </ul>
+              <>
+                <h4 className='text-lg font-semibold mt-6'>Phương thức thanh toán</h4>
+                <div className='flex mr-[160px] mt-4'>
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/momo_iroppc.svg'
+                    alt='MOMO'
+                    className='h-8'
+                  />
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/vnpay_new_lzopgz.svg'
+                    alt='Ahamove'
+                    className='h-8'
+                  />
+                  <img
+                    src='https://res.cloudinary.com/didbnrsmz/image/upload/v1728645343/CozyNest/zalopay_qazloz.svg'
+                    alt='J&T Express'
+                    className='h-8'
+                  />
+                </div>
+              </>
             </div>
           </Col>
 

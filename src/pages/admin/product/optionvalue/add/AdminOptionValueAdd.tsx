@@ -1,7 +1,8 @@
 import instance from '@/configs/axios'
+import { vietnameseTitlePattern } from '@/validations/validate'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
+import { Button, Form, FormProps, Input, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 type Props = {}
 type FieldType = {
@@ -45,7 +46,7 @@ const AdminOptionValueAdd = (props: Props) => {
   return (
     <div>
       {contextHolder}
-      <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
+      <div className='flex item-center justify-between mb-5'>
         <h1 className='text-2xl font-bold'>Thêm giá trị thuộc tính</h1>
         <Link to={`/admin/products/${product_id}/options_value/${option_id}`}>
           <Button>
@@ -57,9 +58,7 @@ const AdminOptionValueAdd = (props: Props) => {
       <Form
         form={form}
         name='basic'
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        layout='vertical'
         // initialValues={{ remember: true }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
@@ -68,19 +67,33 @@ const AdminOptionValueAdd = (props: Props) => {
         <Form.Item<FieldType>
           label='Tiêu đề'
           name='label'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          className='w-1/2'
+          rules={[
+            { required: true, message: 'Tiêu đề không được bỏ trống!' },
+            {
+              pattern: vietnameseTitlePattern,
+              message: 'Tiêu đề không được chứa ký tự đặc biệt và phải bắt đầu bằng chữ!'
+            }
+          ]}
         >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
           label='Giá trị'
           name='value'
-          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+          className='w-1/2'
+          rules={[
+            { required: true, message: 'Giá trị không được bỏ trống!' },
+            {
+              pattern: vietnameseTitlePattern,
+              message: 'Giá trị không được chứa ký tự đặc biệt và phải bắt đầu bằng chữ!'
+            }
+          ]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item>
           <Button type='primary' htmlType='submit'>
             Thêm
           </Button>

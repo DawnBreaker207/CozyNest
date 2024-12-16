@@ -19,8 +19,6 @@ const TopProduct = (props: Props) => {
 
   // 1. Lọc các đơn hàng đã hoàn thành
   const completedOrders = data?.data?.res?.items.filter((order: any) => order.status === 'Completed')
-  console.log('🚀 ~ TopProduct ~ completedOrders:', completedOrders)
-
   // 2. Tổng hợp số lượng theo sku_id, đồng thời lưu trữ tên và hình ảnh
   const productSales: Record<string, { SKU: string; quantity: number; name: string; image: string[]; price: number }> =
     {}

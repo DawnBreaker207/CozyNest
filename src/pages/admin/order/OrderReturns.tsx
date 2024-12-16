@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Table, Button, Popconfirm, message } from 'antd'
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Button, message, Popconfirm, Select, Table } from 'antd'
+import { useState } from 'react'
 
 const ReturnOrdersAdmin = () => {
   const queryClient = useQueryClient() // Lấy queryClient từ React Query
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['returnOrders'],
     queryFn: async () => {
       const res = await instance.get('/orders/return?_sort=createdAt')
@@ -47,6 +49,15 @@ const ReturnOrdersAdmin = () => {
     }
   })
 
+  const [statusFilter, setStatusFilter] = useState<'all' | 'confirmed' | 'unconfirmed'>('all')
+
+  const filteredData = data?.filter((order: any) => {
+    if (statusFilter === 'all') return true
+    if (statusFilter === 'confirmed') return order.is_confirm
+    if (statusFilter === 'unconfirmed') return !order.is_confirm
+    return true
+  })
+
   const columns = [
     {
       title: 'Mã đơn hàng',
@@ -77,7 +88,7 @@ const ReturnOrdersAdmin = () => {
           <img
             src={images[0]}
             alt='Product'
-            style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+            style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px' }}
           />
         ) : (
           'Không có ảnh'
@@ -107,10 +118,37 @@ const ReturnOrdersAdmin = () => {
     }
   ]
 
-  if (isLoading) return <div>Đang tải dữ liệu...</div>
-  if (isError) return <div>Đã có lỗi xảy ra khi tải dữ liệu</div>
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>{error.message}</div>
 
-  return <Table columns={columns} dataSource={data} rowKey={(record: any) => record?._id} />
+  return (
+    <div>
+      <div className='mb-5'>
+        <h1 className='text-2xl font-bold mb-4'>Quản lý hoàn trả</h1>
+
+        {/* Add Select dropdown for filtering by return status */}
+        <Select
+          value={statusFilter}
+          style={{ width: 200 }}
+          onChange={(value) => setStatusFilter(value)}
+          placeholder='Chọn trạng thái'
+          className='mb-4'
+        >
+          <Select.Option value='all'>Tất cả trạng thái</Select.Option>
+          <Select.Option value='confirmed'>Đã xác nhận</Select.Option>
+          <Select.Option value='unconfirmed'>Chưa xác nhận</Select.Option>
+        </Select>
+      </div>
+
+      {/* Table displaying the filtered data */}
+      <Table columns={columns} dataSource={filteredData} rowKey={(record: any) => record?._id} />
+    </div>
+  )
 }
 
 export default ReturnOrdersAdmin

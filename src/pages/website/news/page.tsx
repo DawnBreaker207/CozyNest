@@ -141,32 +141,32 @@ const NewsPage = () => {
               <Row gutter={[16, 16]}>
                 {currentArticles.length > 0 ? (
                   currentArticles
-                  .filter((article) => article.isHidden === true)
-                  .map((article, index) => (
-                    <Col xs={24} sm={12} md={8} key={index}>
-                      <Card
-                        hoverable
-                        cover={
-                          <img
-                            alt={article.title}
-                            src={article.thumbnail}
-                            style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                            onClick={() => showModal(article.thumbnail)}
-                          />
-                        }
-                      >
-                        <Link to={`/articles/${article._id}`}>
-                          <Text type='secondary' style={{ fontSize: '16px' }}>
-                            {new Date(article.createdAt).toLocaleDateString('vi-VN')}
-                          </Text>
-                          <Title level={4} style={{ color: '#000', fontSize: '20px', marginTop: '8px' }}>
-                            {article.title.substring(0, 50) + '...'}
-                          </Title>
-                          <Paragraph style={{ fontSize: '13px', color: 'gray' }}>{article.author}</Paragraph>
-                        </Link>
-                      </Card>
-                    </Col>
-                  ))
+                    .filter((article) => article.isHidden === true)
+                    .map((article, index) => (
+                      <Col xs={24} sm={12} md={8} key={index}>
+                        <Card
+                          hoverable
+                          cover={
+                            <img
+                              alt={article.title}
+                              src={article.thumbnail}
+                              style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                              onClick={() => showModal(article.thumbnail)}
+                            />
+                          }
+                        >
+                          <Link to={`/articles/${article._id}`}>
+                            <Text type='secondary' style={{ fontSize: '16px' }}>
+                              {new Date(article.createdAt).toLocaleDateString('vi-VN')}
+                            </Text>
+                            <Title level={4} style={{ color: '#000', fontSize: '20px', marginTop: '8px' }}>
+                              {article.title.substring(0, 50) + '...'}
+                            </Title>
+                            <Paragraph style={{ fontSize: '13px', color: 'gray' }}>{article.author}</Paragraph>
+                          </Link>
+                        </Card>
+                      </Col>
+                    ))
                 ) : (
                   <div>Không có bài viết nào</div>
                 )}

@@ -1,21 +1,23 @@
-import { Cart } from '@/components/icons/index'
+import CustomLoadingPage from '@/components/Loading'
+import useCart from '@/hooks/useCart'
 import { useProduct } from '@/hooks/useProductQuery'
 import { Variants } from '@/types/product'
+import { message, Spin } from 'antd'
+import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
-import { FaRegEye } from 'react-icons/fa'
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import CouponCard from '../../cart/_components/CouponCard'
 import RelatedProduct from '../_components/RelatedProduct'
 import ReviewComponent from './_components/Review'
-import useCart from '@/hooks/useCart'
-import { Button, message, Spin } from 'antd'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeImageIndex, setActiveImageIndex] = useState(0) // Quản lý trạng thái ảnh hiện tại
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null) // State để lưu id màu sắc được chọn
   const [priceVar, setPriceVar] = useState<number | 0>(0) // State để lưu id màu sắc được chọn
+  const [priceOldVar, setPriceOldVar] = useState<number | 0>(0) // State để lưu id màu sắc được chọn
   const [hoveredColorId, setHoveredColorId] = useState<string | null>(null)
   const navigate = useNavigate()
   const { id } = useParams() // Lấy productId từ URL
@@ -24,29 +26,42 @@ const ProductDetail = () => {
   const { addToCart } = useCart() // Lấy hàm addToCart từ hook
   // Lấy tất cả các màu sắc từ variants
   const variants = data?.variants || [] // Đảm bảo variants không undefined
-  console.log(variants)
 
   const colors = variants
     .map((variant: Variants) => ({
       id: variant?.sku_id?._id, // Lưu id của màu sắc
       price: variant?.sku_id?.price,
-      value: variant?.sku_id?.name // Lưu giá trị của màu sắc
+      value: variant?.sku_id?.name, // Lưu giá trị của màu sắc
+      price_before_discount: variant?.sku_id?.price_before_discount // Lưu giá trị của màu sắc
     }))
     .filter((color) => color.value) // Lọc các màu sắc hợp lệ
-  console.log(colors)
   // Đảm bảo khi `colors` có dữ liệu, chọn màu đầu tiên mặc định
   useEffect(() => {
     // Nếu không có màu nào được chọn, chọn màu đầu tiên trong danh sách màu sắc
     if (colors.length > 0 && !selectedColorId) {
       setSelectedColorId(colors[0].id) // Chọn màu đầu tiên mặc định
       setPriceVar(colors[0].price) // Cập nhật giá của màu sắc đầu tiên
+      setPriceOldVar(colors[0].price_before_discount)
     }
   }, [colors, selectedColorId]) // Chạy lại khi colors thay đổi
+
   const handleAddToCart = () => {
+    // Lấy thông tin user từ cookie
+    const user = Cookies.get('user')
+
+    // Kiểm tra trạng thái đăng nhập
+    if (!user || Object.keys(JSON.parse(user)).length === 0) {
+      message.error('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.')
+      setTimeout(() => {
+        navigate('/login')
+      }, 3500)
+      return
+    }
+
     if (selectedColorId && count > 0) {
       // Lấy thông tin sản phẩm và SKU dựa trên `selectedColorId`
       const selectedVariant = product.variants?.find((variant) => variant.sku_id._id === selectedColorId)
-      console.log(selectedVariant)
+
       if (!selectedVariant) {
         message.error('Không tìm thấy thông tin sản phẩm.')
         return
@@ -60,11 +75,12 @@ const ProductDetail = () => {
 
       // Thêm vào giỏ hàng nếu đủ tồn kho
       message.success('Thêm vào giỏ hàng thành công')
-      addToCart(selectedColorId, count) // Sử dụng `addToCart` từ hook để thêm vào giỏ hàng
+      addToCart(selectedColorId, count) // Gọi hàm thêm sản phẩm vào giỏ hàng
     } else {
       message.error('Vui lòng chọn số lượng hợp lệ.')
     }
   }
+
   const handleBuyNow = async () => {
     setLoading(true) // Hiển thị trạng thái loading ngay khi nhấn nút
 
@@ -111,9 +127,8 @@ const ProductDetail = () => {
   }
   const selectedVariant = variants.find((variant: any) => variant.sku_id._id === selectedColorId)
   //Kiểm tra dữ liệu product
-  if (!data || !data) return <Spin size='large' />
+  if (!data || !data) return <CustomLoadingPage />
   const product = data
-  console.log(product)
 
   const category = product?.category_id?._id
 
@@ -133,7 +148,7 @@ const ProductDetail = () => {
   if (isLoading) {
     return (
       <div>
-        <Spin size='large' />
+        <CustomLoadingPage />
       </div>
     )
   }
@@ -141,7 +156,6 @@ const ProductDetail = () => {
   if (error) {
     return <div>Error: {error.message}</div>
   }
-  console.log(product)
 
   return (
     <div>
@@ -153,7 +167,7 @@ const ProductDetail = () => {
             <div className='lg:flex flex-wrap flex-col hidden'>
               {product?.variants
                 .find((variant) => variant.sku_id._id === selectedColorId) // Lọc variant dựa trên màu đã chọn
-                ?.sku_id?.image?.map((image, index) => (
+                ?.sku_id?.image?.map((image: any, index: any) => (
                   <img
                     key={index}
                     src={image} // Sử dụng URL ảnh từ variant tương ứng với màu đã chọn
@@ -173,7 +187,7 @@ const ProductDetail = () => {
               >
                 {product?.variants
                   .find((variant) => variant.sku_id._id === selectedColorId) // Lọc variant dựa trên màu đã chọn
-                  ?.sku_id?.image?.map((image, index) => (
+                  ?.sku_id?.image?.map((image: any, index: any) => (
                     <img
                       key={index}
                       src={image} // Sử dụng URL ảnh từ variant tương ứng với màu đã chọn
@@ -183,9 +197,13 @@ const ProductDetail = () => {
                   ))}
               </div>
 
-              <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
-                {product.discount}%
-              </span>
+              <p className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
+                {
+                  product.variants.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id
+                    ?.price_discount_percent
+                }
+                <span className='text-base'>%</span>
+              </p>
 
               {/* Nút quay lại */}
               <button
@@ -195,9 +213,9 @@ const ProductDetail = () => {
                   setActiveImageIndex(
                     (activeImageIndex -
                       1 +
-                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length) %
-                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length
                   )
                 }
@@ -212,7 +230,7 @@ const ProductDetail = () => {
                 onClick={() =>
                   setActiveImageIndex(
                     (activeImageIndex + 1) %
-                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length
                   )
                 }
@@ -247,18 +265,9 @@ const ProductDetail = () => {
             <div className='pricedetail flex flex-row items-center gap-2'>
               {/* Hiển thị giá sau khi giảm */}
               <span className='text-[#FF0000] font-semibold text-[24px]'>{priceVar.toLocaleString()}₫</span>
-              {/* Kiểm tra nếu có giảm giá và hiển thị giá cũ bị gạch ngang */}
-              {product.variants[0]?.sku_id?.price_discount_percent > 0 && (
-                <>
-                  {/* <span className='bg-[#FF0000] px-[5px] py-[2px] text-white text-[12px] rounded'>
-                    {product.variants[0]?.sku_id?.price_discount_percent}%
-                  </span> */}
-                  {/* Giá trước khi giảm */}
-                  <span className='text-gray-500 line-through text-[18px]'>
-                    {product.variants[0]?.sku_id?.price.toLocaleString()}₫
-                  </span>
-                </>
-              )}
+              <span className='text-gray-500 line-through font-medium text-[18px]'>
+                {priceOldVar.toLocaleString()}₫
+              </span>
             </div>
           </div>
           {/* Màu sắc Section */}
@@ -383,56 +392,13 @@ const ProductDetail = () => {
               <div
                 className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
               >
-                <p>{product.description}</p>
-                <p>--------------</p>
+                <ReactQuill
+                  value={product.description}
+                  readOnly
+                  theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
+                />
+                <p className='-mt-[10px]'>--------------</p>
                 {/* More product description details */}
-                <table className='table-auto w-full border-collapse mt-[10px]'>
-                  <tbody>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Sản phẩm
-                      </th>
-                      <td className=''>{product.name}</td>
-                    </tr>
-
-                    {/* <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Bộ sưu tập
-                      </th>
-                      <td className=''>{product.brand}</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Kích cỡ
-                      </th>
-                      <td className=''>H6.5XDia12.5; L20xW11xH15 ∙ 6 cups</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Màu sắc
-                      </th>
-                      <td className=''>Màu trắng/ màu đen</td>
-                    </tr> */}
-                    {/* <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Chất liệu
-                      </th>
-                      <td className=''>Sứ</td>
-                    </tr> */}
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Xuất xứ
-                      </th>
-                      <td className=''>Trung Quốc</td>
-                    </tr>
-                    <tr>
-                      <th scope='row' className='btn-th text-left align-top pr-12'>
-                        Đơn vị
-                      </th>
-                      <td className=''>SET</td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </div>
             <div className='description-btn flex justify-center mt-[10px]'>
@@ -451,8 +417,8 @@ const ProductDetail = () => {
           className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[350px] `}
         >
           {' '}
-          <div className='review lg:-mt-[180px] xl:mt-[280px] '>
-            <ReviewComponent product={product} />{' '}
+          <div className='review lg:-mt-[90px] xl:mt-[280px] '>
+            <ReviewComponent handleBuyNow={handleBuyNow} loading={loading} />
           </div>
         </div>
       </div>

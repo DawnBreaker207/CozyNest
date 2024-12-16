@@ -1,17 +1,24 @@
 import CustomLoadingPage from '@/components/Loading'
-import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Import hook để lấy danh mục
 import useProductMutation from '@/hooks/useProductMutation'
-import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
-import { ICategory } from '@/types/category'
+import { useProductQuery } from '@/hooks/useProductQuery'
 import { IProduct } from '@/types/product'
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
+import { Button, Input, message, Popconfirm, Select, Space, Table, Tag } from 'antd'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const AdminProductPage = () => {
   const queryClient = useQueryClient()
   const [messageApi, contextHolder] = message.useMessage()
+
+  const [search, setSearch] = useState('')
+  const [sortOrder, setSortOrder] = useState<'ascend' | 'descend' | null>(null)
+
+  // Hàm loại bỏ dấu trong chuỗi
+  const removeAccents = (str: string) => {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  }
 
   // Sử dụng useProductQuery để lấy danh sách sản phẩm
   const {
@@ -20,33 +27,52 @@ const AdminProductPage = () => {
     isError: isErrorProducts,
     error: errorProducts
   } = useProductQuery()
-  // Sử dụng useCategoryQuery để lấy danh sách danh mục
-  const {
-    data: categoriesData,
-    isLoading: isLoadingCategories,
-    isError: isErrorCategories,
-    error: errorCategories
-  } = useCategoryQuery()
+
   // Mutation để xóa sản phẩm
-  const { mutate: deleteProduct } = useProductMutation({
+  const { mutate, status: mutationStatus } = useProductMutation({
     action: 'DELETE',
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['PRODUCT_KEY']
+      })
       messageApi.open({
         type: 'success',
         content: 'Xóa thành công'
       })
-      queryClient.invalidateQueries({
-        queryKey: ['PRODUCT_KEY']
-      })
     }
   })
-  // Chuẩn bị dữ liệu cho bảng
-  const dataSource = productsData?.res?.map((item: IProduct) => ({
+
+  // Xử lý thay đổi tìm kiếm
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+  }
+
+  // Xử lý thay đổi sắp xếp
+  const handleSortChange = (value: string) => {
+    setSortOrder(value as 'ascend' | 'descend')
+  }
+
+  // Lọc và sắp xếp sản phẩm theo tên và ngày
+  let filteredProducts = productsData?.res?.filter((product: IProduct) =>
+    removeAccents(product.name.toLowerCase()).includes(removeAccents(search.toLowerCase()))
+  )
+
+  if (sortOrder) {
+    filteredProducts = filteredProducts?.sort((a, b) => {
+      const dateA = new Date(a.createdAt)
+      const dateB = new Date(b.createdAt)
+      if (sortOrder === 'ascend') {
+        return dateA.getTime() - dateB.getTime() // Cũ nhất
+      }
+      return dateB.getTime() - dateA.getTime() // Mới nhất
+    })
+  }
+
+  const dataSource = filteredProducts?.map((item: IProduct) => ({
     key: item._id,
     ...item
   }))
 
-  // Cấu trúc các cột của bảng
   const columns = [
     {
       key: 'name',
@@ -54,9 +80,9 @@ const AdminProductPage = () => {
       dataIndex: 'name'
     },
     {
-      key: 'categoryName', // Sử dụng key là 'categoryName'
+      key: 'categoryName',
       title: 'Tên danh mục',
-      render: (product: IProduct) => <p>{product.category_id.name}</p>
+      render: (product: IProduct) => <p>{product.category_id?.name}</p>
     },
     {
       key: 'SKU',
@@ -92,11 +118,11 @@ const AdminProductPage = () => {
           <Popconfirm
             title='Xóa sản phẩm'
             description='Bạn có chắc chắn muốn xóa sản phẩm này?'
-            onConfirm={() => deleteProduct({ _id: product._id } as IProduct)}
+            onConfirm={() => mutate({ _id: product._id } as IProduct)}
             okText='Có'
             cancelText='Không'
           >
-            <Button icon={<DeleteOutlined />} danger />
+            <Button icon={<DeleteOutlined />} danger loading={mutationStatus === 'pending'} />
           </Popconfirm>
           <Link to={`/admin/products/${product._id}/options`}>
             <Button>Thuộc tính</Button>
@@ -109,20 +135,39 @@ const AdminProductPage = () => {
     }
   ]
 
-  // Xử lý trạng thái khi loading hoặc error
-  if (isLoadingProducts || isLoadingCategories)
-    return (
-      <div>
-        <CustomLoadingPage />
-      </div>
-    )
+  // Xử lý khi loading hoặc có lỗi
+  if (isLoadingProducts || mutationStatus === 'pending') return <CustomLoadingPage />
   if (isErrorProducts) return <div>{errorProducts.message}</div>
-  if (isErrorCategories) return <div>{errorCategories.message}</div>
 
   return (
     <>
-      {contextHolder}
-      <Table dataSource={dataSource} columns={columns} />
+      <div className='bg-white'>
+        {contextHolder}
+        <div className='mb-5 flex items-center justify-between'>
+          <h1 className='text-2xl font-bold mb-4'>Quản lý sản phẩm</h1>
+          <Link to={`/admin/products/add`}>
+            <Button type='primary'>
+              <PlusOutlined />
+              Thêm mới sản phẩm
+            </Button>
+          </Link>
+        </div>
+
+        <div className='mb-4 flex items-center justify-between'>
+          <Input
+            placeholder='Tìm kiếm theo tên sản phẩm'
+            value={search}
+            onChange={handleSearchChange}
+            style={{ width: 500 }}
+          />
+          <Select placeholder='Sắp xếp theo' style={{ width: 150 }} onChange={handleSortChange} defaultValue={null}>
+            <Select.Option value='descend'>Mới nhất</Select.Option>
+            <Select.Option value='ascend'>Cũ nhất</Select.Option>
+          </Select>
+        </div>
+
+        <Table dataSource={dataSource} columns={columns} />
+      </div>
     </>
   )
 }

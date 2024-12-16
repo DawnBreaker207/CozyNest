@@ -1,5 +1,6 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
+import { vietnameseTitlePattern } from '@/validations/validate'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, InputNumber, message } from 'antd'
@@ -64,7 +65,7 @@ const AdminOptionEdit = (props: Props) => {
   return (
     <div>
       {contextHolder}
-      <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
+      <div className='flex item-center justify-between mb-5'>
         <h1 className='text-2xl font-bold'>Cập nhật thuộc tính</h1>
         <Link to={`/admin/products/${product_id}/options`}>
           <Button>
@@ -76,15 +77,31 @@ const AdminOptionEdit = (props: Props) => {
       <Form
         form={form}
         name='basic'
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        layout='vertical'
         initialValues={{ ...data?.data?.res }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
         autoComplete='off'
       >
-        <Form.Item<FieldType> label='Name' name='name' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+        <Form.Item<FieldType>
+          label='Tên thuộc tính'
+          className='w-1/2'
+          name='name'
+          rules={[
+            {
+              required: true,
+              message: 'Tên thuộc tính là bắt buộc'
+            },
+            {
+              validator: (_, value) => {
+                if (!value || vietnameseTitlePattern.test(value)) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('Chữ cái đầu tiên phải là chữ và không được là ký tự đặc biệt hoặc số'))
+              }
+            }
+          ]}
+        >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
@@ -95,7 +112,7 @@ const AdminOptionEdit = (props: Props) => {
           <InputNumber />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item>
           <Button type='primary' htmlType='submit'>
             Cập nhật
           </Button>

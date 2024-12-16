@@ -91,13 +91,14 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
           rules={[
             { required: true, message: 'Vui lòng nhập họ và tên' },
             {
-              pattern: /^[a-zA-ZÀ-ỹ\s]+$/u,
-              message: 'Vui lòng nhập đúng định dạng họ và tên'
+              pattern: /^(?!\s)(?!.*\s{2})[a-zA-ZÀ-ỹ\s]+$/u,
+              message: 'Vui lòng nhập đúng định dạng họ và tên, không chứa khoảng trắng ở đầu hoặc liên tiếp'
             }
           ]}
         >
           <Input placeholder='Nhập họ và tên' />
         </Form.Item>
+
         <Form.Item
           label='Số điện thoại'
           name='phone_number'

@@ -35,6 +35,15 @@ export const addArticle = async (article: Partial<IArticle>) => {
     throw error
   }
 }
+export const softDeleteArticle = async (article: Partial<IArticle>): Promise<void> => {
+  try {
+    await instance.patch(`/articles/${article._id}`)
+    return
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
 
 // Xóa bài viết
 export const removeArticle = async (article: Partial<IArticle>): Promise<void> => {
