@@ -201,7 +201,7 @@ const ProductDetail = () => {
               </div>
 
               <span className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
-                {product.discount}%
+                {product.variants.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.price_discount_percent}%
               </span>
 
               {/* Nút quay lại */}
@@ -272,7 +272,7 @@ const ProductDetail = () => {
                   </span> */}
                   {/* Giá trước khi giảm */}
                   <span className='text-gray-500 line-through text-[18px]'>
-                    {product.variants[0]?.sku_id?.price.toLocaleString()}₫
+                  {}%
                   </span>
                 </>
               )}
