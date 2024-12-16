@@ -3,6 +3,6 @@ export type IReview = {
   product_id?: string
   user_id: string
   rating?: number
-  comment?: number
+  comment?: string
   image?: string
 }

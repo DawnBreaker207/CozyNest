@@ -29,7 +29,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import RefundOrderButton from './RefundOrderButton'
 import ReturnOrderButton from './ReturnOrderButton '
 import CustomLoadingPage from '@/components/Loading'
+import { badword } from './badword'
 const { Title } = Typography
+
 const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
 const OrderDetail = () => {
@@ -52,6 +54,17 @@ const OrderDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const queryClient = useQueryClient()
+  const replaceBadWord = (text: string): string => {
+    let modifiedText = text;
+  
+    badword.forEach((word) => {
+      const regExp = new RegExp(word, 'gi'); // Tạo regex cho từ, không phân biệt hoa/thường
+      const replacement = '*'.repeat(word.length); // Tạo dấu '*' theo độ dài của từ
+      modifiedText = modifiedText.replace(regExp, replacement); // Thay thế từ xấu bằng dấu '*'
+    });
+  
+    return modifiedText;
+  };
   const { mutate } = useMutation({
     mutationFn: async (formData: IReview) => {
       try {
@@ -97,6 +110,8 @@ const OrderDetail = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    form.resetFields()
+    setImage(null)
     setSelectedProduct(null)
   }
 
@@ -110,9 +125,11 @@ const OrderDetail = () => {
   }
 
   const onFinish: FormProps<IReview>['onFinish'] = async (values: IReview) => {
+    const filterComment = replaceBadWord(values.comment ?? "");
     const imageUrl = image ? await uploadFileCloudinary(image.file) : ''
     const reviewData = {
       ...values,
+      comment: filterComment,
       image: imageUrl,
       product_id: selectedProduct.sku_id.product_id,
       user_id: order.user_id
@@ -578,7 +595,7 @@ const OrderDetail = () => {
       >
         <div>
           <h2 className='text-xl font-bold'>Đánh giá & nhận xét</h2>
-          <h3 className='text-lg font-bold mt-4'>{selectedProduct?.name}</h3>
+          <h3 className='text-lg font-bold my-3'>{selectedProduct?.name}</h3>
           <Form form={form} onFinish={onFinish}>
             <Form.Item name='rating' rules={[{ required: true, message: 'Vui lòng chọn đánh giá!' }]}>
               <Rate tooltips={desc} />
