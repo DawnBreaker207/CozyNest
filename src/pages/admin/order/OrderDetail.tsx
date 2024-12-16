@@ -83,7 +83,7 @@ const AdminOrderDetail = () => {
     try {
       const { data: currentOrder } = await instance.get(`/orders/${id}`)
       await instance.put(`/orders/updateStatusOrder/${id}`, { status: newStatus })
-      if (currentOrder?.res?.payment_method?.[0]?.method === 'cod' || newStatus === 'Delivered') {
+      if (currentOrder?.res?.payment_method?.[0]?.method === 'cod' && newStatus === 'Delivered') {
         await instance.put(`/orders/updateStatusPayment/${id}`, {
           ...currentOrder,
           payment_status: 'Paid'
