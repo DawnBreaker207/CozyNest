@@ -69,82 +69,40 @@ const BestProduct = (props: Props) => {
 
               return (
                 <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
-                  <Link to={`/detail/${product._id}`}>
-                    <div className='relative'>
-                      <div className='flex transition-transform ease-in-out duration-500'>
+                  <div className='relative'>
+                    <div className='flex transition-transform ease-in-out duration-500'>
+                      <p className='absolute top-1 left-1 bg-[#FF0000] px-[4px] py-[2px] text-white text-sm rounded-md'>
+                        {firstVariant?.sku_id?.price_discount_percent}
+                        <span className='text-xs'>%</span>
+                      </p>
+                      <a href={`/detail/${product._id}`}>
                         <img
                           src={
-                            // hoveredImages[product._id] || // Ảnh hiện tại được hover
-                            product?.variants?.[0]?.sku_id?.image?.[0] || 'default-image.jpg' // Ảnh mặc định ban đầu // Ảnh mặc định nếu không có
+                            firstVariant?.sku_id?.image?.[0] || 'default-image.jpg' // Ảnh mặc định ban đầu
                           }
                           alt={product?.name}
                           className='object-cover'
                         />
-                      </div>
-
-                      <FaRegEye
-                        className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
-                        title='Xem nhanh'
-                      />
+                        <FaRegEye
+                          className='absolute left-[45%] top-[30%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
+                          title='Xem nhanh'
+                        />
+                        <div className='mx-2 text-center space-y-2 mt-3'>
+                          <h3>{firstVariant?.sku_id?.name}</h3>
+                          <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
+                            {/* Hiển thị giá thay đổi khi hover */}
+                            <span className='text-[#FF0000] font-semibold'>
+                              {firstVariant?.sku_id?.price.toLocaleString()}₫
+                            </span>
+                            <span className='text-gray-500 line-through font-medium text-sm'>
+                              {firstVariant?.sku_id?.price_before_discount.toLocaleString()}₫
+                            </span>
+                          </div>
+                          <Button>xem chi tiết</Button>
+                        </div>
+                      </a>
                     </div>
-
-                    <div className='mx-2 text-center space-y-2 mt-3'>
-                      <h3>{product?.name}</h3>
-                      <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
-                        {/* Hiển thị giá thay đổi khi hover */}
-                        <span className='text-[#FF0000] font-semibold'>{price.toLocaleString()}₫</span>
-                        {/* {hoveredPrices[product._id] ? (
-                        <span className='text-[#878c8f] font-light line-through text-[13px]'>
-                          {product?.variants?.[0]?.sku_id?.price.toLocaleString()}₫
-                        </span>
-                      ) : null} */}
-                      </div>
-                      {/* <div className='flex space-x-4'>
-                      {product.variants.map((variant, idx) => {
-                        const value = variant.option_value_id.value
-                        const bgColor =
-                          value === 'Nâu' ? 'bg-[#A0522D]' : value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
-
-                        const isSelected = hoveredImages[product._id]
-                          ? hoveredImages[product._id] === variant.sku_id.image?.[0]
-                          : idx === 0 // Mặc định chọn màu đầu nếu chưa hover
-
-                        return (
-                          <div
-                            key={idx}
-                            className={`w-6 h-6 rounded-full ${bgColor} cursor-pointer`}
-                            title={value}
-                            style={{
-                              outline: isSelected ? '2px solid black' : 'none', // Hiển thị viền nếu được chọn
-                              outlineOffset: '3px'
-                            }}
-                            onMouseEnter={() => {
-                              setHoveredImages((prev) => ({
-                                ...prev,
-                                [product._id]: variant.sku_id.image?.[0] || '' // Cập nhật ảnh khi hover
-                              }))
-                              setHoveredPrices((prev) => ({
-                                ...prev,
-                                [product._id]: variant.sku_id.price || null // Cập nhật giá khi hover
-                              }))
-                            }}
-                            onClick={() => {
-                              setHoveredImages((prev) => ({
-                                ...prev,
-                                [product._id]: variant.sku_id.image?.[0] // Duy trì trạng thái hover sau khi click
-                              }))
-                              setHoveredPrices((prev) => ({
-                                ...prev,
-                                [product._id]: variant.sku_id.price // Duy trì giá sau khi click
-                              }))
-                            }}
-                          />
-                        )
-                      })}
-                    </div> */}
-                      <Button>xem chi tiết</Button>
-                    </div>
-                  </Link>
+                  </div>
                 </div>
               )
             })}

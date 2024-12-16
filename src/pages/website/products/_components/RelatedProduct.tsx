@@ -1,18 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
 import instance from '@/configs/axios'
-import { FaRegEye } from 'react-icons/fa'
-import { Cart } from '@/components/icons'
-import { IProduct } from '@/types/product'
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Button } from 'antd'
+import { FaRegEye } from 'react-icons/fa'
 type Props = {
   id: string | undefined
 }
 const RelatedProduct = ({ id }: Props) => {
-  const [hoveredImages, setHoveredImages] = useState({})
-  const [hoveredPrices, setHoveredPrices] = useState({})
-
   const { data, isLoading } = useQuery({
     queryKey: ['RELATED_PRODUCT', id],
     queryFn: async () => {
@@ -20,7 +13,6 @@ const RelatedProduct = ({ id }: Props) => {
       return data.res
     }
   })
-  console.log(data)
 
   if (isLoading) return
 
@@ -32,42 +24,39 @@ const RelatedProduct = ({ id }: Props) => {
       <h2 className='text-[#fca120] font-semibold text-[25px] mb-8'>Xem thêm sản phẩm cùng loại</h2>
       <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5'>
         {products
-          .filter((product) => !product.is_hidden)
-          .map((product) => {
-            console.log(product)
-
+          .filter((product: any) => !product.is_hidden)
+          .map((product: any) => {
             // Kiểm tra các variant và lấy giá trị từ sku_id
             const firstVariant = product?.variants?.[0]
-            console.log(firstVariant)
-
-            const price = firstVariant?.sku_id?.price || 0 // Sử dụng giá mặc định là 0 nếu không có giá
-            // const priceDiscountPercent = firstVariant?.sku_id?.price_discount_percent || 0
-            // const discountedPrice = price - price * (priceDiscountPercent / 100)
-
             return (
               <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
                 <div className='relative'>
                   <div className='flex transition-transform ease-in-out duration-500'>
+                    <p className='absolute top-1 left-1 bg-[#FF0000] px-[4px] py-[2px] text-white text-sm rounded-md'>
+                      {firstVariant?.sku_id?.price_discount_percent}
+                      <span className='text-xs'>%</span>
+                    </p>
                     <a href={`/detail/${product._id}`}>
                       <img
                         src={
-                          hoveredImages[product._id] || // Ảnh hiện tại được hover
-                          product?.variants?.[0]?.sku_id?.image?.[0] || // Ảnh mặc định ban đầu
-                          'default-image.jpg' // Ảnh mặc định nếu không có
+                          firstVariant?.sku_id?.image?.[0] || 'default-image.jpg' // Ảnh mặc định ban đầu
                         }
                         alt={product?.name}
                         className='object-cover'
                       />
                       <FaRegEye
-                        className='absolute left-[45%] top-[50%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
+                        className='absolute left-[45%] top-[30%] bg-white text-[#6d6565] rounded-full size-7 md:size-8 px-1 py-[2px] opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-500 hover:bg-[#444444] hover:text-white hover:border hover:border-white'
                         title='Xem nhanh'
                       />
                       <div className='mx-2 text-center space-y-2 mt-3'>
-                        <h3>{product?.name}</h3>
+                        <h3>{firstVariant?.sku_id?.name}</h3>
                         <div className='flex sm:flex-row flex-col items-center justify-center gap-2'>
                           {/* Hiển thị giá thay đổi khi hover */}
                           <span className='text-[#FF0000] font-semibold'>
-                            {(hoveredPrices[product._id] || price).toLocaleString()}₫
+                            {firstVariant?.sku_id?.price.toLocaleString()}₫
+                          </span>
+                          <span className='text-gray-500 line-through font-medium text-sm'>
+                            {firstVariant?.sku_id?.price_before_discount.toLocaleString()}₫
                           </span>
                         </div>
                         <Button>xem chi tiết</Button>

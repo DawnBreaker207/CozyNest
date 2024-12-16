@@ -27,7 +27,6 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
     }
   })
   const dataReview = data?.data?.data || []
-  console.log('🚀 ~ ReviewComponent ~ dataReview:', dataReview)
   const sortedReviews = [...dataReview].sort((a, b) => {
     const dateA = new Date(a.createdAt).getTime()
     const dateB = new Date(b.createdAt).getTime()
