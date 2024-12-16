@@ -16,7 +16,7 @@ const orderStatusMap: { [key: string]: string } = {
   'Pending-Ship': 'Đang chờ bên vận chuyển',
   Delivering: 'Đang vận chuyển',
   Delivered: 'Giao hàng thành công',
-  Canceled: 'Đã hủy đơn hàng',
+  Cancelled: 'Đã hủy đơn hàng',
   Completed: 'Đơn hàng hoàn thành',
   Returned: 'Hoàn trả đơn hàng',
   Refunded: 'Hoàn trả đơn hàng và hoàn tiền'
@@ -29,7 +29,7 @@ const statusColorMap: { [key: string]: string } = {
   'Pending-Ship': 'text-orange-500',
   Delivering: 'text-orange-500',
   Delivered: 'text-green-500',
-  Canceled: 'text-red-500',
+  Cancelled: 'text-red-500',
   Completed: 'text-cyan-500',
   Returned: 'text-magenta-500',
   Refunded: 'text-purple-500'

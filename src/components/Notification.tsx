@@ -1,21 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
+import { useOrderNotifications } from '@/hooks/useOrderNotifcations'
+import { useCookie } from '@/hooks/useStorage'
 import { StatusType } from '@/types/status'
 import { BellOutlined } from '@ant-design/icons'
-import { Button, Dropdown, Menu, Tag } from 'antd'
+import { Badge, Button, Dropdown, Menu, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 
-const Notification = ({
-  visible,
-  onClick,
-  notifications,
-  setNotifications
-}: {
-  visible: boolean
-  onClick: () => void
-  notifications: any[]
-  setNotifications: React.Dispatch<React.SetStateAction<any[]>>
-}) => {
+const Notification = () => {
+  const [user] = useCookie('user', {})
+  const { notifications, setNotifications } = useOrderNotifications(user._id)
+  const [showNotify, setShowNotify] = useState(false)
   const [loading, setLoading] = useState(false)
 
   // Cập nhật lại thông báo khi `notifications` thay đổi
@@ -50,7 +45,7 @@ const Notification = ({
     Completed: 'gold',
     Returned: 'red',
     Refunded: 'red',
-    cancelled: 'gray'
+    Cancelled: 'red'
   }
   const statuses = [
     { label: 'Đang xử lý', value: 'Processing' },
@@ -62,12 +57,12 @@ const Notification = ({
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
     { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
-    { label: 'Đã hủy đơn hàng', value: 'cancelled' }
+    { label: 'Đã hủy đơn hàng', value: 'Cancelled' }
   ]
   const menu = (
     <Menu>
-      {notifications.length === 0 ? (
-        <Menu.Item disabled>Không có thông báo nào</Menu.Item>
+      {notifications.filter((notification) => !notification.read).length === 0 ? (
+        <Menu.Item disabled>Không có thông báo mới nào</Menu.Item>
       ) : (
         notifications
           .filter((notification) => !notification.read) // Lọc thông báo chưa đọc
@@ -103,15 +98,17 @@ const Notification = ({
   )
 
   return (
-    <Dropdown
-      overlay={menu}
-      open={visible}
-      onOpenChange={onClick} // Đóng dropdown khi click ngoài
-      trigger={['click']}
-      placement='bottomRight'
-    >
-      <Button icon={<BellOutlined />} shape='circle' />
-    </Dropdown>
+    <Badge count={notifications.filter((n) => !n.read).length} overflowCount={99}>
+      <Dropdown
+        overlay={menu}
+        open={showNotify}
+        onOpenChange={() => setShowNotify((prev) => !prev)} // Đóng dropdown khi click ngoài
+        trigger={['click']}
+        placement='bottomRight'
+      >
+        <Button icon={<BellOutlined />} shape='circle' />
+      </Dropdown>
+    </Badge>
   )
 }
 

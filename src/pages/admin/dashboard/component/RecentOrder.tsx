@@ -70,7 +70,7 @@ const RecentOrder = () => {
             | 'Pending-Ship'
             | 'Delivering'
             | 'Delivered'
-            | 'Canceled'
+            | 'Cancelled'
             | 'Completed'
             | 'Returned'
             | 'Refunded'
@@ -83,7 +83,7 @@ const RecentOrder = () => {
             'Pending-Ship': 'orange',
             Delivering: 'orange',
             Delivered: 'green',
-            Canceled: 'red',
+            Cancelled: 'red',
             Completed: 'cyan',
             Returned: 'magenta',
             Refunded: 'purple'
