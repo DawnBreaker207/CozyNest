@@ -3,8 +3,6 @@ import instance from '@/configs/axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { message, Rate, Select, Table } from 'antd'
 import { useState } from 'react'
-import HeaderAdmin from '../header/page'
-
 
 type Props = {}
 
@@ -112,8 +110,7 @@ const AdminReview = (props: Props) => {
     <>
       {contextHolder}
 
-      <HeaderAdmin/>
-      <h1 className='text-2xl font-bold mb-4 mt-4'>Quản lý đánh giá sản phẩm</h1>
+      <h1 className='text-2xl font-bold mb-3'>Quản lý đánh giá sản phẩm</h1>
       {/* Add Select above the table for filtering */}
       <div className='mb-4'>
         <Select

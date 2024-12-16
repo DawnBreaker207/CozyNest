@@ -40,7 +40,11 @@ const HeaderAdmin = () => {
   const users: MenuProps['items'] = [
     {
       key: '1',
-      label: <Link className='text-black ml-1' to='/'>Trang chủ</Link>
+      label: (
+        <Link className='text-black ml-1' to='/'>
+          Trang chủ
+        </Link>
+      )
     },
     {
       key: '2',
@@ -54,35 +58,38 @@ const HeaderAdmin = () => {
     }
   ]
   return (
-    <div>
-      <div className='flex items-center justify-between'>
+    <>
+      <div className='flex items-center justify-between w-full pr-4 sticky top-0 bg-white z-50'>
         {/* Ảnh logo */}
-        <Link to='/'>
-          <img src='/src/assets/icon/cozynet.svg' alt='Logo' className='w-[160px]   ' />
+        <Link to='/admin'>
+          <img src='/src/assets/icon/cozynet.svg' alt='Logo' className='w-[160px]' />
         </Link>
-        <div className='flex ml-[1630px] '>
-          <Button shape='circle' icon={<BellOutlined />} />
-        </div>
+
         {/* Ảnh với menu */}
-        <Dropdown
-          menu={{ items: users }}
-          trigger={['click']}
-          open={isVisible}
-          onOpenChange={(visible) => setIsVisible(visible)}
-        >
-          <span onClick={(e) => e.preventDefault()}>
-            <Space>
-              <div className='flex'>
-                <Button shape='circle' className='mt-1.5'>
-                  <img src={userData?.data?.res[0].avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
-                </Button>
-              </div>
-            </Space>
-          </span>
-        </Dropdown>
+        <div className='flex items-center gap-2'>
+          <div className=''>
+            <Button shape='circle' icon={<BellOutlined />} />
+          </div>
+          <Dropdown
+            menu={{ items: users }}
+            trigger={['click']}
+            open={isVisible}
+            onOpenChange={(visible) => setIsVisible(visible)}
+          >
+            <span onClick={(e) => e.preventDefault()}>
+              <Space>
+                <div className='flex'>
+                  <Button shape='circle' className='mt-1.5'>
+                    <img src={userData?.data?.res[0].avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />
+                  </Button>
+                </div>
+              </Space>
+            </span>
+          </Dropdown>
+        </div>
       </div>
       <hr />
-    </div>
+    </>
   )
 }
 

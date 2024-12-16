@@ -115,7 +115,7 @@ const UpdateVariant = (props: Props) => {
   return (
     <div>
       {contextHolder}
-      <div className='flex item-center justify-between max-w-4xl mx-auto mb-8'>
+      <div className='flex item-center justify-between mb-5'>
         <h1 className='text-2xl font-bold'>Cập nhật biến thể</h1>
         <Link to={`/admin/products/${product_id}/variants`}>
           <Button>
@@ -127,9 +127,7 @@ const UpdateVariant = (props: Props) => {
       <Form
         form={form}
         name='basic'
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        layout='vertical'
         initialValues={{
           ...data?.data?.res,
           image: data?.data?.res?.image || [] // Gán ảnh cũ cho field image
@@ -137,12 +135,18 @@ const UpdateVariant = (props: Props) => {
         onFinish={onFinish}
         autoComplete='off'
       >
-        <Form.Item<FieldType> label='SKU' name='SKU' rules={[{ required: true, message: 'Không được bỏ trống!' }]}>
+        <Form.Item<FieldType>
+          label='SKU'
+          name='SKU'
+          className='w-[50%]'
+          rules={[{ required: true, message: 'Không được bỏ trống!' }]}
+        >
           <Input disabled />
         </Form.Item>
         <Form.Item<FieldType>
           label='Tên biến thể'
           name='name'
+          className='w-[50%]'
           rules={[{ required: true, message: 'Không được bỏ trống!' }]}
         >
           <Input disabled />
@@ -253,7 +257,7 @@ const UpdateVariant = (props: Props) => {
         >
           <Input style={{ width: '30%' }} />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item>
           <Button type='primary' htmlType='submit'>
             Cập nhật
           </Button>

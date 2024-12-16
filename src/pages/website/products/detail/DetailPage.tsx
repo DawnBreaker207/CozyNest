@@ -425,7 +425,7 @@ const ProductDetail = () => {
         >
           {' '}
           <div className='review lg:-mt-[90px] xl:mt-[280px] '>
-            <ReviewComponent product={product} />{' '}
+            <ReviewComponent handleBuyNow={handleBuyNow} loading={loading}/>
           </div>
         </div>
       </div>

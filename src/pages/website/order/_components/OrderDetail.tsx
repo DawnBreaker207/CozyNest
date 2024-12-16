@@ -1,16 +1,39 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
-import { Button, Card, Col, message, Modal, notification, Row, Spin, Table, Tag, Typography } from 'antd'
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
+import { IReview } from '@/types/review'
+import { StatusType } from '@/types/status'
+import { UploadOutlined } from '@ant-design/icons'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  FormProps,
+  message,
+  Modal,
+  notification,
+  Rate,
+  Row,
+  Spin,
+  Table,
+  Tag,
+  Typography,
+  Upload
+} from 'antd'
+import TextArea from 'antd/es/input/TextArea'
+import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import RefundOrderButton from './RefundOrderButton'
 import ReturnOrderButton from './ReturnOrderButton '
-import { StatusType } from '@/types/status'
-
 const { Title } = Typography
+const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
 const OrderDetail = () => {
   const [order, setOrder] = useState<any>(null)
+  console.log('🚀 ~ OrderDetail ~ order:', order)
   const [returnOrder, setReturnOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [refundOrder, setRefundOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [loading, setLoading] = useState<boolean>(true)
@@ -19,6 +42,88 @@ const OrderDetail = () => {
   const orderId = params.get('orderId')
   const navigate = useNavigate()
   window.scrollTo({ top: 0, behavior: 'smooth' })
+
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
+  console.log('🚀 ~ OrderDetail ~ selectedProduct:', selectedProduct)
+  const [form] = Form.useForm()
+  const [image, setImage] = useState<{ file: File; name: string } | null>(null)
+  const [messageApi, contextHolder] = message.useMessage()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationFn: async (formData: IReview) => {
+      try {
+        return instance.post(`/reviews`, formData)
+      } catch (error) {
+        throw new Error('Thêm đánh giá thất bại')
+      }
+    },
+    onSuccess: () => {
+      messageApi.open({
+        type: 'success',
+        content: 'Bạn đã thêm đánh giá thành công'
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['reviews']
+      })
+    },
+    onError: (error) => {
+      messageApi.open({
+        type: 'error',
+        content: error.message
+      })
+    }
+  })
+
+  const showModal = (product: any) => {
+    if (order.user_id) {
+      setSelectedProduct(product)
+      setIsModalOpen(true)
+    } else {
+      setIsLoginModalOpen(true)
+    }
+  }
+  const handleOk = async () => {
+    try {
+      await form.validateFields()
+      form.submit()
+      setIsModalOpen(false)
+    } catch (error) {
+      console.error('error:', error)
+    }
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+    setSelectedProduct(null)
+  }
+
+  const handleLoginCancel = () => {
+    setIsLoginModalOpen(false)
+  }
+
+  const handleLoginRedirect = () => {
+    setIsLoginModalOpen(false)
+    navigate('/login')
+  }
+
+  const onFinish: FormProps<IReview>['onFinish'] = async (values: IReview) => {
+    const imageUrl = image ? await uploadFileCloudinary(image.file) : ''
+    const reviewData = {
+      ...values,
+      image: imageUrl,
+      product_id: selectedProduct.sku_id.product_id,
+      user_id: order.user_id
+    }
+    mutate(reviewData, {
+      onSuccess: () => {
+        form.resetFields()  
+        setImage(null)  
+        setSelectedProduct(null)  
+      }
+    })
+  }
 
   useEffect(() => {
     if (orderId) {
@@ -57,7 +162,6 @@ const OrderDetail = () => {
         })
     }
   }, [orderId])
-  console.log(returnOrder)
   useEffect(() => {
     if (orderId) {
       instance
@@ -75,7 +179,6 @@ const OrderDetail = () => {
         })
     }
   }, [orderId])
-  console.log(refundOrder)
   useEffect(() => {
     if (isOrderNotFound) {
       const timer = setTimeout(() => {
@@ -191,7 +294,6 @@ const OrderDetail = () => {
       </div>
     )
   }
-  console.log(order)
 
   // Định nghĩa các trạng thái đơn hàng
   const statuses = [
@@ -265,7 +367,8 @@ const OrderDetail = () => {
   }
   return (
     <div className='lg:px-32 p-10'>
-      <Card className='mb-6'>
+      {contextHolder}
+      <div className='mb-6 flex flex-col gap-2'>
         <Title level={2}>Mã đơn hàng: {order._id}</Title>
         <p>
           <strong>Ngày đặt hàng:</strong> {new Date(order.createdAt).toLocaleString()}
@@ -274,7 +377,7 @@ const OrderDetail = () => {
           <strong>Trạng thái đơn hàng hiện tại:</strong>{' '}
           <Tag color='green'>{statuses.find((s) => s.value === currentStatus)?.label || currentStatus}</Tag>
         </p>
-      </Card>
+      </div>
 
       {/* Hiển thị hành trình trạng thái */}
       <Card title='Lịch sử trạng thái' className='mb-6'>
@@ -424,7 +527,30 @@ const OrderDetail = () => {
 
       <Card title='Thông tin sản phẩm' className='mb-6'>
         <Table
-          columns={productColumns}
+          columns={[
+            ...productColumns,
+            {
+              title: 'Đánh giá',
+              key: 'review',
+              render: (_, review) => {
+                console.log('🚀 ~ OrderDetail ~ review:', review)
+                return (
+                  <>
+                    {order?.status === 'Completed' ? (
+                      <div className='space-y-2'>
+                        <button
+                          onClick={() => showModal(review)} // Truyền sản phẩm vào hàm showModal
+                          className='block bg-[#fca120] text-white py-1 px-2 rounded'
+                        >
+                          Đánh giá ngay
+                        </button>
+                      </div>
+                    ) : null}
+                  </>
+                )
+              }
+            }
+          ]}
           dataSource={order?.order_details?.products.map((product: any) => ({
             ...product,
             name: product?.sku_id?.name,
@@ -436,6 +562,71 @@ const OrderDetail = () => {
           scroll={{ x: 'max-content' }}
         />
       </Card>
+      {/* Modal đánh giá */}
+      <Modal
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={[
+          <button onClick={handleOk} className='bg-[#fca120] text-white py-2 px-4 rounded'>
+            Đánh giá
+          </button>,
+          <button onClick={handleCancel} className='py-2 px-4 rounded'>
+            Hủy
+          </button>
+        ]}
+      >
+        <div>
+          <h2 className='text-xl font-bold'>Đánh giá & nhận xét</h2>
+          <h3 className='text-lg font-bold mt-4'>{selectedProduct?.name}</h3>
+          <Form form={form} onFinish={onFinish}>
+            <Form.Item name='rating' rules={[{ required: true, message: 'Vui lòng chọn đánh giá!' }]}>
+              <Rate tooltips={desc} />
+            </Form.Item>
+            <Form.Item
+              name='comment'
+              rules={[
+                { required: true, message: 'Không được bỏ trống!' },
+                { max: 500, message: 'Bình luận không được quá 500 ký tự!' }
+              ]}
+            >
+              <TextArea rows={5} placeholder='Nhập nhận xét của bạn...' />
+            </Form.Item>
+            <Upload
+              beforeUpload={(file) => {
+                setImage({ file, name: file.name })
+                return false // Prevent automatic upload
+              }}
+              showUploadList={false}
+            >
+              <Button icon={<UploadOutlined />}>Thêm ảnh</Button>
+            </Upload>
+            <div className='mt-2'>
+              {image && (
+                <>
+                  <span>{image.name}</span>
+                  <br />
+                  <img src={URL.createObjectURL(image.file)} alt='image' className='size-32 mt-3' />
+                </>
+              )}
+            </div>
+          </Form>
+        </div>
+      </Modal>
+      <Modal
+        title='Vui lòng đăng nhập'
+        open={isLoginModalOpen}
+        onCancel={handleLoginCancel}
+        footer={[
+          <button key='login' onClick={handleLoginRedirect} className='bg-[#fca120] text-white py-2 px-4 rounded'>
+            Đăng nhập
+          </button>,
+          <button key='cancel' onClick={handleLoginCancel} className='py-2 px-4 rounded'>
+            Hủy
+          </button>
+        ]}
+      >
+        <p className='text-base '>Để đánh giá sản phẩm, bạn cần đăng nhập vào tài khoản của mình.</p>
+      </Modal>
 
       <Card className='mb-6'>
         <div className='border-t mt-4 pt-4'>

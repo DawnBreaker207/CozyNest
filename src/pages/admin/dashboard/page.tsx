@@ -1,15 +1,13 @@
 import CustomLoadingPage from '@/components/Loading'
+import instance from '@/configs/axios'
+import { useUser } from '@/hooks/useUser'
+import { useQuery } from '@tanstack/react-query'
+import { MenuProps, Select } from 'antd'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import RecentOrder from './component/RecentOrder'
 import Revenue from './component/Revenue'
 import TopProduct from './component/TopProduct'
-import { useQuery } from '@tanstack/react-query'
-import instance from '@/configs/axios'
-import { useState } from 'react'
-import { Button, Dropdown, MenuProps, Select, Space } from 'antd'
-import RecentOrder from './component/RecentOrder'
-import { Link } from 'react-router-dom'
-import { useUser } from '@/hooks/useUser'
-import { BellOutlined } from '@ant-design/icons'
-import HeaderAdmin from '../header/page'
 
 const DashboardPage = () => {
   const { Logout } = useUser()
@@ -88,7 +86,6 @@ const DashboardPage = () => {
   ]
   return (
     <>
-      <HeaderAdmin/>
       <div className='grid grid-cols-4 px-5 mb-10 gap-10 mt-4'>
         <div className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>

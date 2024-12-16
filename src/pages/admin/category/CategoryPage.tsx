@@ -1,14 +1,12 @@
-import { useState } from 'react'
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import useCategoryMutation from '@/hooks/useCategoryMutations'
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { ICategory } from '@/types/category'
-import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
+import { EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Space, Table, Tag, Input, Select } from 'antd'
+import { Button, Input, message, Popconfirm, Select, Space, Table, Tag } from 'antd'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import HeaderAdmin from '../header/page'
 
 // Hàm loại bỏ dấu (Accents) trong chuỗi
 const removeAccents = (str: string) => {
@@ -165,8 +163,7 @@ const CategoryPage = () => {
   return (
     <>
       {contextHolder}
-      <HeaderAdmin/>
-      <div className='mb-5 mt-4'>
+      <div className='mb-5 flex items-center justify-between'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý danh mục</h1>
         <Link to={`/admin/categories/add`}>
           <Button type='primary'>

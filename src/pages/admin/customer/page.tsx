@@ -2,10 +2,9 @@
 import CustomLoadingPage from '@/components/Loading'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
-import { message, Popconfirm, Switch, Table, Select, Input } from 'antd'
+import { Input, message, Popconfirm, Select, Switch, Table } from 'antd'
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import HeaderAdmin from '../header/page'
 const useQuery = () => {
   return new URLSearchParams(useLocation().search)
 }
@@ -148,9 +147,8 @@ const AdminCustomerPage = () => {
   return (
     <>
       {contextHolder}
-      <HeaderAdmin/>
       <div>
-        <h1 className='text-2xl font-bold mb-5 mt-4'>Quản lý người dùng</h1>
+        <h1 className='text-2xl font-bold mb-5'>Quản lý người dùng</h1>
         <div className='flex items-center justify-between '>
           <Input
             placeholder='Tìm kiếm người dùng theo tên hoặc email'

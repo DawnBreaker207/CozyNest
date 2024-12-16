@@ -13,6 +13,7 @@ import {
 import { Layout, Menu, Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import HeaderAdmin from './header/page'
 const { Header, Content, Footer, Sider } = Layout
 
 const LayoutAdmin: React.FC = () => {
@@ -76,7 +77,7 @@ const LayoutAdmin: React.FC = () => {
         theme='dark'
       >
         <div className='demo-logo-vertical' />
-        <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
+        <Menu theme='dark' mode='inline' className='mt-1' defaultSelectedKeys={['1']}>
           {/* Menu cho admin */}
           {role === 'admin' && (
             <>
@@ -129,6 +130,7 @@ const LayoutAdmin: React.FC = () => {
         </Menu>
       </Sider>
       <Layout>
+        <HeaderAdmin />
         <Content className='overflow-y-auto h-full px-6 py-3 bg-white'>
           <Outlet />
         </Content>

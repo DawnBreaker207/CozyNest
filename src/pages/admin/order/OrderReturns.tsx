@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Table, Button, Popconfirm, message, Select } from 'antd'
 import instance from '@/configs/axios'
-import HeaderAdmin from '../header/page'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Button, message, Popconfirm, Select, Table } from 'antd'
 import { useState } from 'react'
-
 
 const ReturnOrdersAdmin = () => {
   const queryClient = useQueryClient() // Lấy queryClient từ React Query
@@ -124,8 +122,7 @@ const ReturnOrdersAdmin = () => {
 
   return (
     <div>
-      <HeaderAdmin/>
-      <div className='mb-5 mt-4'>
+      <div className='mb-5'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý hoàn trả</h1>
 
         {/* Add Select dropdown for filtering by return status */}

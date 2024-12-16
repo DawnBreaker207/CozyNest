@@ -23,10 +23,7 @@ import { useState } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 
-import HeaderAdmin from '../header/page'
-
 import { Link } from 'react-router-dom'
-
 
 const { Paragraph } = Typography
 const { Panel } = Collapse
@@ -170,8 +167,7 @@ const AdminArticlePage = () => {
   return (
     <>
       {contextHolder}
-      <HeaderAdmin/>
-      <div className='mb-5 mt-4'>
+      <div className='mb-3 flex items-center justify-between'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý bài viết</h1>
         <Link to={`/admin/articles/add`}>
           <Button type='primary'>

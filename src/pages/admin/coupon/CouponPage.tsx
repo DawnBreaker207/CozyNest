@@ -4,15 +4,12 @@ import instance from '@/configs/axios'
 import { useCouponQuery } from '@/hooks/useCouponQuery'
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Space, Table, Tag, Select } from 'antd'
+import { Button, message, Popconfirm, Select, Space, Table, Tag } from 'antd'
 import { Link } from 'react-router-dom'
-
-import HeaderAdmin from '../header/page'
 
 import { useState } from 'react'
 
 const { Option } = Select
-
 
 const CouponPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
@@ -132,15 +129,16 @@ const CouponPage = () => {
   return (
     <div>
       {contextHolder}
-      <HeaderAdmin/>
-      <h1 className='text-2xl font-bold mb-5 mt-4'>Quản lý mã giảm giá</h1>
-      <div className='mb-5'>
-        <Link to='/admin/coupons/add'>
-          <Button type='primary'>
-            <PlusOutlined />
-            Thêm mới mã giảm giá
-          </Button>
-        </Link>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-2xl font-bold mb-5'>Quản lý mã giảm giá</h1>
+        <div className='mb-5'>
+          <Link to='/admin/coupons/add'>
+            <Button type='primary'>
+              <PlusOutlined />
+              Thêm mới mã giảm giá
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className='mb-5'>

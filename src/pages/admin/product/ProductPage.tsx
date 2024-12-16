@@ -1,14 +1,12 @@
-import { useState } from 'react'
-import { Input, Select, Space, Button, message, Table, Tag, Popconfirm } from 'antd'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
-import HeaderAdmin from '../header/page'
-import { useQueryClient } from '@tanstack/react-query'
 import CustomLoadingPage from '@/components/Loading'
-import { useProductQuery } from '@/hooks/useProductQuery'
 import useProductMutation from '@/hooks/useProductMutation'
+import { useProductQuery } from '@/hooks/useProductQuery'
 import { IProduct } from '@/types/product'
-
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { useQueryClient } from '@tanstack/react-query'
+import { Button, Input, message, Popconfirm, Select, Space, Table, Tag } from 'antd'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const AdminProductPage = () => {
   const queryClient = useQueryClient()
@@ -143,36 +141,34 @@ const AdminProductPage = () => {
 
   return (
     <>
-     <HeaderAdmin/>
-     <div className='bg-white mt-4'>
-      {contextHolder}
-      <div className='mb-5'>
-        <h1 className='text-2xl font-bold mb-4'>Quản lý sản phẩm</h1>
-        <Link to={`/admin/products/add`}>
-          <Button type='primary'>
-            <PlusOutlined />
-            Thêm mới sản phẩm
-          </Button>
-        </Link>
-      </div>
+      <div className='bg-white'>
+        {contextHolder}
+        <div className='mb-5 flex items-center justify-between'>
+          <h1 className='text-2xl font-bold mb-4'>Quản lý sản phẩm</h1>
+          <Link to={`/admin/products/add`}>
+            <Button type='primary'>
+              <PlusOutlined />
+              Thêm mới sản phẩm
+            </Button>
+          </Link>
+        </div>
 
-      <div className='mb-5 flex items-center justify-between'>
-        <Input
-          placeholder='Tìm kiếm theo tên sản phẩm'
-          value={search}
-          onChange={handleSearchChange}
-          style={{ width: 500 }}
-        />
-        <Select placeholder='Sắp xếp theo' style={{ width: 150 }} onChange={handleSortChange} defaultValue={null}>
-          <Select.Option value='descend'>Mới nhất</Select.Option>
-          <Select.Option value='ascend'>Cũ nhất</Select.Option>
-        </Select>
-      </div>
+        <div className='mb-4 flex items-center justify-between'>
+          <Input
+            placeholder='Tìm kiếm theo tên sản phẩm'
+            value={search}
+            onChange={handleSearchChange}
+            style={{ width: 500 }}
+          />
+          <Select placeholder='Sắp xếp theo' style={{ width: 150 }} onChange={handleSortChange} defaultValue={null}>
+            <Select.Option value='descend'>Mới nhất</Select.Option>
+            <Select.Option value='ascend'>Cũ nhất</Select.Option>
+          </Select>
+        </div>
 
-      <Table dataSource={dataSource} columns={columns} />
-    </div>
+        <Table dataSource={dataSource} columns={columns} />
+      </div>
     </>
-   
   )
 }
 
