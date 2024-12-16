@@ -56,6 +56,7 @@ const AdminReview = (props: Props) => {
       product_name: review.product_id ? review.product_id.name : 'Sản phẩm không tồn tại',
       ...review
     }))
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
   const columns = [
     {
