@@ -3,13 +3,12 @@ import { useFilterProducts, usePaginate } from '@/hooks/useProduct'
 import { useProductQuery } from '@/hooks/useProductQuery'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
-import { CheckOutlined, DownOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
+import { CheckOutlined, DownOutlined, SortAscendingOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Dropdown, MenuProps } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
 import { GrNext } from 'react-icons/gr'
 import { MdOutlineArrowBackIos } from 'react-icons/md'
-import { Link } from 'react-router-dom'
 
 const ProductsPage = () => {
   const { data: categories } = useCategoryQuery()

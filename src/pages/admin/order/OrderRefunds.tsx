@@ -92,9 +92,12 @@ const RefundOrdersAdmin = () => {
   ]
 
   // Filter data based on status filter
-  const filteredData = statusFilter === 'all' ? data : data.filter((item: any) => {
-    return statusFilter === 'confirmed' ? item.is_confirm : !item.is_confirm
-  })
+  const filteredData =
+    statusFilter === 'all'
+      ? data
+      : data.filter((item: any) => {
+          return statusFilter === 'confirmed' ? item.is_confirm : !item.is_confirm
+        })
 
   if (isLoading)
     return (

@@ -1,11 +1,10 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { ResAPI } from '@/types/responseApi'
 import { useQuery } from '@tanstack/react-query'
 import { Empty, message, Spin, Table, Tag } from 'antd'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
-interface Order {
+export interface Order {
   _id: string
   customer_name: string
   total_amount: number

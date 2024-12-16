@@ -54,7 +54,7 @@ const CheckOutOrder = () => {
     }
   }, [isError, navigate])
 
-  if (isLoading) return  <CustomLoadingPage />
+  if (isLoading) return <CustomLoadingPage />
   if (isError)
     return (
       <div className='text-center mb-10 mt-20'>

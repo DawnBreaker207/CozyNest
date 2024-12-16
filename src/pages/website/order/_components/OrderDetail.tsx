@@ -55,16 +55,16 @@ const OrderDetail = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const queryClient = useQueryClient()
   const replaceBadWord = (text: string): string => {
-    let modifiedText = text;
-  
+    let modifiedText = text
+
     badword.forEach((word) => {
-      const regExp = new RegExp(word, 'gi'); // Tạo regex cho từ, không phân biệt hoa/thường
-      const replacement = '*'.repeat(word.length); // Tạo dấu '*' theo độ dài của từ
-      modifiedText = modifiedText.replace(regExp, replacement); // Thay thế từ xấu bằng dấu '*'
-    });
-  
-    return modifiedText;
-  };
+      const regExp = new RegExp(word, 'gi') // Tạo regex cho từ, không phân biệt hoa/thường
+      const replacement = '*'.repeat(word.length) // Tạo dấu '*' theo độ dài của từ
+      modifiedText = modifiedText.replace(regExp, replacement) // Thay thế từ xấu bằng dấu '*'
+    })
+
+    return modifiedText
+  }
   const { mutate } = useMutation({
     mutationFn: async (formData: IReview) => {
       try {
@@ -125,7 +125,7 @@ const OrderDetail = () => {
   }
 
   const onFinish: FormProps<IReview>['onFinish'] = async (values: IReview) => {
-    const filterComment = replaceBadWord(values.comment ?? "");
+    const filterComment = replaceBadWord(values.comment ?? '')
     const imageUrl = image ? await uploadFileCloudinary(image.file) : ''
     const reviewData = {
       ...values,

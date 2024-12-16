@@ -1,14 +1,14 @@
+import instance from '@/configs/axios'
+import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
-import { CheckOutlined, DownOutlined, FilterOutlined, SortAscendingOutlined } from '@ant-design/icons'
+import { CheckOutlined, DownOutlined, SortAscendingOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
 import { Button, Checkbox, Dropdown, MenuProps } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
-import { Link, useParams } from 'react-router-dom'
 import { GrNext } from 'react-icons/gr'
 import { MdOutlineArrowBackIos } from 'react-icons/md'
-import instance from '@/configs/axios'
-import { useQuery } from '@tanstack/react-query'
-import { ICategory } from '@/types/category'
+import { Link, useParams } from 'react-router-dom'
 
 const ProductsPageDetail = () => {
   const { id } = useParams()
@@ -197,7 +197,7 @@ const ProductsPageDetail = () => {
     <>
       <div className='wrapper-collection-header banner-header'>
         <div className='flex flex-col my-auto'>
-        <div className='w-full collection-banner'>
+          <div className='w-full collection-banner'>
             <img
               src={data?.res?.thumbnail}
               alt='Products'

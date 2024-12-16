@@ -1,15 +1,21 @@
+import Notification from '@/components/Notification'
 import instance from '@/configs/axios'
+import { useOrderNotifications } from '@/hooks/useOrderNotifcations'
+import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
-import { BellOutlined, LogoutOutlined } from '@ant-design/icons'
+import { LogoutOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Dropdown, Menu, MenuProps, Modal, Space } from 'antd'
+import { Badge, Button, Dropdown, Menu, MenuProps, Modal, Space } from 'antd'
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 const HeaderAdmin = () => {
+  const [user] = useCookie('user', {})
+  const { notifications, setNotifications } = useOrderNotifications(user._id)
   const navigate = useNavigate()
   const { Logout } = useUser()
   const [isVisible, setIsVisible] = useState(false)
+  const [showNotify, setShowNotify] = useState(false)
   const { data: userData } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
@@ -20,6 +26,7 @@ const HeaderAdmin = () => {
       }
     }
   })
+
   const handleLogout = () => {
     Modal.confirm({
       title: 'Bạn có chắc chắn muốn đăng xuất không?',
@@ -57,24 +64,32 @@ const HeaderAdmin = () => {
       )
     }
   ]
+
   return (
     <>
       <div className='flex items-center justify-between w-full pr-4 sticky top-0 bg-white z-50'>
-        {/* Ảnh logo */}
+        {/* Logo */}
         <Link to='/admin'>
           <img src='/src/assets/icon/cozynet.svg' alt='Logo' className='w-[160px]' />
         </Link>
 
-        {/* Ảnh với menu */}
         <div className='flex items-center gap-2'>
           <div className=''>
-            <Button shape='circle' icon={<BellOutlined />} />
+            <Badge count={notifications.filter((n) => !n.read).length} overflowCount={99}>
+              <Notification
+                visible={showNotify}
+                onClick={() => setShowNotify((prev) => !prev)} // Close the modal
+                notifications={notifications}
+                setNotifications={setNotifications}
+              />
+            </Badge>
           </div>
           <Dropdown
             menu={{ items: users }}
             trigger={['click']}
             open={isVisible}
             onOpenChange={(visible) => setIsVisible(visible)}
+            placement='bottomCenter'
           >
             <span onClick={(e) => e.preventDefault()}>
               <Space>
@@ -89,6 +104,8 @@ const HeaderAdmin = () => {
         </div>
       </div>
       <hr />
+
+      {/* Notification Modal */}
     </>
   )
 }

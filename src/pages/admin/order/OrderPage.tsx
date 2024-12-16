@@ -4,7 +4,7 @@ import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Select, Space, Spin, Table, Tag } from 'antd'
+import { Button, Select, Space, Table, Tag } from 'antd'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -138,7 +138,7 @@ const AdminOrderPage = () => {
   if (isLoading)
     return (
       <div>
-       <CustomLoadingPage />
+        <CustomLoadingPage />
       </div>
     )
   if (isError) return <div>{error.message}</div>

@@ -74,7 +74,7 @@ const ProductEditPage = () => {
         {/* Hiển thị spinner khi loading là true */}
         {loading ? (
           <div className='flex justify-center items-center'>
-          <CustomLoadingPage />
+            <CustomLoadingPage />
           </div>
         ) : (
           <Form

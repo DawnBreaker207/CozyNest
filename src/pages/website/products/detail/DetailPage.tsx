@@ -1,18 +1,16 @@
-import { Cart } from '@/components/icons/index'
+import CustomLoadingPage from '@/components/Loading'
+import useCart from '@/hooks/useCart'
 import { useProduct } from '@/hooks/useProductQuery'
 import { Variants } from '@/types/product'
+import { message, Spin } from 'antd'
+import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import CouponCard from '../../cart/_components/CouponCard'
 import RelatedProduct from '../_components/RelatedProduct'
 import ReviewComponent from './_components/Review'
-import useCart from '@/hooks/useCart'
-import { Button, message, Spin } from 'antd'
-import 'react-quill/dist/quill.snow.css'
-import ReactQuill from 'react-quill'
-import Cookies from 'js-cookie'
-import CustomLoadingPage from '@/components/Loading'
 const ProductDetail = () => {
   const [count, setCount] = useState(1) // State để giữ số lượng sản phẩm
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -215,9 +213,9 @@ const ProductDetail = () => {
                   setActiveImageIndex(
                     (activeImageIndex -
                       1 +
-                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length) %
-                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length
                   )
                 }
@@ -232,7 +230,7 @@ const ProductDetail = () => {
                 onClick={() =>
                   setActiveImageIndex(
                     (activeImageIndex + 1) %
-                      product?.variants?.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id?.image
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length
                   )
                 }
@@ -267,7 +265,6 @@ const ProductDetail = () => {
             <div className='pricedetail flex flex-row items-center gap-2'>
               {/* Hiển thị giá sau khi giảm */}
               <span className='text-[#FF0000] font-semibold text-[24px]'>{priceVar.toLocaleString()}₫</span>
-
               <span className='text-gray-500 line-through font-medium text-[18px]'>
                 {priceOldVar.toLocaleString()}₫
               </span>
