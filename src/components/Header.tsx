@@ -278,7 +278,7 @@ const Header = () => {
                     <hr />
                     <li className='hover:bg-gray-100'>
                       <Link to='/products_page' className='block px-4 py-2 text-gray-700'>
-                        Sản phẩm mới
+                        Tất cả sản phẩm
                       </Link>
                       <hr />
                     </li>
@@ -288,7 +288,7 @@ const Header = () => {
                       .map((category) => (
                         <>
                           <li key={category._id} className='hover:bg-gray-100'>
-                            <Link to={`/products_page/${category._id}`} className='block px-4 py-2 text-gray-700'>
+                            <Link to={`/categorie/${category._id}`} className='block px-4 py-2 text-gray-700'>
                               {category.name}
                             </Link>
                           </li>

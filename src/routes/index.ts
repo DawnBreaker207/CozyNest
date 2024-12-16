@@ -69,7 +69,7 @@ function App() {
         { path: 'products_page', Component: ProductsPage },
         // Cart
 
-        { path: 'products_page/:id', Component: ProductsPageDetail },
+        { path: 'categorie/:id', Component: ProductsPageDetail },
 
         { path: 'category/:id', Component: CategoryProductsPage }, // Route path="/products_page?category=:categoryId" element={<ProductsPage />} /> {/* Trang sản phẩm của danh mục */}
 
