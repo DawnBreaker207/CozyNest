@@ -48,7 +48,6 @@ import CheckOutOder from '@/pages/website/order/_components/CheckOutOder'
 import OrderDetail from '@/pages/website/order/_components/OrderDetail'
 import OrderPage from '@/pages/website/order/_components/OrderPage'
 import PaymentResultPage from '@/pages/website/order/_components/PaymentResultPage '
-import PaymentPage from '@/pages/website/order/_components/RetryPayment'
 import StockPropblem from '@/pages/website/order/_components/StockPropblem'
 import CheckoutPage from '@/pages/website/order/page'
 import ProductsPage from '@/pages/website/products/_components/ProductPage'
@@ -77,7 +76,6 @@ function App() {
         { path: 'check_out', Component: CheckoutPage },
         { path: 'paymentresult', Component: PaymentResultPage },
         { path: 'orders/orderdetail', Component: OrderDetail },
-        { path: 'paymentRetry/:id', Component: PaymentPage },
         { path: 'stock_propblem', Component: StockPropblem },
         { path: 'intro', Component: Introduction },
         { path: 'orders', Component: OrderPage },
