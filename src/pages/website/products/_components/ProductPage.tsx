@@ -185,122 +185,95 @@ const ProductsPage = () => {
         <div className='flex flex-col my-auto'>
           <div className='w-full collection-banner'>
             <img
-              src='https://nhaxinh.com/wp-content/uploads/2022/09/banner-phong-an-nha-xinh-12-9-22-768x488.jpg'
+              src='https://file.hstatic.net/200000065946/collection/banner_web_1920x450-0410__1__6f2_c39476d703c04384bf6b292d1aef8d19_2048x2048.jpg'
               alt='Products'
               className='w-full h-[200px] sm:h-[300px] md:h-[450px] lg:h-[482px] object-cover'
             />
           </div>
-          <div className='w-full place-content-center collection-heading mt-[30px]'>
-            <h1 className='text-[#FFCC00] w-[85%] mb-[1%] mx-auto text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium'>
-              Tất cả sản phẩm
-            </h1>
-          </div>
         </div>
       </div>
-
-      <div className='flex flex-row justify-between items-center my-4 px-8'>
+      <div>
+        {/* Tiêu đề */}
+        <div className='w-full flex justify-center mt-6 px-4 md:px-8 lg:px-12'>
+          <h1 className='text-[#FFCC00] text-center w-[90%] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium'>
+            Tất cả sản phẩm
+          </h1>
+        </div>
         {/* Bộ lọc và Sắp xếp */}
-        <div className='flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-12 w-full'>
+        <div className='flex flex-col md:flex-row justify-between items-center my-6 px-4 md:px-8 space-y-4 md:space-y-0'>
           {/* Bộ lọc */}
-          <div className='flex items-center ml-20'>
-            <Button icon={<FilterOutlined />} className='text-sm md:text-base pr-4'>
-              Bộ lọc
-            </Button>
-            {/* <div className='h-8 border-r-2 border-gray-300 ml-12 md:block invisible md:visible' /> */}
+          <div className='flex items-center space-x-2 md:space-x-4 lg:ml-[150px]'>
+            <h1 className='text-black text-lg md:text-2xl font-medium '>Bộ lọc |</h1>
           </div>
 
-          {/* Danh mục sản phẩm */}
-          <Dropdown
-            overlay={
-              <div className='p-4 bg-white shadow-lg rounded-lg'>
-                <Checkbox
-                  checked={selectedCategories.length === 0} // Không chọn danh mục nào
-                  onChange={() => setSelectedCategories([])} // Reset danh mục
-                >
-                  Tất cả sản phẩm
-                </Checkbox>
-                <br />
-                {categories?.res?.map((category: ICategory) => (
-                  <div key={category._id}>
-                    <Checkbox
-                      checked={selectedCategories.includes(String(category._id))}
-                      onChange={() => handleCategorySelect(String(category._id))}
-                    >
-                      {category.name}
-                    </Checkbox>
-                  </div>
-                ))}
-              </div>
-            }
-          >
-            <Button className='text-sm md:text-base min-w-[200px] flex items-center'>
-              Danh mục sản phẩm
-              <DownOutlined className='mr-2' />
-            </Button>
-          </Dropdown>
+          {/* Các dropdown */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full lg:-mr-16 md:w-auto'>
+            {/* Danh mục */}
+            <Dropdown
+              overlay={
+                <div className='p-4 bg-white shadow-lg rounded-lg'>
+                  <Checkbox checked={selectedCategories.length === 0} onChange={() => setSelectedCategories([])}>
+                    Tất cả sản phẩm
+                  </Checkbox>
+                  {categories?.res?.map((category: ICategory) => (
+                    <div key={category._id}>
+                      <Checkbox
+                        checked={selectedCategories.includes(String(category._id))}
+                        onChange={() => handleCategorySelect(String(category._id))}
+                      >
+                        {category.name}
+                      </Checkbox>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <Button className='text-sm md:text-base w-full flex items-center justify-between'>
+                Danh mục sản phẩm
+                <DownOutlined />
+              </Button>
+            </Dropdown>
 
-          {/* Lọc giá */}
-          <Dropdown
-            overlay={
-              <div className='p-4 bg-white shadow-lg rounded-lg'>
-                <Checkbox
-                  checked={selectedPriceRanges.includes('Dưới 1.000.000₫')}
-                  onChange={() => handlePriceRangeChange('Dưới 1.000.000₫')}
-                >
-                  Dưới 1.000.000₫
-                </Checkbox>
-                <br />
-                <Checkbox
-                  checked={selectedPriceRanges.includes('1.000.000₫ - 2.000.000₫')}
-                  onChange={() => handlePriceRangeChange('1.000.000₫ - 2.000.000₫')}
-                >
-                  1.000.000₫ - 2.000.000₫
-                </Checkbox>
-                <br />
-                <Checkbox
-                  checked={selectedPriceRanges.includes('2.000.000₫ - 3.000.000₫')}
-                  onChange={() => handlePriceRangeChange('2.000.000₫ - 3.000.000₫')}
-                >
-                  2.000.000₫ - 3.000.000₫
-                </Checkbox>
-                <br />
-                <Checkbox
-                  checked={selectedPriceRanges.includes('3.000.000₫ - 4.000.000₫')}
-                  onChange={() => handlePriceRangeChange('3.000.000₫ - 4.000.000₫')}
-                >
-                  3.000.000₫ - 4.000.000₫
-                </Checkbox>
-                <br />
-                <Checkbox
-                  checked={selectedPriceRanges.includes('Trên 4.000.000₫')}
-                  onChange={() => handlePriceRangeChange('Trên 4.000.000₫')}
-                >
-                  Trên 4.000.000₫
-                </Checkbox>
-              </div>
-            }
-          >
-            <Button className='text-sm md:text-base min-w-[200px] flex items-center'>
-              Giá sản phẩm
-              <DownOutlined className='mr-2' />
-            </Button>
-          </Dropdown>
-        </div>
+            {/* Giá sản phẩm */}
+            <Dropdown
+              overlay={
+                <div className='p-4 bg-white shadow-lg rounded-lg'>
+                  {[
+                    'Dưới 1.000.000₫',
+                    '1.000.000₫ - 2.000.000₫',
+                    '2.000.000₫ - 3.000.000₫',
+                    '3.000.000₫ - 4.000.000₫',
+                    'Trên 4.000.000₫'
+                  ].map((range) => (
+                    <div key={range}>
+                      <Checkbox
+                        checked={selectedPriceRanges.includes(range)}
+                        onChange={() => handlePriceRangeChange(range)}
+                      >
+                        {range}
+                      </Checkbox>
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <Button className='text-sm md:text-base w-full flex items-center justify-between'>
+                Giá sản phẩm
+                <DownOutlined />
+              </Button>
+            </Dropdown>
 
-        {/* Sắp xếp (đẩy sang bên phải) */}
-        <div className='ml-auto mr-20 mb-24 sm:mb-0'>
-          <Dropdown
-            className='w-full sm:w-auto'
-            menu={{
-              items: menuItems,
-              onClick: (e) => handleMenuClick(e.key)
-            }}
-          >
-            <Button icon={<SortAscendingOutlined />}>Sắp xếp</Button>
-          </Dropdown>
+            {/* Sắp xếp */}
+            <Dropdown menu={{ items: menuItems, onClick: (e) => handleMenuClick(e.key) }}>
+              <Button className='text-sm md:text-base w-full flex items-center justify-between'>
+                Sắp xếp
+                <SortAscendingOutlined />
+              </Button>
+            </Dropdown>
+          </div>
         </div>
       </div>
-
+       <hr />
       {window.innerWidth >= 600 ? (
         <div className='flex flex-row justify-left ml-20 my-4 px-8 space-x-2 md:space-x-4'>
           {/* Hiển thị selectedPriceRanges */}
