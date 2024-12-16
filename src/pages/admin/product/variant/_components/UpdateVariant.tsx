@@ -104,6 +104,19 @@ const UpdateVariant = (props: Props) => {
 
   // Close preview modal
   const handleCancel = () => setPreviewVisible(false)
+
+  const handlePriceChange = (value: number, field: string) => {
+    const priceBeforeDiscount = form.getFieldValue('price_before_discount')
+    const discountPercent = form.getFieldValue('price_discount_percent')
+
+    if (priceBeforeDiscount && discountPercent) {
+      const discountAmount = priceBeforeDiscount * (discountPercent / 100)
+      const newPrice = priceBeforeDiscount - discountAmount
+      form.setFieldsValue({
+        price: Math.round(newPrice)
+      })
+    }
+  }
   if (isLoading)
     return (
       <div>
@@ -193,47 +206,16 @@ const UpdateVariant = (props: Props) => {
         >
           <Input style={{ width: '30%' }} />
         </Form.Item>
-        <Form.Item<FieldType>
-          label='Giá'
-          name='price'
-          rules={[
-            { required: true, message: 'Giá không được bỏ trống!' },
-            {
-              pattern: /^[0-9]+$/,
-              message: 'Giá phải là số và không được chứa ký tự khác'
-            },
-            {
-              validator: (_, value) => (value < 0 ? Promise.reject('Giá không được là số âm!') : Promise.resolve())
-            }
-          ]}
-        >
-          <Input style={{ width: '30%' }} />
-        </Form.Item>
 
         <Form.Item<FieldType>
           label='Giá cũ'
           name='price_before_discount'
-          rules={[
-            { required: true, message: 'Giá không được bỏ trống!' },
-            {
-              pattern: /^[0-9]+$/,
-              message: 'Giá phải là số và không được chứa ký tự khác'
-            },
-            {
-              validator: (_, value) => (value < 0 ? Promise.reject('Giá không được là số âm!') : Promise.resolve())
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                const price = getFieldValue('price')
-                if (value <= price) {
-                  return Promise.reject(new Error('Giá cũ phải lớn hơn giá mới!'))
-                }
-                return Promise.resolve()
-              }
-            })
-          ]}
+          rules={[{ required: true, message: 'Giá không được bỏ trống!' }]}
         >
-          <Input style={{ width: '30%' }} />
+          <Input
+            style={{ width: '30%' }}
+            onBlur={() => handlePriceChange(form.getFieldValue('price_before_discount'), 'price_before_discount')}
+          />
         </Form.Item>
 
         <Form.Item
@@ -255,7 +237,26 @@ const UpdateVariant = (props: Props) => {
             }
           ]}
         >
-          <Input style={{ width: '30%' }} />
+          <Input
+            style={{ width: '30%' }}
+            onBlur={() => handlePriceChange(form.getFieldValue('price_discount_percent'), 'price_discount_percent')}
+          />
+        </Form.Item>
+        <Form.Item<FieldType>
+          label='Giá'
+          name='price'
+          rules={[
+            { required: true, message: 'Giá không được bỏ trống!' },
+            {
+              pattern: /^[0-9]+$/,
+              message: 'Giá phải là số và không được chứa ký tự khác'
+            },
+            {
+              validator: (_, value) => (value < 0 ? Promise.reject('Giá không được là số âm!') : Promise.resolve())
+            }
+          ]}
+        >
+          <Input style={{ width: '30%' }} disabled />
         </Form.Item>
         <Form.Item>
           <Button type='primary' htmlType='submit'>
