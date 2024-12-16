@@ -1,29 +1,30 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Table, Button, Popconfirm, message } from 'antd'
+import { Table, Button, Popconfirm, message, Select } from 'antd'
+import { useState } from 'react' // Import useState for handling the filter state
 import instance from '@/configs/axios'
+import CustomLoadingPage from '@/components/Loading'
 
 const RefundOrdersAdmin = () => {
-  const queryClient = useQueryClient() // Lấy queryClient từ React Query
+  const queryClient = useQueryClient()
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['refundOrders'],
     queryFn: async () => {
       const res = await instance.get('/orders/refund?_sort=createdAt')
       return res.data.res.items
     },
-    refetchOnWindowFocus: false // Tắt việc refetch dữ liệu khi chuyển tab
+    refetchOnWindowFocus: false
   })
 
-  // Mutation cho việc xác nhận trả lại đơn hàng
+  const [statusFilter, setStatusFilter] = useState('all') // State for the filter
+
   const { mutate: confirmRefund } = useMutation({
     mutationFn: async (id: string) => {
       await instance.put(`/orders/refund/${id}`)
     },
     onSuccess: () => {
       message.success('Xác nhận yêu cầu hoàn trả đơn hàng thành công')
-      // Làm mới dữ liệu sau khi mutation thành công
-      queryClient.refetchQueries({ queryKey: ['refundOrders'] }) // Refetch thay vì invalidate
+      queryClient.refetchQueries({ queryKey: ['refundOrders'] })
     },
     onError: (error) => {
       console.log('Error confirming return: ', error)
@@ -90,15 +91,39 @@ const RefundOrdersAdmin = () => {
     }
   ]
 
-  if (isLoading) return <div>Đang tải dữ liệu...</div>
-  if (isError) return <div>Đã có lỗi xảy ra khi tải dữ liệu</div>
+  // Filter data based on status filter
+  const filteredData = statusFilter === 'all' ? data : data.filter((item: any) => {
+    return statusFilter === 'confirmed' ? item.is_confirm : !item.is_confirm
+  })
+
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>{error.message}</div>
 
   return (
     <div>
       <div className='mb-5'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý hoàn tiền</h1>
+
+        {/* Status Filter Select */}
+        <Select
+          value={statusFilter}
+          style={{ width: 200 }}
+          onChange={(value) => setStatusFilter(value)}
+          placeholder='Chọn trạng thái'
+          className='mb-4'
+        >
+          <Select.Option value='all'>Tất cả trạng thái</Select.Option>
+          <Select.Option value='confirmed'>Đã xác nhận</Select.Option>
+          <Select.Option value='unconfirmed'>Chưa xác nhận</Select.Option>
+        </Select>
       </div>
-      <Table columns={columns} dataSource={data} rowKey={(record: any) => record?._id} />
+
+      <Table columns={columns} dataSource={filteredData} rowKey={(record: any) => record?._id} />
     </div>
   )
 }
