@@ -26,7 +26,7 @@ const LayoutAdmin: React.FC = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
 
   useEffect(() => {
-    if (role === 'admin' || role === 'manager') {
+    if (role === 'admin' || role === 'manager' || role === 'superAdmin') {
       setIsAuthorized(true)
       navigate('/admin') // Điều hướng vào trang admin
     } else {
@@ -78,14 +78,14 @@ const LayoutAdmin: React.FC = () => {
       >
         <div className='demo-logo-vertical' />
         <Menu theme='dark' mode='inline' className='mt-1' defaultSelectedKeys={['1']}>
-          {/* Menu cho admin */}
-          {role === 'admin' && (
+          {/* Menu cho admin và superAdmin */}
+          {(role === 'admin' || role === 'superAdmin') && (
             <>
               {/* <Menu.Item key='0'>
-                <div className='-ml-5'>
-                  <img src='/src/assets/icon/cozynet.svg' alt='CozyNest' />
-                </div>
-              </Menu.Item> */}
+        <div className='-ml-5'>
+          <img src='/src/assets/icon/cozynet.svg' alt='CozyNest' />
+        </div>
+      </Menu.Item> */}
               <Menu.Item key='1' icon={<AppstoreOutlined />}>
                 <NavLink to='/admin'>Thống kê</NavLink>
               </Menu.Item>
