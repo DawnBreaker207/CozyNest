@@ -49,7 +49,8 @@ const CartPage = () => {
   }
   // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    if (quantities[index]) {
+    const maxStock = products[0]?.sku_id?.stock
+    if (quantities[index] < maxStock) {
       setQuantity(index, quantities[index] + 1)
       mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
     }
