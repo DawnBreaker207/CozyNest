@@ -32,7 +32,6 @@ const CartPage = () => {
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         const unavailableProducts = error.response.data.res
-        // Lưu dữ liệu sản phẩm không đủ số lượng vào localStorage
         localStorage.setItem('unavailableProducts', JSON.stringify(unavailableProducts))
 
         // Chuyển hướng sang trang vấn đề tồn kho
