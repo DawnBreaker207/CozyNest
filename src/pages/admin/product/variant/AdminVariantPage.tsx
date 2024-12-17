@@ -75,11 +75,10 @@ const AdminVariantPage = () => {
     mutateVariantAdd()
   }
 
-  const dataSource = data?.data?.res
-    .map((variant: any) => ({
-      key: variant._id,
-      ...variant
-    }))
+  const dataSource = data?.data?.res.map((variant: any) => ({
+    key: variant._id,
+    ...variant
+  }))
 
   const columns = [
     {

@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { useUser } from '@/hooks/useUser'
 import { useQuery } from '@tanstack/react-query'
-import { MenuProps, Select } from 'antd'
+import { Select } from 'antd'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import RecentOrder from './component/RecentOrder'
@@ -10,8 +10,7 @@ import Revenue from './component/Revenue'
 import TopProduct from './component/TopProduct'
 
 const DashboardPage = () => {
-  const { Logout } = useUser()
-  const [isVisible, setIsVisible] = useState(false)
+  // const { Logout } = useUser()
   const [selectedComponent, setSelectedComponent] = useState('TopProduct') // State cho component được chọn
   const handleComponentChange = (value: string) => {
     setSelectedComponent(value)
@@ -70,20 +69,20 @@ const DashboardPage = () => {
   if (isErrorUsers || isError) {
     return <div>{errorUsers?.message || error?.message}</div>
   }
-  const users: MenuProps['items'] = [
-    {
-      key: '1',
-      label: <Link to='/'>Trang chủ</Link>
-    },
-    {
-      label: (
-        <a href='/' onClick={Logout}>
-          Đăng xuất
-        </a>
-      ),
-      key: '3'
-    }
-  ]
+  // const users: MenuProps['items'] = [
+  //   {
+  //     key: '1',
+  //     label: <Link to='/'>Trang chủ</Link>
+  //   },
+  //   {
+  //     label: (
+  //       <a href='/' onClick={Logout}>
+  //         Đăng xuất
+  //       </a>
+  //     ),
+  //     key: '3'
+  //   }
+  // ]
   return (
     <>
       <div className='grid grid-cols-4 px-5 mb-10 gap-10 mt-4'>

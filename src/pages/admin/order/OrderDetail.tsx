@@ -185,6 +185,8 @@ const AdminOrderDetail = () => {
             {statuses.map((status, index) => {
               const isProcessing = currentStatus === 'Processing'
               const isPending = currentStatus === 'Pending'
+              const isDelivered = currentStatus === 'Delivered' // Trạng thái hiện tại là "Delivered"
+              const isCompleted = currentStatus === 'Completed' // Trạng thái hiện tại là "Completed"
 
               const currentIndex = statuses.findIndex((s) => s.value === currentStatus)
               const targetIndex = statuses.findIndex((s) => s.value === status.value)
@@ -198,13 +200,11 @@ const AdminOrderDetail = () => {
                 if (status.value === 'Cancelled') {
                   // "Hủy đơn hàng" chỉ được phép khi đang xử lý hoặc đang chờ
                   isDisabled = !(isProcessing || isPending)
-                } else if (
-                  status.value === 'Returned' ||
-                  status.value === 'Refunded' ||
-                  status.value === 'Returing' ||
-                  status.value === 'Refunding'
-                ) {
+                } else if (status.value === 'Returned' || status.value === 'Refunded' || status.value === 'Refunding') {
                   // "Hoàn trả đơn hàng" và "Hoàn tiền" luôn bị vô hiệu hóa
+                  isDisabled = true
+                } else if (isDelivered && status.value === 'Completed') {
+                  // Khi trạng thái "Delivered", vô hiệu hóa trạng thái "Completed"
                   isDisabled = true
                 } else if (
                   (currentStatus === 'Delivered' || currentStatus === 'Rejected') &&
@@ -212,6 +212,9 @@ const AdminOrderDetail = () => {
                 ) {
                   // Trạng thái "Delivered" hoặc "Rejected" có thể chuyển thành "Completed"
                   isDisabled = false
+                } else if (isCompleted && status.value === 'Returning') {
+                  // Nếu trạng thái là "Completed", không thể chuyển sang "Returning"
+                  isDisabled = true
                 } else {
                   // Các trạng thái khác: chỉ cho phép chuyển liền kề
                   isDisabled =
@@ -241,7 +244,7 @@ const AdminOrderDetail = () => {
                     }
                   }}
                   className={`px-4 py-2 ${isDisabled ? 'cursor-not-allowed opacity-50' : ''} 
-        ${status.value === currentStatus ? 'border border-blue-500 bg-blue-500 text-white' : ''} flex-shrink-0`}
+          ${status.value === currentStatus ? 'border border-blue-500 bg-blue-500 text-white' : ''} flex-shrink-0`}
                   type={btnType}
                 >
                   {status.label} {/* Hiển thị tên trạng thái */}

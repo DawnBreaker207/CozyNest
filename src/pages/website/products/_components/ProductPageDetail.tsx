@@ -42,7 +42,7 @@ const ProductsPageDetail = () => {
     }
   }, [data])
   const handleMenuClick = (key: string) => {
-    let sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
+    const sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
 
     switch (key) {
       case '1': // Giá: Thấp đến Cao

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { useFilterProducts, usePaginate } from '@/hooks/useProduct'
 import { useProductQuery } from '@/hooks/useProductQuery'
@@ -18,8 +19,6 @@ const ProductsPage = () => {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([])
   const { filterProductsByPrice } = useFilterProducts(products)
   const filteredProducts = filterProductsByPrice(selectedPriceRanges)
-  const [hoveredImages, setHoveredImages] = useState({})
-  const [hoveredPrices, setHoveredPrices] = useState({})
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
 
   console.log(data)
@@ -69,7 +68,7 @@ const ProductsPage = () => {
     if (data) setProducts(data.res)
   }, [data])
   const handleMenuClick = (key: string) => {
-    let sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
+    const sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
 
     switch (key) {
       case '1': // Giá: Thấp đến Cao

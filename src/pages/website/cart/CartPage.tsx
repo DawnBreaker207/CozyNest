@@ -18,9 +18,9 @@ const CartPage = () => {
   const handleCheckout = async () => {
     const cartItems = products.map((product, index) => {
       return {
-        productId: product.sku_id.product_id._id, 
-        skuId: product.sku_id._id, 
-        quantity: quantities[index] 
+        productId: product.sku_id.product_id._id,
+        skuId: product.sku_id._id,
+        quantity: quantities[index]
       }
     })
     try {

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { IReview } from '@/types/review'
@@ -16,20 +17,17 @@ import {
   notification,
   Rate,
   Row,
-  Spin,
   Table,
   Tag,
   Typography,
   Upload
 } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { badword } from './badword'
 import RefundOrderButton from './RefundOrderButton'
 import ReturnOrderButton from './ReturnOrderButton '
-import CustomLoadingPage from '@/components/Loading'
-import { badword } from './badword'
 const { Title } = Typography
 
 const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
@@ -150,7 +148,7 @@ const OrderDetail = () => {
       return response.data
     }
   })
-  console.log(data)
+  console.log(data);
 
   useEffect(() => {
     setLoading(true)
@@ -162,6 +160,7 @@ const OrderDetail = () => {
       // Lấy tên người xác nhận từ cookie
     }
     setLoading(false)
+
   }, [data])
   useEffect(() => {
     if (orderId) {

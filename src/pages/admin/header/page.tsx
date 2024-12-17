@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Notification from '@/components/Notification'
 import instance from '@/configs/axios'
 import { useUser } from '@/hooks/useUser'
