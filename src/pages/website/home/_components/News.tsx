@@ -63,8 +63,9 @@ const News = () => {
                 </div>
                 <Meta
                   title={<span className='text-[#FCA120]'>{article.title}</span>}
-                  description={article.title.substring(0, 20)}
+                  description={article.title.substring(0, 45) + "..."}
                 />
+                <p className='items-center mt-2 -mb-2 text-gray-400 '>ttác giả: {article.author}</p>
                 <Link
                   to={`/articles/${article._id}`}
                   className='text-black hover:text-orange-600 flex items-center mt-4'
