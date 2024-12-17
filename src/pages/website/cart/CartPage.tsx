@@ -13,13 +13,12 @@ const CartPage = () => {
   const navigate = useNavigate()
   const unavailableProducts = products.filter((product) => product.sku_id.product_id.is_hidden)
 
-  // Tính tổng tiền sau khi loại bỏ sản phẩm không khả dụng
   const total =
     calculateTotal() - unavailableProducts.reduce((acc, product) => acc + product.price * product.quantity, 0)
   const handleCheckout = async () => {
     const cartItems = products.map((product, index) => {
       return {
-        productId: product.sku_id.product_id._id, // Đảm bảo _id là một thuộc tính hợp lệ
+        productId: product.sku_id.product_id._id, 
         skuId: product.sku_id._id, // Đảm bảo sku_id._id là hợp lệ
         quantity: quantities[index] // Kiểm tra số lượng
       }
