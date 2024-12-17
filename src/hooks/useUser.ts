@@ -46,6 +46,5 @@ export const useUser = () => {
     }
   }
 
-
   return { user, userId, Logout }
 }

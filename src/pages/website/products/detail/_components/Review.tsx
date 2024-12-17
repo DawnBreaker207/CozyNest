@@ -141,7 +141,11 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
                     {/* Hiển thị hình ảnh của sản phẩm */}
                     <div className='mt-4 grid grid-cols-3 gap-2'>
                       {review.image && (
-                        <img title='ảnh sản phẩm' src={review.image} className='w-20 h-20 md:w-32 md:h-32 object-cover rounded-md' />
+                        <img
+                          title='ảnh sản phẩm'
+                          src={review.image}
+                          className='w-20 h-20 md:w-32 md:h-32 object-cover rounded-md'
+                        />
                       )}
                     </div>
                   </div>

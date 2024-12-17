@@ -26,7 +26,7 @@ const CheckoutPage = () => {
     const fetchCoupons = async () => {
       try {
         const response = await instance.get('/coupon')
-        console.log("🚀 ~ fetchCoupons ~ response:", response)
+        console.log('🚀 ~ fetchCoupons ~ response:', response)
 
         // Lọc các mã giảm giá
         const filteredCoupons = response.data?.res?.docs.filter((coupon: any) => {
@@ -159,7 +159,9 @@ const CheckoutPage = () => {
                   <div className='flex items-center gap-3'>
                     <img src={product.sku_id.image[0]} className='xl:w-20 lg:w-20 w-16 sm:w-20' alt={product.name} />
                     <div className='flex flex-col'>
-                      <span className='font-semibold text-[#252A2B] text-sm md:text-base'>{product.sku_id.product_id.name}</span>
+                      <span className='font-semibold text-[#252A2B] text-sm md:text-base'>
+                        {product.sku_id.product_id.name}
+                      </span>
                       <span className='font-medium text-[#252A2B] bg-gray-200 w-fit px-2 text-sm md:text-base'>
                         {currentVariant?.option_value_id?.label || 'Không có màu'}
                       </span>
