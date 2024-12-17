@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import { useAdminUsersQuery } from '@/hooks/useAdminUsersQuery'
 import useAdminUsersMutations from '@/hooks/userAdminUsersMutations'
@@ -167,7 +168,7 @@ const AdminCustomerPage = () => {
             okText='Có'
             cancelText='Không'
           >
-            <Switch checked={status} onChange={(checked) => {}} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
+            <Switch checked={status} onChange={(checked) => { }} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
           </Popconfirm>
         )
       }
