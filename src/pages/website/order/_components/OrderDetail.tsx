@@ -4,7 +4,7 @@ import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { IReview } from '@/types/review'
 import { StatusType } from '@/types/status'
 import { UploadOutlined } from '@ant-design/icons'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Button,
   Card,
@@ -143,26 +143,27 @@ const OrderDetail = () => {
       }
     })
   }
-  useEffect(() => {
-    if (orderId) {
-      instance
-        .get(`/orders/${orderId}`)
-        .then((response) => {
-          if (response?.data?.res) {
-            setOrder(response?.data?.res)
-            setLoading(false)
-          } else {
-            setIsOrderNotFound(true)
-            setLoading(false)
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching order:', error)
-          setIsOrderNotFound(true)
-          setLoading(false)
-        })
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['orderDetail', orderId],
+    queryFn: async () => {
+      const response = await instance.get(`/orders/${orderId}`)
+      return response.data
     }
-  }, [orderId])
+  })
+  console.log(data);
+  
+  useEffect(() => {
+    setLoading(true)
+    if (data?.res) {
+      if (data.res) {
+        setOrder(data.res)
+      }
+
+      // Lấy tên người xác nhận từ cookie
+    }
+    setLoading(false)
+
+  }, [data])
   useEffect(() => {
     if (orderId) {
       instance
@@ -387,13 +388,20 @@ const OrderDetail = () => {
     Refunded: 'red',
     Cancelled: 'gray'
   }
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>Lỗi khi tải chi tiết đơn hàng</div>
   return (
     <div className='lg:px-32 p-10'>
       {contextHolder}
       <div className='mb-6 flex flex-col gap-2'>
-        <Title level={2}>Mã đơn hàng: {order._id}</Title>
+        <Title level={2}>Mã đơn hàng: {order?._id}</Title>
         <p>
-          <strong>Ngày đặt hàng:</strong> {new Date(order.createdAt).toLocaleString()}
+          <strong>Ngày đặt hàng:</strong> {new Date(order?.createdAt).toLocaleString()}
         </p>
         <p>
           <strong>Trạng thái đơn hàng hiện tại:</strong>{' '}
@@ -404,7 +412,7 @@ const OrderDetail = () => {
       {/* Hiển thị hành trình trạng thái */}
       <Card title='Lịch sử trạng thái' className='mb-3'>
         <div className='flex flex-wrap gap-4'>
-          {order.status_detail.length > 0 &&
+          {order?.status_detail?.length > 0 &&
             order.status_detail.map((item: any, index: number) => (
               <div key={index} className='flex flex-col'>
                 <p>
@@ -418,7 +426,7 @@ const OrderDetail = () => {
         </div>
         <div className='flex flex-wrap gap-4 mt-4'>
           {statuses.map((status, index) => {
-            const normalizedCurrentStatus = currentStatus.trim().toLowerCase()
+            const normalizedCurrentStatus = currentStatus?.trim().toLowerCase()
             const normalizedStatusValue = status.value.trim().toLowerCase()
 
             const isPast = index < statuses.findIndex((s) => s.value.trim().toLowerCase() === normalizedCurrentStatus)
@@ -525,16 +533,16 @@ const OrderDetail = () => {
       )}
       <Card title='Thông tin giao hàng' className='mb-6'>
         <p>
-          <strong>Tên người nhận:</strong> {order.customer_name}
+          <strong>Tên người nhận:</strong> {order?.customer_name}
         </p>
         <p>
-          <strong>Số điện thoại:</strong> {order.phone_number}
+          <strong>Số điện thoại:</strong> {order?.phone_number}
         </p>
         <p>
-          <strong>Email:</strong> {order.email}
+          <strong>Email:</strong> {order?.email}
         </p>
         <p>
-          <strong>Địa chỉ nhận hàng:</strong> {order.address}
+          <strong>Địa chỉ nhận hàng:</strong> {order?.address}
         </p>
       </Card>
 
@@ -671,23 +679,23 @@ const OrderDetail = () => {
             {/* Hiển thị mã giảm giá nếu có */}
             {order?.order_details?.total > 0 && (
               <div className='flex justify-between'>
-                <span>Mã Giảm Giá: {order.order_details.coupon}</span>
-                <span className='text-red-600'>- {order.order_details.total.toLocaleString()}₫</span>
+                <span>Mã Giảm Giá: {order?.order_details.coupon}</span>
+                <span className='text-red-600'>- {order?.order_details.total.toLocaleString()}₫</span>
               </div>
             )}
 
             {/* Hiển thị tổng cộng đơn hàng */}
             <div className='flex justify-between'>
               <span>Tổng cộng đơn hàng</span>
-              <span>{order.total_amount.toLocaleString()}₫</span>
+              <span>{order?.total_amount.toLocaleString()}₫</span>
             </div>
           </div>
           <p>
-            <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
+            <strong>Phương thức thanh toán: {order?.payment_method[0].orderInfo}</strong>
           </p>
           <p>
             <strong>
-              Trạng thái thanh toán: {order.payment_status === 'Unpaid' ? 'Chưa thanh toán' : 'Đã thanh toán'}
+              Trạng thái thanh toán: {order?.payment_status === 'Unpaid' ? 'Chưa thanh toán' : 'Đã thanh toán'}
             </strong>
           </p>
         </div>
@@ -701,7 +709,7 @@ const OrderDetail = () => {
         <Button
           className='bg-red-400 text-white w-full sm:w-auto'
           onClick={cancelOrder} // Khi nhấn Hủy đơn hàng
-          disabled={order.status !== 'Processing' && order.status !== 'Pending'}
+          disabled={order?.status !== 'Processing' && order?.status !== 'Pending'}
         >
           Hủy đơn hàng
         </Button>
@@ -709,7 +717,7 @@ const OrderDetail = () => {
         <Button
           className='bg-blue-500 text-white w-full sm:w-auto'
           onClick={confirmOrder} // Khi nhấn Xác nhận đơn hàng
-          disabled={(order.status !== 'Delivered' && order.status !== 'Rejected') || currentStatus === 'Returning'}
+          disabled={(order?.status !== 'Delivered' && order?.status !== 'Rejected') || currentStatus === 'Returning'}
         >
           Xác nhận đơn hàng
         </Button>

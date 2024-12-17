@@ -301,6 +301,7 @@ const ProductDetail = () => {
             <h2 className='font-semibold'>Màu sắc:</h2>
             {variants.map((variant: any) => {
               const color = variant.option_value_id
+
               const isSelected = selectedColorId === variant.sku_id._id
               const isHovered = hoveredColorId === variant._id
               const bgColor =

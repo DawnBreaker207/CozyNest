@@ -62,7 +62,6 @@ const CouponAdd = () => {
         >
           <Input placeholder='Nhập tên mã giảm giá' />
         </Form.Item>
-
         <Form.Item
           label='Mã Coupon'
           name='couponCode'
@@ -71,7 +70,6 @@ const CouponAdd = () => {
         >
           <Input placeholder='Nhập mã coupon' />
         </Form.Item>
-
         <Form.Item
           label='Giá trị'
           name='couponValue'
@@ -93,7 +91,6 @@ const CouponAdd = () => {
             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           />
         </Form.Item>
-
         <Form.Item
           label='Số lượng'
           name='couponQuantity'
@@ -102,7 +99,6 @@ const CouponAdd = () => {
         >
           <InputNumber min={0} className='w-full' />
         </Form.Item>
-
         <Form.Item
           label='Ngày bắt đầu'
           name='couponStartDate'
@@ -136,7 +132,6 @@ const CouponAdd = () => {
         <Form.Item label='Trạng thái' name='status' valuePropName='checked'>
           <Switch checkedChildren='Hoạt động' unCheckedChildren='Không hoạt động' />
         </Form.Item>
-
         <Button type='primary' htmlType='submit' loading={loading}>
           Tạo mã giảm giá
         </Button>

@@ -82,7 +82,7 @@ const RefundOrderButton = ({ order, currentStatus }: any) => {
     <>
       <Button
         className='bg-yellow-500 text-white w-full sm:w-auto'
-        disabled={currentStatus === 'Refunding' || order.status !== 'Returned' || order.payment_status != 'Paid'}
+        disabled={currentStatus === 'Refunding' || order?.status !== 'Returned' || order?.payment_status != 'Paid'}
         onClick={() => setIsModalOpen(true)}
       >
         Yêu cầu hoàn tiền

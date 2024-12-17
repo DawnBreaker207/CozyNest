@@ -70,7 +70,7 @@ const ReturnOrderButton = ({ order, currentStatus }: any) => {
     <>
       <Button
         className='bg-yellow-500 text-white w-full sm:w-auto'
-        disabled={currentStatus === 'Returning' || order.status !== 'Delivered'}
+        disabled={currentStatus === 'Returning' || order?.status !== 'Delivered'}
         onClick={() => setIsModalOpen(true)}
       >
         Hoàn trả đơn hàng
