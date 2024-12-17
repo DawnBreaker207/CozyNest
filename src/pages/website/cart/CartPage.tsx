@@ -19,7 +19,7 @@ const CartPage = () => {
     const cartItems = products.map((product, index) => {
       return {
         productId: product.sku_id.product_id._id, 
-        skuId: product.sku_id._id, // Đảm bảo sku_id._id là hợp lệ
+        skuId: product.sku_id._id, 
         quantity: quantities[index] // Kiểm tra số lượng
       }
     })
