@@ -157,6 +157,19 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
         <RightOutlined /> <Link to={``}>Phương thức thanh toán</Link>
       </p>
       <Form layout='vertical' onFinish={handlePayment}>
+        <h2 className='text-lg font-semibold mb-4 mt-7'>Dịch vụ lắp đặt</h2>
+        <div className='p-6 bg-white rounded-lg shadow-md'>
+          <Form.Item name='service'>
+            <Radio.Group onChange={handleShippingChange} className='flex flex-col space-y-4'>
+              <Radio className='flex items-center border border-2px p-4' value='home_install'>
+                Lắp đặt tại nhà
+              </Radio>
+              <Radio className='flex items-center border border-2px p-4' value='self_install'>
+                Tự lắp đặt
+              </Radio>
+            </Radio.Group>
+          </Form.Item>
+        </div>
         <h2 className='text-lg font-semibold mb-4 mt-7'>Phương thức thanh toán</h2>
         <div className='p-6 bg-white rounded-lg shadow-md'>
           <Form.Item name='payment' rules={[{ required: true, message: 'Vui lòng chọn phương thức thanh toán!' }]}>
@@ -237,19 +250,7 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
               </Radio.Group>
             </Form.Item>
           </div> */}
-          <h2 className='text-lg font-semibold mb-4 mt-7'>Dịch vụ lắp đặt</h2>
-          <div className='p-6 bg-white rounded-lg shadow-md'>
-            <Form.Item name='service'>
-              <Radio.Group onChange={handleShippingChange} className='flex flex-col space-y-4'>
-                <Radio className='flex items-center border border-2px p-4' value='home_install'>
-                  Lắp đặt tại nhà
-                </Radio>
-                <Radio className='flex items-center border border-2px p-4' value='self_install'>
-                  Tự lắp đặt
-                </Radio>
-              </Radio.Group>
-            </Form.Item>
-          </div>
+
         </div>
         <Form.Item>
           <Button type='primary' className='mt-5' htmlType='submit' block>
