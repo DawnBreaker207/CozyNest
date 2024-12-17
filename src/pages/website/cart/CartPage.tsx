@@ -36,7 +36,6 @@ const CartPage = () => {
 
         navigate('/stock_propblem')
       } else {
-        // Hiển thị thông báo lỗi khác
         message.error('Đã có lỗi xảy ra khi kiểm tra tồn kho')
       }
     }
