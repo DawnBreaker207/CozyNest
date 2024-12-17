@@ -27,7 +27,6 @@ const CartPage = () => {
       const response = await instance.post('/stock/checkStock', { cartItems })
 
       if (response.status === 200) {
-        // Nếu tồn kho đủ, chuyển hướng đến trang thanh toán
         navigate('/check_out')
       }
     } catch (error: any) {
