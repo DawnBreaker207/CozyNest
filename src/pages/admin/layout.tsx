@@ -124,7 +124,7 @@ const LayoutAdmin: React.FC = () => {
           {/* Menu cho shipper */}
           {role === 'shipper' && (
             <Menu.Item key='4' icon={<UploadOutlined />}>
-              <NavLink to='/admin/order'>Quản lý đơn hàng</NavLink>
+              <NavLink to='/admin/order?status=Delivering'>Quản lý đơn hàng</NavLink>
             </Menu.Item>
           )}
         </Menu>
