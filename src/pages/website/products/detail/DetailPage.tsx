@@ -143,7 +143,7 @@ const ProductDetail = () => {
   const category = product?.category_id?._id
 
   const increase = () => {
-    if (count) setCount(count + 1)
+    if (selectedVariant && count < selectedVariant.sku_id.stock) setCount(count + 1)
   }
 
   const decrease = () => {
