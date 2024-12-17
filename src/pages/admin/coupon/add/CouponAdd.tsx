@@ -78,10 +78,8 @@ const CouponAdd = () => {
             { required: true, message: 'Vui lòng nhập giá trị coupon!' },
             {
               validator: (_, value) =>
-                value > 200000
-                  ? Promise.reject(new Error('Giá trị không được vượt quá 200,000!'))
-                  : Promise.resolve(),
-            },
+                value > 200000 ? Promise.reject(new Error('Giá trị không được vượt quá 200,000!')) : Promise.resolve()
+            }
           ]}
         >
           <InputNumber
@@ -122,8 +120,8 @@ const CouponAdd = () => {
                   return Promise.reject(new Error('Ngày kết thúc phải lớn hơn ngày bắt đầu!'))
                 }
                 return Promise.resolve()
-              },
-            }),
+              }
+            })
           ]}
         >
           <DatePicker className='w-full' format='YYYY-MM-DD' />
