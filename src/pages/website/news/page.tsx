@@ -108,11 +108,30 @@ const NewsPage = () => {
                       key={index}
                       hoverable
                       cover={
-                        <img
-                          alt='Sofa set'
-                          src={product?.variants?.[0]?.sku_id?.image?.[0]}
-                          style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                        />
+                        <div style={{ position: 'relative' }}>
+                          <img
+                            alt='Sofa set'
+                            src={product?.variants?.[0]?.sku_id?.image?.[0]}
+                            style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                          />
+                          {product?.variants[0]?.sku_id?.price_discount_percent && (
+                            <div
+                              className='discount-badge'
+                              style={{
+                                position: 'absolute',
+                                top: '1px',
+                                left: '1px',
+                                backgroundColor: 'red',
+                                color: 'white',
+                                fontSize: '14px',
+                                fontWeight: 'bold',
+                                borderRadius: '5px',
+                              }}
+                            >
+                              {product?.variants[0]?.sku_id?.price_discount_percent}%
+                            </div>
+                          )}
+                        </div>
                       }
                     >
                       <Paragraph className='mb-0'>
@@ -124,6 +143,7 @@ const NewsPage = () => {
                       </Paragraph>
                       <Button className='text-center'>xem chi tiết</Button>
                     </Card>
+
                   </Link>
                 ))}
             </div>
