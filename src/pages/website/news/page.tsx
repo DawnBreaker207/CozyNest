@@ -138,8 +138,8 @@ const NewsPage = () => {
                         <strong>{product.name}</strong>
                       </Paragraph>
                       <Paragraph className='text-red-500 font-bold mb-0'>
-                        <strong>{product.price}</strong>
-                        {/* <span className='line-through text-gray-500'> 10,600,000₫</span> */}
+                        <strong>{product?.variants[0]?.sku_id?.price.toLocaleString()}đ</strong>
+                        <span className='line-through text-gray-500 ml-1'>{product?.variants[0]?.sku_id?.price_before_discount.toLocaleString()}đ</span>
                       </Paragraph>
                       <Button className='text-center'>xem chi tiết</Button>
                     </Card>
