@@ -60,6 +60,16 @@ const AdminCustomerPage = () => {
         return
       }
 
+      // Kiểm tra và cập nhật vai trò dựa trên vai trò hiện tại
+      let validRoles: string[] = []
+      if (user.role === 'admin') {
+        validRoles = ['admin'] // Admin không thể chọn các role khác
+      } else if (user.role === 'shipper') {
+        validRoles = ['admin', 'shipper'] // Shipper chỉ có thể chọn admin
+      } else if (user.role === 'member') {
+        validRoles = ['admin', 'member', 'shipper'] // User có thể chọn tất cả trừ superAdmin
+      }
+
       // Cập nhật vai trò người dùng
       const updatedUser = { ...user, role }
       mutate(updatedUser)
@@ -117,18 +127,34 @@ const AdminCustomerPage = () => {
       title: 'Vai trò',
       dataIndex: 'role',
       key: 'role',
-      render: (role: string, user: any) => (
-        <Select
-          value={role}
-          style={{ width: 120 }}
-          onChange={(value) => handleRoleChange(user._id, value)}
-          disabled={user.role === 'superAdmin'} // Không cho phép thay đổi vai trò của người dùng có vai trò superAdmin
-        >
-          <Select.Option value='admin'>Admin</Select.Option>
-          <Select.Option value='member'>Member</Select.Option>
-          <Select.Option value='shipper'>Shipper</Select.Option>
-        </Select>
-      )
+      render: (role: string, user: any) => {
+        const currentUserRole = Cookies.get('user')
+        const currentUser = currentUserRole ? JSON.parse(currentUserRole) : null
+        const currentUserRoles = currentUser?.role
+        // Chỉ cho phép superAdmin thay đổi vai trò
+        const isSuperAdmin = currentUserRoles === 'superAdmin'
+
+        let validRoles: string[] = []
+        if (user.role === 'admin') {
+          validRoles = ['admin']
+        } else if (user.role === 'shipper') {
+          validRoles = ['admin', 'shipper']
+        } else if (user.role === 'member') {
+          validRoles = ['admin', 'member', 'shipper']
+        }
+        return (
+          <Select
+            value={role}
+            style={{ width: 120 }}
+            onChange={(value) => handleRoleChange(user._id, value)}
+            disabled={!isSuperAdmin || !validRoles.includes(role)} // Chỉ cho phép chọn vai trò hợp lệ
+          >
+            {validRoles.includes('admin') && <Select.Option value="admin">Admin</Select.Option>}
+            {validRoles.includes('shipper') && <Select.Option value="shipper">Shipper</Select.Option>}
+            {validRoles.includes('member') && <Select.Option value="member">Member</Select.Option>}
+          </Select>
+        )
+      }
     },
     {
       title: 'Email',
