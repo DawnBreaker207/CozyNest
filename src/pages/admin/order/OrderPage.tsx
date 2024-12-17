@@ -157,7 +157,7 @@ const AdminOrderPage = () => {
         </div>
 
         {/* Filters */}
-        {statusFilter !== 'Delivering' && (
+        {statusFilter !== 'Pending-Ship' && (
           <div className='mb-4'>
             <div className='flex justify-between items-center'>
               {/* <DatePicker placeholder='Chọn ngày' value={dateFilter} onChange={setDateFilter} format='DD/MM/YYYY' /> */}

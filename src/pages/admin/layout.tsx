@@ -37,7 +37,7 @@ const LayoutAdmin: React.FC = () => {
   useEffect(() => {
     if (role === 'shipper') {
       setIsAuthorized(true)
-      navigate('/admin/order?status=Delivering')
+      navigate('/admin/order?status=Pending-Ship')
     }
   }, [role])
   const handleLogout = () => {
@@ -124,7 +124,7 @@ const LayoutAdmin: React.FC = () => {
           {/* Menu cho shipper */}
           {role === 'shipper' && (
             <Menu.Item key='4' icon={<UploadOutlined />}>
-              <NavLink to='/admin/order?status=Delivering'>Quản lý đơn hàng</NavLink>
+              <NavLink to='/admin/order?status=Pending-Ship'>Quản lý đơn hàng</NavLink>
             </Menu.Item>
           )}
         </Menu>

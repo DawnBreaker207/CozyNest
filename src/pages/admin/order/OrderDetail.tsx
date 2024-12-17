@@ -153,7 +153,7 @@ const AdminOrderDetail = () => {
             {order.status === 'Delivered' ? (
               <Button>
                 <BackwardOutlined />
-                <Link to={`/admin/order?status=Delivering`}>Quay lại</Link>
+                <Link to={`/admin/order?status=Pending-Ship`}>Quay lại</Link>
               </Button>
             ) : (
               <Button>
