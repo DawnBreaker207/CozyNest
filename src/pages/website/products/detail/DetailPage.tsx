@@ -239,8 +239,8 @@ const ProductDetail = () => {
                       1 +
                       product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length) %
-                    product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
-                      ?.length
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
+                        ?.length
                   )
                 }
               >
@@ -254,8 +254,8 @@ const ProductDetail = () => {
                 onClick={() =>
                   setActiveImageIndex(
                     (activeImageIndex + 1) %
-                    product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
-                      ?.length
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
+                        ?.length
                   )
                 }
               >
@@ -300,7 +300,7 @@ const ProductDetail = () => {
           <div className='flex flex-wrap items-center mt-6 gap-3'>
             <h2 className='font-semibold'>Màu sắc:</h2>
             {variants.map((variant: any) => {
-              const color = variant?.option_id?.option_value_id[0]
+              const color = variant.option_value_id
               const isSelected = selectedColorId === variant.sku_id._id
               const isHovered = hoveredColorId === variant._id
               const bgColor =
@@ -308,7 +308,7 @@ const ProductDetail = () => {
 
               // Tên màu hiển thị khi hover hoặc select
               const displayName =
-                isSelected || isHovered ? color.label || color.value : variants[0]?.option_id?.option_value_id?.[0].value
+                isSelected || isHovered ? color.label || color.value : variants[0]?.option_value_id.value
 
               return (
                 <button
