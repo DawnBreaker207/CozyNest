@@ -2,7 +2,7 @@ import CustomLoadingPage from '@/components/Loading'
 import useProductMutation from '@/hooks/useProductMutation'
 import { useProductQuery } from '@/hooks/useProductQuery'
 import { IProduct } from '@/types/product'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Input, message, Popconfirm, Select, Space, Table, Tag } from 'antd'
 import { useState } from 'react'
@@ -117,12 +117,12 @@ const AdminProductPage = () => {
           </Link>
           <Popconfirm
             title='Xóa sản phẩm'
-            description='Bạn có chắc chắn muốn xóa sản phẩm này?'
+            description='Bạn có chắc chắn muốn đình chỉ sản phẩm này?'
             onConfirm={() => mutate({ _id: product._id } as IProduct)}
             okText='Có'
             cancelText='Không'
           >
-            <Button icon={<DeleteOutlined />} danger loading={mutationStatus === 'pending'} />
+            <Button icon={<EyeInvisibleOutlined />} danger loading={mutationStatus === 'pending'} />
           </Popconfirm>
           <Link to={`/admin/products/${product._id}/options`}>
             <Button>Thuộc tính</Button>
