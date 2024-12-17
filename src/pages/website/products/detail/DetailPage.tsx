@@ -300,16 +300,20 @@ const ProductDetail = () => {
           <div className='flex flex-wrap items-center mt-6 gap-3'>
             <h2 className='font-semibold'>Màu sắc:</h2>
             {variants.map((variant: any) => {
-              const color = variant?.option_id?.option_value_id[0]
+              const color = variant.option_value_id
               const isSelected = selectedColorId === variant.sku_id._id
               const isHovered = hoveredColorId === variant._id
-              // const bgColor =
-              //   color.value === 'Nâu' ? 'bg-[#A0522D]' : color.value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
+              const bgColor =
+                color.value === 'Nâu' ? 'bg-[#A0522D]' : color.value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
 
               // Tên màu hiển thị khi hover hoặc select
               // const displayName =
               //   isSelected || isHovered ? color.label || color.value : variants[0]?.option_id?.option_value_id?.[0].value
               //className =  `bg-{item.color}`
+
+              const displayName =
+                isSelected || isHovered ? color.label || color.value : variants[0]?.option_value_id.value
+
               return (
                 <button
                   key={variant.sku_id._id}
@@ -318,7 +322,7 @@ const ProductDetail = () => {
                   }}
                   onMouseEnter={() => setHoveredColorId(variant._id)}
                   onMouseLeave={() => setHoveredColorId(null)}
-                  // className={`relative p-3 border-2 rounded-full ${bgColor}`}
+                  className={`relative p-3 border-2 rounded-full ${bgColor}`}
                   style={{
                     outline: isSelected ? '1px solid black' : 'none',
                     outlineOffset: '3px'
@@ -337,7 +341,7 @@ const ProductDetail = () => {
                         maxWidth: '80%'
                       }}
                     >
-                      {/* {displayName} */}
+                      {displayName}
                     </span>
                   )}
                 </button>

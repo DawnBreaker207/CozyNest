@@ -89,12 +89,12 @@ const AdminProductPage = () => {
       title: 'SKU',
       dataIndex: 'SKU'
     },
-    {
-      key: 'isSale',
-      title: 'Đang giảm giá',
-      dataIndex: 'isSale',
-      render: (isSale: boolean) => <Tag color={isSale ? 'green' : 'yellow'}>{isSale ? 'Có' : 'Không'}</Tag>
-    },
+    // {
+    //   key: 'isSale',
+    //   title: 'Đang giảm giá',
+    //   dataIndex: 'isSale',
+    //   render: (isSale: boolean) => <Tag color={isSale ? 'green' : 'yellow'}>{isSale ? 'Có' : 'Không'}</Tag>
+    // },
     {
       key: 'is_hidden',
       title: 'Trạng thái hiển thị',
