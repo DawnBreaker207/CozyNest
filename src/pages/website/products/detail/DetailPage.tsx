@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import useCart from '@/hooks/useCart'
 import { useProduct } from '@/hooks/useProductQuery'

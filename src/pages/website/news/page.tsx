@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import { Layout, Menu, Card, Row, Col, Typography, Modal, Pagination, Button } from 'antd'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
-import { IProduct } from '@/types/product'
 import { getAllProducts } from '@/services/product'
+import { IProduct } from '@/types/product'
+import { Button, Card, Col, Layout, Modal, Pagination, Row, Typography } from 'antd'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 const { Header, Content, Sider } = Layout
 const { Title, Paragraph, Text } = Typography
 
