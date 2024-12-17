@@ -1,6 +1,16 @@
 import { ICategory } from './category'
 export interface Variants {
-  option_id: { _id: string; name: string }
+  option_id: {
+    _id: string
+    name: string
+    position: string
+    option_value_id: [
+      {
+        label: string
+        value: string
+      }
+    ]
+  }
   option_value_id: { _id: string; value: string }
   sku_id: {
     price_discount_percent: number

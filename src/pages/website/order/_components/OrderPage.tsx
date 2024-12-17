@@ -157,7 +157,6 @@ const OrderPage = () => {
                           <th className='border border-gray-200 px-4 py-2 text-right'>Số lượng</th>
                           <th className='border border-gray-200 px-4 py-2 text-right'>Giá</th>
                           <th className='border border-gray-200 px-4 py-2 text-right'>Tổng</th>
-
                         </tr>
                       </thead>
                       <tbody>
