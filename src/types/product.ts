@@ -15,6 +15,7 @@ export interface Variants {
     price: number
     stock: number
     sold: number
+    deleted: boolean
   }
 }
 export interface IProduct {
