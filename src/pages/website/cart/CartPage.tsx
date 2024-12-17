@@ -24,7 +24,6 @@ const CartPage = () => {
       }
     })
     try {
-      // Gọi API kiểm tra tồn kho
       const response = await instance.post('/stock/checkStock', { cartItems })
 
       if (response.status === 200) {
