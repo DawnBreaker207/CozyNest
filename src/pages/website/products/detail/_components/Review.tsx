@@ -2,7 +2,7 @@ import instance from '@/configs/axios'
 
 import { StarFilled } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Rate, Select } from 'antd'
+import { Rate, Select, Spin } from 'antd'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -53,7 +53,7 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>{error.message}</div>
   return (
-    <div className='p-6 border border-gray-200 rounded-lg mt-24 mr-10'>
+    <div className='p-4 md:p-6 border border-gray-200 rounded-lg mt-6 lg:mt-24 md:mr-10'>
       {dataReview.length > 0 ? (
         <>
           <h4 className='text-lg font-semibold mb-4'>Đánh giá & nhận xét</h4>
@@ -67,7 +67,7 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
                 {totalRatings} đánh giá
               </a>
             </div>
-            <div className='w-2/3'>
+            <div className='md:w-2/3'>
               {[5, 4, 3, 2, 1].map((star, index) => {
                 const ratingCount = ratingCounts[5 - star] // Lấy số lượng đánh giá cho mỗi mức sao
                 const percentage = totalRatings === 0 ? 0 : (ratingCount / totalRatings) * 100
@@ -78,7 +78,7 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
                       <p className='text-sm font-bold'>{star}</p>
                       <StarFilled className='text-sm text-[#fadb14]' />
                     </div>
-                    <div className='w-2/3 h-2 rounded bg-gray-200'>
+                    <div className='w-[60px] md:w-2/3 h-2 rounded bg-gray-200'>
                       <div className='h-2 rounded bg-[#fadb14]' style={{ width: `${percentage}%` }}></div>
                     </div>
                     <span className='ml-2 text-sm'>{ratingCount} đánh giá</span>
@@ -123,16 +123,16 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
           </div>
 
           {/* Hiển thị danh sách các đánh giá */}
-          <div className='space-y-4 p-4'>
+          <div className='space-y-4 p-2 md:p-4'>
             {sortedReviews
               .filter((review: any) => selectedRating === null || review.rating === selectedRating)
               .slice(0, showAll ? sortedReviews.length : 2)
               .map((review: any, index: number) => (
                 <div key={index} className='flex gap-4 items-start pb-4'>
-                  <img src={review.user_id.avatar} alt='User avatar' className='w-12 h-12 rounded-full' />
+                  <img src={review.user_id.avatar} alt='User avatar' className='w-8 h-8 md:w-12 md:h-12 rounded-full' />
                   <div className='flex-1'>
                     <div className='flex items-center justify-between'>
-                      <p className='font-semibold text-lg'>{review.user_id.username}</p>
+                      <p className='font-semibold text-base md:text-lg'>{review.user_id.username}</p>
                       <div className='flex items-center text-[#fca120]'>
                         <Rate disabled allowHalf value={review.rating} className='text-sm' />
                       </div>
@@ -141,14 +141,14 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
                     {/* Hiển thị hình ảnh của sản phẩm */}
                     <div className='mt-4 grid grid-cols-3 gap-2'>
                       {review.image && (
-                        <img title='ảnh sản phẩm' src={review.image} className='w-32 h-32 object-cover rounded-md' />
+                        <img title='ảnh sản phẩm' src={review.image} className='w-20 h-20 md:w-32 md:h-32 object-cover rounded-md' />
                       )}
                     </div>
                   </div>
                 </div>
               ))}
           </div>
-          <div className='flex items-center gap-4 mt-4'>
+          <div className='flex items-center gap-4 mt-2 md:mt-4'>
             {!showAll && (
               <button
                 onClick={() => setShowAll(true)}
@@ -177,8 +177,8 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
         <>
           <h4 className='text-lg font-semibold mb-4'>Đánh giá & nhận xét</h4>
           <div className='flex flex-col items-center justify-center'>
-            <p className='text-base '>Hiện chưa có đánh giá nào.</p>
-            <p className='text-base '>Chỉ những người đã mua hàng mới có thể đánh giá sản phẩm này.</p>
+            <p className='text-base text-center'>Hiện chưa có đánh giá nào.</p>
+            <p className='text-base text-center'>Chỉ những người đã mua hàng mới có thể đánh giá sản phẩm này.</p>
           </div>
           <div className='flex items-center justify-center mt-3'>
             <button
@@ -186,7 +186,14 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
               disabled={loading}
               className='block bg-[#fca120] text-white font-semibold py-2 px-4 rounded'
             >
-              Mua ngay
+              {loading ? (
+                <p>
+                  <Spin size='small' className='mr-2' />
+                  Mua Ngay
+                </p>
+              ) : (
+                <span>Mua Ngay</span>
+              )}
             </button>
           </div>
         </>

@@ -82,6 +82,16 @@ const ProductDetail = () => {
   }
 
   const handleBuyNow = async () => {
+    const user = Cookies.get('user')
+
+    // Kiểm tra trạng thái đăng nhập
+    if (!user || Object.keys(JSON.parse(user)).length === 0) {
+      message.error('Vui lòng đăng nhập để mua sản phẩm.')
+      setTimeout(() => {
+        navigate('/login')
+      }, 3500)
+      return
+    }
     setLoading(true) // Hiển thị trạng thái loading ngay khi nhấn nút
 
     try {
@@ -196,13 +206,27 @@ const ProductDetail = () => {
                     />
                   ))}
               </div>
+              {/* List of Thumbnails */}
+              <div className='lg:hidden flex-wrap justify-between mt-3 flex'>
+                {product?.variants
+                  .find((variant) => variant.sku_id._id === selectedColorId) // Lọc variant dựa trên màu đã chọn
+                  ?.sku_id?.image?.map((image: any, index: any) => (
+                    <img
+                      key={index}
+                      src={image} // Sử dụng URL ảnh từ variant tương ứng với màu đã chọn
+                      alt={`Ảnh thu nhỏ sản phẩm ${index + 1}`}
+                      className='w-16 h-16 mb-3 cursor-pointer'
+                      onClick={() => setActiveImageIndex(index)}
+                    />
+                  ))}
+              </div>
 
-              <p className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-[18px] rounded-lg'>
+              <p className='absolute top-1 left-1 bg-[#FF0000] px-[5px] py-[2px] text-white text-base md:text-[18px] rounded-lg'>
                 {
                   product.variants.find((variant) => variant.sku_id._id === selectedColorId)?.sku_id
                     ?.price_discount_percent
                 }
-                <span className='text-base'>%</span>
+                <span className='text-sm md:text-base'>%</span>
               </p>
 
               {/* Nút quay lại */}
@@ -243,8 +267,8 @@ const ProductDetail = () => {
 
         <div className='col-span-1 lg:mt-0 mt-6'>
           <div className='product-heading'>
-            <h1 className=' font-bold text-2xl'>{product.name}</h1>
-            <div className='flex gap-[30px] mt-3'>
+            <h1 className=' font-bold text-[20px] md:text-2xl'>{product.name}</h1>
+            <div className='flex flex-wrap gap-x-[30px] gap-y-3 mt-3'>
               <span id='pro_sku' className='text-sm font-light'>
                 Mã sản phẩm: <span className='text-[#fca120] font-semibold ml-1'>{selectedVariant?.sku_id?.SKU}</span>
               </span>
@@ -261,11 +285,13 @@ const ProductDetail = () => {
 
           {/* Price Section */}
           <div className='price flex justify-start items-center gap-3 mt-[30px]'>
-            <span className='name-price text-[19px] font-semibold'>Giá:</span>
+            <span className='name-price text-[18px] md:text-[19px] font-semibold'>Giá:</span>
             <div className='pricedetail flex flex-row items-center gap-2'>
               {/* Hiển thị giá sau khi giảm */}
-              <span className='text-[#FF0000] font-semibold text-[24px]'>{priceVar.toLocaleString()}₫</span>
-              <span className='text-gray-500 line-through font-medium text-[18px]'>
+              <span className='text-[#FF0000] font-semibold text-[18px] md:text-[24px]'>
+                {priceVar.toLocaleString()}₫
+              </span>
+              <span className='text-gray-500 line-through font-medium text-base md:text-[18px]'>
                 {priceOldVar.toLocaleString()}₫
               </span>
             </div>
@@ -335,7 +361,7 @@ const ProductDetail = () => {
               <div className='flex gap-[12px] mt-[22px]'>
                 <Link
                   to=''
-                  className='bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
+                  className='bg-[#fca120] text-white w-full py-2 md:py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300'
                 >
                   <button onClick={handleAddToCart} className='w-full'>
                     <span className='relative z-10 text-[16px]'>Thêm Vào Giỏ</span>
@@ -345,7 +371,7 @@ const ProductDetail = () => {
                 <button
                   onClick={handleBuyNow}
                   disabled={loading} // Disable nút khi đang loading
-                  className={`bg-[#fca120] text-white w-full py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-[#fca120] text-white w-full py-2 md:py-[10px] border border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   {loading ? <Spin size='small' /> : <span className='relative z-10'>Mua Ngay</span>}
                 </button>
@@ -385,9 +411,9 @@ const ProductDetail = () => {
           <hr className='h-[1px] bg-gray-400 border-none my-5' />
           <div className='productDetail--navs mg-top mt-[15px]'>
             <div className='nav tab-title'>
-              <b className='nav-item active text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
+              <b className='nav-item active text-[20px] md:text-[24px] text-[#fca120]'>Mô tả sản phẩm</b>
             </div>
-            <hr className='mb-[20px]' />
+            <hr className='md:mb-[20px]' />
             <div className={`tab-pane fade show active ${isCollapsed ? 'h-[250px]' : 'h-auto'} transition-all`}>
               <div
                 className={`description-productdetail overflow-hidden ${isCollapsed ? 'max-h-[180px]' : 'max-h-none'} transition-all`}
@@ -396,6 +422,7 @@ const ProductDetail = () => {
                   value={product.description}
                   readOnly
                   theme='bubble' // Sử dụng theme bubble cho chế độ chỉ đọc
+                  className='custom-quill'
                 />
                 <p className='-mt-[10px]'>--------------</p>
                 {/* More product description details */}
@@ -413,9 +440,7 @@ const ProductDetail = () => {
         </div>
         {/* Product Description */}
 
-        <div
-          className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'min-h-[230px]' : 'min-h-[420px]'}  overflow-hidden lg:-mt-[350px] `}
-        >
+        <div className={`transition-all duration-300 ease-in-out   overflow-hidden lg:-mt-[350px] `}>
           {' '}
           <div className='review lg:-mt-[90px] xl:mt-[280px] '>
             <ReviewComponent handleBuyNow={handleBuyNow} loading={loading} />

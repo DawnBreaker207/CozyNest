@@ -143,8 +143,8 @@ const CheckoutPage = () => {
                   <div className='flex items-center gap-3'>
                     <img src={product.sku_id.image[0]} className='xl:w-20 lg:w-20 w-16 sm:w-20' alt={product.name} />
                     <div className='flex flex-col'>
-                      <span className='font-semibold text-[#252A2B]'>{product.sku_id.product_id.name}</span>
-                      <span className='font-medium text-[#252A2B] bg-gray-200 w-fit px-2'>
+                      <span className='font-semibold text-[#252A2B] text-sm md:text-base'>{product.sku_id.product_id.name}</span>
+                      <span className='font-medium text-[#252A2B] bg-gray-200 w-fit px-2 text-sm md:text-base'>
                         {currentVariant?.option_value_id?.label || 'Không có màu'}
                       </span>
                       <span className='text-xl font-semibold'>{product.price.toLocaleString()}₫</span>
@@ -170,7 +170,7 @@ const CheckoutPage = () => {
                 <div
                   key={coupon._id}
                   onClick={() => handleSelectCoupon(coupon)} // Gọi hàm chọn coupon
-                  className={`cursor-pointer p-3 rounded-lg border ${
+                  className={`cursor-pointer p-2 md:p-3 rounded-lg border ${
                     coupon.couponCode === couponCode ? 'bg-green-100 border-green-500' : 'bg-gray-100 border-gray-300'
                   }`}
                 >
@@ -200,7 +200,7 @@ const CheckoutPage = () => {
             {couponName && couponValue > 0 && (
               <div className='mb-2'>
                 <span className='font-medium'>Mã giảm giá: </span>
-                <span className='bg-green-100 text-green-700 px-2 py-3 rounded relative inline-block'>
+                <span className='bg-green-100 text-green-700 py-2 px-1 md:px-2 md:py-3 rounded relative inline-block'>
                   {couponName}
                   <CloseOutlined
                     onClick={() => {
@@ -208,7 +208,7 @@ const CheckoutPage = () => {
                       setCouponValue(0)
                       setCouponCode('')
                     }}
-                    className='absolute top-0 right-0 mt-1 mr-0.5 text-red-500 hover:text-red-700 text-xs cursor-pointer'
+                    className='absolute top-0 right-0 md:mt-1 mr-0.5 text-red-500 hover:text-red-700 text-xs cursor-pointer'
                     aria-label='Xóa mã giảm giá'
                   />
                 </span>
@@ -219,7 +219,7 @@ const CheckoutPage = () => {
 
             <div className='mb-2 flex justify-between'>
               <span className='font-medium'>Tổng cộng:</span>
-              <span className='text-xl font-semibold'>{totalAfterDiscount.toLocaleString()} ₫</span>
+              <span className='text-xl font-semibold text-red-500'>{totalAfterDiscount.toLocaleString()} ₫</span>
             </div>
           </div>
         </div>
