@@ -185,7 +185,7 @@ const Header = () => {
           label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
           key: '1'
         },
-        ...(role === 'admin'
+        ...(role === 'admin' || role === 'superAdmin'
           ? [
               {
                 label: <a href='/admin'>Quản lý</a>, // Admin: Link đến trang quản lý admin

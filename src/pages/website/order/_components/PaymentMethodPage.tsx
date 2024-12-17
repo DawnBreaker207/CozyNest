@@ -250,7 +250,6 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
               </Radio.Group>
             </Form.Item>
           </div> */}
-
         </div>
         <Form.Item>
           <Button type='primary' className='mt-5' htmlType='submit' block>

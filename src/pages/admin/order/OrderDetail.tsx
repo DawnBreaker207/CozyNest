@@ -150,10 +150,17 @@ const AdminOrderDetail = () => {
         <div className='flex items-center justify-between'>
           <h1 className='text-2xl font-bold mb-5'>Chi tiết đơn hàng</h1>
           <div className='flex items-center space-x-2'>
-            <Button>
-              <BackwardOutlined />
-              <Link to={`/admin/order`}>Quay lại</Link>
-            </Button>
+            {order.status === 'Delivered' ? (
+              <Button>
+                <BackwardOutlined />
+                <Link to={`/admin/order?status=Delivering`}>Quay lại</Link>
+              </Button>
+            ) : (
+              <Button>
+                <BackwardOutlined />
+                <Link to={`/admin/order`}>Quay lại</Link>
+              </Button>
+            )}
           </div>
         </div>
 

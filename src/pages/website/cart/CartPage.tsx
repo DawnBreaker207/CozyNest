@@ -13,36 +13,29 @@ const CartPage = () => {
   const navigate = useNavigate()
   const unavailableProducts = products.filter((product) => product.sku_id.product_id.is_hidden)
 
-  // Tính tổng tiền sau khi loại bỏ sản phẩm không khả dụng
   const total =
     calculateTotal() - unavailableProducts.reduce((acc, product) => acc + product.price * product.quantity, 0)
   const handleCheckout = async () => {
     const cartItems = products.map((product, index) => {
       return {
-        productId: product.sku_id.product_id._id, // Đảm bảo _id là một thuộc tính hợp lệ
-        skuId: product.sku_id._id, // Đảm bảo sku_id._id là hợp lệ
-        quantity: quantities[index] // Kiểm tra số lượng
+        productId: product.sku_id.product_id._id, 
+        skuId: product.sku_id._id, 
+        quantity: quantities[index] 
       }
     })
     try {
-      // Gọi API kiểm tra tồn kho
       const response = await instance.post('/stock/checkStock', { cartItems })
 
       if (response.status === 200) {
-        // Nếu tồn kho đủ, chuyển hướng đến trang thanh toán
         navigate('/check_out')
       }
     } catch (error: any) {
-      // Nếu có lỗi, tức là có sản phẩm vượt quá số lượng tồn kho
       if (error.response && error.response.status === 400) {
         const unavailableProducts = error.response.data.res
-        // Lưu dữ liệu sản phẩm không đủ số lượng vào localStorage
         localStorage.setItem('unavailableProducts', JSON.stringify(unavailableProducts))
 
-        // Chuyển hướng sang trang vấn đề tồn kho
         navigate('/stock_propblem')
       } else {
-        // Hiển thị thông báo lỗi khác
         message.error('Đã có lỗi xảy ra khi kiểm tra tồn kho')
       }
     }
