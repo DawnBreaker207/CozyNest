@@ -30,7 +30,6 @@ const CartPage = () => {
         navigate('/check_out')
       }
     } catch (error: any) {
-      // Nếu có lỗi, tức là có sản phẩm vượt quá số lượng tồn kho
       if (error.response && error.response.status === 400) {
         const unavailableProducts = error.response.data.res
         // Lưu dữ liệu sản phẩm không đủ số lượng vào localStorage
