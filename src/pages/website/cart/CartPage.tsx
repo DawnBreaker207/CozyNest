@@ -20,7 +20,7 @@ const CartPage = () => {
       return {
         productId: product.sku_id.product_id._id, 
         skuId: product.sku_id._id, 
-        quantity: quantities[index] // Kiểm tra số lượng
+        quantity: quantities[index] 
       }
     })
     try {
