@@ -34,7 +34,6 @@ const CartPage = () => {
         const unavailableProducts = error.response.data.res
         localStorage.setItem('unavailableProducts', JSON.stringify(unavailableProducts))
 
-        // Chuyển hướng sang trang vấn đề tồn kho
         navigate('/stock_propblem')
       } else {
         // Hiển thị thông báo lỗi khác
