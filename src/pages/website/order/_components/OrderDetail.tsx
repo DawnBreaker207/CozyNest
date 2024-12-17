@@ -45,6 +45,7 @@ const OrderDetail = () => {
   const orderId = params.get('orderId')
   const navigate = useNavigate()
   window.scrollTo({ top: 0, behavior: 'smooth' })
+  console.log(returnOrder)
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
   console.log('🚀 ~ OrderDetail ~ selectedProduct:', selectedProduct)
@@ -142,7 +143,6 @@ const OrderDetail = () => {
       }
     })
   }
-
   useEffect(() => {
     if (orderId) {
       instance
@@ -264,7 +264,7 @@ const OrderDetail = () => {
             console.error('Đơn hàng không tồn tại')
             return
           }
-          if (order.status !== 'Delivered') {
+          if (order.status !== 'Delivered' && order.status !== 'Rejected') {
             // Hiển thị thông báo bằng Ant Design
             notification.error({
               message: 'Thông báo',
@@ -322,7 +322,8 @@ const OrderDetail = () => {
     { label: 'Đang vận chuyển', value: 'Delivering' },
     { label: 'Giao hàng thành công', value: 'Delivered' },
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
-    { label: 'Tiến hành hoàn trả đơn hàng', value: 'Returning' },
+    { label: 'Tiến hành hoàn trả', value: 'Returning' },
+    { label: 'Từ chối hoàn trả', value: 'Rejected' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
     { label: 'Tiến hành hoàn Tiền', value: 'Refunding' },
     { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
@@ -379,7 +380,10 @@ const OrderDetail = () => {
     Delivering: 'purple',
     Delivered: 'green',
     Completed: 'gold',
+    Returning: 'orange',
+    Rejected: 'red',
     Returned: 'red',
+    Refunding: 'orange',
     Refunded: 'red',
     Cancelled: 'gray'
   }
@@ -399,10 +403,10 @@ const OrderDetail = () => {
 
       {/* Hiển thị hành trình trạng thái */}
       <Card title='Lịch sử trạng thái' className='mb-3'>
-        <div className='flex space-x-4'>
+        <div className='flex flex-wrap gap-4'>
           {order.status_detail.length > 0 &&
             order.status_detail.map((item: any, index: number) => (
-              <div key={index} className='detail'>
+              <div key={index} className='flex flex-col'>
                 <p>
                   <Tag color={statusColors[item.status as StatusType] || 'default'}>
                     {statuses.find((status) => status.value === item.status)?.label || 'Không xác định'}
@@ -411,19 +415,6 @@ const OrderDetail = () => {
                 <p>{new Date(item.created_at).toLocaleString()}</p>
               </div>
             ))}
-        </div>
-        <div className='mt-4'>
-          {/* Hiển thị trạng thái của đơn hàng hiện tại */}
-          <div>
-            <strong>Trạng thái: </strong>
-            <Tag color='green'>
-              {statuses.find((status) => status.value === currentStatus)?.label || 'Không xác định'}
-            </Tag>
-          </div>
-          <div>
-            <strong>Thời gian: </strong>
-            {new Date(returnOrder?.items?.[0]?.updatedAt || order?.updatedAt).toLocaleString()}
-          </div>
         </div>
         <div className='flex flex-wrap gap-4 mt-4'>
           {statuses.map((status, index) => {
@@ -469,9 +460,13 @@ const OrderDetail = () => {
                   <strong>Lý do hoàn trả:</strong> {returnOrder?.items?.[0]?.reason}
                 </p>
                 <p>
-                  <strong>Trạng thái hoàn trả:</strong>{' '}
-                  {returnOrder?.items?.[0]?.is_confirm ? 'Đã xác nhận' : 'Chưa xác nhận'}
+                  <strong>Trạng thái hoàn trả:</strong> {returnOrder?.items?.[0]?.is_confirm}
                 </p>
+                {returnOrder?.items?.[0]?.reason_cancel && returnOrder?.items?.[0]?.reason_cancel.trim() !== '' && (
+                  <p className='text-red-500'>
+                    <strong>Lý do từ chối:</strong> {returnOrder?.items?.[0]?.reason_cancel}
+                  </p>
+                )}
                 <p>
                   <strong>Số điện thoại:</strong> {returnOrder?.items?.[0]?.phone_number}
                 </p>
@@ -714,7 +709,7 @@ const OrderDetail = () => {
         <Button
           className='bg-blue-500 text-white w-full sm:w-auto'
           onClick={confirmOrder} // Khi nhấn Xác nhận đơn hàng
-          disabled={order.status !== 'Delivered' || currentStatus === 'Returning'}
+          disabled={(order.status !== 'Delivered' && order.status !== 'Rejected') || currentStatus === 'Returning'}
         >
           Xác nhận đơn hàng
         </Button>

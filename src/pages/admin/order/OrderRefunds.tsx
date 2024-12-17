@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Table, Button, Popconfirm, message, Select } from 'antd'
-import { useState } from 'react' // Import useState for handling the filter state
+import { Table, Button, Popconfirm, message, Select, Spin } from 'antd'
+import { useState } from 'react'
 import instance from '@/configs/axios'
 import CustomLoadingPage from '@/components/Loading'
 
 const RefundOrdersAdmin = () => {
   const queryClient = useQueryClient()
+  const [loading, setLoading] = useState(false)
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['refundOrders'],
@@ -16,17 +17,19 @@ const RefundOrdersAdmin = () => {
     refetchOnWindowFocus: false
   })
 
-  const [statusFilter, setStatusFilter] = useState('all') // State for the filter
+  const [statusFilter, setStatusFilter] = useState('all')
 
   const { mutate: confirmRefund } = useMutation({
     mutationFn: async (id: string) => {
       await instance.put(`/orders/refund/${id}`)
     },
     onSuccess: () => {
+      setLoading(false) // Kết thúc loading sau khi thành công
       message.success('Xác nhận yêu cầu hoàn trả đơn hàng thành công')
       queryClient.refetchQueries({ queryKey: ['refundOrders'] })
     },
     onError: (error) => {
+      setLoading(false) // Kết thúc loading dù gặp lỗi
       console.log('Error confirming return: ', error)
       message.error('Có lỗi xảy ra khi xác nhận yêu cầu hoàn tiền')
     }
@@ -81,8 +84,14 @@ const RefundOrdersAdmin = () => {
       title: 'Hành động',
       render: (record: any) => (
         <div style={{ display: 'flex', gap: '8px' }}>
-          <Popconfirm title='Bạn có chắc chắn xác nhận yêu cầu này?' onConfirm={() => confirmRefund(record._id)}>
-            <Button type='primary' disabled={record.is_confirm}>
+          <Popconfirm
+            title='Bạn có chắc chắn xác nhận yêu cầu này?'
+            onConfirm={() => {
+              setLoading(true) // Bắt đầu loading khi xác nhận
+              confirmRefund(record._id)
+            }}
+          >
+            <Button type='primary' disabled={record.is_confirm || loading}>
               Xác nhận
             </Button>
           </Popconfirm>
@@ -91,7 +100,6 @@ const RefundOrdersAdmin = () => {
     }
   ]
 
-  // Filter data based on status filter
   const filteredData =
     statusFilter === 'all'
       ? data
@@ -109,10 +117,16 @@ const RefundOrdersAdmin = () => {
 
   return (
     <div>
+      {/* Spinner overlay */}
+      {loading && (
+        <div className='fixed inset-0 flex items-center justify-center  z-50'>
+          <Spin size='large' />
+        </div>
+      )}
+
       <div className='mb-5'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý hoàn tiền</h1>
 
-        {/* Status Filter Select */}
         <Select
           value={statusFilter}
           style={{ width: 200 }}

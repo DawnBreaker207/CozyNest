@@ -1,50 +1,52 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import CustomLoadingPage from '@/components/Loading'
+import { useState } from 'react'
+import { Button, Input, message, Popconfirm, Select, Table, Modal } from 'antd'
 import instance from '@/configs/axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Select, Table } from 'antd'
-import { useState } from 'react'
+import CustomLoadingPage from '@/components/Loading'
 
 const ReturnOrdersAdmin = () => {
-  const queryClient = useQueryClient() // Lấy queryClient từ React Query
-
+  const queryClient = useQueryClient()
+  const [reasonCancel, setReasonCancel] = useState<string>('') // Lý do từ chối
+  const [isRejecting, setIsRejecting] = useState<string | null>(null) // Trạng thái để kiểm tra đơn hàng nào đang bị từ chối
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['returnOrders'],
     queryFn: async () => {
       const res = await instance.get('/orders/return?_sort=createdAt')
       return res.data.res.items
     },
-    refetchOnWindowFocus: false // Tắt việc refetch dữ liệu khi chuyển tab
+    refetchOnWindowFocus: false
   })
 
-  // Mutation cho việc xác nhận trả lại đơn hàng
+  // Mutation xác nhận trả lại đơn hàng
   const { mutate: confirmReturn } = useMutation({
     mutationFn: async (id: string) => {
       await instance.put(`/orders/return/${id}`)
     },
     onSuccess: () => {
       message.success('Xác nhận yêu cầu hoàn trả đơn hàng thành công')
-      // Làm mới dữ liệu sau khi mutation thành công
-      queryClient.refetchQueries({ queryKey: ['returnOrders'] }) // Refetch thay vì invalidate
+      queryClient.refetchQueries({ queryKey: ['returnOrders'] })
     },
-    onError: (error) => {
-      console.log('Error confirming return: ', error)
+    onError: () => {
       message.error('Có lỗi xảy ra khi xác nhận yêu cầu hoàn trả')
     }
   })
 
-  // Mutation cho việc từ chối trả lại đơn hàng
+  // Mutation từ chối trả lại đơn hàng
   const { mutate: rejectReturn } = useMutation({
-    mutationFn: async (id: string) => {
-      await instance.put(`/orders/return/${id}/reject`)
+    mutationFn: async (params: { id: string; reasonCancel: string }) => {
+      const { id, reasonCancel } = params
+      if (reasonCancel.trim() === '') {
+        message.error('Vui lòng nhập lý do từ chối')
+        return
+      }
+      await instance.put(`/orders/return/${id}/reject`, { reasonCancel })
     },
     onSuccess: () => {
       message.success('Từ chối yêu cầu hoàn trả thành công')
-      // Làm mới dữ liệu sau khi mutation thành công
-      queryClient.refetchQueries({ queryKey: ['returnOrders'] }) // Refetch thay vì invalidate
+      queryClient.refetchQueries({ queryKey: ['returnOrders'] })
     },
-    onError: (error) => {
-      console.log('Error rejecting return: ', error)
+    onError: () => {
       message.error('Có lỗi xảy ra khi từ chối yêu cầu hoàn trả')
     }
   })
@@ -97,22 +99,48 @@ const ReturnOrdersAdmin = () => {
     {
       title: 'Trạng thái',
       dataIndex: 'is_confirm',
-      render: (is_confirm: boolean) => (is_confirm ? 'Đã xác nhận' : 'Chưa xác nhận')
+      render: (is_confirm: string) => is_confirm
     },
     {
       title: 'Hành động',
       render: (record: any) => (
         <div style={{ display: 'flex', gap: '8px' }}>
           <Popconfirm title='Bạn có chắc chắn xác nhận yêu cầu này?' onConfirm={() => confirmReturn(record._id)}>
-            <Button type='primary' disabled={record.is_confirm}>
+            <Button type='primary' disabled={record.is_confirm === 'Đã xác nhận' || record.is_confirm === 'Đã từ chối'}>
               Xác nhận
             </Button>
           </Popconfirm>
-          <Popconfirm title='Bạn có chắc chắn từ chối yêu cầu này?' onConfirm={() => rejectReturn(record._id)}>
-            <Button danger disabled={record.is_confirm}>
-              Từ chối
-            </Button>
-          </Popconfirm>
+
+          {/* Modal khi nhấn Từ chối */}
+          <Button
+            danger
+            disabled={record.is_confirm !== 'Chờ xác nhận'}
+            onClick={() => setIsRejecting(record._id)} // Mở modal khi nhấn Từ chối
+          >
+            Từ chối
+          </Button>
+
+          {/* Modal nhập lý do từ chối */}
+          <Modal
+            title='Nhập lý do từ chối'
+            visible={isRejecting === record._id} // Chỉ hiển thị modal nếu đơn hàng trùng với `isRejecting`
+            onCancel={() => setIsRejecting(null)} // Đóng modal khi nhấn Cancel
+            onOk={() => {
+              if (reasonCancel.trim() !== '') {
+                rejectReturn({ id: record._id, reasonCancel }) // Gửi lý do từ chối khi xác nhận
+                setIsRejecting(null) // Đặt lại trạng thái khi từ chối xong
+              } else {
+                message.error('Vui lòng nhập lý do từ chối')
+              }
+            }}
+          >
+            <Input.TextArea
+              value={reasonCancel}
+              onChange={(e) => setReasonCancel(e.target.value)}
+              placeholder='Nhập lý do từ chối'
+              rows={4}
+            />
+          </Modal>
         </div>
       )
     }
@@ -130,8 +158,6 @@ const ReturnOrdersAdmin = () => {
     <div>
       <div className='mb-5'>
         <h1 className='text-2xl font-bold mb-4'>Quản lý hoàn trả</h1>
-
-        {/* Add Select dropdown for filtering by return status */}
         <Select
           value={statusFilter}
           style={{ width: 200 }}
@@ -144,8 +170,6 @@ const ReturnOrdersAdmin = () => {
           <Select.Option value='unconfirmed'>Chưa xác nhận</Select.Option>
         </Select>
       </div>
-
-      {/* Table displaying the filtered data */}
       <Table columns={columns} dataSource={filteredData} rowKey={(record: any) => record?._id} />
     </div>
   )

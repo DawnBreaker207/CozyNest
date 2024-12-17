@@ -40,7 +40,10 @@ const AdminOrderPage = () => {
     { label: 'Đang vận chuyển', value: 'Delivering' },
     { label: 'Giao hàng thành công', value: 'Delivered' },
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Tiến hành hoàn trả', value: 'Returning' },
+    { label: 'Từ chối hoàn trả', value: 'Rejected' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
+    { label: 'Tiến hành hoàn tiền', value: 'Refunding' },
     { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
     { label: 'Đã hủy đơn hàng', value: 'Cancelled' }
   ]
@@ -112,7 +115,10 @@ const AdminOrderPage = () => {
           Delivered: 'green',
           Cancelled: 'red',
           Completed: 'cyan',
-          Returned: 'magenta',
+          Returning: 'orange',
+          Rejected: 'red',
+          Returned: 'red',
+          Refunding: 'orange',
           Refunded: 'purple'
         }
 
@@ -170,6 +176,9 @@ const AdminOrderPage = () => {
               <Select.Option value='Completed'>Đơn hàng hoàn thành</Select.Option>
               <Select.Option value='Cancelled'>Đã hủy đơn hàng</Select.Option>
               <Select.Option value='Returned'>Hoàn trả đơn hàng</Select.Option>
+              <Select.Option value='Returning'>Tiến hành hoàn trả đơn hàng</Select.Option>
+              <Select.Option value='Rejected'>Từ chối hoàn trả</Select.Option>
+              <Select.Option value='Refunding'>Tiến hành Hoàn tiền đơn hàng</Select.Option>
               <Select.Option value='Refunded'>Hoàn tiền đơn hàng</Select.Option>
             </Select>
           </div>

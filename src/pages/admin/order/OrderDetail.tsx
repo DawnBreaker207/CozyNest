@@ -35,7 +35,10 @@ const AdminOrderDetail = () => {
     { label: 'Đang vận chuyển', value: 'Delivering' },
     { label: 'Giao hàng thành công', value: 'Delivered' },
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Tiến hành hoàn trả', value: 'Returning' },
+    { label: 'Từ chối hoàn trả', value: 'Rejected' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
+    { label: 'Tiến hành hoàn tiền', value: 'Refunding' },
     { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
     { label: 'Đã hủy đơn hàng', value: 'Cancelled' }
   ]
@@ -131,7 +134,10 @@ const AdminOrderDetail = () => {
     Delivering: 'purple',
     Delivered: 'green',
     Completed: 'gold',
+    Returning: 'orange',
+    Rejected: 'red',
     Returned: 'red',
+    Refunding: 'orange',
     Refunded: 'red',
     Cancelled: 'gray'
   }
@@ -154,17 +160,16 @@ const AdminOrderDetail = () => {
         {/* Lịch sử trạng thái */}
         <div className='mb-3'>
           <h3 className='font-semibold text-lg'>Lịch sử trạng thái đơn hàng</h3>
-          <div className='mt-3 flex space-x-4'>
+          <div className='flex flex-wrap gap-4 mt-5'>
             {order.status_detail.length > 0 &&
               order.status_detail.map((item: any, index: number) => (
-                <div key={index} className='detail'>
+                <div key={index} className='flex flex-col'>
                   <p>
                     <Tag color={statusColors[item.status as StatusType] || 'default'}>
                       {statuses.find((status) => status.value === item.status)?.label || 'Không xác định'}
                     </Tag>
                   </p>
-
-                  <p>Thời gian: {new Date(item.created_at).toLocaleString()}</p>
+                  <p>{new Date(item.created_at).toLocaleString()}</p>
                 </div>
               ))}
           </div>
@@ -186,9 +191,20 @@ const AdminOrderDetail = () => {
                 if (status.value === 'Cancelled') {
                   // "Hủy đơn hàng" chỉ được phép khi đang xử lý hoặc đang chờ
                   isDisabled = !(isProcessing || isPending)
-                } else if (status.value === 'Returned' || status.value === 'Refunded' || status.value === 'Completed') {
+                } else if (
+                  status.value === 'Returned' ||
+                  status.value === 'Refunded' ||
+                  status.value === 'Returing' ||
+                  status.value === 'Refunding'
+                ) {
                   // "Hoàn trả đơn hàng" và "Hoàn tiền" luôn bị vô hiệu hóa
                   isDisabled = true
+                } else if (
+                  (currentStatus === 'Delivered' || currentStatus === 'Rejected') &&
+                  status.value === 'Completed'
+                ) {
+                  // Trạng thái "Delivered" hoặc "Rejected" có thể chuyển thành "Completed"
+                  isDisabled = false
                 } else {
                   // Các trạng thái khác: chỉ cho phép chuyển liền kề
                   isDisabled =
@@ -217,8 +233,8 @@ const AdminOrderDetail = () => {
                       }
                     }
                   }}
-                  className={`px-4 py-2 ${isDisabled ? 'cursor-not-allowed opacity-50' : ''}
-      ${status.value === currentStatus ? 'border border-blue-500 bg-blue-500 text-white' : ''} flex-shrink-0`}
+                  className={`px-4 py-2 ${isDisabled ? 'cursor-not-allowed opacity-50' : ''} 
+        ${status.value === currentStatus ? 'border border-blue-500 bg-blue-500 text-white' : ''} flex-shrink-0`}
                   type={btnType}
                 >
                   {status.label} {/* Hiển thị tên trạng thái */}

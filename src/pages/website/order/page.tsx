@@ -85,46 +85,46 @@ const CheckoutPage = () => {
   if (totalAfterDiscount < 0) {
     totalAfterDiscount = 0
   }
-  useEffect(() => {
-    // Hàm chặn điều hướng khi người dùng tắt trang hoặc tải lại trang
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (data) {
-        const message = 'Bạn có chắc muốn rời khỏi trang? Thông tin đơn hàng chưa được lưu.'
-        event.returnValue = message // Cảnh báo khi người dùng cố gắng đóng tab
-        return message // Cho phép trình duyệt hiển thị cảnh báo
-      }
-    }
+  // useEffect(() => {
+  //   // Hàm chặn điều hướng khi người dùng tắt trang hoặc tải lại trang
+  //   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+  //     if (data) {
+  //       const message = 'Bạn có chắc muốn rời khỏi trang? Thông tin đơn hàng chưa được lưu.'
+  //       event.returnValue = message // Cảnh báo khi người dùng cố gắng đóng tab
+  //       return message // Cho phép trình duyệt hiển thị cảnh báo
+  //     }
+  //   }
 
-    // Đăng ký sự kiện 'beforeunload' để cảnh báo khi người dùng đóng tab hoặc chuyển trang
-    window.addEventListener('beforeunload', handleBeforeUnload)
+  //   // Đăng ký sự kiện 'beforeunload' để cảnh báo khi người dùng đóng tab hoặc chuyển trang
+  //   window.addEventListener('beforeunload', handleBeforeUnload)
 
-    // Hàm chặn điều hướng khi quay lại trang trước
-    const handlePopState = (event: PopStateEvent) => {
-      if (data) {
-        const confirmation = window.confirm('Bạn có chắc muốn quay lại? Thông tin đơn hàng chưa được lưu.')
-        if (!confirmation) {
-          // Ngừng điều hướng nếu người dùng không xác nhận
-          event.preventDefault()
-          // Đảm bảo rằng trạng thái không thay đổi
-          window.history.pushState(null, '', location.pathname)
-        }
-      }
-    }
+  //   // Hàm chặn điều hướng khi quay lại trang trước
+  //   const handlePopState = (event: PopStateEvent) => {
+  //     if (data) {
+  //       const confirmation = window.confirm('Bạn có chắc muốn quay lại? Thông tin đơn hàng chưa được lưu.')
+  //       if (!confirmation) {
+  //         // Ngừng điều hướng nếu người dùng không xác nhận
+  //         event.preventDefault()
+  //         // Đảm bảo rằng trạng thái không thay đổi
+  //         window.history.pushState(null, '', location.pathname)
+  //       }
+  //     }
+  //   }
 
-    // Thêm trạng thái giả vào lịch sử trình duyệt khi người dùng vào trang
-    if (!window.history.state) {
-      window.history.pushState(null, '', location.pathname)
-    }
+  //   // Thêm trạng thái giả vào lịch sử trình duyệt khi người dùng vào trang
+  //   if (!window.history.state) {
+  //     window.history.pushState(null, '', location.pathname)
+  //   }
 
-    // Đăng ký sự kiện popstate để can thiệp vào điều hướng khi quay lại trang trước
-    window.addEventListener('popstate', handlePopState)
+  //   // Đăng ký sự kiện popstate để can thiệp vào điều hướng khi quay lại trang trước
+  //   window.addEventListener('popstate', handlePopState)
 
-    return () => {
-      // Dọn dẹp sự kiện khi component bị unmount
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-      window.removeEventListener('popstate', handlePopState)
-    }
-  }, [data]) // Điều kiện cập nhật lại khi `data` hoặc `location.p
+  //   return () => {
+  //     // Dọn dẹp sự kiện khi component bị unmount
+  //     window.removeEventListener('beforeunload', handleBeforeUnload)
+  //     window.removeEventListener('popstate', handlePopState)
+  //   }
+  // }, [data]) // Điều kiện cập nhật lại khi `data` hoặc `location.p
 
   return (
     <div className='flex flex-col md:flex-row p-6 bg-background lg:px-28'>
