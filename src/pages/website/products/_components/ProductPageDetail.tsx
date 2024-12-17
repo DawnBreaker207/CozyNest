@@ -42,7 +42,7 @@ const ProductsPageDetail = () => {
     }
   }, [data])
   const handleMenuClick = (key: string) => {
-    let sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
+    const sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
 
     switch (key) {
       case '1': // Giá: Thấp đến Cao
@@ -232,7 +232,7 @@ const ProductsPageDetail = () => {
                   </Link>
                   {categories?.data?.res?.map((category: ICategory) => (
                     <div key={category._id}>
-                      <a href={`/products_page/${category._id}`} className='text-black hover:text-yellow-500'>
+                      <a href={`/categorie/${category._id}`} className='text-black hover:text-yellow-500'>
                         {category.name}
                       </a>
                     </div>

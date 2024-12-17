@@ -1,12 +1,12 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
-import { Button, Carousel } from 'antd'
+import { Button, Carousel, Typography } from 'antd'
 import { CarouselRef } from 'antd/es/carousel'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 const Banner = () => {
   const carouselRef = useRef<CarouselRef | null>(null)
-
+  const { Text } = Typography
   const prev = () => {
     if (carouselRef.current) {
       carouselRef.current.prev()
@@ -31,9 +31,9 @@ const Banner = () => {
               className='w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover'
             />
             <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
-              <h1 className='text-white text-2xl sm:text-4xl md:text-6xl font-extrabold text-center'>
+              <Text className='text-white text-2xl sm:text-4xl md:text-6xl lg:text-6xl font-oldstyle font-bold text-center'>
                 Chào mừng đến với Cozynest
-              </h1>
+              </Text>
             </div>
           </div>
 
@@ -47,14 +47,16 @@ const Banner = () => {
             {/* Lớp phủ */}
             <div className='absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center'>
               {/* Phần nội dung */}
-              <div className='text-center px-4'>
-                <h1 className='text-yellow-500 text-2xl sm:text-4xl lg:text-5xl font-extrabold mb-4'>
+              <div className='text-center px-4 flex flex-col items-center'>
+                <Text className='text-yellow-500 text-2xl sm:text-4xl lg:text-5xl font-oldstyle font-bold mb-4 ml-2'>
                   NỘI THẤT CHUẨN XUẤT KHẨU CHÂU ÂU
-                </h1>
-                <h2 className='text-white text-2xl lg:text-3xl font-extrabold mb-6'>AN TOÀN CHO CẢ GIA ĐÌNH</h2>
-                <button className='px-6 py-3 lg:px-8 lg:py-4 bg-yellow-700 text-white font-extrabold rounded-md'>
+                </Text>
+                <Text className='text-white text-2xl lg:text-3xl font-oldstyle font-bold mb-6'>
+                  AN TOÀN CHO CẢ GIA ĐÌNH
+                </Text>
+                <Button className='px-6 py-3  w-1/5 lg:px-6 lg:py-4 bg-yellow-700 text-white rounded-md'>
                   XEM CHI TIẾT
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -67,9 +69,9 @@ const Banner = () => {
               className='w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover'
             />
             <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
-              <h1 className='text-white text-2xl sm:text-4xl md:text-6xl font-extrabold text-center'>
+              <Text className='text-white text-2xl sm:text-4xl md:text-6xl font-oldstyle font-bold text-center font-bold'>
                 Thiết kế nội thất với phong cách hiện đại
-              </h1>
+              </Text>
             </div>
           </div>
         </Carousel>

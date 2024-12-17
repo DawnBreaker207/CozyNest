@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { useQuery } from '@tanstack/react-query'
-import { Empty, message, Spin, Table, Tag } from 'antd'
+import { Empty, message, Table, Tag } from 'antd'
 import { useMemo } from 'react'
 
 export interface Order {
@@ -36,7 +37,7 @@ const RecentOrder = () => {
     }
   })
   const orders = data?.data?.res?.items
-  const sortedOrders = orders?.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  const sortedOrders = orders?.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
   //* Lấy 5 đơn hàng gần nhất
   const latestOrders = sortedOrders?.slice(0, 5)

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { useCookie } from '@/hooks/useStorage'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Card, Col, Pagination, Row, Spin, Typography } from 'antd'
+import { Button, Card, Col, Pagination, Row, Typography } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { formatCurrency } from '../../../../utils/formatCurrency'
-import CustomLoadingPage from '@/components/Loading'
 
 // Đối tượng ánh xạ trạng thái
 const orderStatusMap: { [key: string]: string } = {
@@ -18,7 +18,10 @@ const orderStatusMap: { [key: string]: string } = {
   Delivered: 'Giao hàng thành công',
   Cancelled: 'Đã hủy đơn hàng',
   Completed: 'Đơn hàng hoàn thành',
+  Returning: 'Tiến hành hoàn trả',
+  Rejected: 'Từ chối hoàn trả',
   Returned: 'Hoàn trả đơn hàng',
+  Refunding: 'Tiến hành hoàn tiền hoàn tiền',
   Refunded: 'Hoàn trả đơn hàng và hoàn tiền'
 }
 
@@ -31,7 +34,10 @@ const statusColorMap: { [key: string]: string } = {
   Delivered: 'text-green-500',
   Cancelled: 'text-red-500',
   Completed: 'text-cyan-500',
+  Returning: 'text-orange-500',
+  Rejected: 'text-red-500',
   Returned: 'text-magenta-500',
+  Refunding: 'text-orange-500',
   Refunded: 'text-purple-500'
 }
 
@@ -150,6 +156,7 @@ const OrderPage = () => {
                           <th className='border border-gray-200 px-4 py-2'>Tên sản phẩm</th>
                           <th className='border border-gray-200 px-4 py-2 text-right'>Số lượng</th>
                           <th className='border border-gray-200 px-4 py-2 text-right'>Giá</th>
+                          <th className='border border-gray-200 px-4 py-2 text-right'>Tổng</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -171,6 +178,9 @@ const OrderPage = () => {
                               <td className='border border-gray-200 px-4 py-2 text-right'>x{product?.quantity}</td>
                               <td className='border border-gray-200 px-4 py-2 text-right'>
                                 {formatCurrency(product?.price)}
+                              </td>
+                              <td className='border border-gray-200 px-4 py-2 text-right'>
+                                {formatCurrency(product?.total_money)}
                               </td>
                             </tr>
                           ))

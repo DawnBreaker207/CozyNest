@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCategoryQuery } from '@/hooks/useCategoryQuery'
 import { useFilterProducts, usePaginate } from '@/hooks/useProduct'
 import { useProductQuery } from '@/hooks/useProductQuery'
@@ -18,8 +19,6 @@ const ProductsPage = () => {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([])
   const { filterProductsByPrice } = useFilterProducts(products)
   const filteredProducts = filterProductsByPrice(selectedPriceRanges)
-  const [hoveredImages, setHoveredImages] = useState({})
-  const [hoveredPrices, setHoveredPrices] = useState({})
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
 
   console.log(data)
@@ -69,7 +68,7 @@ const ProductsPage = () => {
     if (data) setProducts(data.res)
   }, [data])
   const handleMenuClick = (key: string) => {
-    let sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
+    const sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
 
     switch (key) {
       case '1': // Giá: Thấp đến Cao
@@ -214,16 +213,18 @@ const ProductsPage = () => {
                   <Checkbox checked={selectedCategories.length === 0} onChange={() => setSelectedCategories([])}>
                     Tất cả sản phẩm
                   </Checkbox>
-                  {categories?.res?.map((category: ICategory) => (
-                    <div key={category._id}>
-                      <Checkbox
-                        checked={selectedCategories.includes(String(category._id))}
-                        onChange={() => handleCategorySelect(String(category._id))}
-                      >
-                        {category.name}
-                      </Checkbox>
-                    </div>
-                  ))}
+                  {categories?.res
+                    ?.filter((category) => category.isHidden === false)
+                    ?.map((category: ICategory) => (
+                      <div key={category._id}>
+                        <Checkbox
+                          checked={selectedCategories.includes(String(category._id))}
+                          onChange={() => handleCategorySelect(String(category._id))}
+                        >
+                          {category.name}
+                        </Checkbox>
+                      </div>
+                    ))}
                 </div>
               }
             >
@@ -347,7 +348,7 @@ const ProductsPage = () => {
       <div className='mx-auto container mt-12'>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
           {currentProducts
-            .filter((product: any) => !product.is_hidden)
+            .filter((product: any) => !product.is_hidden && !product.category_id.isHidden)
             .map((product: any) => {
               // Kiểm tra các variant và lấy giá trị từ sku_id
               const firstVariant = product?.variants?.[0]

@@ -40,7 +40,10 @@ const AdminOrderPage = () => {
     { label: 'Đang vận chuyển', value: 'Delivering' },
     { label: 'Giao hàng thành công', value: 'Delivered' },
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Tiến hành hoàn trả', value: 'Returning' },
+    { label: 'Từ chối hoàn trả', value: 'Rejected' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
+    { label: 'Tiến hành hoàn tiền', value: 'Refunding' },
     { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
     { label: 'Đã hủy đơn hàng', value: 'Cancelled' }
   ]
@@ -112,7 +115,10 @@ const AdminOrderPage = () => {
           Delivered: 'green',
           Cancelled: 'red',
           Completed: 'cyan',
-          Returned: 'magenta',
+          Returning: 'orange',
+          Rejected: 'red',
+          Returned: 'red',
+          Refunding: 'orange',
           Refunded: 'purple'
         }
 
@@ -151,29 +157,34 @@ const AdminOrderPage = () => {
         </div>
 
         {/* Filters */}
-        <div className='mb-4'>
-          <div className='flex justify-between items-center'>
-            {/* <DatePicker placeholder='Chọn ngày' value={dateFilter} onChange={setDateFilter} format='DD/MM/YYYY' /> */}
-            <Select
-              value={statusFilter}
-              onChange={(value) => setStatusFilter(value)}
-              placeholder='Chọn trạng thái'
-              style={{ width: 200 }}
-            >
-              <Select.Option value=''>Tất cả trạng thái</Select.Option>
-              <Select.Option value='Processing'>Đang xử lý</Select.Option>
-              <Select.Option value='Pending'>Chờ xác nhận</Select.Option>
-              <Select.Option value='Confirmed'>Đã xác nhận</Select.Option>
-              <Select.Option value='Pending-Ship'>Đang chờ bên vận chuyển</Select.Option>
-              <Select.Option value='Delivering'>Đang vận chuyển</Select.Option>
-              <Select.Option value='Delivered'>Giao hàng thành công</Select.Option>
-              <Select.Option value='Completed'>Đơn hàng hoàn thành</Select.Option>
-              <Select.Option value='Cancelled'>Đã hủy đơn hàng</Select.Option>
-              <Select.Option value='Returned'>Hoàn trả đơn hàng</Select.Option>
-              <Select.Option value='Refunded'>Hoàn tiền đơn hàng</Select.Option>
-            </Select>
+        {statusFilter !== 'Pending-Ship' && (
+          <div className='mb-4'>
+            <div className='flex justify-between items-center'>
+              {/* <DatePicker placeholder='Chọn ngày' value={dateFilter} onChange={setDateFilter} format='DD/MM/YYYY' /> */}
+              <Select
+                value={statusFilter}
+                onChange={(value) => setStatusFilter(value)}
+                placeholder='Chọn trạng thái'
+                style={{ width: 200 }}
+              >
+                <Select.Option value=''>Tất cả trạng thái</Select.Option>
+                <Select.Option value='Processing'>Đang xử lý</Select.Option>
+                <Select.Option value='Pending'>Chờ xác nhận</Select.Option>
+                <Select.Option value='Confirmed'>Đã xác nhận</Select.Option>
+                <Select.Option value='Pending-Ship'>Đang chờ bên vận chuyển</Select.Option>
+                <Select.Option value='Delivering'>Đang vận chuyển</Select.Option>
+                <Select.Option value='Delivered'>Giao hàng thành công</Select.Option>
+                <Select.Option value='Completed'>Đơn hàng hoàn thành</Select.Option>
+                <Select.Option value='Cancelled'>Đã hủy đơn hàng</Select.Option>
+                <Select.Option value='Returned'>Hoàn trả đơn hàng</Select.Option>
+                <Select.Option value='Returning'>Tiến hành hoàn trả đơn hàng</Select.Option>
+                <Select.Option value='Rejected'>Từ chối hoàn trả</Select.Option>
+                <Select.Option value='Refunding'>Tiến hành Hoàn tiền đơn hàng</Select.Option>
+                <Select.Option value='Refunded'>Hoàn tiền đơn hàng</Select.Option>
+              </Select>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Table */}
         <div className='bg-white p-6 rounded shadow'>

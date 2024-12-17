@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import { Layout, Menu, Card, Row, Col, Typography, Modal, Pagination, Button } from 'antd'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
-import { IProduct } from '@/types/product'
 import { getAllProducts } from '@/services/product'
+import { IProduct } from '@/types/product'
+import { Button, Card, Col, Layout, Modal, Pagination, Row, Typography } from 'antd'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 const { Header, Content, Sider } = Layout
 const { Title, Paragraph, Text } = Typography
 
@@ -108,19 +108,40 @@ const NewsPage = () => {
                       key={index}
                       hoverable
                       cover={
-                        <img
-                          alt='Sofa set'
-                          src={product?.variants?.[0]?.sku_id?.image?.[0]}
-                          style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                        />
+                        <div style={{ position: 'relative' }}>
+                          <img
+                            alt='Sofa set'
+                            src={product?.variants?.[0]?.sku_id?.image?.[0]}
+                            style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                          />
+                          {product?.variants[0]?.sku_id?.price_discount_percent && (
+                            <div
+                              className='discount-badge'
+                              style={{
+                                position: 'absolute',
+                                top: '1px',
+                                left: '1px',
+                                backgroundColor: 'red',
+                                color: 'white',
+                                fontSize: '14px',
+                                fontWeight: 'bold',
+                                borderRadius: '5px'
+                              }}
+                            >
+                              {product?.variants[0]?.sku_id?.price_discount_percent}%
+                            </div>
+                          )}
+                        </div>
                       }
                     >
                       <Paragraph className='mb-0'>
                         <strong>{product.name}</strong>
                       </Paragraph>
                       <Paragraph className='text-red-500 font-bold mb-0'>
-                        <strong>{product.price}</strong>
-                        {/* <span className='line-through text-gray-500'> 10,600,000₫</span> */}
+                        <strong>{product?.variants[0]?.sku_id?.price.toLocaleString()}đ</strong>
+                        <span className='line-through text-gray-500 ml-1'>
+                          {product?.variants[0]?.sku_id?.price_before_discount.toLocaleString()}đ
+                        </span>
                       </Paragraph>
                       <Button className='text-center'>xem chi tiết</Button>
                     </Card>

@@ -1,6 +1,8 @@
 import instance from '@/configs/axios'
 import { useMutation } from '@tanstack/react-query'
 import { Form, Input, Button, message } from 'antd'
+import { useUser } from '@/hooks/useUser'
+import { useNavigate } from 'react-router-dom'
 
 interface ProfilePageProps {
   userDetail: {
@@ -17,7 +19,8 @@ type FieldType = {
 
 const UpdatePasswordForm = ({ userDetail }: ProfilePageProps) => {
   const [messageApi, contextHolder] = message.useMessage()
-
+  const { Logout } = useUser()
+  const navigate = useNavigate()
   const [form] = Form.useForm()
 
   const onFinish = (values: FieldType) => {
@@ -39,6 +42,8 @@ const UpdatePasswordForm = ({ userDetail }: ProfilePageProps) => {
     },
     onSuccess: () => {
       messageApi.success('Đổi mật khẩu thành công!')
+      Logout()
+      navigate('/login')
       form.resetFields()
     },
     onError: (error) => {

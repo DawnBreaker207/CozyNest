@@ -16,12 +16,16 @@ const Contactthree = () => {
           <div className='md:w-2/3 w-full pl-0 md:pl-8'>
             <h2 className='text-3xl font-bold text-gray-800 mb-6'>Về công ty</h2>
             <p className='text-gray-600 mb-4'>
-              Chào mừng đến với Cozynest, nơi mang đến vẻ đẹp tự nhiên và không gian sống lý tưởng. Chúng tôi tự hào là
-              một trong những đơn vị hàng đầu cung cấp sản phẩm nội thất chất lượng cao.
+              Tại Cozynest, chúng tôi không chỉ cung cấp những sản phẩm nội thất đẹp mắt, mà còn mang đến những giải
+              pháp thiết kế tối ưu để tạo nên không gian sống hài hòa và đầy cảm hứng. Với tầm nhìn là trở thành đối tác
+              đáng tin cậy trong việc kiến tạo không gian sống cho mọi gia đình, chúng tôi cam kết luôn đi đầu trong
+              việc cung cấp các sản phẩm nội thất chất lượng cao, phù hợp với xu hướng thiết kế hiện đại và nhu cầu sử
+              dụng của từng khách hàng.
             </p>
             <p className='text-gray-600 mb-4'>
-              Cozynest đặt sự chăm sóc khách hàng và tính chuyên nghiệp lên hàng đầu, cam kết mang đến sản phẩm chính
-              hãng và dịch vụ tốt nhất cho quý khách.
+              Chúng tôi hiểu rằng mỗi không gian sống đều có những yêu cầu và cá tính riêng, vì vậy Cozynest luôn nỗ lực
+              mang lại những sản phẩm đa dạng, từ các món đồ nội thất nhỏ xinh cho đến những bộ sưu tập hoàn chỉnh, giúp
+              bạn tạo dựng một không gian sống vừa đẹp, vừa tiện nghi.
             </p>
           </div>
         </div>

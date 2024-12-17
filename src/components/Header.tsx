@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
 import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
@@ -5,6 +6,7 @@ import useCart from '@/hooks/useCart'
 import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
 import { ICategory } from '@/types/category'
+import { IProduct } from '@/types/product'
 import {
   DeleteOutlined,
   DownOutlined,
@@ -16,13 +18,12 @@ import {
   ShoppingCartOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Button, Divider, Drawer, Dropdown, GetProps, Input, List, MenuProps, message, Modal, Space, theme } from 'antd'
+import { Button, Divider, Drawer, Dropdown, Input, List, MenuProps, message, Modal, Space, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 import { Link, NavLink } from 'react-router-dom'
 import { menu1 } from './data/Header'
-import 'react-quill/dist/quill.snow.css'
-import ReactQuill from 'react-quill'
-import { IProduct } from '@/types/product'
 
 const { useToken } = theme
 
@@ -34,14 +35,14 @@ const Header = () => {
   const [results, setResults] = useState([])
   const [, contextHolder] = message.useMessage()
   const { token } = useToken()
-  const { data, calculateTotal, mutate } = useCart()
+  const { calculateTotal, mutate } = useCart()
 
   const { Logout, user, userId } = useUser()
   const { products, quantities, setQuantity } = useCartStore()
   const [isVisible, setIsVisible] = useState(false)
   const [visible, setVisible] = useState(false)
   const [open, setOpen] = useState(false)
-  const { data: userData, error } = useAdminUser(userId ?? '')
+  const { data: userData } = useAdminUser(userId ?? '')
   const [isOpen, setIsOpen] = useState(false) // Quản lý trạng thái mở/đóng menu
 
   // Toggle trạng thái menu
@@ -131,7 +132,9 @@ const Header = () => {
 
   // Tăng số lượng sản phẩm
   const increase = (index: number) => {
-    if (quantities[index]) {
+    const product = products[index]
+    const stockQuantity = product?.sku_id?.stock
+    if (quantities[index] && quantities[index] < stockQuantity) {
       setQuantity(index, quantities[index] + 1)
       mutate({ action: 'INCREMENT', sku_id: products[index].sku_id._id })
     }
@@ -163,9 +166,9 @@ const Header = () => {
     borderRadius: token.borderRadiusLG,
     boxShadow: token.boxShadowSecondary
   }
-  type SearchProps = GetProps<typeof Input.Search>
+  // type SearchProps = GetProps<typeof Input.Search>
   const { Search } = Input
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
+  // const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
   // if (error) {
   //   Logout()
@@ -185,7 +188,7 @@ const Header = () => {
           label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
           key: '1'
         },
-        ...(role === 'admin'
+        ...(role === 'admin' || role === 'superAdmin'
           ? [
               {
                 label: <a href='/admin'>Quản lý</a>, // Admin: Link đến trang quản lý admin

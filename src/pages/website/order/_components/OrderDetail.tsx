@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import { IReview } from '@/types/review'
 import { StatusType } from '@/types/status'
 import { UploadOutlined } from '@ant-design/icons'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Button,
   Card,
@@ -16,20 +17,17 @@ import {
   notification,
   Rate,
   Row,
-  Spin,
   Table,
   Tag,
   Typography,
   Upload
 } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { badword } from './badword'
 import RefundOrderButton from './RefundOrderButton'
 import ReturnOrderButton from './ReturnOrderButton '
-import CustomLoadingPage from '@/components/Loading'
-import { badword } from './badword'
 const { Title } = Typography
 
 const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
@@ -45,6 +43,7 @@ const OrderDetail = () => {
   const orderId = params.get('orderId')
   const navigate = useNavigate()
   window.scrollTo({ top: 0, behavior: 'smooth' })
+  console.log(returnOrder)
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
   console.log('🚀 ~ OrderDetail ~ selectedProduct:', selectedProduct)
@@ -142,27 +141,27 @@ const OrderDetail = () => {
       }
     })
   }
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['orderDetail', orderId],
+    queryFn: async () => {
+      const response = await instance.get(`/orders/${orderId}`)
+      return response.data
+    }
+  })
+  console.log(data);
 
   useEffect(() => {
-    if (orderId) {
-      instance
-        .get(`/orders/${orderId}`)
-        .then((response) => {
-          if (response?.data?.res) {
-            setOrder(response?.data?.res)
-            setLoading(false)
-          } else {
-            setIsOrderNotFound(true)
-            setLoading(false)
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching order:', error)
-          setIsOrderNotFound(true)
-          setLoading(false)
-        })
+    setLoading(true)
+    if (data?.res) {
+      if (data.res) {
+        setOrder(data.res)
+      }
+
+      // Lấy tên người xác nhận từ cookie
     }
-  }, [orderId])
+    setLoading(false)
+
+  }, [data])
   useEffect(() => {
     if (orderId) {
       instance
@@ -264,7 +263,7 @@ const OrderDetail = () => {
             console.error('Đơn hàng không tồn tại')
             return
           }
-          if (order.status !== 'Delivered') {
+          if (order.status !== 'Delivered' && order.status !== 'Rejected') {
             // Hiển thị thông báo bằng Ant Design
             notification.error({
               message: 'Thông báo',
@@ -322,7 +321,8 @@ const OrderDetail = () => {
     { label: 'Đang vận chuyển', value: 'Delivering' },
     { label: 'Giao hàng thành công', value: 'Delivered' },
     { label: 'Đơn hàng hoàn thành', value: 'Completed' },
-    { label: 'Tiến hành hoàn trả đơn hàng', value: 'Returning' },
+    { label: 'Tiến hành hoàn trả', value: 'Returning' },
+    { label: 'Từ chối hoàn trả', value: 'Rejected' },
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
     { label: 'Tiến hành hoàn Tiền', value: 'Refunding' },
     { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
@@ -379,17 +379,27 @@ const OrderDetail = () => {
     Delivering: 'purple',
     Delivered: 'green',
     Completed: 'gold',
+    Returning: 'orange',
+    Rejected: 'red',
     Returned: 'red',
+    Refunding: 'orange',
     Refunded: 'red',
     Cancelled: 'gray'
   }
+  if (isLoading)
+    return (
+      <div>
+        <CustomLoadingPage />
+      </div>
+    )
+  if (isError) return <div>Lỗi khi tải chi tiết đơn hàng</div>
   return (
     <div className='lg:px-32 p-10'>
       {contextHolder}
       <div className='mb-6 flex flex-col gap-2'>
-        <Title level={2}>Mã đơn hàng: {order._id}</Title>
+        <Title level={2}>Mã đơn hàng: {order?._id}</Title>
         <p>
-          <strong>Ngày đặt hàng:</strong> {new Date(order.createdAt).toLocaleString()}
+          <strong>Ngày đặt hàng:</strong> {new Date(order?.createdAt).toLocaleString()}
         </p>
         <p>
           <strong>Trạng thái đơn hàng hiện tại:</strong>{' '}
@@ -399,10 +409,10 @@ const OrderDetail = () => {
 
       {/* Hiển thị hành trình trạng thái */}
       <Card title='Lịch sử trạng thái' className='mb-3'>
-        <div className='flex space-x-4'>
-          {order.status_detail.length > 0 &&
+        <div className='flex flex-wrap gap-4'>
+          {order?.status_detail?.length > 0 &&
             order.status_detail.map((item: any, index: number) => (
-              <div key={index} className='detail'>
+              <div key={index} className='flex flex-col'>
                 <p>
                   <Tag color={statusColors[item.status as StatusType] || 'default'}>
                     {statuses.find((status) => status.value === item.status)?.label || 'Không xác định'}
@@ -412,22 +422,9 @@ const OrderDetail = () => {
               </div>
             ))}
         </div>
-        <div className='mt-4'>
-          {/* Hiển thị trạng thái của đơn hàng hiện tại */}
-          <div>
-            <strong>Trạng thái: </strong>
-            <Tag color='green'>
-              {statuses.find((status) => status.value === currentStatus)?.label || 'Không xác định'}
-            </Tag>
-          </div>
-          <div>
-            <strong>Thời gian: </strong>
-            {new Date(returnOrder?.items?.[0]?.updatedAt || order?.updatedAt).toLocaleString()}
-          </div>
-        </div>
         <div className='flex flex-wrap gap-4 mt-4'>
           {statuses.map((status, index) => {
-            const normalizedCurrentStatus = currentStatus.trim().toLowerCase()
+            const normalizedCurrentStatus = currentStatus?.trim().toLowerCase()
             const normalizedStatusValue = status.value.trim().toLowerCase()
 
             const isPast = index < statuses.findIndex((s) => s.value.trim().toLowerCase() === normalizedCurrentStatus)
@@ -469,9 +466,13 @@ const OrderDetail = () => {
                   <strong>Lý do hoàn trả:</strong> {returnOrder?.items?.[0]?.reason}
                 </p>
                 <p>
-                  <strong>Trạng thái hoàn trả:</strong>{' '}
-                  {returnOrder?.items?.[0]?.is_confirm ? 'Đã xác nhận' : 'Chưa xác nhận'}
+                  <strong>Trạng thái hoàn trả:</strong> {returnOrder?.items?.[0]?.is_confirm}
                 </p>
+                {returnOrder?.items?.[0]?.reason_cancel && returnOrder?.items?.[0]?.reason_cancel.trim() !== '' && (
+                  <p className='text-red-500'>
+                    <strong>Lý do từ chối:</strong> {returnOrder?.items?.[0]?.reason_cancel}
+                  </p>
+                )}
                 <p>
                   <strong>Số điện thoại:</strong> {returnOrder?.items?.[0]?.phone_number}
                 </p>
@@ -530,16 +531,16 @@ const OrderDetail = () => {
       )}
       <Card title='Thông tin giao hàng' className='mb-6'>
         <p>
-          <strong>Tên người nhận:</strong> {order.customer_name}
+          <strong>Tên người nhận:</strong> {order?.customer_name}
         </p>
         <p>
-          <strong>Số điện thoại:</strong> {order.phone_number}
+          <strong>Số điện thoại:</strong> {order?.phone_number}
         </p>
         <p>
-          <strong>Email:</strong> {order.email}
+          <strong>Email:</strong> {order?.email}
         </p>
         <p>
-          <strong>Địa chỉ nhận hàng:</strong> {order.address}
+          <strong>Địa chỉ nhận hàng:</strong> {order?.address}
         </p>
       </Card>
 
@@ -676,23 +677,23 @@ const OrderDetail = () => {
             {/* Hiển thị mã giảm giá nếu có */}
             {order?.order_details?.total > 0 && (
               <div className='flex justify-between'>
-                <span>Mã Giảm Giá: {order.order_details.coupon}</span>
-                <span className='text-red-600'>- {order.order_details.total.toLocaleString()}₫</span>
+                <span>Mã Giảm Giá: {order?.order_details.coupon}</span>
+                <span className='text-red-600'>- {order?.order_details.total.toLocaleString()}₫</span>
               </div>
             )}
 
             {/* Hiển thị tổng cộng đơn hàng */}
             <div className='flex justify-between'>
               <span>Tổng cộng đơn hàng</span>
-              <span>{order.total_amount.toLocaleString()}₫</span>
+              <span>{order?.total_amount.toLocaleString()}₫</span>
             </div>
           </div>
           <p>
-            <strong>Phương thức thanh toán: {order.payment_method[0].orderInfo}</strong>
+            <strong>Phương thức thanh toán: {order?.payment_method[0].orderInfo}</strong>
           </p>
           <p>
             <strong>
-              Trạng thái thanh toán: {order.payment_status === 'Unpaid' ? 'Chưa thanh toán' : 'Đã thanh toán'}
+              Trạng thái thanh toán: {order?.payment_status === 'Unpaid' ? 'Chưa thanh toán' : 'Đã thanh toán'}
             </strong>
           </p>
         </div>
@@ -706,7 +707,7 @@ const OrderDetail = () => {
         <Button
           className='bg-red-400 text-white w-full sm:w-auto'
           onClick={cancelOrder} // Khi nhấn Hủy đơn hàng
-          disabled={order.status !== 'Processing' && order.status !== 'Pending'}
+          disabled={order?.status !== 'Processing' && order?.status !== 'Pending'}
         >
           Hủy đơn hàng
         </Button>
@@ -714,7 +715,7 @@ const OrderDetail = () => {
         <Button
           className='bg-blue-500 text-white w-full sm:w-auto'
           onClick={confirmOrder} // Khi nhấn Xác nhận đơn hàng
-          disabled={order.status !== 'Delivered' || currentStatus === 'Returning'}
+          disabled={(order?.status !== 'Delivered' && order?.status !== 'Rejected') || currentStatus === 'Returning'}
         >
           Xác nhận đơn hàng
         </Button>

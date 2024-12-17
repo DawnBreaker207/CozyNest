@@ -1,9 +1,9 @@
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { IVariant } from '@/types/variant'
-import { BackwardOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, message, Popconfirm, Space, Table } from 'antd'
+import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 
 const AdminVariantPage = () => {
@@ -33,7 +33,7 @@ const AdminVariantPage = () => {
     onSuccess: () => {
       messageApi.open({
         type: 'success',
-        content: 'Xóa thành công'
+        content: 'Ẩn biến thể thành công'
       })
       queryClient.invalidateQueries({
         queryKey: ['variants']
@@ -75,12 +75,10 @@ const AdminVariantPage = () => {
     mutateVariantAdd()
   }
 
-  const dataSource = data?.data?.res
-    .filter((variant: any) => variant.deleted === false) // Filter out the deleted variants
-    .map((variant: any) => ({
-      key: variant._id,
-      ...variant
-    }))
+  const dataSource = data?.data?.res.map((variant: any) => ({
+    key: variant._id,
+    ...variant
+  }))
 
   const columns = [
     {
@@ -135,6 +133,12 @@ const AdminVariantPage = () => {
       )
     },
     {
+      key: 'deleted',
+      title: 'Trạng thái hiển thị',
+      dataIndex: 'deleted',
+      render: (deleted: boolean) => <Tag color={deleted ? 'red' : 'green'}>{deleted ? 'Ẩn' : 'Hiển thị'}</Tag>
+    },
+    {
       title: 'Hành động',
       key: 'action',
       render: (_: any, sku: any) => {
@@ -145,12 +149,12 @@ const AdminVariantPage = () => {
             </Link>
             <Popconfirm
               title='Xóa biến thể'
-              description='Bạn có chắc chắn muốn xóa biến thể này?'
+              description='Bạn có chắc chắn muốn ẩn biến thể này?'
               onConfirm={() => mutate(sku._id!)}
               okText='Có'
               cancelText='Không'
             >
-              <Button icon={<DeleteOutlined />} danger />
+              <Button icon={<EyeInvisibleOutlined />} danger />
             </Popconfirm>
           </Space>
         )
