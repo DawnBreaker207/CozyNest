@@ -26,7 +26,23 @@ const CheckoutPage = () => {
     const fetchCoupons = async () => {
       try {
         const response = await instance.get('/coupon')
-        setCoupons(response.data?.res?.docs || [])
+        console.log("🚀 ~ fetchCoupons ~ response:", response)
+
+        // Lọc các mã giảm giá
+        const filteredCoupons = response.data?.res?.docs.filter((coupon: any) => {
+          const currentDate = new Date() // Ngày hiện tại
+          const couponStartDate = new Date(coupon.couponStartDate)
+          const couponEndDate = new Date(coupon.couponEndDate)
+
+          return (
+            coupon.status === true && // Trạng thái phải là true
+            coupon.deleted === false && // Mã giảm giá không bị xóa
+            currentDate >= couponStartDate && // Ngày hiện tại phải lớn hơn hoặc bằng ngày bắt đầu
+            currentDate <= couponEndDate // Ngày hiện tại phải nhỏ hơn hoặc bằng ngày kết thúc
+          )
+        })
+
+        setCoupons(filteredCoupons) // Lưu các mã giảm giá đã lọc vào state
       } catch (error) {
         console.error('Không thể lấy danh sách mã giảm giá:', error)
       }
