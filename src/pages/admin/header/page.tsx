@@ -1,21 +1,16 @@
 import Notification from '@/components/Notification'
 import instance from '@/configs/axios'
-import { useOrderNotifications } from '@/hooks/useOrderNotifcations'
-import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
 import { LogoutOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Badge, Button, Dropdown, Menu, MenuProps, Modal, Space } from 'antd'
+import { Button, Dropdown, Menu, MenuProps, Modal, Space } from 'antd'
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 const HeaderAdmin = () => {
-  const [user] = useCookie('user', {})
-  const { notifications, setNotifications } = useOrderNotifications(user._id)
   const navigate = useNavigate()
   const { Logout } = useUser()
   const [isVisible, setIsVisible] = useState(false)
-  const [showNotify, setShowNotify] = useState(false)
   const { data: userData } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
@@ -75,14 +70,7 @@ const HeaderAdmin = () => {
 
         <div className='flex items-center gap-2'>
           <div className=''>
-            <Badge count={notifications.filter((n) => !n.read).length} overflowCount={99}>
-              <Notification
-                visible={showNotify}
-                onClick={() => setShowNotify((prev) => !prev)} // Close the modal
-                notifications={notifications}
-                setNotifications={setNotifications}
-              />
-            </Badge>
+            <Notification />
           </div>
           <Dropdown
             menu={{ items: users }}

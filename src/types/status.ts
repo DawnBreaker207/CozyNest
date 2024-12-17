@@ -8,7 +8,7 @@ export type StatusType =
   | 'Completed'
   | 'Returned'
   | 'Refunded'
-  | 'cancelled'
+  | 'Cancelled'
 
 // Khai báo màu sắc cho từng trạng thái
 export const statusColors: Record<StatusType, string> = {
@@ -21,5 +21,5 @@ export const statusColors: Record<StatusType, string> = {
   Completed: 'gold',
   Returned: 'red',
   Refunded: 'red',
-  cancelled: 'gray'
+  Cancelled: 'gray'
 }

@@ -99,7 +99,7 @@ const CartPage = () => {
                       onOk: handleDeleteCart // Gọi handleDeleteCart khi xóa giỏ hàng
                     })
                   }}
-                  className='bg-[#fca120] text-white py-[10px] px-[10px] border rounded-lg mb-3 border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300 ml-auto'
+                  className='bg-[#fca120] md:text-base text-sm text-white py-1 px-2 md:py-[10px] md:px-[10px] border rounded-lg mb-3 border-transparent hover:bg-white hover:text-[#fca120] hover:border-[#fca120] transition-all duration-300 ml-auto'
                 >
                   Xóa giỏ hàng
                 </button>

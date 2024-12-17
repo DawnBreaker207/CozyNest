@@ -95,7 +95,10 @@ const BestProduct = (props: Props) => {
                               {firstVariant?.sku_id?.price.toLocaleString()}₫
                             </span>
                             <span className='text-gray-500 line-through font-medium text-sm'>
-                              {firstVariant?.sku_id?.price_before_discount.toLocaleString()}₫
+                              {firstVariant?.sku_id?.price_before_discount !== undefined &&
+                              firstVariant?.sku_id?.price_before_discount !== null
+                                ? `${firstVariant.sku_id.price_before_discount.toLocaleString()}₫`
+                                : ''}
                             </span>
                           </div>
                           <Button>xem chi tiết</Button>

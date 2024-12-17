@@ -51,9 +51,9 @@ const DashboardPage = () => {
         .reduce((sum: number, order: any) => sum + order.total_amount, 0) // Cộng tổng số tiền
     : 0
 
-  // Tính số lượng đơn hàng "Completed" và "Canceled"
+  // Tính số lượng đơn hàng "Completed" và "Cancelled"
   const completedOrders = data?.data?.res.items?.filter((order: any) => order.status === 'Completed').length || 0
-  const canceledOrders = data?.data?.res.items?.filter((order: any) => order.status === 'Canceled').length || 0
+  const canceledOrders = data?.data?.res.items?.filter((order: any) => order.status === 'Cancelled').length || 0
   // Tính số lượng user role member
   const memberCount = userData?.data?.res.filter((user: any) => user.role === 'member').length || 0
 
@@ -107,7 +107,7 @@ const DashboardPage = () => {
             <span className='text-xl font-semibold text-black'>{completedOrders}</span>
           </div>
         </Link>
-        <Link to={`/admin/order?status=Canceled`} className='rounded-xl shadow-xl'>
+        <Link to={`/admin/order?status=Cancelled`} className='rounded-xl shadow-xl'>
           <div className='flex flex-col gap-5 p-5'>
             <div className='flex gap-3 items-center'>
               <img src='/src/assets/images/content/delete.png' alt='' className='size-8' />

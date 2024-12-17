@@ -233,11 +233,11 @@ const OrderDetail = () => {
             }, 1500) // 1500ms = 1,5 giây
             return
           }
-          // Bước 2: Cập nhật trạng thái của đơn hàng thành "Canceled"
+          // Bước 2: Cập nhật trạng thái của đơn hàng thành "Cancelled"
           //* Update: Sửa lại api hủy đơn
           const response = await instance.patch(`/orders/cancel/${orderId}`, {
             ...order, // Giữ lại dữ liệu cũ
-            status: 'cancelled' // Cập nhật trạng thái hủy
+            status: 'Cancelled' // Cập nhật trạng thái hủy
           })
 
           // Hiển thị thông báo thành công
@@ -326,7 +326,7 @@ const OrderDetail = () => {
     { label: 'Hoàn trả đơn hàng', value: 'Returned' },
     { label: 'Tiến hành hoàn Tiền', value: 'Refunding' },
     { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
-    { label: 'Đã hủy đơn hàng', value: 'cancelled' }
+    { label: 'Đã hủy đơn hàng', value: 'Cancelled' }
   ]
 
   // Tìm trạng thái hiện tại
@@ -381,7 +381,7 @@ const OrderDetail = () => {
     Completed: 'gold',
     Returned: 'red',
     Refunded: 'red',
-    cancelled: 'gray'
+    Cancelled: 'gray'
   }
   return (
     <div className='lg:px-32 p-10'>

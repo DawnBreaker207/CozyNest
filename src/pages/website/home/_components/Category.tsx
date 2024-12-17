@@ -83,7 +83,8 @@ const Category = () => {
     const fetchCategories = async () => {
       try {
         const { data } = await instance.get('/categories')
-        setCategories(data.res) // Giả sử `data` là mảng danh mục
+        const filteredCategories = data.res.filter((category: ICategory) => !category.isHidden)
+        setCategories(filteredCategories)
       } catch (err) {
         console.error('Error fetching categories:', err)
       }
@@ -134,29 +135,31 @@ const Category = () => {
         <div className='sectionContent'>
           <Slider {...settings}>
             {/* Item 1 */}
-            {categories.map((category) => (
-              <Link to={`/categorie/${category._id}`} key={category._id} className='block  py-2 text-gray-700'>
-                <div className='item-category p-3'>
-                  {' '}
-                  <div className='media-category effect-image'>
-                    <a href='#' aria-label='Nội thất cơ bản'>
-                      <img
-                        className='rounded-t-lg w-full h-[270px] object-cover'
-                        src={category.thumbnail}
-                        alt={category.name}
-                      />
-                    </a>
-                  </div>
-                  <div className='title-category text-center mt-4'>
-                    <h4 className='text-xl font-medium'>
-                      <a href='#' className='text-[#FCA120] font-normal' aria-label='Nội thất cơ bản'>
-                        {category.name}
+            {categories.map((category) => {
+              return (
+                <Link to={`/categorie/${category._id}`} key={category._id} className='block  py-2 text-gray-700'>
+                  <div className='item-category p-3'>
+                    {' '}
+                    <div className='media-category effect-image'>
+                      <a href='#' aria-label='Nội thất cơ bản'>
+                        <img
+                          className='rounded-t-lg w-full h-[270px] object-cover'
+                          src={category.thumbnail}
+                          alt={category.name}
+                        />
                       </a>
-                    </h4>
+                    </div>
+                    <div className='title-category text-center mt-4'>
+                      <h4 className='text-xl font-medium'>
+                        <a href='#' className='text-[#FCA120] font-normal' aria-label='Nội thất cơ bản'>
+                          {category.name}
+                        </a>
+                      </h4>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              )
+            })}
           </Slider>
         </div>
       </div>
