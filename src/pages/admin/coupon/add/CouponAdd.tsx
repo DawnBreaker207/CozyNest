@@ -76,7 +76,15 @@ const CouponAdd = () => {
           label='Giá trị'
           name='couponValue'
           className='w-1/2'
-          rules={[{ required: true, message: 'Vui lòng nhập giá trị coupon!' }]}
+          rules={[
+            { required: true, message: 'Vui lòng nhập giá trị coupon!' },
+            {
+              validator: (_, value) =>
+                value > 200000
+                  ? Promise.reject(new Error('Giá trị không được vượt quá 200,000!'))
+                  : Promise.resolve(),
+            },
+          ]}
         >
           <InputNumber
             placeholder='Nhập giá trị coupon'
@@ -108,7 +116,19 @@ const CouponAdd = () => {
           label='Ngày kết thúc'
           name='couponEndDate'
           className='w-1/2'
-          rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}
+          dependencies={['couponStartDate']}
+          rules={[
+            { required: true, message: 'Vui lòng chọn ngày kết thúc!' },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                const startDate = getFieldValue('couponStartDate')
+                if (value && startDate && new Date(value).getTime() <= new Date(startDate).getTime()) {
+                  return Promise.reject(new Error('Ngày kết thúc phải lớn hơn ngày bắt đầu!'))
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}
         >
           <DatePicker className='w-full' format='YYYY-MM-DD' />
         </Form.Item>
