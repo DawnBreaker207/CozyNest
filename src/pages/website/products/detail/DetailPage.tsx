@@ -292,7 +292,7 @@ const ProductDetail = () => {
                 {priceVar.toLocaleString()}₫
               </span>
               <span className='text-gray-500 line-through font-medium text-base md:text-[18px]'>
-                {priceOldVar.toLocaleString()}₫
+                {priceOldVar?.toLocaleString?.() ?? ''}
               </span>
             </div>
           </div>
