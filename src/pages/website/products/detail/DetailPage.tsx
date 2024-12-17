@@ -239,8 +239,8 @@ const ProductDetail = () => {
                       1 +
                       product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length) %
-                    product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
-                      ?.length
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
+                        ?.length
                   )
                 }
               >
@@ -254,8 +254,8 @@ const ProductDetail = () => {
                 onClick={() =>
                   setActiveImageIndex(
                     (activeImageIndex + 1) %
-                    product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
-                      ?.length
+                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
+                        ?.length
                   )
                 }
               >
@@ -332,7 +332,6 @@ const ProductDetail = () => {
                   {/* Hiển thị tên màu khi hover hoặc select */}
                   {(isSelected || isHovered) && (
                     <span
-
                       className='absolute top-[-30px] right-7 transform translate-x-[10px] text-sm font-semibold'
                       style={{
                         padding: '2px 10px',

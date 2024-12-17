@@ -125,7 +125,7 @@ const NewsPage = () => {
                                 color: 'white',
                                 fontSize: '14px',
                                 fontWeight: 'bold',
-                                borderRadius: '5px',
+                                borderRadius: '5px'
                               }}
                             >
                               {product?.variants[0]?.sku_id?.price_discount_percent}%
@@ -139,11 +139,12 @@ const NewsPage = () => {
                       </Paragraph>
                       <Paragraph className='text-red-500 font-bold mb-0'>
                         <strong>{product?.variants[0]?.sku_id?.price.toLocaleString()}đ</strong>
-                        <span className='line-through text-gray-500 ml-1'>{product?.variants[0]?.sku_id?.price_before_discount.toLocaleString()}đ</span>
+                        <span className='line-through text-gray-500 ml-1'>
+                          {product?.variants[0]?.sku_id?.price_before_discount.toLocaleString()}đ
+                        </span>
                       </Paragraph>
                       <Button className='text-center'>xem chi tiết</Button>
                     </Card>
-
                   </Link>
                 ))}
             </div>
