@@ -34,7 +34,7 @@ const ProductDetail = () => {
       value: variant?.sku_id?.name, // Lưu giá trị của màu sắc
       price_before_discount: variant?.sku_id?.price_before_discount // Lưu giá trị của màu sắc
     }))
-    .filter((color) => color.value) // Lọc các màu sắc hợp lệ
+    .filter((color) => color?.value) // Lọc các màu sắc hợp lệ
   // Đảm bảo khi `colors` có dữ liệu, chọn màu đầu tiên mặc định
   useEffect(() => {
     // Nếu không có màu nào được chọn, chọn màu đầu tiên trong danh sách màu sắc
@@ -239,8 +239,8 @@ const ProductDetail = () => {
                       1 +
                       product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
                         ?.length) %
-                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
-                        ?.length
+                    product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
+                      ?.length
                   )
                 }
               >
@@ -254,8 +254,8 @@ const ProductDetail = () => {
                 onClick={() =>
                   setActiveImageIndex(
                     (activeImageIndex + 1) %
-                      product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
-                        ?.length
+                    product?.variants?.find((variant) => variant?.sku_id?._id === selectedColorId)?.sku_id?.image
+                      ?.length
                   )
                 }
               >
@@ -301,12 +301,17 @@ const ProductDetail = () => {
             <h2 className='font-semibold'>Màu sắc:</h2>
             {variants.map((variant: any) => {
               const color = variant.option_value_id
+
               const isSelected = selectedColorId === variant.sku_id._id
               const isHovered = hoveredColorId === variant._id
               const bgColor =
                 color.value === 'Nâu' ? 'bg-[#A0522D]' : color.value === 'Màu Tự Nhiên' ? 'bg-[#F5DEB3]' : 'bg-gray-200'
 
               // Tên màu hiển thị khi hover hoặc select
+              // const displayName =
+              //   isSelected || isHovered ? color.label || color.value : variants[0]?.option_id?.option_value_id?.[0].value
+              //className =  `bg-{item.color}`
+
               const displayName =
                 isSelected || isHovered ? color.label || color.value : variants[0]?.option_value_id.value
 
@@ -327,6 +332,7 @@ const ProductDetail = () => {
                   {/* Hiển thị tên màu khi hover hoặc select */}
                   {(isSelected || isHovered) && (
                     <span
+
                       className='absolute top-[-30px] right-7 transform translate-x-[10px] text-sm font-semibold'
                       style={{
                         padding: '2px 10px',

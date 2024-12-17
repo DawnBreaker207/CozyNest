@@ -62,7 +62,6 @@ const CouponAdd = () => {
         >
           <Input placeholder='Nhập tên mã giảm giá' />
         </Form.Item>
-
         <Form.Item
           label='Mã Coupon'
           name='couponCode'
@@ -71,12 +70,19 @@ const CouponAdd = () => {
         >
           <Input placeholder='Nhập mã coupon' />
         </Form.Item>
-
         <Form.Item
           label='Giá trị'
           name='couponValue'
           className='w-1/2'
-          rules={[{ required: true, message: 'Vui lòng nhập giá trị coupon!' }]}
+          rules={[
+            { required: true, message: 'Vui lòng nhập giá trị coupon!' },
+            {
+              validator: (_, value) =>
+                value > 200000
+                  ? Promise.reject(new Error('Giá trị không được vượt quá 200,000!'))
+                  : Promise.resolve(),
+            },
+          ]}
         >
           <InputNumber
             placeholder='Nhập giá trị coupon'
@@ -85,7 +91,6 @@ const CouponAdd = () => {
             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           />
         </Form.Item>
-
         <Form.Item
           label='Số lượng'
           name='couponQuantity'
@@ -94,7 +99,6 @@ const CouponAdd = () => {
         >
           <InputNumber min={0} className='w-full' />
         </Form.Item>
-
         <Form.Item
           label='Ngày bắt đầu'
           name='couponStartDate'
@@ -108,7 +112,19 @@ const CouponAdd = () => {
           label='Ngày kết thúc'
           name='couponEndDate'
           className='w-1/2'
-          rules={[{ required: true, message: 'Vui lòng chọn ngày kết thúc!' }]}
+          dependencies={['couponStartDate']}
+          rules={[
+            { required: true, message: 'Vui lòng chọn ngày kết thúc!' },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                const startDate = getFieldValue('couponStartDate')
+                if (value && startDate && new Date(value).getTime() <= new Date(startDate).getTime()) {
+                  return Promise.reject(new Error('Ngày kết thúc phải lớn hơn ngày bắt đầu!'))
+                }
+                return Promise.resolve()
+              },
+            }),
+          ]}
         >
           <DatePicker className='w-full' format='YYYY-MM-DD' />
         </Form.Item>
@@ -116,7 +132,6 @@ const CouponAdd = () => {
         <Form.Item label='Trạng thái' name='status' valuePropName='checked'>
           <Switch checkedChildren='Hoạt động' unCheckedChildren='Không hoạt động' />
         </Form.Item>
-
         <Button type='primary' htmlType='submit' loading={loading}>
           Tạo mã giảm giá
         </Button>
