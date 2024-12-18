@@ -137,7 +137,7 @@ const Category = () => {
             {/* Item 1 */}
             {categories.map((category) => {
               return (
-                <Link to={`/categorie/${category._id}`} key={category._id} className='block  py-2 text-gray-700'>
+                <Link to={`/categories/${category._id}`} key={category._id} className='block  py-2 text-gray-700'>
                   <div className='item-category p-3'>
                     {' '}
                     <div className='media-category effect-image'>
