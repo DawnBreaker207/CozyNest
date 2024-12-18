@@ -94,8 +94,8 @@ const ProductsPage = () => {
       case '5': // Sản phẩm bán chạy (tuỳ chỉnh logic nếu cần)
         sortedProducts.sort((a, b) => {
           // Sắp xếp theo số lượng sold giảm dần
-          const soldA = a?.variants?.[0]?.sku_id.sold || 0
-          const soldB = b?.variants?.[0]?.sku_id.sold || 0
+          const soldA = a?.variants?.[0]?.sku_id?.sold || 0
+          const soldB = b?.variants?.[0]?.sku_id?.sold || 0
           return soldB - soldA
         }) // Giả sử có trường "sold" biểu thị số lượng bán
         break

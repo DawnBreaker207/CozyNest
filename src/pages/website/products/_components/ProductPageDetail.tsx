@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import instance from '@/configs/axios'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
@@ -68,8 +69,8 @@ const ProductsPageDetail = () => {
       case '5': // Sản phẩm bán chạy (tuỳ chỉnh logic nếu cần)
         sortedProducts.sort((a, b) => {
           // Sắp xếp theo số lượng sold giảm dần
-          const soldA = a?.variants?.[0]?.sku_id.sold || 0
-          const soldB = b?.variants?.[0]?.sku_id.sold || 0
+          const soldA = a?.variants?.[0]?.sku_id?.sold || 0
+          const soldB = b?.variants?.[0]?.sku_id?.sold || 0
           return soldB - soldA
         }) // Giả sử có trường "sold" biểu thị số lượng bán
         break
@@ -230,13 +231,15 @@ const ProductsPageDetail = () => {
                   <Link className='text-black hover:text-yellow-500' to={`/products_page`}>
                     Tất cả sản phẩm
                   </Link>
-                  {categories?.data?.res?.map((category: ICategory) => (
-                    <div key={category._id}>
-                      <a href={`/categorie/${category._id}`} className='text-black hover:text-yellow-500'>
-                        {category.name}
-                      </a>
-                    </div>
-                  ))}
+                  {categories?.data?.res
+                    ?.filter((category: any) => category?.isHidden === false)
+                    ?.map((category: ICategory) => (
+                      <div key={category?._id}>
+                        <a href={`/categories/${category?._id}`} className='text-black hover:text-yellow-500'>
+                          {category?.name}
+                        </a>
+                      </div>
+                    ))}
                 </div>
               }
             >
