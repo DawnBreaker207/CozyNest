@@ -1,13 +1,13 @@
-import moment from 'moment'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
-import useCouponMutation from '@/hooks/useCouponMutation'
+import instance from '@/configs/axios'
 import { useCouponQuery } from '@/hooks/useCouponQuery'
 import { ICoupon } from '@/types/coupon'
 import { BackwardOutlined } from '@ant-design/icons'
-import { Button, DatePicker, Form, Input, InputNumber, message, Switch } from 'antd'
-import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import instance from '@/configs/axios'
+import { Button, DatePicker, Form, Input, InputNumber, message, Switch } from 'antd'
+import moment from 'moment'
+import { Link, useParams } from 'react-router-dom'
 
 const CouponEdit = () => {
   const [messageApi, contextHolder] = message.useMessage()

@@ -17,8 +17,6 @@ const Login = () => {
       return await login(formData)
     },
     onSuccess: (data) => {
-      // console.log(data)
-
       openNotify('Thành công', 'Đăng nhập thành công')
 
       // Lưu thông tin vào cookie
@@ -42,7 +40,6 @@ const Login = () => {
   })
 
   const onFinish = (values: FieldType) => {
-    console.log('Form Values: ', values)
     mutate(values)
   }
 

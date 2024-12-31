@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useCategoryMutation from '@/hooks/useCategoryMutations'

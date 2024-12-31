@@ -34,7 +34,6 @@ const useCart = () => {
 
       try {
         const { data: cartData } = await instance.get(`/cart/${userId}`)
-        console.log(cartData)
 
         // Không lọc sản phẩm, chỉ làm mờ các sản phẩm có is_hidden = true
         return cartData
@@ -61,16 +60,11 @@ const useCart = () => {
         return // Ngừng xử lý nếu dữ liệu không hợp lệ
       }
 
-      const { productId, updatedData } = data
-
-      console.log(`Product with ID ${productId} has been updated:`, updatedData)
-
+      const { productId } = data
       // Kiểm tra nếu sản phẩm đã cập nhật nằm trong giỏ hàng
       const isProductInCart = products.some((product) => product.sku_id.product_id._id === productId)
 
       if (isProductInCart) {
-        console.log(`Product in cart has been updated, refreshing cart...`)
-
         // Nếu đang ở trang checkout, điều hướng về trang giỏ hàng
         if (window.location.pathname === '/check_out') {
           navigate('/cart')
@@ -79,7 +73,7 @@ const useCart = () => {
         // Làm mới dữ liệu giỏ hàng
         refetch() // Lấy lại dữ liệu giỏ hàng mới
       } else {
-        console.log(`Updated product not in cart, no action taken.`)
+        console.info(`Updated product not in cart, no action taken.`)
       }
     })
 
@@ -87,7 +81,7 @@ const useCart = () => {
     return () => {
       socket.disconnect()
     }
-  }, [refetch])
+  }, [refetch, products, navigate])
 
   // Sử dụng useEffect để cập nhật state khi dữ liệu query thành công
   useEffect(() => {

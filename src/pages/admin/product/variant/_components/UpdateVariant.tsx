@@ -1,14 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
-import { BackwardOutlined, PlusOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons'
+import { BackwardOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Button, Form, Input, InputNumber, message, Upload, Image, Modal } from 'antd'
+import { Button, Form, Input, message, Modal, Upload } from 'antd'
 import { RcFile, UploadFile } from 'antd/es/upload'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-type Props = {}
 type FieldType = {
   SKU: string
   name: string
@@ -19,12 +19,12 @@ type FieldType = {
   price_discount_percent?: number
 }
 
-const UpdateVariant = (props: Props) => {
+const UpdateVariant = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
   const { product_id, sku_id } = useParams()
   const [fileList, setFileList] = useState<UploadFile[]>([]) // fileList mới
-  const [removedImages, setRemovedImages] = useState<string[]>([]) // Lưu các ảnh cũ đã bị xóa
+  const [removedImages] = useState<string[]>([]) // Lưu các ảnh cũ đã bị xóa
   const [previewVisible, setPreviewVisible] = useState(false) // Modal visible state
   const [previewImage, setPreviewImage] = useState<string>('')
   const [form] = Form.useForm()
@@ -106,6 +106,7 @@ const UpdateVariant = (props: Props) => {
   const handleCancel = () => setPreviewVisible(false)
 
   const handlePriceChange = (value: number, field: string) => {
+    console.info(value, field)
     const priceBeforeDiscount = form.getFieldValue('price_before_discount')
     const discountPercent = form.getFieldValue('price_discount_percent')
 
@@ -171,6 +172,7 @@ const UpdateVariant = (props: Props) => {
             fileList={fileList}
             onChange={handleChange}
             beforeUpload={(file) => {
+              console.info(file)
               return false // Prevent auto-upload
             }}
             onPreview={handlePreview} // Trigger preview on image click

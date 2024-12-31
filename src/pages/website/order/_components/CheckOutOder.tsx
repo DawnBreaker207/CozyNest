@@ -34,8 +34,6 @@ const CheckOutOrder = () => {
   })
 
   const orderData = order?.res
-  console.log(orderData)
-
   useEffect(() => {
     if (orderData && cartData?.res?.cart_id && !hasDeletedCart) {
       removeAllProductsFromCart()
@@ -71,7 +69,7 @@ const CheckOutOrder = () => {
       title: 'Hình ảnh',
       dataIndex: 'thumbnail',
       key: 'thumbnail',
-      render: (text: any, record: any) => {
+      render: (record: any) => {
         // Sử dụng trực tiếp từ `record` đã được map
         const image = record.thumbnail // Lấy hình ảnh từ `record.thumbnail`
 
@@ -101,7 +99,6 @@ const CheckOutOrder = () => {
     quantity: product.quantity,
     price: product.price
   }))
-  console.log(data)
 
   return (
     <div className='mx-auto'>

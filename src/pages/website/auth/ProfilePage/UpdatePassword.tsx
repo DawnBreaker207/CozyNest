@@ -32,7 +32,7 @@ const UpdatePasswordForm = ({ userDetail }: ProfilePageProps) => {
   }
 
   const onFinishFailed = (errorInfo: unknown) => {
-    console.log('Failed:', errorInfo)
+    return errorInfo
   }
 
   const { mutate } = useMutation({
@@ -48,7 +48,7 @@ const UpdatePasswordForm = ({ userDetail }: ProfilePageProps) => {
     },
     onError: (error) => {
       messageApi.error('Email hoặc mật khẩu không chính xác!')
-      console.log(error)
+      console.error(error)
     }
   })
 

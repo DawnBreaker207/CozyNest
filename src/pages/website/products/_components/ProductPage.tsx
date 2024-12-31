@@ -20,8 +20,6 @@ const ProductsPage = () => {
   const { filterProductsByPrice } = useFilterProducts(products)
   const filteredProducts = filterProductsByPrice(selectedPriceRanges)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-
-  console.log(data)
   const filteredProductsByCategoryAndPrice = filteredProducts.filter((product) => {
     const isInCategory = selectedCategories.length
       ? product.category_id && selectedCategories.includes(String(product.category_id._id))

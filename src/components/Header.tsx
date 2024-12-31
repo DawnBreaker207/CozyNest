@@ -3,7 +3,6 @@ import instance from '@/configs/axios'
 import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
-import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
@@ -37,7 +36,7 @@ const Header = () => {
   const { token } = useToken()
   const { calculateTotal, mutate } = useCart()
 
-  const { Logout, user, userId } = useUser()
+  const { Logout, userId } = useUser()
   const { products, quantities, setQuantity } = useCartStore()
   const [isVisible, setIsVisible] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -162,8 +161,6 @@ const Header = () => {
 
   const { user: userJson } = useUser()
   const role = userJson && Object.keys(userJson).length > 0 ? userJson.role : null
-  console.log(userJson && Object.keys(userJson).length > 0)
-
   const users: MenuProps['items'] =
     userJson && Object.keys(userJson).length > 0
       ? [

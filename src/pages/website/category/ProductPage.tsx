@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import useCart from '@/hooks/useCart'
 import { getAllCategories } from '@/services/category'
 import { getAllProducts } from '@/services/product'
@@ -10,7 +11,7 @@ import { Link, useParams } from 'react-router-dom'
 import { formatCurrency } from '../../../utils/formatCurrency'
 
 const CategoryProductsPage = () => {
-  const [products, setProducts] = useState<IProduct[]>([])
+  const [, setProducts] = useState<IProduct[]>([])
   const [categories, setCategories] = useState<ICategory[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const productsPerPage = 5 // Số sản phẩm mỗi trang
@@ -37,8 +38,6 @@ const CategoryProductsPage = () => {
   }, [categoryId])
 
   let filteredProducts: IProduct[] = []
-  console.log(products)
-
   filteredProducts = useMemo(() => {
     return categories.find((category) => category._id === categoryId)?.products || []
   }, [categories, categoryId])
@@ -57,8 +56,6 @@ const CategoryProductsPage = () => {
       setCurrentPage(page)
     }
   }
-  console.log(filteredProducts)
-  console.log(currentProducts)
 
   return (
     <div className='mx-auto'>
@@ -81,7 +78,7 @@ const CategoryProductsPage = () => {
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px] mt-4 mb-8'>
           {currentProducts
             .filter((product) => !product.is_hidden)
-            .map((product: IProduct) => (
+            .map((product: any) => (
               <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
                 <Link to={`/detail/${product._id}`}>
                   <div className='relative'>

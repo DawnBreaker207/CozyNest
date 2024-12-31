@@ -1,21 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IProduct } from '@/types/product'
 import { useState } from 'react'
 
 export const useFilterProducts = (products: IProduct[]) => {
-  console.log(products)
-
   const filterProductsByPrice = (priceRanges: string[]) => {
     if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
 
     return products.filter((product) => {
-      console.log(product)
-
       // Duyệt qua các variants của sản phẩm để lấy giá từ sku_id
       return product.variants.some((variant) => {
-        console.log(variant)
-
         const price = variant?.sku_id?.price // Lấy giá từ sku_id, bỏ qua giảm giá nếu không có dữ liệu
-        console.log(price)
 
         if (priceRanges.includes('Dưới 1.000.000₫') && price < 1000000) return true
         if (priceRanges.includes('1.000.000₫ - 2.000.000₫') && price >= 1000000 && price <= 2000000) return true
@@ -29,7 +23,7 @@ export const useFilterProducts = (products: IProduct[]) => {
 
   return { filterProductsByPrice }
 }
-export const useSortProducts = (products: IProduct[]) => {
+export const useSortProducts = (products: any) => {
   const sortProducts = (key: string) => {
     switch (key) {
       // Chức năng sắp xếp giá từ thấp đến cao

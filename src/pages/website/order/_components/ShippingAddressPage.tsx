@@ -79,8 +79,6 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
   }
 
   const onFinish = (values: any) => {
-    console.log(values)
-
     const address = `${values.address}, ${getWardName(values.village)}, ${getDistrictName(values.district)}, ${getProvinceName(values.city)}`
     onNext({
       address,
@@ -89,8 +87,6 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
       phone_number: values.phone_number,
       email: values.email
     })
-    console.log(values) // Log dữ liệu để kiểm tra
-    // navigate('/checkout/payment'); // Nếu bạn muốn tự động điều hướng
   }
 
   return (

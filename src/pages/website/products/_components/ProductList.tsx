@@ -45,7 +45,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
 
   useEffect(() => {
     // Mặc định chọn màu đầu tiên cho mỗi sản phẩm khi render
-    const defaultVariants = products.reduce((acc, product) => {
+    const defaultVariants = products.reduce((acc: any, product: any) => {
       acc[product._id] = 0 // Chọn màu đầu tiên
       return acc
     }, {})

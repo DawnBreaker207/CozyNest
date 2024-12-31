@@ -54,7 +54,6 @@ const useArticleMutation = ({ action, onSuccess }: useArticleMutationProps) => {
   })
 
   const onSubmit: SubmitHandler<IArticle> = async (article) => {
-    console.log('Data before mutation submission:', article)
     if (!article._id) {
       console.error('Missing _id for editing')
       return

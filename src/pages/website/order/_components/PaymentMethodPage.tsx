@@ -123,12 +123,9 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
     }
 
     try {
-      // Tạo đơn hàng trước
-      console.log(`Orders: ${finalOrderData.total_amount}`)
-      console.log('Products:', finalOrderData.products)
       const orderResponse = await instance.post('/orders', finalOrderData)
       const orderId = orderResponse.data?.res?._id
-      // console.log(orderId)
+
       Cookies.set('orderId', orderId, { expires: 1 / 24 })
       // Kiểm tra phương thức thanh toán và thực hiện chuyển hướng
       if (selectedPaymentMethod === 'momo') {

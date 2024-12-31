@@ -30,13 +30,11 @@ const HeaderAdmin = () => {
       okText: 'Đăng xuất',
       cancelText: 'Hủy',
       onOk: () => {
-        // Thực hiện đăng xuất
-        console.log('Đăng xuất thành công!')
         Logout()
         navigate('/login') // Điều hướng về trang login
       },
       onCancel: () => {
-        console.log('Hủy thao tác đăng xuất')
+        console.info('Hủy thao tác đăng xuất')
       }
     })
   }

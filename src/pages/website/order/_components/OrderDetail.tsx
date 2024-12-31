@@ -34,7 +34,6 @@ const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
 const OrderDetail = () => {
   const [order, setOrder] = useState<any>(null)
-  console.log('🚀 ~ OrderDetail ~ order:', order)
   const [returnOrder, setReturnOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [refundOrder, setRefundOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [loading, setLoading] = useState<boolean>(true)
@@ -43,10 +42,8 @@ const OrderDetail = () => {
   const orderId = params.get('orderId')
   const navigate = useNavigate()
   window.scrollTo({ top: 0, behavior: 'smooth' })
-  console.log(returnOrder)
 
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null)
-  console.log('🚀 ~ OrderDetail ~ selectedProduct:', selectedProduct)
   const [form] = Form.useForm()
   const [image, setImage] = useState<{ file: File; name: string } | null>(null)
   const [messageApi, contextHolder] = message.useMessage()
@@ -148,8 +145,6 @@ const OrderDetail = () => {
       return response.data
     }
   })
-  console.log(data)
-
   useEffect(() => {
     setLoading(true)
     if (data?.res) {
@@ -551,7 +546,6 @@ const OrderDetail = () => {
               title: 'Đánh giá',
               key: 'review',
               render: (_, review) => {
-                console.log('🚀 ~ OrderDetail ~ review:', review)
                 return (
                   <>
                     {order?.status === 'Completed' ? (

@@ -55,7 +55,7 @@ const useCouponMutation = ({ action, onSuccess }: useCouponMutationProps) => {
       }
     },
     onError: (error) => {
-      console.log(error)
+      console.error(error)
       messageApi.error({
         content: 'Có lỗi xảy ra trong quá trình xử lý',
         duration: 2

@@ -81,8 +81,6 @@ const PaymentResultPage = () => {
       const orderId = Cookies.get('orderId')
       // Lấy dữ liệu đơn hàng từ backend
       const { data: currentOrder } = await instance.get(`/orders/${orderId}`)
-      console.log(currentOrder)
-
       // Kiểm tra nếu trạng thái thanh toán là "Unpaid", chuyển hướng đến payment_url
       if (currentOrder?.res?.payment_status === 'Unpaid') {
         const paymentUrl = currentOrder?.res?.payment_url

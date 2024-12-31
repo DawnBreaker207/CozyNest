@@ -71,7 +71,6 @@ const AdminOrderDetail = () => {
       const response = await instance.patch(`/orders/cancel/${id}`)
 
       if (response.data.res) {
-        console.log('Hủy đơn hàng thành công', response.data.res)
         setCurrentStatus('Cancelled') // Cập nhật trạng thái là "Cancelled"
         queryClient.invalidateQueries({
           queryKey: ['orderDetail', id]
@@ -102,8 +101,6 @@ const AdminOrderDetail = () => {
   }
 
   const handleStatusChange = (orderId: string, newStatus: string) => {
-    console.log('Order ID:', orderId) // Debugging log
-
     Modal.confirm({
       title: 'Bạn có chắc chắn muốn cập nhật trạng thái? Sau khi cập nhật không thể hoàn tác.',
       icon: <ExclamationCircleOutlined />,
@@ -124,7 +121,6 @@ const AdminOrderDetail = () => {
       </div>
     )
   if (isError) return <div>Lỗi khi tải chi tiết đơn hàng</div>
-  console.log(data)
   const order = data?.res
   const statusColors = {
     Processing: 'blue',

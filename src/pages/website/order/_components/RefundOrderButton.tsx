@@ -77,9 +77,6 @@ const RefundOrderButton = ({ order, currentStatus }: any) => {
       setLoading(false) // Tắt trạng thái loading
     }
   }
-  console.log('order:', order)
-  console.log('order.status:', order?.status)
-  console.log('order.payment_status:', order?.payment_status)
 
   return (
     <>

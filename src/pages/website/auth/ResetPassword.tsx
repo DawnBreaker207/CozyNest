@@ -7,13 +7,11 @@ const ResetPassword = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
   const onFinish = (values: { email: string }) => {
-    console.log('Reset Password Info:', values)
-    // Gửi yêu cầu lấy lại mật khẩu đến server ở đây
     mutate(values)
   }
 
   const onFinishFailed = (errorInfo: unknown) => {
-    console.log('Failed:', errorInfo)
+    console.error('Failed:', errorInfo)
   }
 
   const { mutate } = useMutation({
@@ -28,7 +26,7 @@ const ResetPassword = () => {
     },
     onError: (error) => {
       messageApi.success('Yêu cầu đặt lại mật khẩu thất bại!')
-      console.log(error)
+      console.error(error)
     }
   })
 

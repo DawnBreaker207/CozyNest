@@ -4,12 +4,12 @@ import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
-type Props = {}
+
 type FieldType = {
   label: string
   value: string
 }
-const AdminOptionValueAdd = (props: Props) => {
+const AdminOptionValueAdd = () => {
   const { product_id, option_id } = useParams()
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
@@ -39,7 +39,6 @@ const AdminOptionValueAdd = (props: Props) => {
     }
   })
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values)
     mutate(values)
     form.resetFields()
   }

@@ -52,22 +52,10 @@ const AdminCustomerPage = () => {
       const currentUser = currentUserRole ? JSON.parse(currentUserRole) : null
       const currentUserRoles = currentUser?.role
 
-      console.log(currentUserRoles) // Lấy giá trị role của người dùng
-
       // Kiểm tra nếu người dùng là superAdmin
       if (currentUserRoles !== 'superAdmin') {
         messageApi.warning('Chỉ có superAdmin mới có quyền thay đổi vai trò người dùng')
         return
-      }
-
-      // Kiểm tra và cập nhật vai trò dựa trên vai trò hiện tại
-      let validRoles: string[] = []
-      if (user.role === 'admin') {
-        validRoles = ['admin'] // Admin không thể chọn các role khác
-      } else if (user.role === 'shipper') {
-        validRoles = ['admin', 'shipper'] // Shipper chỉ có thể chọn admin
-      } else if (user.role === 'member') {
-        validRoles = ['admin', 'member', 'shipper'] // User có thể chọn tất cả trừ superAdmin
       }
 
       // Cập nhật vai trò người dùng

@@ -19,8 +19,7 @@ export const getCategoryById = async (id: number | string | undefined) => {
     const { data } = await instance.get(`/categories/${id}`, {})
     return data.res
   } catch (error) {
-    console.log(error)
-    throw error
+    return error
   }
 }
 
@@ -30,19 +29,17 @@ export const addCategory = async (category: Partial<ICategory>) => {
     const { data } = await instance.post('/categories', category)
     return data.res
   } catch (error) {
-    console.log(error)
-    throw error
+    return error
   }
 }
 
 // Xóa một danh mục
-export const removeCategory = async (category: Partial<ICategory>): Promise<void> => {
+export const removeCategory = async (category: Partial<ICategory>) => {
   try {
     await instance.patch(`/categories/${category._id}`)
     return
   } catch (error) {
-    console.log(error)
-    throw error
+    return error
   }
 }
 
@@ -57,7 +54,6 @@ export const editCategory = async (category: Partial<ICategory>) => {
     })
     return response.data
   } catch (error) {
-    console.log(error)
-    throw error
+    return error
   }
 }

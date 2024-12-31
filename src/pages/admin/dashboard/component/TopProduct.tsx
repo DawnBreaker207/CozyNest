@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
+import { formatCurrency } from '@/utils/formatCurrency'
 import { useQuery } from '@tanstack/react-query'
 import { Table } from 'antd'
 
-type Props = {}
-
-const TopProduct = (props: Props) => {
+const TopProduct = () => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['orders'],
     queryFn: async () => {
@@ -60,7 +60,7 @@ const TopProduct = (props: Props) => {
     SKU: product.SKU,
     quantity: product.quantity,
     name: product.name,
-    price: product.price,
+    price: formatCurrency(product.price),
     image: product.image.length > 0 ? product.image[0] : '' // Lấy ảnh đầu tiên nếu có
   }))
 

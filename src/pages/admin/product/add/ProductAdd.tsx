@@ -40,11 +40,10 @@ const ProductAddPage = () => {
     const thumbnailUrl = thumbnail ? await uploadFileCloudinary(thumbnail.file) : ''
 
     const updatedValues = { ...values, thumbnail: thumbnailUrl } // Cập nhật thumbnail
-    console.log(updatedValues) // Kiểm tra giá trị trước khi gửi
     mutate(updatedValues)
   }
   const handleQuillChange = (value: string) => {
-    console.log('Mô tả sản phẩm:', value)
+    return value
   }
   return (
     <>

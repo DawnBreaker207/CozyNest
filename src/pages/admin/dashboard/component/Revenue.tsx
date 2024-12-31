@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { useQuery } from '@tanstack/react-query'

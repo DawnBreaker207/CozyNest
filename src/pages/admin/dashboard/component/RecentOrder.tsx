@@ -40,7 +40,21 @@ const RecentOrder = () => {
   const sortedOrders = orders?.sort(
     (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   )
-
+  const statuses = [
+    { label: 'Đang xử lý', value: 'Processing' },
+    { label: 'Chờ xác nhận', value: 'Pending' },
+    { label: 'Đã xác nhận', value: 'Confirmed' },
+    { label: 'Đang chờ bên vận chuyển', value: 'Pending-Ship' },
+    { label: 'Đang vận chuyển', value: 'Delivering' },
+    { label: 'Giao hàng thành công', value: 'Delivered' },
+    { label: 'Đơn hàng hoàn thành', value: 'Completed' },
+    { label: 'Tiến hành hoàn trả', value: 'Returning' },
+    { label: 'Từ chối hoàn trả', value: 'Rejected' },
+    { label: 'Hoàn trả đơn hàng', value: 'Returned' },
+    { label: 'Tiến hành hoàn tiền', value: 'Refunding' },
+    { label: 'Hoàn tiền đơn hàng', value: 'Refunded' },
+    { label: 'Đã hủy đơn hàng', value: 'Cancelled' }
+  ]
   //* Lấy 5 đơn hàng gần nhất
   const latestOrders = sortedOrders?.slice(0, 5)
   const columns = useMemo(
@@ -65,20 +79,7 @@ const RecentOrder = () => {
         title: 'Trạng Thái',
         dataIndex: 'status',
         key: 'status',
-        render: (
-          status:
-            | 'Processing'
-            | 'Pending'
-            | 'Confirmed'
-            | 'Pending-Ship'
-            | 'Delivering'
-            | 'Delivered'
-            | 'Cancelled'
-            | 'Completed'
-            | 'Returned'
-            | 'Refunded'
-        ) => {
-          // Ánh xạ trạng thái với màu tương ứng
+        render: (status: string) => {
           const statusColors: { [key in typeof status]: string } = {
             Processing: 'blue',
             Pending: 'yellow',
@@ -88,10 +89,17 @@ const RecentOrder = () => {
             Delivered: 'green',
             Cancelled: 'red',
             Completed: 'cyan',
-            Returned: 'magenta',
+            Returning: 'orange',
+            Rejected: 'red',
+            Returned: 'red',
+            Refunding: 'orange',
             Refunded: 'purple'
           }
-          return <Tag color={statusColors[status] || 'gray'}>{status.replace('-', ' ')}</Tag>
+
+          // Tìm trạng thái trong mảng statuses và lấy label tiếng Việt
+          const statusLabel = statuses.find((s) => s.value === status)?.label || status
+
+          return <Tag color={statusColors[status] || 'gray'}>{statusLabel}</Tag>
         }
       }
     ],
