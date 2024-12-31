@@ -48,8 +48,6 @@ const getStatusClass = (status: string) => {
 
 const fetchOrderByUserId = async (userId: any) => {
   const response = await instance.get(`orders/orderByUserId?id=${userId}`)
-  console.log(response.data.res.items)
-
   return response.data.res.items
 }
 
@@ -118,7 +116,6 @@ const OrderPage = () => {
   // Xác định đơn hàng hiển thị theo trang
   const startIndex = (currentPage - 1) * pageSize
   const currentOrders = sortedOrders.slice(startIndex, startIndex + pageSize)
-  console.log(currentOrders)
 
   const handleOrderClick = (orderId: string) => {
     const orderRef = orderRefs.current[orderId]

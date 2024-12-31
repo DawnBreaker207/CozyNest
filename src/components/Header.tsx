@@ -3,7 +3,6 @@ import instance from '@/configs/axios'
 import { useCartStore } from '@/hooks/store/cartStore'
 import { useAdminUser } from '@/hooks/useAdminUsersQuery'
 import useCart from '@/hooks/useCart'
-import { useCookie } from '@/hooks/useStorage'
 import { useUser } from '@/hooks/useUser'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
@@ -37,7 +36,7 @@ const Header = () => {
   const { token } = useToken()
   const { calculateTotal, mutate } = useCart()
 
-  const { Logout, user, userId } = useUser()
+  const { Logout, userId } = useUser()
   const { products, quantities, setQuantity } = useCartStore()
   const [isVisible, setIsVisible] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -152,15 +151,6 @@ const Header = () => {
     calculateTotal()
   }, [quantities, calculateTotal])
 
-  // const show = () => {
-  //   if (!userId) {
-  //     // Nếu không có userId, chuyển hướng đến trang đăng nhập
-  //     window.location.href = '/login'
-  //   } else {
-  //     setOpen(true) // Mở Drawer nếu đã đăng nhập
-  //   }
-  // }
-
   const contentStyle: React.CSSProperties = {
     backgroundColor: token.colorBgElevated,
     borderRadius: token.borderRadiusLG,
@@ -168,73 +158,67 @@ const Header = () => {
   }
   // type SearchProps = GetProps<typeof Input.Search>
   const { Search } = Input
-  // const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value)
 
-  // if (error) {
-  //   Logout()
-  //   return window.location.reload()
-  // }
-
-  const userJson = useCookie('user', {})
-  const role = userJson ? userJson?.[0].role : null
-
-  const users: MenuProps['items'] = user
-    ? [
-        {
-          label: <a href='/profile'>Thông tin tài khoản</a>,
-          key: '0'
-        },
-        {
-          label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
-          key: '1'
-        },
-        ...(role === 'admin' || role === 'superAdmin'
-          ? [
-              {
-                label: <a href='/admin'>Quản lý</a>, // Admin: Link đến trang quản lý admin
-                key: '2'
-              }
-            ]
-          : []),
-        ...(role === 'shipper'
-          ? [
-              {
-                label: <a href='/admin/order'>Quản lý đơn hàng</a>, // Shipper: Link đến trang quản lý đơn hàng
-                key: '2'
-              }
-            ]
-          : []),
-        { type: 'divider' }, // Đường kẻ phân cách
-        {
-          label: (
-            <a href='/' onClick={Logout}>
-              Đăng xuất
-            </a>
-          ),
-          key: '3'
-        }
-      ]
-    : window.innerWidth < 800
+  const { user: userJson } = useUser()
+  const role = userJson && Object.keys(userJson).length > 0 ? userJson.role : null
+  const users: MenuProps['items'] =
+    userJson && Object.keys(userJson).length > 0
       ? [
           {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
-            key: '1'
+            label: <a href='/profile'>Thông tin tài khoản</a>,
+            key: '0'
           },
           {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
-          }
-        ]
-      : [
-          {
-            label: <NavLink to='/register'>Đăng ký</NavLink>,
+            label: <a href='/orders'>Đơn hàng</a>, // Liên kết đến trang đơn hàng
             key: '1'
           },
+          ...(role === 'admin' || role === 'superAdmin'
+            ? [
+                {
+                  label: <a href='/admin'>Quản lý</a>, // Admin: Link đến trang quản lý admin
+                  key: '2'
+                }
+              ]
+            : []),
+          ...(role === 'shipper'
+            ? [
+                {
+                  label: <a href='/admin/order'>Quản lý đơn hàng</a>, // Shipper: Link đến trang quản lý đơn hàng
+                  key: '2'
+                }
+              ]
+            : []),
+          { type: 'divider' }, // Đường kẻ phân cách
           {
-            label: <NavLink to='/login'>Đăng nhập</NavLink>,
-            key: '2'
+            label: (
+              <a href='/' onClick={Logout}>
+                Đăng xuất
+              </a>
+            ),
+            key: '3'
           }
         ]
+      : window.innerWidth < 800
+        ? [
+            {
+              label: <NavLink to='/register'>Đăng ký</NavLink>,
+              key: '1'
+            },
+            {
+              label: <NavLink to='/login'>Đăng nhập</NavLink>,
+              key: '2'
+            }
+          ]
+        : [
+            {
+              label: <NavLink to='/register'>Đăng ký</NavLink>,
+              key: '1'
+            },
+            {
+              label: <NavLink to='/login'>Đăng nhập</NavLink>,
+              key: '2'
+            }
+          ]
 
   const handleDelete = () => {
     // Thực hiện hành động mutate
@@ -389,7 +373,7 @@ const Header = () => {
             >
               <span onClick={(e) => e.preventDefault()}>
                 <Space>
-                  {user ? (
+                  {userJson && Object.keys(userJson).length > 0 ? (
                     <div className='flex'>
                       <Button shape='circle' className='mt-1.5'>
                         <img src={userData?.avatar} alt='user' className='w-[32px] h-[32px] rounded-full' />

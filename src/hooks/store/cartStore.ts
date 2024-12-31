@@ -32,7 +32,7 @@ interface CartStore {
   selectedColorId: string | null
   isCartVisible: boolean
   colors: Color[]
-  selectedProduct: IProduct | null
+  selectedProduct: any | null
   selectedSkuId: string | null | number
   setQuantity: (quantity: number) => void
   setActiveImageIndex: (index: number) => void

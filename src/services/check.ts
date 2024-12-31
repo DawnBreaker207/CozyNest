@@ -49,8 +49,8 @@ const Token = () => {
   const location = useLocation()
   const fetchData = async () => {
     try {
-      const response = await instance.get('orders', { withCredentials: true })
-      console.log('Data:', response.data)
+      const { data } = await instance.get('orders', { withCredentials: true })
+      return data
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status
@@ -80,7 +80,6 @@ const Token = () => {
       }
     } else {
       Cookies.remove('user')
-      console.log(Cookies.remove('user'))
     }
   }, [location, navigate])
 

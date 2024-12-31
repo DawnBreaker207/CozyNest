@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Table, Button, Popconfirm, message, Select, Spin } from 'antd'
 import { useState } from 'react'

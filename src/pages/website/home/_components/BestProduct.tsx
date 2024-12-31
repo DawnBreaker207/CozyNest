@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
 import { getAllProducts } from '@/services/product'
@@ -6,11 +7,9 @@ import { useQuery } from '@tanstack/react-query'
 import { Button } from 'antd'
 import { useEffect, useState } from 'react'
 import { FaRegEye } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
-type Props = {}
 
-const BestProduct = (props: Props) => {
-  const { data, isLoading, isError, error } = useQuery({
+const BestProduct = () => {
+  const { isLoading, isError, error } = useQuery({
     queryKey: ['orders'],
     queryFn: async () => {
       try {
@@ -33,7 +32,6 @@ const BestProduct = (props: Props) => {
     }
     fetchProducts()
   }, [])
-  console.log(products)
   if (isLoading) return <CustomLoadingPage />
   if (isError) return <div>{error?.message}</div>
   return (
@@ -65,8 +63,7 @@ const BestProduct = (props: Props) => {
             .slice(0, 5) // Lấy 5 sản phẩm đầu tiên
             .map((product) => {
               const firstVariant = product?.variants?.[0]
-              const price = firstVariant?.sku_id?.price || 0
-
+              // const price = firstVariant?.sku_id?.price || 0
               return (
                 <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
                   <div className='relative'>

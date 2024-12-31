@@ -7,7 +7,7 @@ import { IProduct } from '@/types/product'
 import { vietnameseChars1 } from '@/validations/validate'
 import { BackwardOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Form, Input, message, Select, Spin, Switch } from 'antd'
+import { Button, Form, Input, message, Select, Switch } from 'antd'
 import { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css' // Import React Quill CSS

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import instance from '@/configs/axios'
-import Cookies from 'js-cookie'
-import { Button, notification, Spin } from 'antd'
 import CustomLoadingPage from '@/components/Loading'
+import instance from '@/configs/axios'
+import { Button, notification } from 'antd'
+import Cookies from 'js-cookie'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const PaymentResultPage = () => {
   const location = useLocation()
@@ -23,7 +23,7 @@ const PaymentResultPage = () => {
     const vnpResponseCode = searchParams.get('vnp_ResponseCode') // Mã phản hồi từ VNPay
 
     // Dữ liệu ZaloPay
-    const amount = searchParams.get('amount') // Số tiền thanh toán
+    // const amount = searchParams.get('amount') // Số tiền thanh toán
     const appid = searchParams.get('appid') // Mã ứng dụng
     const apptransid = searchParams.get('apptransid') // Mã giao dịch của ứng dụng
     const checksum = searchParams.get('checksum') // Checksum để kiểm tra tính hợp lệ
@@ -81,8 +81,6 @@ const PaymentResultPage = () => {
       const orderId = Cookies.get('orderId')
       // Lấy dữ liệu đơn hàng từ backend
       const { data: currentOrder } = await instance.get(`/orders/${orderId}`)
-      console.log(currentOrder)
-
       // Kiểm tra nếu trạng thái thanh toán là "Unpaid", chuyển hướng đến payment_url
       if (currentOrder?.res?.payment_status === 'Unpaid') {
         const paymentUrl = currentOrder?.res?.payment_url

@@ -4,9 +4,9 @@ import useProductMutation from '@/hooks/useProductMutation'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
 import { vietnameseChars1 } from '@/validations/validate'
-import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { BackwardOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Checkbox, Form, Input, InputNumber, message, Select, Upload } from 'antd'
+import { Button, Checkbox, Form, Input, message, Select } from 'antd'
 import { useState } from 'react'
 import ReactQuill from 'react-quill'
 import { Link, useNavigate } from 'react-router-dom'
@@ -14,7 +14,7 @@ import { Link, useNavigate } from 'react-router-dom'
 const ProductAddPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
   // const [images, setImages] = useState<{ file: File; name: string }[]>([])
-  const [thumbnail, setThumbnail] = useState<{ file: File; name: string } | null>(null)
+  const [thumbnail] = useState<{ file: File; name: string } | null>(null)
   const navigate = useNavigate()
 
   const { mutate } = useProductMutation({
@@ -40,11 +40,10 @@ const ProductAddPage = () => {
     const thumbnailUrl = thumbnail ? await uploadFileCloudinary(thumbnail.file) : ''
 
     const updatedValues = { ...values, thumbnail: thumbnailUrl } // Cập nhật thumbnail
-    console.log(updatedValues) // Kiểm tra giá trị trước khi gửi
     mutate(updatedValues)
   }
   const handleQuillChange = (value: string) => {
-    console.log('Mô tả sản phẩm:', value)
+    return value
   }
   return (
     <>

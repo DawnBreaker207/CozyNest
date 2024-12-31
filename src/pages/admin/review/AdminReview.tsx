@@ -1,14 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { message, Rate, Select, Table } from 'antd'
 import { useState } from 'react'
 
-type Props = {}
-
-const AdminReview = (props: Props) => {
-  const [messageApi, contextHolder] = message.useMessage()
-  const queryClient = useQueryClient()
+const AdminReview = () => {
+  const [, contextHolder] = message.useMessage()
+  // const queryClient = useQueryClient()
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['reviews'],
@@ -21,30 +20,30 @@ const AdminReview = (props: Props) => {
     }
   })
 
-  const { mutate } = useMutation({
-    mutationFn: async (id: any) => {
-      try {
-        return await instance.delete(`/reviews/${id}`)
-      } catch (error) {
-        throw new Error((error as any).message)
-      }
-    },
-    onSuccess: () => {
-      messageApi.open({
-        type: 'success',
-        content: 'Xóa đánh giá thành công'
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['reviews']
-      })
-    },
-    onError: (error) => {
-      messageApi.open({
-        type: 'error',
-        content: error.message
-      })
-    }
-  })
+  // const { mutate } = useMutation({
+  //   mutationFn: async (id: any) => {
+  //     try {
+  //       return await instance.delete(`/reviews/${id}`)
+  //     } catch (error) {
+  //       throw new Error((error as any).message)
+  //     }
+  //   },
+  //   onSuccess: () => {
+  //     messageApi.open({
+  //       type: 'success',
+  //       content: 'Xóa đánh giá thành công'
+  //     })
+  //     queryClient.invalidateQueries({
+  //       queryKey: ['reviews']
+  //     })
+  //   },
+  //   onError: (error) => {
+  //     messageApi.open({
+  //       type: 'error',
+  //       content: error.message
+  //     })
+  //   }
+  // })
 
   const [ratingFilter, setRatingFilter] = useState<number | null>(null) // State for filtering by rating
 

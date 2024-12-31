@@ -52,22 +52,10 @@ const AdminCustomerPage = () => {
       const currentUser = currentUserRole ? JSON.parse(currentUserRole) : null
       const currentUserRoles = currentUser?.role
 
-      console.log(currentUserRoles) // Lấy giá trị role của người dùng
-
       // Kiểm tra nếu người dùng là superAdmin
       if (currentUserRoles !== 'superAdmin') {
         messageApi.warning('Chỉ có superAdmin mới có quyền thay đổi vai trò người dùng')
         return
-      }
-
-      // Kiểm tra và cập nhật vai trò dựa trên vai trò hiện tại
-      let validRoles: string[] = []
-      if (user.role === 'admin') {
-        validRoles = ['admin'] // Admin không thể chọn các role khác
-      } else if (user.role === 'shipper') {
-        validRoles = ['admin', 'shipper'] // Shipper chỉ có thể chọn admin
-      } else if (user.role === 'member') {
-        validRoles = ['admin', 'member', 'shipper'] // User có thể chọn tất cả trừ superAdmin
       }
 
       // Cập nhật vai trò người dùng
@@ -136,7 +124,7 @@ const AdminCustomerPage = () => {
 
         let validRoles: string[] = []
         if (user.role === 'admin') {
-          validRoles = ['admin']
+          validRoles = ['admin', 'member']
         } else if (user.role === 'shipper') {
           validRoles = ['admin', 'shipper']
         } else if (user.role === 'member') {
@@ -149,9 +137,9 @@ const AdminCustomerPage = () => {
             onChange={(value) => handleRoleChange(user._id, value)}
             disabled={!isSuperAdmin || !validRoles.includes(role)} // Chỉ cho phép chọn vai trò hợp lệ
           >
-            {validRoles.includes('admin') && <Select.Option value="admin">Admin</Select.Option>}
-            {validRoles.includes('shipper') && <Select.Option value="shipper">Shipper</Select.Option>}
-            {validRoles.includes('member') && <Select.Option value="member">Member</Select.Option>}
+            {validRoles.includes('admin') && <Select.Option value='admin'>Admin</Select.Option>}
+            {validRoles.includes('shipper') && <Select.Option value='shipper'>Shipper</Select.Option>}
+            {validRoles.includes('member') && <Select.Option value='member'>Member</Select.Option>}
           </Select>
         )
       }
@@ -194,7 +182,7 @@ const AdminCustomerPage = () => {
             okText='Có'
             cancelText='Không'
           >
-            <Switch checked={status} onChange={(checked) => { }} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
+            <Switch checked={status} onChange={() => {}} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
           </Popconfirm>
         )
       }

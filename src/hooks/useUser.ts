@@ -1,10 +1,11 @@
 import instance from '@/configs/axios'
+import { IUsers } from '@/types/user'
 import { openNotify } from '@/utils/notification'
 import Cookies from 'js-cookie'
 import { useEffect, useMemo, useState } from 'react'
 
 export const useUser = () => {
-  const [user, setUser] = useState<string | null>(null)
+  const [user, setUser] = useState<IUsers | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
 
   // Hàm đọc thông tin user từ cookie
@@ -14,7 +15,7 @@ export const useUser = () => {
       try {
         const userData = JSON.parse(storedUser)
         return {
-          username: userData?.username || null,
+          username: userData || null,
           id: userData?._id || null
         }
       } catch (error) {
@@ -26,7 +27,7 @@ export const useUser = () => {
 
   useEffect(() => {
     const { username, id } = getUserFromCookie
-    setUser(username)
+    setUser({ ...username })
     setUserId(id)
   }, [getUserFromCookie])
 
@@ -35,11 +36,11 @@ export const useUser = () => {
       // Xóa các thông tin từ cookie
       Cookies.remove('user')
       await instance.delete('/auth/token') // Gọi API xóa token
-
       // Hiển thị thông báo và reset state
       openNotify('Success', 'Đăng xuất thành công!')
       setUser(null)
       setUserId(null)
+      window.location.reload()
     } catch (error) {
       console.error('Error while logging out:', error)
       openNotify('Error', 'Có lỗi xảy ra khi đăng xuất. Vui lòng thử lại!')

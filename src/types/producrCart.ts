@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ISku {
   image: any
   _id: string | number
@@ -11,7 +12,7 @@ export interface ISku {
   name: string
 }
 export interface IProductCart {
-  sku_id: ISku
+  sku_id: any
   _id: string | number
   name: string
   thumbnail: string

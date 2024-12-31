@@ -5,12 +5,11 @@ import { BackwardOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Form, FormProps, Input, message } from 'antd'
 import { Link, useParams } from 'react-router-dom'
-type Props = {}
 type FieldType = {
   label: string
   value?: string
 }
-const AdminOptionValueEdit = (props: Props) => {
+const AdminOptionValueEdit = () => {
   const { product_id, option_id, value_id } = useParams()
   const [messageApi, contextHolder] = message.useMessage()
   const queryClient = useQueryClient()
@@ -25,7 +24,6 @@ const AdminOptionValueEdit = (props: Props) => {
       }
     }
   })
-  console.log('🚀 ~ AdminOptionEdit ~ data:', data)
 
   const { mutate } = useMutation({
     mutationFn: async (formData: FieldType) => {
@@ -52,7 +50,6 @@ const AdminOptionValueEdit = (props: Props) => {
     }
   })
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values)
     mutate(values)
   }
   if (isLoading)

@@ -1,13 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons'
+import { BackwardOutlined, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table } from 'antd'
 import { Link, useParams } from 'react-router-dom'
 
-type Props = {}
-
-const AdminOption = (props: Props) => {
+const AdminOption = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const { product_id } = useParams()
   const queryClient = useQueryClient()

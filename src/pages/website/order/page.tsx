@@ -26,7 +26,6 @@ const CheckoutPage = () => {
     const fetchCoupons = async () => {
       try {
         const response = await instance.get('/coupon')
-        console.log('🚀 ~ fetchCoupons ~ response:', response)
 
         // Lọc các mã giảm giá
         const filteredCoupons = response.data?.res?.docs.filter((coupon: any) => {
@@ -75,7 +74,6 @@ const CheckoutPage = () => {
   }
 
   const handleSelectCoupon = (coupon: any) => {
-    console.log('Coupon selected:', coupon)
     setCouponCode(coupon.couponCode)
     setCouponName(coupon.name)
     setCouponValue(coupon.couponValue)

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllProducts, getProductById } from '@/services/product'
 import { IProduct } from '@/types/product'
 import { IQuery, ResAPI } from '@/types/responseApi'

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Cart } from '@/components/icons/index'
 import useCart from '@/hooks/useCart'
 import { IProduct } from '@/types/product'
@@ -32,7 +33,7 @@ const ProductList = ({ products }: ProductListProps) => {
           Sản phẩm mới ra mắt
         </h2>
         <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 items-center gap-5 lg:mx-[40px]  mt-4 mb-8'>
-          {products?.slice(0, 5).map((product: IProduct, index: number) => (
+          {products?.slice(0, 5).map((product: any, index: number) => (
             <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3 '>
               <Link to={`/detail/${product._id}`}>
                 <div className='relative'>

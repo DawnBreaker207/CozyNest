@@ -11,7 +11,7 @@ const ContactPage = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
   const onFinish = (values: string) => {
-    console.log('Received values:', values)
+    return values
   }
 
   return (

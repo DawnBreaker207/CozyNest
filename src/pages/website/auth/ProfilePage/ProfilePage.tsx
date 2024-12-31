@@ -59,7 +59,7 @@ const ProfilePage = () => {
         console.error('Lỗi khi phân tích dữ liệu từ cookie:', error)
       }
     } else {
-      console.log('Cookie "user" không tồn tại hoặc trống')
+      console.error('Cookie "user" không tồn tại hoặc trống')
     }
   }, [])
 
@@ -205,8 +205,6 @@ const ProfilePage = () => {
                 // Kiểm tra xem có dữ liệu người dùng và ảnh đại diện không
                 if (userData && avatar) {
                   const updatedUserData = { ...userData, avatar }
-                  console.log('Dữ liệu sau khi cập nhật avatar:', updatedUserData)
-
                   // Gọi mutation để cập nhật ảnh đại diện
                   mutate(updatedUserData, {
                     onSuccess: () => {

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticleQuery } from '@/hooks/useArticleQuery'
+import { useUser } from '@/hooks/useUser'
 import IArticle from '@/types/article'
-import { EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   Button,
@@ -22,9 +24,7 @@ import { ColumnGroupType, ColumnType } from 'antd/es/table'
 import { useState } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-
 import { Link } from 'react-router-dom'
-
 const { Paragraph } = Typography
 const { Panel } = Collapse
 
@@ -32,8 +32,16 @@ const AdminArticlePage = () => {
   const queryClient = useQueryClient()
   const [currentPage, setCurrentPage] = useState(1)
   const [messageApi, contextHolder] = message.useMessage()
+  const { userId } = useUser()
   const [sortOrder, setSortOrder] = useState('newest')
   const { data: articleData, isLoading, isError } = useArticleQuery()
+  const { mutate: approveArticle } = useArticleMutation({
+    action: 'UPDATE',
+    onSuccess: () => {
+      messageApi.success('Article approved successfully')
+      queryClient.invalidateQueries({ queryKey: ['ARTICLE_KEY'] })
+    }
+  })
   const { mutate: deleteArticle } = useArticleMutation({
     action: 'DELETE',
     onSuccess: () => {
@@ -59,13 +67,21 @@ const AdminArticlePage = () => {
 
     return filteredCategories
   }
+  const handleApprove = (id: string, authorId: string) => {
+    if (userId === authorId) {
+      messageApi.info('Bạn là tác giả của bài viết này và không thể chấp thuận bài viết của chính mình')
+    } else {
+      approveArticle({ _id: id, isHidden: true })
+      messageApi.success('Bài viết đã được chấp thuận')
+    }
+  }
   const data =
-    filterCategories().map((item: IArticle) => ({
+    filterCategories().map((item: Partial<IArticle>) => ({
       key: item._id,
       ...item
     })) || []
 
-  const columns: (ColumnType<IArticle> | ColumnGroupType<IArticle>)[] = [
+  const columns: (ColumnType<Partial<IArticle>> | ColumnGroupType<Partial<IArticle>>)[] = [
     {
       title: 'Tiêu đề',
       dataIndex: 'title',
@@ -91,7 +107,7 @@ const AdminArticlePage = () => {
     {
       title: 'Nội dung',
       key: 'content',
-      render: (_text: string, record: IArticle) => (
+      render: (_text: string, record: Partial<IArticle>) => (
         <Collapse>
           {record.content && record.content.length > 0 ? (
             record.content.map((section, index: number) => (
@@ -127,7 +143,6 @@ const AdminArticlePage = () => {
         </Collapse>
       )
     },
-    ,
     {
       key: 'isHidden',
       title: 'Trạng thái hiển thị',
@@ -137,8 +152,19 @@ const AdminArticlePage = () => {
     {
       title: 'Hành động',
       key: 'actions',
-      render: (_text: string, record: IArticle) => (
+      render: (_text: string, record: Partial<IArticle>) => (
         <Space size='middle'>
+          {!record.isHidden && (
+            <Popconfirm
+              title='Chấp thuận bài viết?'
+              description='Bạn có chắc chắn muốn chấp thuận bài viết này?'
+              onConfirm={() => handleApprove(record._id as string, record.author_id as string)}
+              okText='Chấp thuận'
+              cancelText='Hủy'
+            >
+              <Button icon={<CheckCircleOutlined />} type='primary'></Button>
+            </Popconfirm>
+          )}
           <Link to={`/admin/articles/${record._id}`}>
             <Button icon={<EditOutlined />} />
           </Link>

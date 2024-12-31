@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Cart } from '@/components/icons'
 import useCart from '@/hooks/useCart'
 import { useProductQuery } from '@/hooks/useProductQuery'
@@ -39,13 +40,13 @@ const SearchResults = () => {
     }
   }, [data])
   // Chức năng sắp xếp giá từ thấp đến cao
-  const sortPriceAsc = (products: IProduct[]) => {
-    return products.sort((a, b) => a.price - b.price)
+  const sortPriceAsc = (products: any) => {
+    return products.sort((a: any, b: any) => a.price - b.price)
   }
 
   // Chức năng sắp xếp giá từ cao đến thấp
-  const sortPriceDesc = (products: IProduct[]) => {
-    return products.sort((a, b) => b.price - a.price)
+  const sortPriceDesc = (products: any) => {
+    return products.sort((a: any, b: any) => b.price - a.price)
   }
 
   // Chức năng sắp xếp theo tên từ A-Z
@@ -145,10 +146,10 @@ const SearchResults = () => {
     })
   }
 
-  const filterProductsByPrice = (products: IProduct[], priceRanges: string[]) => {
+  const filterProductsByPrice = (products: any, priceRanges: string[]) => {
     if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
 
-    return products.filter((product) => {
+    return products.filter((product: any) => {
       if (
         priceRanges.includes('Dưới 1.000.000₫') &&
         product?.price - product?.price * (product?.discount / 100) < 1000000
@@ -388,7 +389,7 @@ const SearchResults = () => {
             <h2 className='text-2xl text-gray-600'>Không có sản phẩm nào đúng theo yêu cầu!</h2>
           </div>
         ) : (
-          currentProducts.map((product: IProduct, index: number) => (
+          currentProducts.map((product: any, index: number) => (
             <div key={index} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
               <Link to={`/detail/${product._id}`}>
                 <div className='relative'>

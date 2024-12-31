@@ -23,8 +23,7 @@ export const getUserById = async (id: string | undefined) => {
     const { data } = await instance.get(`/users/${id}`)
     return data.res
   } catch (error) {
-    console.log(error)
-    throw error
+    return error
   }
 }
 
@@ -34,7 +33,6 @@ export const editUser = async (users: Partial<IUsers>) => {
     const { data } = await instance.patch(`/users/${users._id}`, users)
     return data.res
   } catch (error) {
-    console.log(error)
     throw new Error('Failed to update user')
   }
 }

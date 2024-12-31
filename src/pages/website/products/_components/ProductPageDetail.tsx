@@ -31,17 +31,7 @@ const ProductsPageDetail = () => {
 
   // Sắp xếp
   const [selectedKey, setSelectedKey] = useState('')
-  useEffect(() => {
-    if (selectedKey) {
-      handleMenuClick(selectedKey) // Gọi hàm sắp xếp khi selectedKey thay đổi
-    }
-  }, [selectedKey])
 
-  useEffect(() => {
-    if (data?.res?.products) {
-      setProducts(data.res.products) // Cập nhật dữ liệu
-    }
-  }, [data])
   const handleMenuClick = (key: string) => {
     const sortedProducts = [...products] // Clone mảng sản phẩm để tránh thay đổi trạng thái gốc
 
@@ -81,6 +71,18 @@ const ProductsPageDetail = () => {
     setProducts(sortedProducts)
     setSelectedKey(key)
   }
+  useEffect(() => {
+    if (selectedKey) {
+      handleMenuClick(selectedKey) // Gọi hàm sắp xếp khi selectedKey thay đổi
+    }
+  }, [selectedKey])
+
+  useEffect(() => {
+    if (data?.res?.products) {
+      setProducts(data.res.products) // Cập nhật dữ liệu
+    }
+  }, [data])
+
   const menuItems: MenuProps['items'] = [
     {
       key: '1',
@@ -146,14 +148,9 @@ const ProductsPageDetail = () => {
     if (priceRanges.length === 0) return products // Nếu không có khoảng giá nào được chọn, trả về tất cả sản phẩm
 
     return products.filter((product) => {
-      console.log(product)
-
       // Duyệt qua các variants của sản phẩm để lấy giá từ sku_id
       return product.variants.some((variant) => {
-        console.log(variant)
-
         const price = variant.sku_id.price // Lấy giá từ sku_id, bỏ qua giảm giá nếu không có dữ liệu
-        console.log(price)
 
         if (priceRanges.includes('Dưới 1.000.000₫') && price < 1000000) return true
         if (priceRanges.includes('1.000.000₫ - 2.000.000₫') && price >= 1000000 && price <= 2000000) return true
@@ -180,7 +177,6 @@ const ProductsPageDetail = () => {
   const endIndex = startIndex + productsPerPage
   const currentProducts = filteredProducts?.slice(startIndex, endIndex)
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
-  // console.log(currentProducts)
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {

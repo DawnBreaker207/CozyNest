@@ -35,12 +35,12 @@ export const addArticle = async (article: Partial<IArticle>) => {
     throw error
   }
 }
-export const softDeleteArticle = async (article: Partial<IArticle>): Promise<void> => {
+export const softDeleteArticle = async (article: Partial<IArticle>) => {
   try {
-    await instance.patch(`/articles/${article._id}`)
-    return
+    const { data } = await instance.patch(`/articles/${article._id}`)
+    return data.res
   } catch (error) {
-    console.log(error)
+    console.error(error)
     throw error
   }
 }

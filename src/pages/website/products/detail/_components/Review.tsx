@@ -103,8 +103,9 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
           <div className='flex gap-2 mb-4'>
             <button
               onClick={() => setSelectedRating(null)} // Đặt lại bộ lọc để hiển thị tất cả các đánh giá
-              className={`py-1 px-2 rounded-2xl ${selectedRating === null ? 'bg-[#fca120] text-white' : 'bg-gray-50 text-black'
-                }`}
+              className={`py-1 px-2 rounded-2xl ${
+                selectedRating === null ? 'bg-[#fca120] text-white' : 'bg-gray-50 text-black'
+              }`}
             >
               Tất cả
             </button>
@@ -112,8 +113,9 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
               <button
                 key={star}
                 onClick={() => setSelectedRating(star)} // Đặt đánh giá sao đã chọn khi người dùng nhấn
-                className={`py-1 px-2 rounded-2xl ${selectedRating === star ? 'bg-[#fca120] text-white' : 'bg-gray-50 text-black'
-                  }`}
+                className={`py-1 px-2 rounded-2xl ${
+                  selectedRating === star ? 'bg-[#fca120] text-white' : 'bg-gray-50 text-black'
+                }`}
               >
                 {star} <StarFilled className='text-sm text-[#fadb14]' />
               </button>

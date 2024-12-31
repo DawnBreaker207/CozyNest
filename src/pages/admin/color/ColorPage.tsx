@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCategoryQuery } from '@/hooks/useCategoryQuery' // Import hook để lấy danh mục
 import { useProductQuery } from '@/hooks/useProductQuery' // Import hook để lấy sản phẩm
 import { ICategory } from '@/types/category'
@@ -47,12 +48,12 @@ const ColorPage = () => {
     {
       key: 'categoryName', // Sử dụng key là 'categoryName'
       title: 'Tên danh mục',
-      render: (_text: string, product: IProduct) => {
+      render: (_text: string, product: any) => {
         if (Array.isArray(product.categoryId) && product.categoryId.length) {
           const categoryIds = product.categoryId.map((category: { _id: string }) => category._id)
 
           const categoryNames = categoryIds
-            .map((categoryId) => {
+            .map((categoryId: any) => {
               const category = categoriesData?.res?.find((category: ICategory) => category._id === categoryId)
               return category ? category.name : 'Không xác định'
             })

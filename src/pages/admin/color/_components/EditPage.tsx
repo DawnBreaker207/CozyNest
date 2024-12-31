@@ -14,7 +14,6 @@ const ColorEditPage = () => {
   const Api = useCallback(async () => {
     try {
       const { data } = await instance.get(`/variants/${id}/${variantId}`)
-      // console.log(data) // Kiểm tra dữ liệu
 
       if (data.res) {
         const variantData = data.res
@@ -45,8 +44,7 @@ const ColorEditPage = () => {
 
   // Form submission handler
   const onFinish = async (values: any) => {
-    console.log('Data to be sent:', values)
-    // Xử lý dữ liệu gửi đi
+    return values
   }
 
   return (

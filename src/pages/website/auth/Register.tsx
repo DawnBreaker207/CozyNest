@@ -37,7 +37,6 @@ const Register = () => {
   })
 
   const onFinish = (values: FieldType) => {
-    console.log('Form Values: ', values)
     mutate(values)
   }
 

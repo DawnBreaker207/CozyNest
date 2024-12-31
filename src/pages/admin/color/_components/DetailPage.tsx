@@ -31,7 +31,6 @@ const DetailPage = () => {
   // Chuẩn bị dữ liệu cho bảng với cột tên sản phẩm và màu sắc
   const productName = data?.name || 'Không có tên' // Lấy tên sản phẩm hoặc hiển thị 'Không có tên'
   const variants = data?.variants || [] // Đảm bảo variants không undefined
-  // console.log(variants)
 
   // Khi bạn lấy dữ liệu từ variants
   const colors = variants.map((variant: Variants) => ({

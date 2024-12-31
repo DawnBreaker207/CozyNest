@@ -1,24 +1,21 @@
 import { useCookie } from '@/hooks/useStorage'
-import { useUser } from '@/hooks/useUser'
 import {
   ApartmentOutlined,
   AppstoreOutlined,
   CalendarOutlined,
   CommentOutlined,
-  LogoutOutlined,
   OrderedListOutlined,
   UploadOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Layout, Menu, Modal } from 'antd'
+import { Layout, Menu } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import HeaderAdmin from './header/page'
-const { Header, Content, Footer, Sider } = Layout
+const { Content, Footer, Sider } = Layout
 
 const LayoutAdmin: React.FC = () => {
   const navigate = useNavigate()
-  const { Logout } = useUser()
   const userJson = useCookie('user', {})
   const role = userJson ? userJson?.[0].role : null
   console.log(role)
@@ -40,23 +37,23 @@ const LayoutAdmin: React.FC = () => {
       navigate('/admin/order?status=Pending-Ship')
     }
   }, [role])
-  const handleLogout = () => {
-    Modal.confirm({
-      title: 'Bạn có chắc chắn muốn đăng xuất không?',
-      content: 'Thao tác này sẽ đưa bạn trở về màn hình đăng nhập.',
-      okText: 'Đăng xuất',
-      cancelText: 'Hủy',
-      onOk: () => {
-        // Thực hiện đăng xuất
-        console.log('Đăng xuất thành công!')
-        Logout()
-        navigate('/login') // Điều hướng về trang login
-      },
-      onCancel: () => {
-        console.log('Hủy thao tác đăng xuất')
-      }
-    })
-  }
+  // const handleLogout = () => {
+  //   Modal.confirm({
+  //     title: 'Bạn có chắc chắn muốn đăng xuất không?',
+  //     content: 'Thao tác này sẽ đưa bạn trở về màn hình đăng nhập.',
+  //     okText: 'Đăng xuất',
+  //     cancelText: 'Hủy',
+  //     onOk: () => {
+  //       // Thực hiện đăng xuất
+  //       console.log('Đăng xuất thành công!')
+  //       Logout()
+  //       navigate('/login') // Điều hướng về trang login
+  //     },
+  //     onCancel: () => {
+  //       console.log('Hủy thao tác đăng xuất')
+  //     }
+  //   })
+  // }
   const [collapsed, setCollapsed] = useState(false)
   // const menu = (
   //   <Menu>

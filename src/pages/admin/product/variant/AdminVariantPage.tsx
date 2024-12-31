@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import instance from '@/configs/axios'
-import { IVariant } from '@/types/variant'
-import { BackwardOutlined, DeleteOutlined, EditOutlined, EyeInvisibleOutlined, PlusOutlined } from '@ant-design/icons'
+import { BackwardOutlined, EditOutlined, EyeInvisibleOutlined } from '@ant-design/icons'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, message, Popconfirm, Space, Table, Tag } from 'antd'
 import { Link, useParams } from 'react-router-dom'
@@ -20,7 +20,6 @@ const AdminVariantPage = () => {
       }
     }
   })
-  console.log('🚀 ~ AdminVariantPage ~ data:', data)
 
   const { mutate } = useMutation({
     mutationFn: async (sku_id: number | string) => {

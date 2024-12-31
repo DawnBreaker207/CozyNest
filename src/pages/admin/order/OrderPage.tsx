@@ -15,7 +15,7 @@ const AdminOrderPage = () => {
   const [user] = useCookie('user', {})
   const token = user?.data?.accessToken
   const [statusFilter, setStatusFilter] = useState<string | undefined>(initialStatusFilter) // Lưu trạng thái lọc
-  const [dateFilter, setDateFilter] = useState<any | undefined>(null) // Lưu ngày lọc
+  const [dateFilter] = useState<any | undefined>(null) // Lưu ngày lọc
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['orders'],

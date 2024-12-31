@@ -1,16 +1,18 @@
-import { useState } from 'react'
+import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useArticleMutation from '@/hooks/useArticleMutation'
+import { useUser } from '@/hooks/useUser'
+import { vietnameseChars2 } from '@/validations/validate'
+import { BackwardOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
-import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
-import { Link, useNavigate } from 'react-router-dom'
+import { RcFile } from 'antd/es/upload'
+import { useState } from 'react'
 import ReactQuill from 'react-quill' // Import ReactQuill
 import 'react-quill/dist/quill.snow.css' // Import Quill styles
-import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
-import { RcFile } from 'antd/es/upload'
-import { vietnameseChars2 } from '@/validations/validate'
+import { Link, useNavigate } from 'react-router-dom'
 
 const ArticleAddPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
+  const { userId } = useUser()
   const [content, setContent] = useState<{ heading: string; paragraph: string; images: RcFile[] }[]>([
     { heading: '', paragraph: '', images: [] }
   ])
@@ -49,7 +51,7 @@ const ArticleAddPage = () => {
       })
     )
 
-    const updatedValues = { ...values, content: contentWithUploadedImages, thumbnail: thumbnailUrl }
+    const updatedValues = { ...values, content: contentWithUploadedImages, thumbnail: thumbnailUrl, author_id: userId }
     mutate(updatedValues)
   }
 

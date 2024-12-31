@@ -4,7 +4,7 @@ import instance from '@/configs/axios'
 import useCart from '@/hooks/useCart'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Spin, Table, Typography, message } from 'antd'
+import { Button, Table, Typography, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
@@ -34,8 +34,6 @@ const CheckOutOrder = () => {
   })
 
   const orderData = order?.res
-  console.log(orderData)
-
   useEffect(() => {
     if (orderData && cartData?.res?.cart_id && !hasDeletedCart) {
       removeAllProductsFromCart()
@@ -71,7 +69,7 @@ const CheckOutOrder = () => {
       title: 'Hình ảnh',
       dataIndex: 'thumbnail',
       key: 'thumbnail',
-      render: (text, record) => {
+      render: (record: any) => {
         // Sử dụng trực tiếp từ `record` đã được map
         const image = record.thumbnail // Lấy hình ảnh từ `record.thumbnail`
 
@@ -101,7 +99,6 @@ const CheckOutOrder = () => {
     quantity: product.quantity,
     price: product.price
   }))
-  console.log(data)
 
   return (
     <div className='mx-auto'>
