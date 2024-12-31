@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 @layer tailwind-base, antd;
 
 @layer tailwind-base {
@@ -10,3 +11,51 @@
 
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    @apply font-Spectral;
+  }
+  .container {
+    @apply 2xl:px-16 lg:px-10 md:px-8 sm:px-6 px-4 mx-auto;
+  }
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  // Cart Page
+  .custom-tooltip {
+    max-width: 450px !important;
+  }
+
+  .custom-tooltip .ant-tooltip-inner {
+    background-color: white !important;
+    color: black !important;
+    margin-right: 30px;
+  }
+  .custom-tooltip .ant-tooltip-arrow::before {
+    background-color: darkgray !important;
+  }
+  @media only screen and (max-width: 600px) {
+    .custom-tooltip {
+      max-width: 350px !important;
+    }
+    .custom-tooltip .ant-tooltip-inner {
+      margin-right: 20px;
+    }
+  }
+  /* Thêm vào CSS của bạn */
+  .custom-quill .ql-editor {
+    @apply md:text-[18px] text-base;
+  }
+
+  .custom-quill .ql-bubble {
+    @apply md:text-[18px] text-base;
+  }
+}
+.ant-carousel {
+  .slick-dots {
+    bottom: -5px;
+  }
+}

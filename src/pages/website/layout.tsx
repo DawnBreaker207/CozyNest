@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 
 const LayoutWebsite = () => {
   return (
-    <div>
+    <div className='relative'>
       <Header />
       <Outlet />
       <Footer />
