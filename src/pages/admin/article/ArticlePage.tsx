@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CustomLoadingPage from '@/components/Loading'
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticleQuery } from '@/hooks/useArticleQuery'
@@ -23,9 +24,7 @@ import { ColumnGroupType, ColumnType } from 'antd/es/table'
 import { useState } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-
 import { Link } from 'react-router-dom'
-
 const { Paragraph } = Typography
 const { Panel } = Collapse
 
@@ -33,7 +32,7 @@ const AdminArticlePage = () => {
   const queryClient = useQueryClient()
   const [currentPage, setCurrentPage] = useState(1)
   const [messageApi, contextHolder] = message.useMessage()
-  const { userId } = useUser();
+  const { userId } = useUser()
   const [sortOrder, setSortOrder] = useState('newest')
   const { data: articleData, isLoading, isError } = useArticleQuery()
   const { mutate: approveArticle } = useArticleMutation({
@@ -70,11 +69,10 @@ const AdminArticlePage = () => {
   }
   const handleApprove = (id: string, authorId: string) => {
     if (userId === authorId) {
-      messageApi.info('Bạn là tác giả của bài viết này và không thể chấp thuận bài viết của chính mình');
+      messageApi.info('Bạn là tác giả của bài viết này và không thể chấp thuận bài viết của chính mình')
     } else {
       approveArticle({ _id: id, isHidden: true })
-      messageApi.success('Bài viết đã được chấp thuận');
-
+      messageApi.success('Bài viết đã được chấp thuận')
     }
   }
   const data =
@@ -156,18 +154,17 @@ const AdminArticlePage = () => {
       key: 'actions',
       render: (_text: string, record: Partial<IArticle>) => (
         <Space size='middle'>
-          {
-            !record.isHidden && (<Popconfirm
-              title="Chấp thuận bài viết?"
-              description="Bạn có chắc chắn muốn chấp thuận bài viết này?"
+          {!record.isHidden && (
+            <Popconfirm
+              title='Chấp thuận bài viết?'
+              description='Bạn có chắc chắn muốn chấp thuận bài viết này?'
               onConfirm={() => handleApprove(record._id as string, record.author_id as string)}
-              okText="Chấp thuận"
-              cancelText="Hủy"
+              okText='Chấp thuận'
+              cancelText='Hủy'
             >
-              <Button icon={<CheckCircleOutlined />} type="primary">
-              </Button>
-            </Popconfirm>)
-          }
+              <Button icon={<CheckCircleOutlined />} type='primary'></Button>
+            </Popconfirm>
+          )}
           <Link to={`/admin/articles/${record._id}`}>
             <Button icon={<EditOutlined />} />
           </Link>

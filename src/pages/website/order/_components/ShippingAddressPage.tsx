@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useUser } from '@/hooks/useUser'
 import { getDistricts, getProvinces, getWards } from '@/services/locationService'
 import { RightOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Select } from 'antd'
+import { useForm } from 'antd/es/form/Form'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -26,15 +28,29 @@ interface ShippingAddressPageProps {
 }
 
 const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => {
+  const { user } = useUser()
+  const [form] = useForm()
   const [provinces, setProvinces] = useState<Province[]>([])
   const [districts, setDistricts] = useState<District[]>([])
   const [wards, setWards] = useState<Ward[]>([])
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null)
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null)
-
   useEffect(() => {
     getProvinces().then(setProvinces)
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      form.setFieldsValue({
+        customer_name: user?.username ?? '',
+        phone_number: user?.phoneNumber ?? '',
+        email: user?.email ?? '',
+        city: '',
+        district: '',
+        address: ''
+      })
+    }
+  }, [user, form])
 
   const handleProvinceChange = async (value: any) => {
     setSelectedProvince(value)
@@ -85,7 +101,7 @@ const ShippingAddressPage: React.FC<ShippingAddressPageProps> = ({ onNext }) => 
         </p>
       </span>
       <h2 className='text-lg font-semibold mb-4'>Địa chỉ giao hàng</h2>
-      <Form className='' layout='vertical' onFinish={onFinish}>
+      <Form className='' layout='vertical' onFinish={onFinish} form={form}>
         <Form.Item
           name='customer_name'
           rules={[

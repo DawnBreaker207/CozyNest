@@ -1,22 +1,20 @@
-import { useState, useEffect, useMemo } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { FaRegEye } from 'react-icons/fa'
-import { Button, message } from 'antd'
 import useCart from '@/hooks/useCart'
-import instance from '@/configs/axios'
-import { Cart } from '@/components/icons'
+import { getAllCategories } from '@/services/category'
+import { getAllProducts } from '@/services/product'
 import { ICategory } from '@/types/category'
 import { IProduct } from '@/types/product'
+import { Button, message } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
+import { FaRegEye } from 'react-icons/fa'
+import { Link, useParams } from 'react-router-dom'
 import { formatCurrency } from '../../../utils/formatCurrency'
-import { getAllProducts } from '@/services/product'
-import { getAllCategories } from '@/services/category'
 
 const CategoryProductsPage = () => {
   const [products, setProducts] = useState<IProduct[]>([])
   const [categories, setCategories] = useState<ICategory[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const productsPerPage = 5 // Số sản phẩm mỗi trang
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi] = message.useMessage()
 
   const { addToCart } = useCart()
   const { id } = useParams()

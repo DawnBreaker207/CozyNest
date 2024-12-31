@@ -194,7 +194,7 @@ const AdminCustomerPage = () => {
             okText='Có'
             cancelText='Không'
           >
-            <Switch checked={status} onChange={(checked) => {}} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
+            <Switch checked={status} onChange={() => {}} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
           </Popconfirm>
         )
       }

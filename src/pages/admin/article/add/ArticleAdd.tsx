@@ -6,13 +6,13 @@ import { BackwardOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icon
 import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 import { useState } from 'react'
-import ReactQuill from 'react-quill'; // Import ReactQuill
-import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import ReactQuill from 'react-quill' // Import ReactQuill
+import 'react-quill/dist/quill.snow.css' // Import Quill styles
 import { Link, useNavigate } from 'react-router-dom'
 
 const ArticleAddPage = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { userId } = useUser();
+  const { userId } = useUser()
   const [content, setContent] = useState<{ heading: string; paragraph: string; images: RcFile[] }[]>([
     { heading: '', paragraph: '', images: [] }
   ])

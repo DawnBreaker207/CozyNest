@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { uploadFileCloudinary } from '@/hooks/uploadCloudinary'
 import useArticleMutation from '@/hooks/useArticleMutation'
 import { useArticle } from '@/hooks/useArticleQuery'
 import IArticle from '@/types/article'
 import { vietnameseChars2 } from '@/validations/validate'
-import { BackwardOutlined, CaretRightOutlined, CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { BackwardOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, message, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 import { useEffect, useState } from 'react'

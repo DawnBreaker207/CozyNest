@@ -19,11 +19,6 @@ type ProductListProps = {
   }
 }
 
-interface Color {
-  id: string | number
-  value: string
-}
-
 const ProductList = ({ products = [] }: ProductListProps) => {
   // Sử dụng Zustand store thay vì useState
   const {
@@ -36,9 +31,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
     isCartVisible,
     setIsCartVisible,
     colors,
-    setColors,
     selectedProduct,
-    setSelectedProduct,
     selectedSkuId,
     setSelectedSkuId
   } = useCartStoreHeader()
@@ -48,7 +41,7 @@ const ProductList = ({ products = [] }: ProductListProps) => {
   const [user] = useCookie('user', {})
   const userId = user?._id
   const { addToCart } = useCart() // Zustand store để thêm vào giỏ hàng
-  const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: number }>({})
+  const [, setSelectedVariants] = useState<{ [key: string]: number }>({})
 
   useEffect(() => {
     // Mặc định chọn màu đầu tiên cho mỗi sản phẩm khi render
@@ -85,35 +78,35 @@ const ProductList = ({ products = [] }: ProductListProps) => {
     setSelectedColorId(null)
   }
 
-  const handleAddToCart = (productId: string) => {
-    if (!userId) {
-      messageApi.warning('Bạn chưa đăng nhập.')
-      return
-    }
-    const foundProduct = products ? products.find((product) => product._id === productId) : undefined
+  // const handleAddToCart = (productId: string) => {
+  //   if (!userId) {
+  //     messageApi.warning('Bạn chưa đăng nhập.')
+  //     return
+  //   }
+  //   const foundProduct = products ? products.find((product) => product._id === productId) : undefined
 
-    if (foundProduct) {
-      setSelectedProduct(foundProduct)
-      setQuantity(1)
-      const productColors =
-        foundProduct.variants?.map((variant: any) => ({
-          id: variant?.sku_id?._id,
-          value: variant?.option_value_id?.value
-        })) || []
+  //   if (foundProduct) {
+  //     setSelectedProduct(foundProduct)
+  //     setQuantity(1)
+  //     const productColors =
+  //       foundProduct.variants?.map((variant: any) => ({
+  //         id: variant?.sku_id?._id,
+  //         value: variant?.option_value_id?.value
+  //       })) || []
 
-      setColors(productColors?.filter((color: Color) => color.value)) // Lọc các màu sắc
-      if (foundProduct?.variants.length === 1) {
-        const singleVariant = foundProduct.variants[0]
-        const singleSkuId = singleVariant.sku_id._id
-        addToCart(singleSkuId, 1)
-        messageApi.success('Thêm vào giỏ hàng thành công') // Thêm sản phẩm vào giỏ hàng ngay lập tức nếu chỉ có 1 biến thể
-      } else {
-        setIsCartVisible(true) // Mở giỏ hàng để người dùng chọn màu sắc
-      }
-    } else {
-      messageApi.error('Sản phẩm không tồn tại!')
-    }
-  }
+  //     setColors(productColors?.filter((color: Color) => color.value)) // Lọc các màu sắc
+  //     if (foundProduct?.variants.length === 1) {
+  //       const singleVariant = foundProduct.variants[0]
+  //       const singleSkuId = singleVariant.sku_id._id
+  //       addToCart(singleSkuId, 1)
+  //       messageApi.success('Thêm vào giỏ hàng thành công') // Thêm sản phẩm vào giỏ hàng ngay lập tức nếu chỉ có 1 biến thể
+  //     } else {
+  //       setIsCartVisible(true) // Mở giỏ hàng để người dùng chọn màu sắc
+  //     }
+  //   } else {
+  //     messageApi.error('Sản phẩm không tồn tại!')
+  //   }
+  // }
 
   const handleColorSelect = (id: any) => {
     setSelectedColorId(id)
@@ -378,8 +371,6 @@ const ProductList = ({ products = [] }: ProductListProps) => {
             .map((product: any) => {
               // Kiểm tra các variant và lấy giá trị từ sku_id
               const firstVariant = product?.variants?.[0]
-              console.log('firstVariant', firstVariant)
-
               return (
                 <div key={product._id} className='group overflow-hidden hover:shadow-lg rounded-lg pb-3'>
                   <div className='relative'>
