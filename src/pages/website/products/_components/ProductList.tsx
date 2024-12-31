@@ -132,8 +132,9 @@ const ProductList = ({ products = [] }: ProductListProps) => {
       {/* Data cart */}
       {selectedProduct && ( // Đảm bảo chỉ render nếu selectedProduct tồn tại
         <div
-          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-            }`}
+          className={`fixed lg:p-60 inset-0 z-50 bg-black bg-opacity-70 flex justify-center items-center transform duration-200 ease-in-out ${
+            isCartVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+          }`}
         >
           <div className='bg-white p-5 rounded-lg'>
             <div className='float-right'>

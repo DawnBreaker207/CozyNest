@@ -136,7 +136,7 @@ const AdminCustomerPage = () => {
 
         let validRoles: string[] = []
         if (user.role === 'admin') {
-          validRoles = ['admin']
+          validRoles = ['admin', 'member']
         } else if (user.role === 'shipper') {
           validRoles = ['admin', 'shipper']
         } else if (user.role === 'member') {
@@ -149,9 +149,9 @@ const AdminCustomerPage = () => {
             onChange={(value) => handleRoleChange(user._id, value)}
             disabled={!isSuperAdmin || !validRoles.includes(role)} // Chỉ cho phép chọn vai trò hợp lệ
           >
-            {validRoles.includes('admin') && <Select.Option value="admin">Admin</Select.Option>}
-            {validRoles.includes('shipper') && <Select.Option value="shipper">Shipper</Select.Option>}
-            {validRoles.includes('member') && <Select.Option value="member">Member</Select.Option>}
+            {validRoles.includes('admin') && <Select.Option value='admin'>Admin</Select.Option>}
+            {validRoles.includes('shipper') && <Select.Option value='shipper'>Shipper</Select.Option>}
+            {validRoles.includes('member') && <Select.Option value='member'>Member</Select.Option>}
           </Select>
         )
       }
@@ -194,7 +194,7 @@ const AdminCustomerPage = () => {
             okText='Có'
             cancelText='Không'
           >
-            <Switch checked={status} onChange={(checked) => { }} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
+            <Switch checked={status} onChange={(checked) => {}} checkedChildren='Hoạt động' unCheckedChildren='Khóa' />
           </Popconfirm>
         )
       }

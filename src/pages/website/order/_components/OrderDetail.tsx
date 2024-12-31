@@ -148,7 +148,7 @@ const OrderDetail = () => {
       return response.data
     }
   })
-  console.log(data);
+  console.log(data)
 
   useEffect(() => {
     setLoading(true)
@@ -160,7 +160,6 @@ const OrderDetail = () => {
       // Lấy tên người xác nhận từ cookie
     }
     setLoading(false)
-
   }, [data])
   useEffect(() => {
     if (orderId) {

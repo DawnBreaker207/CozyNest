@@ -37,7 +37,9 @@ const RecentOrder = () => {
     }
   })
   const orders = data?.data?.res?.items
-  const sortedOrders = orders?.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  const sortedOrders = orders?.sort(
+    (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
 
   //* Lấy 5 đơn hàng gần nhất
   const latestOrders = sortedOrders?.slice(0, 5)
