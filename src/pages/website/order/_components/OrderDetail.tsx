@@ -34,7 +34,6 @@ const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
 const OrderDetail = () => {
   const [order, setOrder] = useState<any>(null)
-  const [reviewedProducts, setReviewedProducts] = useState<string[]>([])
   const [returnOrder, setReturnOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [refundOrder, setRefundOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [loading, setLoading] = useState<boolean>(true)
@@ -78,6 +77,9 @@ const OrderDetail = () => {
       })
       queryClient.invalidateQueries({
         queryKey: ['reviews']
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['orderDetail']
       })
     },
     onError: (error) => {
@@ -130,6 +132,7 @@ const OrderDetail = () => {
       comment: filterComment,
       image: imageUrl,
       product_id: selectedProduct.sku_id.product_id,
+      sku_id: selectedProduct.sku_id,
       user_id: order.user_id,
       order_id: order._id
     }
@@ -138,7 +141,6 @@ const OrderDetail = () => {
         form.resetFields()
         setImage(null)
         setSelectedProduct(null)
-        setReviewedProducts((prev) => [...prev, selectedProduct.sku_id])
       }
     })
   }
@@ -550,20 +552,18 @@ const OrderDetail = () => {
               title: 'Đánh giá',
               key: 'review',
               render: (_, review) => {
-                console.log(`Reviewed ${_} , ${review}`)
-
                 return (
                   <>
                     {order?.status === 'Completed' ? (
                       <div className='space-y-2'>
                         <button
-                          disabled={_?.isReviewed}
+                          disabled={_.isReviewed}
                           onClick={() => showModal(review)} // Truyền sản phẩm vào hàm showModal
                           className={`block ${
-                            _?.isReviewed ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#fca120]'
+                            _.isReviewed ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#fca120]'
                           } text-white py-1 px-2 rounded`}
                         >
-                          {_?.isReviewed ? 'Đã đánh giá' : 'Đánh giá ngay'}
+                          {_.isReviewed ? 'Đã đánh giá' : 'Đánh giá ngay'}
                         </button>
                       </div>
                     ) : null}
