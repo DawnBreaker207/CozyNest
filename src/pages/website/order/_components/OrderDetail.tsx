@@ -34,6 +34,7 @@ const desc = ['Tệ', 'Kém', 'Trung bình', 'Tốt', 'Tuyệt vời']
 
 const OrderDetail = () => {
   const [order, setOrder] = useState<any>(null)
+  const [reviewedProducts, setReviewedProducts] = useState<string[]>([])
   const [returnOrder, setReturnOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [refundOrder, setRefundOrder] = useState<any>(null) // Thêm state cho đơn hàng hoàn trả
   const [loading, setLoading] = useState<boolean>(true)
@@ -62,9 +63,10 @@ const OrderDetail = () => {
     return modifiedText
   }
   const { mutate } = useMutation({
-    mutationFn: async (formData: IReview) => {
+    mutationFn: async (formData: Partial<IReview>) => {
       try {
-        return instance.post(`/reviews`, formData)
+        const { data } = await instance.post(`/reviews`, formData)
+        return data
       } catch (error) {
         throw new Error('Thêm đánh giá thất bại')
       }
@@ -120,7 +122,7 @@ const OrderDetail = () => {
     navigate('/login')
   }
 
-  const onFinish: FormProps<IReview>['onFinish'] = async (values: IReview) => {
+  const onFinish: FormProps<Partial<IReview>>['onFinish'] = async (values: Partial<IReview>) => {
     const filterComment = replaceBadWord(values.comment ?? '')
     const imageUrl = image ? await uploadFileCloudinary(image.file) : ''
     const reviewData = {
@@ -128,21 +130,23 @@ const OrderDetail = () => {
       comment: filterComment,
       image: imageUrl,
       product_id: selectedProduct.sku_id.product_id,
-      user_id: order.user_id
+      user_id: order.user_id,
+      order_id: order._id
     }
     mutate(reviewData, {
       onSuccess: () => {
         form.resetFields()
         setImage(null)
         setSelectedProduct(null)
+        setReviewedProducts((prev) => [...prev, selectedProduct.sku_id])
       }
     })
   }
   const { data, isLoading, isError } = useQuery({
     queryKey: ['orderDetail', orderId],
     queryFn: async () => {
-      const response = await instance.get(`/orders/${orderId}`)
-      return response.data
+      const { data } = await instance.get(`/orders/${orderId}`)
+      return data
     }
   })
   useEffect(() => {
@@ -546,15 +550,20 @@ const OrderDetail = () => {
               title: 'Đánh giá',
               key: 'review',
               render: (_, review) => {
+                console.log(`Reviewed ${_} , ${review}`)
+
                 return (
                   <>
                     {order?.status === 'Completed' ? (
                       <div className='space-y-2'>
                         <button
+                          disabled={_?.isReviewed}
                           onClick={() => showModal(review)} // Truyền sản phẩm vào hàm showModal
-                          className='block bg-[#fca120] text-white py-1 px-2 rounded'
+                          className={`block ${
+                            _?.isReviewed ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#fca120]'
+                          } text-white py-1 px-2 rounded`}
                         >
-                          Đánh giá ngay
+                          {_?.isReviewed ? 'Đã đánh giá' : 'Đánh giá ngay'}
                         </button>
                       </div>
                     ) : null}

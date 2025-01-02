@@ -20,7 +20,8 @@ const ReviewComponent = ({ handleBuyNow, loading }: any) => {
     queryKey: ['reviews'],
     queryFn: async () => {
       try {
-        return await instance.get(`/reviews/${id}`)
+        const { data } = await instance.get(`/reviews/${id}`)
+        return data
       } catch (error) {
         throw new Error((error as any).message)
       }

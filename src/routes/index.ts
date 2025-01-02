@@ -86,7 +86,6 @@ function App() {
         // Order
         { path: 'check_out_order', Component: CheckOutOder },
         // Policy
-        // TODO: Rename
         { path: 'articles/:id', Component: LinkPage },
         { path: 'policy/chinh-sach-ban-hang', Component: SalesPolicy },
         { path: 'policy/giao-hang-va-lap-dat', Component: DeliveryPolicy },

@@ -89,7 +89,6 @@ const PaymentMethodPage: React.FC<PaymentMethodPageProps> = ({
         message.error('Đã có lỗi xảy ra khi kiểm tra tồn kho')
       }
     }
-    // TODO: Update this
     const finalOrderData = {
       ...orderData,
       cart_id: cartId,
